@@ -50,7 +50,7 @@ def create_pipeline_power(main_path, pipeline_name='power',
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    print '*** main_path -> %s' % main_path + ' ***'
+    print('*** main_path -> %s' % main_path + ' ***')
 
     # define the inputs of the pipeline
     inputnode = pe.Node(IdentityInterface(fields=['fif_file']),

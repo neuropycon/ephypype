@@ -1,1 +1,1 @@
-import mne
+from . import mne

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 setup(
     name='ephypype',
-    version='0.0.1',
-    packages=find_packages(),
+    version='0.0.1dev0',
+    packages=['ephypype'],
     author=['David Meunier',
             'Annalisa Pascarella',
             'Dmitrii Altukhov'],

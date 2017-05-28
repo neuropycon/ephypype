@@ -18,9 +18,9 @@ def natural_keys(text):
     
 def return_full_mat(mat,elec_labels,all_elec_labels):
     
-    print mat
+    print(mat)
     
-    print elec_labels
+    print(elec_labels)
     
     assert len(mat.shape) == 2 and mat.shape[0] == mat.shape[1], "Error mat shape = {} should be a 2D squared ndarray (matrix)".format(mat.shape)
     assert len(elec_labels) == mat.shape[0] and len(elec_labels) == mat.shape[1] , "Error, both mat dimension {} {} should be the same as elec_labels {}".format(mat.shape[0],mat.shape[1],len(elec_labels))
@@ -33,7 +33,7 @@ def return_full_mat(mat,elec_labels,all_elec_labels):
         mat = mat + np.transpose(mat)
     
     #### building full_mat from all_elec_labels
-    print all_elec_labels
+    print(all_elec_labels)
     
     full_mat = np.empty((len(all_elec_labels),len(all_elec_labels)))
     full_mat[:] = np.NAN
@@ -48,7 +48,7 @@ def return_full_mat(mat,elec_labels,all_elec_labels):
              
              full_mat[all_i,all_j] = mat[i,j]
              
-    print full_mat
+    print(full_mat)
     
     return full_mat
     
