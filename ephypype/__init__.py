@@ -1,2 +1,2 @@
-import interfaces
-import gather
+from . import interfaces
+from . import gather
