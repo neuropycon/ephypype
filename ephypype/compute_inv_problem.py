@@ -322,6 +322,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         print '***'
         print 'len stc %d' % len(stc)
         print '***'
+
     else:
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
@@ -333,6 +334,9 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         print 'stc dim ' + str(stc.shape)
         print '***'
 
+    if not isinstance(stc, list):
+        stc = [stc]
+        
     if save_stc:
 	for i in range(len([stc])):
 	    try:
@@ -343,7 +347,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 				inv_method + '_stc_' + str(i) + '.npy')
 
 	    if not op.isfile(stc_file):
-		np.save(stc_file, [stc][i].data)    
+		np.save(stc_file, stc[i].data)    
 
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
@@ -354,7 +358,8 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     # allow_empty : bool -> Instead of emitting an error, return all-zero time
     # courses for labels that do not have any vertices in the source estimate
-    label_ts = mne.extract_label_time_course([stc], labels_cortex, src,
+    
+    label_ts = mne.extract_label_time_course(stc, labels_cortex, src,
                                              mode='mean',
                                              allow_empty=True,
                                              return_generator=False)
