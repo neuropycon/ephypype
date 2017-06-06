@@ -270,7 +270,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     else:
         loose = 0.2
         depth = 0.8
-        
+
     print('\n *** loose {}  depth {} ***\n'.format(loose, depth))
     inverse_operator = make_inverse_operator(info, forward, noise_cov,
                                              loose=loose, depth=depth,
@@ -381,28 +381,6 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     print labels[0].pos
     print len(labels)
-
-#    labels_file = op.abspath('labels.dat')
-#    with open(labels_file, "wb") as f:
-#        pickle.dump(len(labels), f)
-#        for value in labels:
-#            pickle.dump(value, f)
-#
-#    label_names_file = op.abspath('label_names.txt')
-#    label_coords_file = op.abspath('label_coords.txt')
-#
-#    label_names = []
-#    label_coords = []
-#
-#    for value in labels:
-#        label_names.append(value.name)
-##        label_coords.append(value.pos[0])
-#        label_coords.append(np.mean(value.pos, axis=0))
-#
-#    np.savetxt(label_names_file, np.array(label_names, dtype=str),
-#               fmt="%s")
-#    np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
-#               fmt="%f %f %f")
 
     labels_file, label_names_file, label_coords_file = create_label_files(labels)
     
