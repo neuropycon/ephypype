@@ -336,19 +336,11 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     if not isinstance(stc, list):
         stc = [stc]
-        
-    if save_stc:
-	for i in range(len(stc)):
-#	    try:
-#		os.mkdir(op.join(subj_path, 'TS'))
-#	    except OSError:
-#		pass
-#	    stc_file = op.join(subj_path, 'TS', basename + '_' +
-#				inv_method + '_stc_' + str(i) + '.npy')
-	    stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
 
-#	    if not op.isfile(stc_file):
-            np.save(stc_file, stc[i].data)    
+    if save_stc:
+        for i in range(len(stc)):
+            stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
+            np.save(stc_file, stc[i].data)
 
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
@@ -359,7 +351,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     # allow_empty : bool -> Instead of emitting an error, return all-zero time
     # courses for labels that do not have any vertices in the source estimate
-    
+
     label_ts = mne.extract_label_time_course(stc, labels_cortex, src,
                                              mode='mean',
                                              allow_empty=True,
@@ -383,15 +375,15 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     print len(labels)
 
     labels_file, label_names_file, label_coords_file = create_label_files(labels)
-    
+
     return ts_file, labels_file, label_names_file, label_coords_file
-    
+
 
 def create_label_files(labels):
     import pickle
     import numpy as np
     import os.path as op
-    
+
     labels_file = op.abspath('labels.dat')
     with open(labels_file, "wb") as f:
         pickle.dump(len(labels), f)
@@ -413,5 +405,5 @@ def create_label_files(labels):
                fmt="%s")
     np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
                fmt="%f %f %f")
-    
+
     return labels_file, label_names_file, label_coords_file
