@@ -32,7 +32,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
 
     fwd_filename = traits.File(exists=True, desc='LF matrix', mandatory=True)
 
-    is_epoched = traits.Bool('False', usedefault=True,
+    is_epoched = traits.Bool(False, usedefault=True,
                              desc='if true raw data will be epoched',
                              mandatory=False)
                              
@@ -67,7 +67,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
 
-    save_stc = traits.Bool('False', desc='if true save stc', usedefault=True,
+    save_stc = traits.Bool(False, desc='if true save stc', usedefault=True,
 			   mandatory=False)
 
 
