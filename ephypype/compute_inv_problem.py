@@ -339,16 +339,8 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         
     if save_stc:
 	for i in range(len(stc)):
-#	    try:
-#		os.mkdir(op.join(subj_path, 'TS'))
-#	    except OSError:
-#		pass
-#	    stc_file = op.join(subj_path, 'TS', basename + '_' +
-#				inv_method + '_stc_' + str(i) + '.npy')
-	    stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
-
-#	    if not op.isfile(stc_file):
-            np.save(stc_file, stc[i].data)    
+         stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
+         np.save(stc_file, stc[i].data)    
 
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
@@ -359,6 +351,11 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     # allow_empty : bool -> Instead of emitting an error, return all-zero time
     # courses for labels that do not have any vertices in the source estimate
+    
+    if fixed:
+        mode='mean_flip'
+    else:
+        mode='mean'
     
     label_ts = mne.extract_label_time_course(stc, labels_cortex, src,
                                              mode='mean',
