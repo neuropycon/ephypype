@@ -30,7 +30,7 @@ class SpectralConnInputSpec(BaseInterfaceInputSpec):
     
     con_method = traits.Enum("coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased",desc='metric computed on time series for connectivity')
     
-    epoch_window_length = traits.Float(desc='epoched data', mandatory=False)
+    epoch_window_length = traits.Float(-1.0, desc='epoched data', mandatory=False)
     
     export_to_matlab = traits.Bool(False, desc='If conmat is exported to .mat format as well',usedefault = True)
     
@@ -103,7 +103,7 @@ class SpectralConn(BaseInterface):
         
         print mode
         
-        if epoch_window_length == traits.Undefined:
+        if epoch_window_length == -1.0:
             print '*** NO epoch_window_length ***'
             data = np.load(ts_file)
         else:
