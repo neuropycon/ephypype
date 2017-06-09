@@ -339,15 +339,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         
     if save_stc:
 	for i in range(len(stc)):
-#	    try:
-#		os.mkdir(op.join(subj_path, 'TS'))
-#	    except OSError:
-#		pass
-#	    stc_file = op.join(subj_path, 'TS', basename + '_' +
-#				inv_method + '_stc_' + str(i) + '.npy')
 	    stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
-
-#	    if not op.isfile(stc_file):
             np.save(stc_file, stc[i].data)    
 
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
