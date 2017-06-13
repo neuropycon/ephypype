@@ -16,9 +16,11 @@ class PowerInputSpec(BaseInterfaceInputSpec):
     fmin = traits.Float(desc='lower psd frequency', mandatory=False)
     fmax = traits.Float(desc='higher psd frequency', mandatory=False)
 
+    sfreq = traits.Float(desc='sampling frequency', mandatory=False)
+
     nfft = traits.Int(desc='the length of FFT used', mandatory=False)
-    overlap = traits.Int(desc='The number of points of overlap between segments', 
-                         mandatory=False)
+    overlap = traits.Float(desc='The number of points of overlap between segments', 
+                           mandatory=False)
 
     method = traits.Enum('welch', 'multitaper',
                          desc='power spectral density computation method')
@@ -26,7 +28,7 @@ class PowerInputSpec(BaseInterfaceInputSpec):
     is_epoched = traits.Bool(desc='if true input data are mne.Epochs',
                              mandatory=False)
 
-    is_sensor_space = traits.Bool(False, usedefault=True,
+    is_sensor_space = traits.Bool(True, usedefault=True,
                                   dedesc='True for PSD on sensor space \
                                   False for PSD on source',
                                   mandatory=False)
@@ -47,6 +49,7 @@ class Power(BaseInterface):
     def _run_interface(self, runtime):
         print 'in Power'
         data_file = self.inputs.data_file
+        sfreq = self.inputs.sfreq
         fmin = self.inputs.fmin
         fmax = self.inputs.fmax
         nfft = self.inputs.nfft
@@ -54,14 +57,16 @@ class Power(BaseInterface):
         method = self.inputs.method
         is_epoched = self.inputs.is_epoched
         is_sensor_space = self.inputs.is_sensor_space
-        
+
         if is_sensor_space:
             self.psds_file = compute_and_save_psd(data_file, fmin, fmax,
                                                   method, is_epoched)
         else:
-            self.psds_file = compute_and_save_src_psd(data_file, fmin, fmax,
-                                                      nfft, overlap,
-                                                      is_epoched)
+            self.psds_file = compute_and_save_src_psd(data_file, sfreq,
+                                                      fmin=fmin, fmax=fmax,
+                                                      n_fft=nfft,
+                                                      n_overlap=overlap,
+                                                      is_epoched=is_epoched)
         return runtime
 
     def _list_outputs(self):
