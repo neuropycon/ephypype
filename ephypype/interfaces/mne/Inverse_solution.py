@@ -36,7 +36,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
                              desc='if true raw data will be epoched',
                              mandatory=False)
                              
-    is_fixed = traits.Bool('False', usedefault=True,
+    is_fixed = traits.Bool(False, usedefault=True,
                            desc='if true we use fixed orientation',
                            mandatory=False)
 
