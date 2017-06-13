@@ -8,20 +8,24 @@ import nipype.pipeline.engine as pe
 
 from nipype.interfaces.utility import IdentityInterface
 from ephypype.interfaces.mne.power import Power
+from ephypype.nodes.power_tools import PowerBand
 
 
-def create_pipeline_power(main_path, pipeline_name='power',
+def create_pipeline_power(main_path, freq_bands, pipeline_name='power',
                           fmin=0, fmax=300, method='welch',
                           is_epoched=False):
     """
     Description:
 
-        Power pipeline: wraps functions of MNE to compute PSD of epoch or raw data
+        Power pipeline: wraps functions of MNE to compute PSD of epoch or raw
+        data
 
     Inputs:
 
         main_path : str
             the main path of the pipeline
+        freq_bands : list
+            frequency bands
         pipeline_name : str (default 'power')
             name of the pipeline
         fmin : float (default 0)
@@ -64,12 +68,18 @@ def create_pipeline_power(main_path, pipeline_name='power',
 
     pipeline.connect(inputnode, 'fif_file', power_node, 'data_file')
 
+    power_band_node = pe.Node(interface=PowerBand(), name='power_band')
+    power_band_node.inputs.freq_bands = freq_bands
+
+    pipeline.connect(power_node, 'psds_file', power_band_node, 'psds_file')
+
     return pipeline
 
 
-def create_pipeline_src_power(main_path, pipeline_name='power',
-                              fmin=0, fmax=300, nfft=256, overlap=0,
-                              is_epoched=False):
+def create_pipeline_power_src_space(main_path, sfreq, freq_bands,
+                                    pipeline_name='source_power',
+                                    fmin=0, fmax=300, nfft=256, overlap=0,
+                                    is_epoched=False):
     """
     Description:
 
@@ -79,6 +89,10 @@ def create_pipeline_src_power(main_path, pipeline_name='power',
 
         main_path : str
             the main path of the pipeline
+        sfreq : float
+            sampling frequency
+        freq_bands : list
+            frequency bands
         pipeline_name : str (default 'source_power')
             name of the pipeline
         fmin : float (default 0)
@@ -109,10 +123,11 @@ def create_pipeline_src_power(main_path, pipeline_name='power',
     print '*** main_path -> %s' % main_path + ' ***'
 
     # define the inputs of the pipeline
-    inputnode = pe.Node(IdentityInterface(fields=['src_file']),
+    inputnode = pe.Node(IdentityInterface(fields=['data_file']),
                         name='inputnode')
 
     power_node = pe.Node(interface=Power(), name='power')
+    power_node.inputs.sfreq = sfreq
     power_node.inputs.fmin = fmin
     power_node.inputs.fmax = fmax
     power_node.inputs.nfft = nfft
@@ -120,6 +135,11 @@ def create_pipeline_src_power(main_path, pipeline_name='power',
     power_node.inputs.is_epoched = is_epoched
     power_node.inputs.is_sensor_space = False
 
-    pipeline.connect(inputnode, 'src_file', power_node, 'data_file')
+    pipeline.connect(inputnode, 'data_file', power_node, 'data_file')
+
+    power_band_node = pe.Node(interface=PowerBand(), name='power_band')
+    power_band_node.inputs.freq_bands = freq_bands
+
+    pipeline.connect(power_node, 'psds_file', power_band_node, 'psds_file')
 
     return pipeline
