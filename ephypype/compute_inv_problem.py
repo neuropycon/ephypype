@@ -342,6 +342,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
             np.save(stc_file, stc[i].data)
 
+    # these coo are in MRI space and we have to convert to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
 
