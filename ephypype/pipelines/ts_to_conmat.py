@@ -93,7 +93,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         #spectral.inputs.sfreq = sfreq
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
-        spectral.inputs.epoch_window_length = epoch_window_length
+        if epoch_window_length:
+            spectral.inputs.epoch_window_length = epoch_window_length
         
         pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(inputnode, 'ts_file', spectral, 'ts_file')

@@ -353,9 +353,9 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     # courses for labels that do not have any vertices in the source estimate
 
     if is_fixed:
-	mode = 'mean_flip'
+        mode = 'mean_flip'
     else:
-	mode = 'mean'
+        mode = 'mean'
 
     label_ts = mne.extract_label_time_course(stc, labels_cortex, src,
                                              mode=mode,
