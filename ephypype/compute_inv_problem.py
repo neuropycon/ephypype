@@ -230,7 +230,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     from nipype.utils.filemanip import split_filename as split_f
 
     from ephypype.preproc import create_reject_dict
-    from ephypype.source_space import create_label_files
+    from ephypype.source_space import create_MNI_label_files
 
     try:
         traits.undefined(events_id)
@@ -379,6 +379,9 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     print labels[0].pos
     print len(labels)
 
-    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+#    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+    labels_file, label_names_file, label_coords_file = \
+        create_MNI_label_files(forward, labels_cortex, labels_aseg,
+                               sbj_id, sbj_dir)
 
     return ts_file, labels_file, label_names_file, label_coords_file
