@@ -152,8 +152,7 @@ def create_label_files(labels):
     return labels_file, label_names_file, label_coords_file
 
 
-def create_MNI_label_files(fwd, labels_cortex, labels_aseg, vertno_left,
-                           vertno_right, sbj, sbj_dir):
+def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     import pickle
     import numpy as np
     import os.path as op
@@ -163,6 +162,9 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, vertno_left,
 
     label_names = list()
     label_coords = list()
+
+    vertno_left = fwd['src'][0]['vertno']
+    vertno_right = fwd['src'][1]['vertno']
 
     ROI_cortex = convert_cortex_MRI_to_MNI(labels_cortex, vertno_left,
                                            vertno_right, sbj, sbj_dir)
