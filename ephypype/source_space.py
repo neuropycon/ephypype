@@ -157,6 +157,11 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     import numpy as np
     import os.path as op
 
+    print('*** n labels cortex: {} ***'.format(len(labels_cortex)))
+    if labels_aseg:
+        print('*** n labels cortex: {} ***'.format(len(labels_aseg)))
+    else:
+        print('*** no deep regions ***')
     label_names_file = op.abspath('label_names.txt')
     label_coords_file = op.abspath('label_coords.txt')
 
@@ -172,11 +177,16 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     ROI_cortex_MNI_coords = ROI_cortex['ROI_MNI_coords']
     ROI_cortex_color = ROI_cortex['ROI_color']
 
-    ROI_aseg = convert_aseg_head_to_MNI(labels_aseg, fwd['mri_head_t'],
-                                        sbj, sbj_dir)
-    ROI_aseg_MNI_coords = ROI_aseg['ROI_aseg_MNI_coords']
-    ROI_aseg_name = ROI_aseg['ROI_aseg_name']
-    ROI_aseg_color = ROI_aseg['ROI_aseg_color']
+    if labels_aseg:
+        ROI_aseg = convert_aseg_head_to_MNI(labels_aseg, fwd['mri_head_t'],
+                                            sbj, sbj_dir)
+        ROI_aseg_MNI_coords = ROI_aseg['ROI_aseg_MNI_coords']
+        ROI_aseg_name = ROI_aseg['ROI_aseg_name']
+        ROI_aseg_color = ROI_aseg['ROI_aseg_color']
+    else:
+        ROI_aseg_name = []
+        ROI_aseg_MNI_coords = []
+        ROI_colors = []
 
     # ROI names
     ROI_names = ROI_cortex_name + ROI_aseg_name
@@ -193,9 +203,11 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
                fmt="%f %f %f")
 
     ROI_colors = ROI_cortex_color + ROI_aseg_color
+
     ROI = dict(ROI_names=ROI_names, ROI_coords=ROI_coords,
                ROI_colors=ROI_colors)
 
+    print('*** written {} labels in a pickle ***'.format(len(ROI_names)))
     labels_file = op.abspath('labels.pkl')
     with open(labels_file, "wb") as f:
         pickle.dump(ROI, f)

@@ -375,6 +375,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         labels = labels_cortex + labels_aseg
     else:
         labels = labels_cortex
+        labels_aseg = None
 
     print labels[0].pos
     print len(labels)
