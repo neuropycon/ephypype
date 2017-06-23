@@ -176,7 +176,7 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
                                         sbj, sbj_dir)
     ROI_aseg_MNI_coords = ROI_aseg['ROI_aseg_MNI_coords']
     ROI_aseg_name = ROI_aseg['ROI_aseg_name']
-    ROI_aseg_color = ROI_aseg['ROI_color']
+    ROI_aseg_color = ROI_aseg['ROI_aseg_color']
 
     # ROI names
     ROI_names = ROI_cortex_name + ROI_aseg_name
