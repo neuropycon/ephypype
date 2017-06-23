@@ -242,40 +242,47 @@ class PlotSpectralConn(BaseInterface):
             
             if is_sensor_space:
                 label_names = [line.strip() for line in open(labels_file)]
-                node_order  = label_names
+                node_order = label_names
                 node_colors = None
-                
-                
-                print label_names
-            
+
+                print label_names            
             else:
-                labels = []
-                with open(labels_file, "rb") as f:
-                    for _ in range(pickle.load(f)):
-                        labels.append(pickle.load(f))
+                with open(labels_file, 'rb') as f:
+                    ROI = pickle.load(f)                    
                 
-                print '\n ********************** \n' 
-                print len(labels)
-                print '\n ********************** \n' 
+                label_coords = ROI['ROI_coords']
+                node_colors = ROI['ROI_colors']
+                label_names = ROI['ROI_names']
+
+#                labels = []
+#                with open(labels_file, "rb") as f:
+#                    for _ in range(pickle.load(f)):
+#                        labels.append(pickle.load(f))
+
+                print '\n ********************** \n'
+                print len(ROI_names)
+                print '\n ********************** \n'
 #                0/0
                 # read colors
-                node_colors = [label.color for label in labels]    
-                
+#                node_colors = [label.color for label in labels]
+
                 # reorder the labels based on their location in the left hemi
-                label_names = [label.name for label in labels]
+#                label_names = [label.name for label in labels]
                 lh_labels = [name for name in label_names if name.endswith('lh')]
                 rh_labels = [name for name in label_names if name.endswith('rh')]
-                
+
                 # Get the y-location of the label
                 label_ypos_lh = list()
                 for name in lh_labels:
                     idx = label_names.index(name)
-                    ypos = np.mean(labels[idx].pos[:, 1])
+#                    ypos = np.mean(labels[idx].pos[:, 1])
+                    ypos = np.mean(label_coords[idx][:, 1])
                     label_ypos_lh.append(ypos)
                     
                 try:
                     idx = label_names.index('Brain-Stem')
-                    ypos = np.mean(labels[idx].pos[:, 1])
+#                    ypos = np.mean(labels[idx].pos[:, 1])
+                    ypos = np.mean(label_coords[idx][:, 1])
                     lh_labels.append('Brain-Stem')
                     label_ypos_lh.append(ypos)
                 except ValueError:
