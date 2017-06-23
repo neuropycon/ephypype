@@ -159,7 +159,7 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
 
     print('*** n labels cortex: {} ***'.format(len(labels_cortex)))
     if labels_aseg:
-        print('*** n labels cortex: {} ***'.format(len(labels_aseg)))
+        print('*** n labels aseg: {} ***'.format(len(labels_aseg)))
     else:
         print('*** no deep regions ***')
     label_names_file = op.abspath('label_names.txt')
@@ -186,7 +186,7 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     else:
         ROI_aseg_name = []
         ROI_aseg_MNI_coords = []
-        ROI_colors = []
+        ROI_aseg_color = []
 
     # ROI names
     ROI_names = ROI_cortex_name + ROI_aseg_name
