@@ -217,11 +217,9 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-    import os
     import os.path as op
     import numpy as np
     import mne
-    import pickle
 
     from mne.io import read_raw_fif
     from mne import read_epochs
@@ -232,6 +230,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     from nipype.utils.filemanip import split_filename as split_f
 
     from ephypype.preproc import create_reject_dict
+    from ephypype.source_space import create_MNI_label_files
 
     try:
         traits.undefined(events_id)
@@ -342,6 +341,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
             np.save(stc_file, stc[i].data)
 
+    # these coo are in MRI space and we have to convert to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
 
@@ -375,40 +375,16 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         labels = labels_cortex + labels_aseg
     else:
         labels = labels_cortex
+        labels_aseg = None
 
     print labels[0].pos
     print len(labels)
 
-    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+
+#    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+    labels_file, label_names_file, label_coords_file = \
+        create_MNI_label_files(forward, labels_cortex, labels_aseg,
+                               sbj_id, sbj_dir)
 
     return ts_file, labels_file, label_names_file, label_coords_file
 
-
-def create_label_files(labels):
-    import pickle
-    import numpy as np
-    import os.path as op
-
-    labels_file = op.abspath('labels.dat')
-    with open(labels_file, "wb") as f:
-        pickle.dump(len(labels), f)
-        for value in labels:
-            pickle.dump(value, f)
-
-    label_names_file = op.abspath('label_names.txt')
-    label_coords_file = op.abspath('label_coords.txt')
-
-    label_names = []
-    label_coords = []
-
-    for value in labels:
-        label_names.append(value.name)
-#        label_coords.append(value.pos[0])
-        label_coords.append(np.mean(value.pos, axis=0))
-
-    np.savetxt(label_names_file, np.array(label_names, dtype=str),
-               fmt="%s")
-    np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
-               fmt="%f %f %f")
-
-    return labels_file, label_names_file, label_coords_file
