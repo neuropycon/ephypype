@@ -78,15 +78,25 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     import numpy as np
 
     from mne.time_frequency import psd_array_welch
-
+    from scipy.signal import welch
+    
     src_data = np.load(data_fname)
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
     print('src data dim: {}'.format(src_data.shape))
+    '''    
     psds, freqs = psd_array_welch(src_data, sfreq, fmin=fmin, fmax=fmax,
                                   n_fft=n_fft, n_overlap=n_overlap,
                                   n_per_seg=None, n_jobs=1, verbose=None)
+    print('psds data dim: {}'.format(psds.shape))
+    '''
+    n_freqs = n_fft // 2 + 1
+    psds = np.empty([src_data.shape[0], n_freqs])
+    for i in range(src_data.shape[0]):
+        freqs, Pxx = welch(src_data[i, :], fs=sfreq, window='hamming',
+                           nperseg=n_fft, noverlap=n_overlap, nfft=None)
+        psds[i, :] = Pxx
 
     psds_fname = _save_psd(data_fname, psds, freqs)
     _save_psd_img(data_fname, psds, freqs, is_epoched)
@@ -155,6 +165,7 @@ def _save_psd(data_fname, psds, freqs):
     psds_fname = basename + '-psds.npz'
     psds_fname = os.path.abspath(psds_fname)
     print(psds.shape)
+    print('*** save {} ***'.format(psds_fname))
     np.savez(psds_fname, psds=psds, freqs=freqs)
 
     return psds_fname
@@ -188,4 +199,5 @@ def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
     ax.set(title='{} PSD'.format(method), xlabel='Frequency',
            ylabel='Power Spectral Density (dB)')
 
+    print('*** save {} ***'.format(psds_img_fname))
     plt.savefig(psds_img_fname)
