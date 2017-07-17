@@ -1,0 +1,5 @@
+*.pyc
+*.mat
+*~
+crash*
+*.egg-info/*
