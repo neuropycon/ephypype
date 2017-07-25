@@ -266,9 +266,11 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     if is_fixed or aseg:
         loose = None
         depth = None
+        pick_ori = None
     else:
         loose = 0.2
         depth = 0.8
+        pick_ori = 'normal'
 
     print('\n *** loose {}  depth {} ***\n'.format(loose, depth))
     inverse_operator = make_inverse_operator(info, forward, noise_cov,
@@ -292,7 +294,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             ev_list = events_id.items()
             for k in range(len(events_id)):
                 stc = apply_inverse(evoked[k], inverse_operator, lambda2,
-                                    inv_method, pick_ori=None)
+                                    inv_method, pick_ori=pick_ori)
 
                 print '\n*** STC for event %s ***\n' % ev_list[k][0]
                 stc_file = op.abspath(basename + '_' + ev_list[k][0])
@@ -308,7 +310,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
-                                       inv_method, pick_ori=None)
+                                       inv_method, pick_ori=pick_ori)
 
             print '***'
             print 'len stc %d' % len(stc)
@@ -316,7 +318,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     elif is_epoched and events_id is None:
         stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
-                                   inv_method, pick_ori=None)
+                                   inv_method, pick_ori=pick_ori)
 
         print '***'
         print 'len stc %d' % len(stc)
@@ -327,7 +329,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                                 label=None,
                                 start=None, stop=None,
                                 buffer_size=1000,
-                                pick_ori=None)  # None 'normal'
+                                pick_ori=pick_ori)  # None 'normal'
 
         print '***'
         print 'stc dim ' + str(stc.shape)
