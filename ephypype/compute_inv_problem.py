@@ -161,7 +161,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                          t_min=None, t_max=None, is_evoked=False,
                          snr=1.0, inv_method='MNE',
                          parc='aparc', aseg=False, aseg_labels=[],
-                         save_stc=False):
+                         save_stc=False, is_fixed=False):
     """
     Compute the inverse solution on raw/epoched data and return the average
     time series computed in the N_r regions of the source space defined by
@@ -217,11 +217,9 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-    import os
     import os.path as op
     import numpy as np
     import mne
-    import pickle
 
     from mne.io import read_raw_fif
     from mne import read_epochs
@@ -232,6 +230,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     from nipype.utils.filemanip import split_filename as split_f
 
     from ephypype.preproc import create_reject_dict
+    from ephypype.source_space import create_MNI_label_files
 
     try:
         traits.undefined(events_id)
@@ -256,23 +255,27 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     forward = mne.read_forward_solution(fwd_filename)
 
     if not aseg:
+        print('\n*** fixed orientation {} ***\n'.format(is_fixed))
         forward = mne.convert_forward_solution(forward, surf_ori=True,
-                                               force_fixed=False)
+                                               force_fixed=is_fixed)
 
     lambda2 = 1.0 / snr ** 2
 
     # compute inverse operator
     print '\n*** COMPUTE INV OP ***\n'
-    if not aseg:
-        loose = 0.2
-        depth = 0.8
-    else:
+    if is_fixed or aseg:
         loose = None
         depth = None
+        pick_ori = None
+    else:
+        loose = 0.2
+        depth = 0.8
+        pick_ori = 'normal'
 
+    print('\n *** loose {}  depth {} ***\n'.format(loose, depth))
     inverse_operator = make_inverse_operator(info, forward, noise_cov,
                                              loose=loose, depth=depth,
-                                             fixed=False)
+                                             fixed=is_fixed)
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print '\n*** APPLY INV OP ***\n'
@@ -291,7 +294,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             ev_list = events_id.items()
             for k in range(len(events_id)):
                 stc = apply_inverse(evoked[k], inverse_operator, lambda2,
-                                    inv_method, pick_ori=None)
+                                    inv_method, pick_ori=pick_ori)
 
                 print '\n*** STC for event %s ***\n' % ev_list[k][0]
                 stc_file = op.abspath(basename + '_' + ev_list[k][0])
@@ -307,7 +310,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
-                                       inv_method, pick_ori=None)
+                                       inv_method, pick_ori=pick_ori)
 
             print '***'
             print 'len stc %d' % len(stc)
@@ -315,34 +318,32 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     elif is_epoched and events_id is None:
         stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
-                                   inv_method, pick_ori=None)
+                                   inv_method, pick_ori=pick_ori)
 
         print '***'
         print 'len stc %d' % len(stc)
         print '***'
+
     else:
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
                                 start=None, stop=None,
                                 buffer_size=1000,
-                                pick_ori=None)  # None 'normal'
+                                pick_ori=pick_ori)  # None 'normal'
 
         print '***'
         print 'stc dim ' + str(stc.shape)
         print '***'
 
+    if not isinstance(stc, list):
+        stc = [stc]
+
     if save_stc:
-	for i in range(len([stc])):
-	    try:
-		os.mkdir(op.join(subj_path, 'TS'))
-	    except OSError:
-		pass
-	    stc_file = op.join(subj_path, 'TS', basename + '_' +
-				inv_method + '_stc_' + str(i) + '.npy')
+        for i in range(len(stc)):
+            stc_file = op.abspath(basename + '_stc_' + str(i) + '.npy')
+            np.save(stc_file, stc[i].data)
 
-	    if not op.isfile(stc_file):
-		np.save(stc_file, [stc][i].data)    
-
+    # these coo are in MRI space and we have to convert to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=sbj_dir)
 
@@ -352,8 +353,14 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     # allow_empty : bool -> Instead of emitting an error, return all-zero time
     # courses for labels that do not have any vertices in the source estimate
-    label_ts = mne.extract_label_time_course([stc], labels_cortex, src,
-                                             mode='mean',
+
+    if is_fixed:
+        mode = 'mean_flip'
+    else:
+        mode = 'mean'
+
+    label_ts = mne.extract_label_time_course(stc, labels_cortex, src,
+                                             mode=mode,
                                              allow_empty=True,
                                              return_generator=False)
 
@@ -370,62 +377,16 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         labels = labels_cortex + labels_aseg
     else:
         labels = labels_cortex
+        labels_aseg = None
 
     print labels[0].pos
     print len(labels)
 
-#    labels_file = op.abspath('labels.dat')
-#    with open(labels_file, "wb") as f:
-#        pickle.dump(len(labels), f)
-#        for value in labels:
-#            pickle.dump(value, f)
-#
-#    label_names_file = op.abspath('label_names.txt')
-#    label_coords_file = op.abspath('label_coords.txt')
-#
-#    label_names = []
-#    label_coords = []
-#
-#    for value in labels:
-#        label_names.append(value.name)
-##        label_coords.append(value.pos[0])
-#        label_coords.append(np.mean(value.pos, axis=0))
-#
-#    np.savetxt(label_names_file, np.array(label_names, dtype=str),
-#               fmt="%s")
-#    np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
-#               fmt="%f %f %f")
 
-    labels_file, label_names_file, label_coords_file = create_label_files(labels)
-    
+#    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+    labels_file, label_names_file, label_coords_file = \
+        create_MNI_label_files(forward, labels_cortex, labels_aseg,
+                               sbj_id, sbj_dir)
+
     return ts_file, labels_file, label_names_file, label_coords_file
-    
 
-def create_label_files(labels):
-    import pickle
-    import numpy as np
-    import os.path as op
-    
-    labels_file = op.abspath('labels.dat')
-    with open(labels_file, "wb") as f:
-        pickle.dump(len(labels), f)
-        for value in labels:
-            pickle.dump(value, f)
-
-    label_names_file = op.abspath('label_names.txt')
-    label_coords_file = op.abspath('label_coords.txt')
-
-    label_names = []
-    label_coords = []
-
-    for value in labels:
-        label_names.append(value.name)
-#        label_coords.append(value.pos[0])
-        label_coords.append(np.mean(value.pos, axis=0))
-
-    np.savetxt(label_names_file, np.array(label_names, dtype=str),
-               fmt="%s")
-    np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
-               fmt="%f %f %f")
-    
-    return labels_file, label_names_file, label_coords_file
