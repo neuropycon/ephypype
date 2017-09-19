@@ -15,12 +15,12 @@ from ephypype.nodes.import_data import ImportBrainVisionAscii, ImportBrainVision
 #from ephypype.nodes.ts_tools import SplitWindows
 
 
-#from ephypype.spectral import split_win_ts
+from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity
 
 ###TODO
 #from ephypype.nodes.? import filter_adj_plot_mat
 
-def create_pipeline_brain_vision_ascii_to_spectral_connectivity(main_path,pipeline_name="brain_vision_to_conmat", con_method = "coh", sample_size = 512, sep_label_name = "", sfreq = 512,filter_spectral = True, k_neigh = 3, n_windows = [], multi_con = False):
+def create_pipeline_brain_vision_ascii_to_spectral_connectivity(main_path,pipeline_name="brain_vision_to_conmat", con_method = "coh", sample_size = 512, sep_label_name = "", sfreq = 512,filter_spectral = True, k_neigh = 3, n_windows = [], multi_con = False, keep_electrodes = ""):
     
     """
     Description:
@@ -44,14 +44,12 @@ def create_pipeline_brain_vision_ascii_to_spectral_connectivity(main_path,pipeli
     
     split_ascii.inputs.sample_size = sample_size
     split_ascii.inputs.sep_label_name = sep_label_name
+    split_ascii.inputs.keep_electrodes = keep_electrodes 
     
     pipeline.connect(inputnode, 'txt_file',split_ascii,'txt_file')
 
-
-    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con, export_to_matlab = export_to_matlab, n_windows = n_windows)
+    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con,n_windows = n_windows)
     
-     
-     
     #pipeline.connect(inputnode, 'freq_band', ts_pipe, 'spectral.freq_band')
     pipeline.connect(inputnode, 'freq_band', ts_pipe, 'inputnode.freq_band')
     pipeline.connect(split_ascii, 'splitted_ts_file', ts_pipe, 'inputnode.ts_file')
@@ -61,7 +59,7 @@ def create_pipeline_brain_vision_ascii_to_spectral_connectivity(main_path,pipeli
     return pipeline
     
     
-def create_pipeline_brain_vision_vhdr_to_spectral_connectivity(main_path,pipeline_name="brain_vision_to_conmat", con_method = "coh", sample_size = 512, sep_label_name = "", sfreq = 512,filter_spectral = True, k_neigh = 3, n_windows = [], multi_con = False):
+def create_pipeline_brain_vision_vhdr_to_spectral_connectivity(main_path,pipeline_name="brain_vision_to_conmat", con_method = "coh", sample_size = 512, sep_label_name = "", sfreq = 512,filter_spectral = True, k_neigh = 3, n_windows = [], multi_con = False,  keep_electrodes = ""):
     
     """
     Description:
@@ -71,7 +69,7 @@ def create_pipeline_brain_vision_vhdr_to_spectral_connectivity(main_path,pipelin
     
     
     """
-    if multicon:
+    if multi_con:
         pipeline_name = pipeline_name + "_multicon"
         
     pipeline = pe.Workflow(name=pipeline_name )
@@ -84,10 +82,13 @@ def create_pipeline_brain_vision_vhdr_to_spectral_connectivity(main_path,pipelin
     split_vhdr = pe.Node(interface = ImportBrainVisionVhdr() ,name = 'split_vhdr')
 
     split_vhdr.inputs.sample_size = sample_size
+    
+    split_vhdr.inputs.keep_electrodes = keep_electrodes
+    
     pipeline.connect(inputnode, 'vhdr_file',split_vhdr,'vhdr_file')
 
     ### pipeline ts_to_conmat
-    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con, export_to_matlab = export_to_matlab, n_windows = n_windows)
+    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con, n_windows = n_windows)
     
     pipeline.connect(split_vhdr,'splitted_ts_file',ts_pipe, 'inputnode.ts_file')
     pipeline.connect(split_vhdr,'elec_names_file',ts_pipe, 'inputnode.labels_file')
