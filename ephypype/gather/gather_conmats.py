@@ -38,7 +38,7 @@ def return_full_mat(mat,elec_labels,all_elec_labels):
     full_mat = np.empty((len(all_elec_labels),len(all_elec_labels)))
     full_mat[:] = np.NAN
     
-    for pair_lab in permutations(all_elec_labels,2):
+    for pair_lab in iter.permutations(all_elec_labels,2):
         
         all_i,all_j =  all_elec_labels.index(pair_lab[0]),all_elec_labels.index(pair_lab[1])
              

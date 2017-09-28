@@ -228,17 +228,13 @@ def get_epochs_info(raw_fname):
 
 
 def get_raw_sfreq(raw_fname):
-    from mne.io import Raw
+    import mne
 
-    raw = Raw(raw_fname, preload=True)
-    return raw.info['sfreq']
-
-
-# def get_epochs_info(raw_fname):
-#    from mne.io import Raw
-#
-#    raw = Raw(raw_fname, preload=True)
-#    return raw.info['epochs']
+    try:
+        data = mne.io.read_raw_fif(raw_fname)
+    except:
+        data = mne.read_epochs(raw_fname)
+    return data.info['sfreq']
 
 
 def create_reject_dict(raw_info):

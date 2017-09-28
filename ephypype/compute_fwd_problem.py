@@ -113,7 +113,7 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
             src += vol_label
     
         if save_mixed_src_space:
-            mne.write_source_spaces(src_aseg_fname, src)
+            mne.write_source_spaces(src_aseg_fname, src, overwrite=True)
             print('\n*** source space file {} written ***\n'.format(src_aseg_fname))
             
         # Export source positions to nift file
