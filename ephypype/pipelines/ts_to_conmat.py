@@ -108,7 +108,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
             plot_spectral.inputs.is_sensor_space = is_sensor_space        
             pipeline.connect(inputnode,  'labels_file',plot_spectral,'labels_file')
     #        pipeline.connect(inputnode,  'is_sensor_space',plot_spectral,'is_sensor_space')        
-            pipeline.connect(spectral, "conmat_file",    plot_spectral, 'conmat_file')
+            pipeline.connect(spectral, "conmat_files",    plot_spectral, 'conmat_file')
             
         else:
             
