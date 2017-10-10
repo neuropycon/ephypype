@@ -88,7 +88,7 @@ def create_pipeline_brain_vision_vhdr_to_spectral_connectivity(main_path,pipelin
     pipeline.connect(inputnode, 'vhdr_file',split_vhdr,'vhdr_file')
 
     ### pipeline ts_to_conmat
-    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con, n_windows = n_windows)
+    ts_pipe = create_pipeline_time_series_to_spectral_connectivity(main_path,sfreq, con_method = con_method, multi_con = multi_con, n_windows = n_windows, is_sensor_space = True)
     
     pipeline.connect(split_vhdr,'splitted_ts_file',ts_pipe, 'inputnode.ts_file')
     pipeline.connect(split_vhdr,'elec_names_file',ts_pipe, 'inputnode.labels_file')
