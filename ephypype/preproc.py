@@ -21,7 +21,7 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
-        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors)
+        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors, fir_design='firwin')
         filt_str = '_filt'
 
     if down_sfreq:
@@ -122,9 +122,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components):
     ica_sol_file = os.path.abspath(basename + '_ica_solution.fif')
 
     ica.save(ica_sol_file)
-    # raw_ica = ica.apply(raw)
+    raw_ica = ica.apply(raw)
     raw_ica_file = os.path.abspath(basename + '_ica' + ext)
-    raw.save(raw_ica_file)
+    raw_ica.save(raw_ica_file)
 
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
