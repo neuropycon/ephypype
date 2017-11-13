@@ -160,6 +160,8 @@ def create_pipeline_preproc_meeg(main_path,
             ica_node.inputs.n_components = variance
             ica_node.inputs.ecg_ch_name = ECG_ch_name
             ica_node.inputs.eog_ch_name = EoG_ch_name
+            
+            ica_node.inputs.reject = reject
 
             pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
 
