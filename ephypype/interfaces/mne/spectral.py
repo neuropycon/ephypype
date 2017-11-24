@@ -89,7 +89,7 @@ class SpectralConn(BaseInterface):
 
     def _run_interface(self, runtime):
                 
-        print 'in SpectralConn'
+        print('in SpectralConn')
         
         ts_file = self.inputs.ts_file
         sfreq = self.inputs.sfreq
@@ -101,16 +101,16 @@ class SpectralConn(BaseInterface):
         mode = self.inputs.mode
         multi_con = self.inputs.multi_con 
         
-        print mode
+        print(mode)
         
         if epoch_window_length == traits.Undefined:
-            print '*** NO epoch_window_length ***'
+            print('*** NO epoch_window_length ***')
             data = np.load(ts_file)
         else:
             raw_data = np.load(ts_file)
             
-            print raw_data.shape
-            print int(epoch_window_length * sfreq)
+            print(raw_data.shape)
+            print(int(epoch_window_length * sfreq))
             
             if len(raw_data.shape) == 3:
                 
@@ -118,7 +118,7 @@ class SpectralConn(BaseInterface):
                     
                     raw_data = raw_data[0,:,:]
                     
-            print raw_data.shape
+            print(raw_data.shape)
                   
             nb_splits = raw_data.shape[1] // (epoch_window_length * sfreq)
             reste = raw_data.shape[1] % int(epoch_window_length * sfreq)
@@ -128,10 +128,10 @@ class SpectralConn(BaseInterface):
             if reste != 0:
                 raw_data = raw_data[:,:-reste]
                 
-            print "epoching data with {}s by window, resulting in {} epochs (rest = {})".format(epoch_window_length,nb_splits,reste)
+            print("epoching data with {}s by window, resulting in {} epochs (rest = {})".format(epoch_window_length,nb_splits,reste))
             data = np.array(np.array_split(raw_data,nb_splits,axis = 1))
           
-            print data.shape
+            print(data.shape)
             
         if multi_con:
             self.conmat_files = compute_and_save_multi_spectral_connectivity(all_data = data,con_method = con_method, sfreq=sfreq, fmin= freq_band[0], fmax=freq_band[1],export_to_matlab = export_to_matlab, mode = mode)
@@ -217,7 +217,7 @@ class PlotSpectralConn(BaseInterface):
 
     def _run_interface(self, runtime):
                 
-        print 'in PlotSpectralConn'
+        print('in PlotSpectralConn')
         
         conmat_file = self.inputs.conmat_file
         vmin = self.inputs.vmin
@@ -229,10 +229,10 @@ class PlotSpectralConn(BaseInterface):
         
         ### reading matrix and base filename from conmat_file
         path,fname,ext = split_f(conmat_file)    
-        print fname
+        print(fname)
         
         conmat = np.load(conmat_file)
-        print conmat.shape
+        print(conmat.shape)
         
         assert conmat.ndim == 2, "Warning, conmat should be 2D matrix , ndim = {}".format(conmat.ndim)
         assert conmat.shape[0] == conmat.shape[1], "Warning, conmat should be a squared matrix , {} != {}".format(conmat.shape[0],conmat.shape[1])
@@ -246,7 +246,7 @@ class PlotSpectralConn(BaseInterface):
                 node_colors = None
                 
                 
-                print label_names
+                print(label_names)
             
             else:
                 labels = []
@@ -254,9 +254,9 @@ class PlotSpectralConn(BaseInterface):
                     for _ in range(pickle.load(f)):
                         labels.append(pickle.load(f))
                 
-                print '\n ********************** \n' 
-                print len(labels)
-                print '\n ********************** \n' 
+                print('\n ********************** \n') 
+                print(len(labels))
+                print('\n ********************** \n') 
 #                0/0
                 # read colors
                 node_colors = [label.color for label in labels]    
@@ -293,19 +293,19 @@ class PlotSpectralConn(BaseInterface):
                 node_order = list()
                 node_order.extend(lh_labels[::-1])  # reverse the order
                 node_order.extend(rh_labels)    
-                print '\n ********************** \n'  
-                print lh_labels
-                print rh_labels
-                print '\n ********************** \n'  
+                print('\n ********************** \n')  
+                print(lh_labels)
+                print(rh_labels)
+                print('\n ********************** \n')  
         else:
-            label_names = range(conmat.shape[0])
+            label_names = list(range(conmat.shape[0]))
             node_order  = label_names
             node_colors = None
            
-        print '\n ********************** \n'   
-        print len(label_names)
-        print len(node_order)
-        print '\n ********************** \n'   
+        print('\n ********************** \n')   
+        print(len(label_names))
+        print(len(node_order))
+        print('\n ********************** \n')   
         
         self.plot_conmat_file = plot_circular_connectivity(conmat,label_names,node_colors,node_order, vmin,vmax ,nb_lines, fname)
 

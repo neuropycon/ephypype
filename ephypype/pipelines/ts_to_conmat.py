@@ -83,7 +83,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                   'sfreq', 'labels_file']), name='inputnode')
     if len(n_windows) == 0:
             
-        print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple trials $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple trials $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         
         #### spectral
         spectral = pe.Node(interface = SpectralConn(), name = "spectral")
@@ -121,8 +121,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         
     else:
         
-        print "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple windows, multiple trials  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-        print n_windows
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple windows, multiple trials  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        print(n_windows)
         
         ### win_ts
         ##### 

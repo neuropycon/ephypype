@@ -33,7 +33,7 @@ class Power(BaseInterface):
     output_spec = PowerOutputSpec
 
     def _run_interface(self, runtime):
-        print 'in Power'
+        print('in Power')
         data_file = self.inputs.data_file
         fmin = self.inputs.fmin
         fmax = self.inputs.fmax

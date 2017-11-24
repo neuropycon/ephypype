@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 setup(
     name='ephypype',
     version='0.0.1',
-    packages=find_packages(),
+    packages=['ephypype'],
     author=['David Meunier',
             'Annalisa Pascarella',
             'Dmitrii Altukhov'],
@@ -16,6 +16,5 @@ setup(
                  pipelines within nipype framework',
     lisence='BSD 3',
     install_requires=[ 'mne>=0.14',
-                      'nipype<=0.12',
-                      'configparser']
+                      'configparser','xlwt']
 )
