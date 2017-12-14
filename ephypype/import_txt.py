@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";"):
+def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", keep_electrodes=""):
 
     import os
 
@@ -66,24 +66,40 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";"):
 
     print(list_indexes)
 
-    if sep_label_name != "" :
-        keep = np.array([len(index.split(sep_label_name)) == 2 for index in list_indexes],dtype = "int")
+    if keep_electrodes != "":
         
+        list_keep_electrodes = keep_electrodes.split("-")
     else:
-        keep = np.ones(shape = np_indexes.shape)
+        list_keep_electrodes = []
+        
+    print list_keep_electrodes 
+
+    
+    if sep_label_name != "" :
+        if len(list_keep_electrodes) == 0:
+            
+            keep = np.array([len(index.split(sep_label_name)) == 2 for index in list_indexes],dtype = "int")
+        else:
+            
+            keep = np.array([len(index.split(sep_label_name)) == 2 and index in list_keep_electrodes for index in list_indexes ],dtype = "int")
+    else:
+        if len(list_keep_electrodes) == 0:
+            keep = np.ones(shape = np_indexes.shape)
+        else:
+            keep = np.array([index in list_keep_electrodes for index in list_indexes ],dtype = "int")
                         
     print(keep)
 
     print(np_indexes[keep == 1])
-
 
     elec_names_file = os.path.abspath("correct_channel_names.txt")
 
     np.savetxt(elec_names_file,np_indexes[keep == 1],fmt = "%s")
 
     ## splitting data_path
+    
     print(df.shape)
-
+    
     if df.shape[1] % sample_size != 0:
 
         print("Error, sample_size is not a multiple of ts shape")
@@ -99,7 +115,7 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";"):
 
     print(nb_epochs)
 
-    splitted_ts = np.split(df.values,nb_epochs,axis = 1)
+    splitted_ts = np.split(df.values[keep == 1,:],nb_epochs,axis = 1)
 
     print(len(splitted_ts))
 

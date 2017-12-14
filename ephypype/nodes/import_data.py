@@ -115,7 +115,10 @@ class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
 
     sep = traits.Str(";", desc="Separator between time points", usedefault=True)
 
-
+    keep_electrodes = traits.String("",
+                                   desc='keep_electrodes',
+                                   usedefault=True)
+                                   
 class ImportBrainVisionAsciiOutputSpec(TraitedSpec):
     """Output specification for ImportBrainVisionAscii"""
 
@@ -178,8 +181,12 @@ class ImportBrainVisionAscii(BaseInterface):
 
         sep = self.inputs.sep
 
+        keep_electrodes = self.inputs.keep_electrodes
+        
+        print keep_electrodes
+        
         split_txt(txt_file=txt_file, sample_size=sample_size,
-                  sep_label_name=sep_label_name, repair=repair, sep=sep)
+                  sep_label_name=sep_label_name, repair=repair, sep=sep, keep_electrodes = keep_electrodes)
 
         return runtime
 
@@ -189,7 +196,7 @@ class ImportBrainVisionAscii(BaseInterface):
 
         outputs['elec_names_file'] = os.path.abspath('correct_channel_names.txt')
 
-        outputs['splitted_ts_file'] = os.path.abspath('uplitted_ts.npy')
+        outputs['splitted_ts_file'] = os.path.abspath('splitted_ts.npy')
 
         return outputs
 
@@ -204,6 +211,10 @@ class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
     sample_size = traits.Float(desc='Size (number of time points) of all samples',
                                mandatory=True)
 
+    keep_electrodes = traits.String("",
+                                   desc='keep_electrodes',
+                                   usedefault=True)
+                    
 class ImportBrainVisionVhdrOutputSpec(TraitedSpec):
     """Output specification for ImportBrainVisionVhdr"""
 
@@ -238,23 +249,49 @@ class ImportBrainVisionVhdr(BaseInterface):
 
 
     """
-    input_spec = ImportBrainVisionAsciiInputSpec
-    output_spec = ImportBrainVisionAsciiOutputSpec
+    input_spec = ImportBrainVisionVhdrInputSpec
+    output_spec = ImportBrainVisionVhdrOutputSpec
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_txt import split_vhdr
-
+        from ephypype.import_txt import read_brainvision_vhdr
+        import numpy as np
+        
         vhdr_file = self.inputs.vhdr_file
 
         sample_size = self.inputs.sample_size
 
-        np_splitted_ts,ch_names = split_vhdr(vhdr_file=vhdr_file, sample_size=sample_size)
-
+        keep_electrodes = self.inputs.keep_electrodes
+        
+        np_splitted_ts,ch_names = read_brainvision_vhdr(vhdr_file=vhdr_file, sample_size=sample_size)
+        
+        np_ch_names = np.array(ch_names,dtype = 'str')
+            
+        if keep_electrodes != "":
+            
+            
+            print keep_electrodes
+        
+            list_keep_electrodes = keep_electrodes.split("-")
+        
+            print list_keep_electrodes
+            
+            keep = np.array([ch_name in list_keep_electrodes for ch_name in ch_names],dtype = 'int')
+            
+            print keep
+            keep_ch_names = np_ch_names[keep == 1]
+            print keep_ch_names 
+            
+            keep_np_splitted_ts = np_splitted_ts[:,keep == 1,:]
+            print keep_np_splitted_ts.shape
+            
+            np_splitted_ts = keep_np_splitted_ts
+            np_ch_names = keep_ch_names
+        
         ### saving
         ch_names_file = os.path.abspath("correct_channel_names.txt")
         
-        np.savetxt(ch_names_file,ch_names,fmt = "%s")
+        np.savetxt(ch_names_file,np_ch_names,fmt = "%s")
         
         splitted_ts_file = os.path.abspath("splitted_ts.npy")
 
