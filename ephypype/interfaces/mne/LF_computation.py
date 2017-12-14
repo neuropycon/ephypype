@@ -33,7 +33,7 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
     
-    save_mixed_src_space = traits.Bool('False', desc='if true save src space',
+    save_mixed_src_space = traits.Bool(False, desc='if true save src space',
                                        usedefault=True,
                                        mandatory=False)
 

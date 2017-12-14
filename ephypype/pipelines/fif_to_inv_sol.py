@@ -26,7 +26,8 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
                                           aseg_labels=[],
                                           noise_cov_fname=None,
                                           save_stc=False,
-                                          save_mixed_src_space=False):
+                                          save_mixed_src_space=False,
+                                          is_fixed=False):
 
     """
     Description:
@@ -138,7 +139,8 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     inv_solution.inputs.sbj_dir = sbj_dir
     inv_solution.inputs.inv_method = inv_method
     inv_solution.inputs.is_epoched = is_epoched
-
+    inv_solution.inputs.is_fixed = is_fixed
+    
     if is_epoched and events_id is not None:
         inv_solution.inputs.events_id = events_id
         inv_solution.inputs.t_min = t_min

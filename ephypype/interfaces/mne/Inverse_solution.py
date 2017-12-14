@@ -32,8 +32,13 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
 
     fwd_filename = traits.File(exists=True, desc='LF matrix', mandatory=True)
 
-    is_epoched = traits.Bool(desc='if true raw data will be epoched',
+    is_epoched = traits.Bool(False, usedefault=True,
+                             desc='if true raw data will be epoched',
                              mandatory=False)
+                             
+    is_fixed = traits.Bool(False, usedefault=True,
+                           desc='if true we use fixed orientation',
+                           mandatory=False)
 
     events_id = traits.Dict(None, desc='the id of all events to consider.',
                             mandatory=False)
@@ -62,7 +67,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
 
-    save_stc = traits.Bool('False', desc='if true save stc', usedefault=True,
+    save_stc = traits.Bool(False, desc='if true save stc', usedefault=True,
 			   mandatory=False)
 
 
@@ -129,6 +134,7 @@ class InverseSolution(BaseInterface):
         cov_filename = self.inputs.cov_filename
         fwd_filename = self.inputs.fwd_filename
         is_epoched = self.inputs.is_epoched
+        is_fixed = self.inputs.is_fixed
         events_id = self.inputs.events_id
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
@@ -145,7 +151,8 @@ class InverseSolution(BaseInterface):
                                  cov_filename, is_epoched, events_id,
                                  t_min, t_max, is_evoked,
                                  snr, inv_method, parc,
-                                 aseg, aseg_labels, save_stc)
+                                 aseg, aseg_labels, save_stc,
+                                 is_fixed)
 
         return runtime
 
