@@ -99,7 +99,7 @@ def convert_aseg_head_to_MNI(labels_aseg, mri_head_t, sbj, sbj_dir):
     # get the MRI (surface RAS) -> head matrix
     head_mri_t = invert_transform(mri_head_t)  # head->MRI (surface RAS)
     for label in labels_aseg:
-        print('sub structure {} \n'.format(label.name))
+        print(('sub structure {} \n'.format(label.name)))
         # before we go from head to MRI (surface RAS)
         aseg_coo = label.pos
         aseg_coo_MRI_RAS = apply_trans(head_mri_t, aseg_coo)
@@ -157,9 +157,9 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     import numpy as np
     import os.path as op
 
-    print('*** n labels cortex: {} ***'.format(len(labels_cortex)))
+    print(('*** n labels cortex: {} ***'.format(len(labels_cortex))))
     if labels_aseg:
-        print('*** n labels aseg: {} ***'.format(len(labels_aseg)))
+        print(('*** n labels aseg: {} ***'.format(len(labels_aseg))))
     else:
         print('*** no deep regions ***')
     label_names_file = op.abspath('label_names.txt')
@@ -207,7 +207,7 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     ROI = dict(ROI_names=ROI_names, ROI_coords=ROI_coords,
                ROI_colors=ROI_colors)
 
-    print('*** written {} labels in a pickle ***'.format(len(ROI_names)))
+    print(('*** written {} labels in a pickle ***'.format(len(ROI_names))))
     labels_file = op.abspath('labels.pkl')
     with open(labels_file, "wb") as f:
         pickle.dump(ROI, f)

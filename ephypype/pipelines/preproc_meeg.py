@@ -105,14 +105,14 @@ def create_pipeline_preproc_meeg(main_path,
     from nipype.interfaces.utility import IdentityInterface, Function
 
     import nipype
-    print(nipype.__version__)
+    print((nipype.__version__))
 
     import nipype.pipeline.engine as pe
 
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    print('*** main_path -> %s' % main_path + ' ***')
+    print(('*** main_path -> %s' % main_path + ' ***'))
 
     # define the inputs of the pipeline
     inputnode = pe.Node(IdentityInterface(fields=['raw_file', 'subject_id']),

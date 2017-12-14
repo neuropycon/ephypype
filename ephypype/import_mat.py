@@ -16,11 +16,11 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
 
     mat = loadmat(mat_file)
 
-    print(mat[data_field_name].shape)
+    print((mat[data_field_name].shape))
 
     raw_data = np.array(mat[data_field_name], dtype='f')
     print(raw_data)
-    print(raw_data.shape)
+    print((raw_data.shape))
 
     ts_file = os.path.abspath(basename + '.npy')
     np.save(ts_file, raw_data)
@@ -66,7 +66,7 @@ def import_tsmat_to_ts(tsmat_file, data_field_name = 'F', good_channels_field_na
     mat = loadmat(tsmat_file)
 
     raw_data = np.array(mat[data_field_name],dtype = "f")
-    print(raw_data.shape)
+    print((raw_data.shape))
 
     print([key for key in list(mat.keys())])
     
@@ -74,23 +74,23 @@ def import_tsmat_to_ts(tsmat_file, data_field_name = 'F', good_channels_field_na
         
         print("Using good channels to sort channels")
         good_channels = np.array(mat[good_channels_field_name])
-        print(good_channels.shape)
+        print((good_channels.shape))
         
         
         good_channels = good_channels.reshape(good_channels.shape[0])
-        print(good_channels.shape)
+        print((good_channels.shape))
         
         
         good_data = raw_data[good_channels == 1,:]
         
-        print(good_data.shape)
+        print((good_data.shape))
         
     else:
         print("No channel sorting") 
         good_data = raw_data
         
     #### save data
-    print(good_data.shape)
+    print((good_data.shape))
     
     ts_file = os.path.abspath("tsmat.npy")
     np.save(ts_file,good_data)
@@ -121,18 +121,18 @@ def import_amplmat_to_ts(tsmat_file):
     #print field_name
 
     raw_data = np.array(mat['F'],dtype = "f")
-    print(raw_data.shape)
+    print((raw_data.shape))
 
     good_channels = np.array(mat['ChannelFlag'])
 
     good_channels = good_channels.reshape(good_channels.shape[0])
 
     print("Good channels:")
-    print(good_channels.shape)
+    print((good_channels.shape))
 
     good_data = raw_data[good_channels == 1,:]
 
-    print(good_data.shape)
+    print((good_data.shape))
 
     #### save data 
     ts_file = os.path.abspath("amplmat.npy")
@@ -165,11 +165,11 @@ def import_mat_to_ts(mat_file,orig_channel_names_file,orig_channel_coords_file):
 #    field_name = basename.split('_')[1]
     print('************************************ \n')
     print(field_name)
-    print(mat[field_name].shape)
+    print((mat[field_name].shape))
 
 
     raw_data = np.array(mat[field_name],dtype = "f")
-    print(raw_data.shape)
+    print((raw_data.shape))
 
     #### load electrode names
     elec_names = [line.strip() for line in open(orig_channel_names_file)]
@@ -188,8 +188,8 @@ def import_mat_to_ts(mat_file,orig_channel_names_file,orig_channel_coords_file):
 
     correct_elec_loc = np.roll(elec_loc[select_sensors,:],shift = 2,axis = 1)
 
-    print(correct_elec_loc[0,:])
-    print(correct_elec_loc[7,:])
+    print((correct_elec_loc[0,:]))
+    print((correct_elec_loc[7,:]))
         
         
     channel_coords_file = os.path.abspath("correct_channel_coords.txt")
@@ -203,7 +203,7 @@ def import_mat_to_ts(mat_file,orig_channel_names_file,orig_channel_coords_file):
 
     ### save data (reorganise dimensions)
     new_data = raw_data[select_sensors,:].swapaxes(0,2).swapaxes(1,2)
-    print(new_data.shape)
+    print((new_data.shape))
 
 
     ts_file = os.path.abspath(basename +".npy")
@@ -225,7 +225,7 @@ def concat_ts(all_ts_files):
         ts = np.load(ts_file)
         
         #print "all_ts: " 
-        print(ts.shape)
+        print((ts.shape))
         
         if i == 0:
             concat_ts = ts.copy()
@@ -234,7 +234,7 @@ def concat_ts(all_ts_files):
             concat_ts = np.concatenate((concat_ts,ts),axis = 0)
             #print concat_ts.shape
 
-    print(concat_ts.shape)
+    print((concat_ts.shape))
 
     ### saving time series
     concat_ts_file = os.path.abspath("concat_ts.npy")

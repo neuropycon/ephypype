@@ -51,7 +51,7 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", kee
                 #print df_data
              
         print(df_data)
-        print(np.array(df_data).shape)
+        print((np.array(df_data).shape))
         
         df = pd.DataFrame(np.array(df_data),index = elec_names)
                      
@@ -72,7 +72,7 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", kee
     else:
         list_keep_electrodes = []
         
-    print list_keep_electrodes 
+    print(list_keep_electrodes) 
 
     
     if sep_label_name != "" :
@@ -90,7 +90,7 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", kee
                         
     print(keep)
 
-    print(np_indexes[keep == 1])
+    print((np_indexes[keep == 1]))
 
     elec_names_file = os.path.abspath("correct_channel_names.txt")
 
@@ -98,7 +98,7 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", kee
 
     ## splitting data_path
     
-    print(df.shape)
+    print((df.shape))
     
     if df.shape[1] % sample_size != 0:
 
@@ -117,13 +117,13 @@ def split_txt(sample_size,txt_file,sep_label_name, repair = True, sep = ";", kee
 
     splitted_ts = np.split(df.values[keep == 1,:],nb_epochs,axis = 1)
 
-    print(len(splitted_ts))
+    print((len(splitted_ts)))
 
-    print(splitted_ts[0])
+    print((splitted_ts[0]))
 
     np_splitted_ts = np.array(splitted_ts,dtype = 'float')
 
-    print(np_splitted_ts.shape)
+    print((np_splitted_ts.shape))
 
     splitted_ts_file = os.path.abspath("splitted_ts.npy")
 
@@ -139,12 +139,12 @@ def read_brainvision_vhdr(vhdr_file,sample_size):
     
     data_raw = mne.io.read_raw_brainvision(vhdr_file, verbose = True)
     
-    print(data_raw.ch_names)
+    print((data_raw.ch_names))
     
     
     data,times = data_raw[:]
     
-    print(data.shape)
+    print((data.shape))
     
     
     nb_epochs = data.shape[1] / sample_size
@@ -153,12 +153,12 @@ def read_brainvision_vhdr(vhdr_file,sample_size):
 
     splitted_ts = np.split(data,nb_epochs,axis = 1)
 
-    print(len(splitted_ts))
+    print((len(splitted_ts)))
 
-    print(splitted_ts[0])
+    print((splitted_ts[0]))
 
     np_splitted_ts = np.array(splitted_ts,dtype = 'float')
 
-    print(np_splitted_ts.shape)
+    print((np_splitted_ts.shape))
     
     return np_splitted_ts,data_raw.ch_names

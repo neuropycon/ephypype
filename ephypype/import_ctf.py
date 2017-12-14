@@ -102,7 +102,7 @@ def compute_ROI_coordinates():
                 ROI_names.append(correct_label)
                 
                 
-                print(split_line[1].strip().split(' '))
+                print((split_line[1].strip().split(' ')))
                 
                 vertex_indexes = np.array(list(map(int,split_line[1].strip().split(' '))))
                 
@@ -112,7 +112,7 @@ def compute_ROI_coordinates():
                 
                 print(np_vertex_indexes)
                 
-                print(coord_vertices_victor[np_vertex_indexes])
+                print((coord_vertices_victor[np_vertex_indexes]))
                 
                 mean_coord = np.mean(coord_vertices_victor[np_vertex_indexes,:],axis = 0)
                 
@@ -123,14 +123,14 @@ def compute_ROI_coordinates():
             
         print(ROI_names)
         
-        print(len(ROI_names))
+        print((len(ROI_names)))
         
         
         np_ROI_mean_coords = np.array(ROI_mean_coords)
         
         print(np_ROI_mean_coords)
         
-        print(np_ROI_mean_coords.shape)
+        print((np_ROI_mean_coords.shape))
         
         np.savetxt(parv.MEG_ROI_coords_file,np_ROI_mean_coords, fmt = "%f")
         

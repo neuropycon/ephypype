@@ -21,7 +21,7 @@ def format_electrodes_xls(data_path,xls_electrodes_file):
     
     animal_id = 0
     
-    print(df.shape)
+    print((df.shape))
     
     for i in df.index:
     

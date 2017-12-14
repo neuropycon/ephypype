@@ -59,11 +59,11 @@ class SplitWindows(BaseInterface):
         
         np_ts = np.load(self.inputs.ts_file)
         
-        print(np_ts.shape)
+        print((np_ts.shape))
 
         self.win_ts_files = []
         
-        print(self.inputs.n_windows)
+        print((self.inputs.n_windows))
         
         for i,n_win in enumerate(self.inputs.n_windows):
             
@@ -88,7 +88,7 @@ class SplitWindows(BaseInterface):
                 
                 #win_ts = np.array([np_ts[trial_index,:,n_win[0]:n_win[1]]] for trial_index in range(np_ts.shape[0]))
                 
-                print(win_ts.shape)
+                print((win_ts.shape))
         
                 win_ts_file = os.path.abspath("win_ts_{}.npy".format(i))
 
@@ -97,12 +97,12 @@ class SplitWindows(BaseInterface):
                 self.win_ts_files.append(win_ts_file)
                 
             else:
-                print("Warning, should be : 0 <= {} and {} <= {}".format(n_win[0],n_win[1],np_ts.shape[2]))
+                print(("Warning, should be : 0 <= {} and {} <= {}".format(n_win[0],n_win[1],np_ts.shape[2])))
                 0/0
                 
             
                    
-        print("Generated {} win files".format(len(self.win_ts_files)))
+        print(("Generated {} win files".format(len(self.win_ts_files))))
         
         return runtime
         

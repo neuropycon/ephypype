@@ -56,13 +56,13 @@ from itertools import product,combinations,permutations
 def plot_tab_circular_connectivity(list_list_conmat,all_elec_labels,plot_filename,coh_low_thresh = 0.0, coh_high_thresh = 1.0, color_bar = 'gist_rainbow', column_labels = [], row_labels = []):
     
     nb_lines = len(list_list_conmat)
-    print nb_lines
+    print(nb_lines)
     
     
-    print len(list_list_conmat[0])
+    print(len(list_list_conmat[0]))
     
     if len(list_list_conmat)!= 1:
-        for i,j in combinations(range(nb_lines),2):        
+        for i,j in combinations(list(range(nb_lines)),2):        
             assert len(list_list_conmat[i]) == len(list_list_conmat[j]), "error, not all the same length {} != {}".format(len(list_list_conmat[i]),len(list_list_conmat[j]))
             
     nb_cols = len(list_list_conmat[0])
@@ -91,11 +91,11 @@ def plot_tab_circular_connectivity(list_list_conmat,all_elec_labels,plot_filenam
     
     for index_sess,list_conmat in enumerate(list_list_conmat):
         
-        print len(list_conmat)
+        print(len(list_conmat))
         
         for index_win, np_all_mean_con_mats in enumerate(list_conmat):
         
-            print np_all_mean_con_mats.shape
+            print(np_all_mean_con_mats.shape)
             
             if index_win == len(list_conmat)-1:
                 fig, ax = plot_connectivity_circle(np_all_mean_con_mats, all_elec_labels, textcolor = "black", facecolor = "white",n_lines=None,  node_angles= all_node_angles, fontsize_names = 15, colorbar_size = 0.5, show = False,colormap = color_bar, vmin = coh_low_thresh, vmax = coh_high_thresh,fig = fig, subplot = (nb_lines,nb_cols,1+index_win+nb_cols*index_sess))
@@ -111,7 +111,7 @@ def plot_tab_circular_connectivity(list_list_conmat,all_elec_labels,plot_filenam
                 ax.set_title(column_labels[index_win],fontdict = {'fontsize':25})
             
     ### saving
-    print plot_filename
+    print(plot_filename)
 
     fig.savefig(plot_filename, facecolor='white')
 

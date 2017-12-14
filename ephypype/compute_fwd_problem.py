@@ -29,10 +29,10 @@ def create_bem_sol(sbj_dir, sbj_id):
         # performed by MNE python functions mne.bem.make_watershed_bem
         if not (op.isfile(sbj_inner_skull_fname) or
                 op.isfile(inner_skull_fname)):
-            print(inner_skull_fname + '---> FILE NOT FOUND!!!---> BEM computed')
+            print((inner_skull_fname + '---> FILE NOT FOUND!!!---> BEM computed'))
             make_watershed_bem(sbj_id, sbj_dir, overwrite=True)
         else:
-            print('\n*** inner skull %s surface exists!!!\n' % inner_skull_fname)
+            print(('\n*** inner skull %s surface exists!!!\n' % inner_skull_fname))
 
         # Create a BEM model for a subject
         surfaces = mne.make_bem_model(sbj_id, ico=4, conductivity=[0.3],
@@ -45,17 +45,17 @@ def create_bem_sol(sbj_dir, sbj_id):
         bem = mne.make_bem_solution(surfaces)
         mne.write_bem_solution(bem_fname, bem)
 
-        print('\n*** BEM solution file %s written ***\n' % bem_fname)
+        print(('\n*** BEM solution file %s written ***\n' % bem_fname))
 
         # add BEM figures to a Report
         report.add_bem_to_section(subject=sbj_id, subjects_dir=sbj_dir)
         report_filename = op.join(bem_dir, "BEM_report.html")
-        print('\n*** REPORT file %s written ***\n' % report_filename)
+        print(('\n*** REPORT file %s written ***\n' % report_filename))
         print(report_filename)
         report.save(report_filename, open_browser=False, overwrite=True)
     else:
         bem = bem_fname
-        print('\n*** BEM solution file %s exists!!! ***\n' % bem_fname)
+        print(('\n*** BEM solution file %s exists!!! ***\n' % bem_fname))
 
     return bem
 
@@ -77,9 +77,9 @@ def create_src_space(sbj_dir, sbj_id, spacing):
                                      n_jobs=2)
 
         mne.write_source_spaces(src_fname, src, overwrite=True)
-        print('\n*** source space file %s written ***\n' % src_fname)
+        print(('\n*** source space file %s written ***\n' % src_fname))
     else:
-        print('\n*** source space file %s exists!!!\n' % src_fname)
+        print(('\n*** source space file %s exists!!!\n' % src_fname))
         src = mne.read_source_spaces(src_fname)
 
     return src
@@ -114,7 +114,7 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
     
         if save_mixed_src_space:
             mne.write_source_spaces(src_aseg_fname, src, overwrite=True)
-            print('\n*** source space file {} written ***\n'.format(src_aseg_fname))
+            print(('\n*** source space file {} written ***\n'.format(src_aseg_fname)))
             
         # Export source positions to nift file
         nii_fname = op.join(bem_dir, '%s-%s-aseg-src.nii' % (sbj_id, spacing))
@@ -175,4 +175,4 @@ def compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
                                     n_jobs=2)
 
     mne.write_forward_solution(fwd_filename, fwd, overwrite=True)
-    print('\n*** FWD file %s written!!!\n' % fwd_filename)
+    print(('\n*** FWD file %s written!!!\n' % fwd_filename))

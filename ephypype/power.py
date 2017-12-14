@@ -84,7 +84,7 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
-    print('src data dim: {}'.format(src_data.shape))
+    print(('src data dim: {}'.format(src_data.shape)))
     '''    
     psds, freqs = psd_array_welch(src_data, sfreq, fmin=fmin, fmax=fmax,
                                   n_fft=n_fft, n_overlap=n_overlap,
@@ -109,16 +109,16 @@ def compute_mean_band_psd(psds_file, freq_bands):
     import numpy as np
 
     npzfile = np.load(psds_file)
-    print('the .npz file contain {} \n'.format(npzfile.files))
+    print(('the .npz file contain {} \n'.format(npzfile.files)))
 
     # is a matrix with dim n_channels(n_voxel) x n_freqs
     psds = npzfile['psds']
-    print('psds is a matrix {} \n'.format(psds.shape))
+    print(('psds is a matrix {} \n'.format(psds.shape)))
 
     # list of frequencies in which psds was computed;
     # its length = columns of psds
     freqs = npzfile['freqs']
-    print('freqs contains {} frequencies \n'.format(len(freqs)))
+    print(('freqs contains {} frequencies \n'.format(len(freqs))))
 
     n_row, _ = psds.shape
     n_fr = len(freq_bands)
@@ -128,7 +128,7 @@ def compute_mean_band_psd(psds_file, freq_bands):
     for f in range(n_fr):
         min_fr = freq_bands[f][0]
         max_fr = freq_bands[f][1]
-        print('*** frequency band [{}, {}] ***\n'.format(min_fr, max_fr))
+        print(('*** frequency band [{}, {}] ***\n'.format(min_fr, max_fr)))
         M_px[:, f] = np.mean(psds[:, (freqs >= min_fr)*(freqs <= max_fr)], 1)
 
     psds_mean_fname = _save_M_px(psds_file, M_px)
@@ -147,7 +147,7 @@ def _save_M_px(psds_file, M_px):
 
     psds_mean_fname = basename + '-mean_band.npy'
     psds_mean_fname = os.path.abspath(psds_mean_fname)
-    print(M_px.shape)
+    print((M_px.shape))
     np.save(psds_mean_fname, M_px)
 
     return psds_mean_fname
@@ -164,8 +164,8 @@ def _save_psd(data_fname, psds, freqs):
 
     psds_fname = basename + '-psds.npz'
     psds_fname = os.path.abspath(psds_fname)
-    print(psds.shape)
-    print('*** save {} ***'.format(psds_fname))
+    print((psds.shape))
+    print(('*** save {} ***'.format(psds_fname)))
     np.savez(psds_fname, psds=psds, freqs=freqs)
 
     return psds_fname
@@ -199,5 +199,5 @@ def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
     ax.set(title='{} PSD'.format(method), xlabel='Frequency',
            ylabel='Power Spectral Density (dB)')
 
-    print('*** save {} ***'.format(psds_img_fname))
+    print(('*** save {} ***'.format(psds_img_fname)))
     plt.savefig(psds_img_fname)
