@@ -26,7 +26,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          n_windows=[],
                                                          mode='multitaper',
                                                          is_sensor_space=True,
-                                                         epoch_window_length=-1.0):
+                                                         epoch_window_length=None):
     
     """
     Description:
