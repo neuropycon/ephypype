@@ -77,15 +77,15 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     """
     import numpy as np
 
-    from mne.time_frequency import psd_array_welch
+    # from mne.time_frequency import psd_array_welch
     from scipy.signal import welch
-    
+
     src_data = np.load(data_fname)
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
     print(('src data dim: {}'.format(src_data.shape)))
-    '''    
+    '''
     psds, freqs = psd_array_welch(src_data, sfreq, fmin=fmin, fmax=fmax,
                                   n_fft=n_fft, n_overlap=n_overlap,
                                   n_per_seg=None, n_jobs=1, verbose=None)
