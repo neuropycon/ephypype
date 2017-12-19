@@ -10,10 +10,11 @@ Neuropycon package of functions for electrophysiology analysis, can be used from
 graphpype and nipype
 
 
-Documentation
-=============
+..
+    Documentation
+    =============
 
-https://annapasca.github.io/neuropype/ephypype/ephypype.html
+    https://annapasca.github.io/neuropype/ephypype/ephypype.html
 
 
 Installation
@@ -22,7 +23,7 @@ Installation
 Requirements
 ------------
 
-Up to now ephypype works only with **python2**; python3 compatibility is planned for later releases
+ephypype works both with **python2** and **python3**
 
 * numpy
 * scikit-learn
@@ -46,8 +47,8 @@ We also recommend to install the  development master version of |MNE install| (s
 .. note:: If you have Anaconda it is possible to create an environment using python2 by the command
 	``conda create -n py27 python=2.7 ipykernel``
 
-.. warning:: We also recommend to use the nipype version 0.12
-	``pip install nipype==0.12``
+.. warning:: We also recommend to use the nipype version 0.13
+	``pip install nipype==0.13``
    
 Install package
 ---------------
@@ -59,7 +60,7 @@ Install ephypype
 
 .. code-block:: bash
 
-    git clone https://github.com/annapasca/ephypype.git
+    git clone https://github.com/neuropycon/ephypype.git
     cd ephypype
     pip install .
     cd ..
@@ -72,7 +73,7 @@ Install graphpype
 
 .. code-block:: bash 
 
-    git clone https://github.com/davidmeunier79/graphpype.git
+    git clone https://github.com/neuropycon/graphpype.git
     cd graphpype
     pip install .
     cd ..
@@ -81,7 +82,7 @@ see |README_graph| for more information.
 
 .. |README_graph| raw:: html
 
-   <a href="http://davidmeunier79.github.io/graphpype/includeme.html" target="_blank">README</a>
+   <a href="https://github.com/neuropycon/graphpype/blob/master/README.md" target="_blank">README</a>
 
 
 .. _mne_install:
@@ -109,7 +110,6 @@ Install dependencies with conda
     conda install pandas
     conda install ipywidgets
     conda install matplotlib
-    conda install 'pyqt<5'
 
 
 Software
