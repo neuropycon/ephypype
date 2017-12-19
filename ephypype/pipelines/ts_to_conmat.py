@@ -17,8 +17,7 @@ from ephypype.nodes.ts_tools import SplitWindows
 ### to modify and add in "Nodes"
 #from ephypype.spectral import  filter_adj_plot_mat
 
-def create_pipeline_time_series_to_spectral_connectivity(main_path, 
-                                                         sfreq,
+def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          pipeline_name='ts_to_conmat',
                                                          con_method='coh',
                                                          multi_con=False,
@@ -80,7 +79,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
     pipeline.base_dir = main_path
         
 #    inputnode = pe.Node(IdentityInterface(fields=['ts_file','freq_band','sfreq','labels_file','epoch_window_length','is_sensor_space','index']), name='inputnode')
-    inputnode = pe.Node(IdentityInterface(fields=['ts_file', 'freq_band',
+    inputnode = pe.Node(IdentityInterface(fields=['ts_file', 'sfreq',
+                                                  'freq_band',
                                                   'labels_file']), name='inputnode')
     if len(n_windows) == 0:
             
@@ -91,12 +91,13 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         
         spectral.inputs.con_method = con_method  
         spectral.inputs.export_to_matlab = export_to_matlab
-        spectral.inputs.sfreq = sfreq
+#        spectral.inputs.sfreq = sfreq
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         if epoch_window_length:
             spectral.inputs.epoch_window_length = epoch_window_length
         
+        pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(inputnode, 'ts_file', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
 #        pipeline.connect(inputnode, 'epoch_window_length', spectral, 'epoch_window_length')
