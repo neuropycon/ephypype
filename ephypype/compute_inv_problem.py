@@ -242,8 +242,8 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
         epochs = read_epochs(raw_filename)
         info = epochs.info
     else:
-        raw = read_raw_fif(raw_filename)
-        raw.set_eeg_reference()
+        raw = read_raw_fif(raw_filename, preload=True)
+#        raw.set_eeg_reference()
         info = raw.info
 
     subj_path, basename, ext = split_f(raw_filename)
@@ -262,10 +262,8 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     lambda2 = 1.0 / snr ** 2
 
     # compute inverse operator
-    
     print('\n*** COMPUTE INV OP ***\n')
     if is_fixed or aseg:
-        
         loose = None
         depth = None
         pick_ori = None
