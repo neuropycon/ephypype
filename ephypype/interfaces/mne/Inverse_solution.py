@@ -35,7 +35,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     is_epoched = traits.Bool(False, usedefault=True,
                              desc='if true raw data will be epoched',
                              mandatory=False)
-                             
+
     is_fixed = traits.Bool(False, usedefault=True,
                            desc='if true we use fixed orientation',
                            mandatory=False)
@@ -108,6 +108,8 @@ class InverseSolution(BaseInterface):
         is_evoked: bool
             if True the raw data will be averaged according to the events
             contained in the dict events_id
+        is_fixed : bool
+            if True we use fixed orientation
         inv_method : str
             the inverse method to use; possible choices: MNE, dSPM, sLORETA
         snr : float
