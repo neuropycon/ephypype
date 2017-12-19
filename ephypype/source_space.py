@@ -56,13 +56,13 @@ def convert_cortex_MRI_to_MNI(labels_cortex, vertno_left, vertno_right,
     for label in labels_cortex:
         if label.hemi == 'lh':
             # from MRI (surface RAS) -> MNI
-            ROI_coo_MNI, _ = mne.vertex_to_mni(label.vertices, 0, sbj, sbj_dir)
+            ROI_coo_MNI = mne.vertex_to_mni(label.vertices, 0, sbj, sbj_dir)
 
             # get the vertices of the ROI used in the src space (index points
             # to dense src space of FS segmentation)
             this_vertno = np.intersect1d(vertno_left, label.vertices)
         elif label.hemi == 'rh':
-            ROI_coo_MNI, _ = mne.vertex_to_mni(label.vertices, 1, sbj, sbj_dir)
+            ROI_coo_MNI = mne.vertex_to_mni(label.vertices, 1, sbj, sbj_dir)
 
             this_vertno = np.intersect1d(vertno_right, label.vertices)
 
@@ -73,11 +73,11 @@ def convert_cortex_MRI_to_MNI(labels_cortex, vertno_left, vertno_right,
         ROI_name.append(label.name)
         ROI_color.append(label.color)
 
-    nvert_ROI = [len(vn) for vn in ROI_MNI_coords]
-
-    if np.sum(nvert_ROI) != (len(vertno_left) + len(vertno_right)):
-        raise RuntimeError('number of src space vertices must be equal to \
-                            the total number of ROI vertices')
+    # TODO check!
+#    nvert_ROI = [len(vn) for vn in ROI_MNI_coords]
+#    if np.sum(nvert_ROI) != (len(vertno_left) + len(vertno_right)):
+#        raise RuntimeError('number of src space vertices must be equal to \
+#                            the total number of ROI vertices')
 
     ROI_MNI = dict(ROI_name=ROI_name, ROI_MNI_coords=ROI_MNI_coords,
                    ROI_color=ROI_color)
@@ -164,9 +164,10 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
         print('*** no deep regions ***')
     label_names_file = op.abspath('label_names.txt')
     label_coords_file = op.abspath('label_coords.txt')
+    label_centroid_file = op.abspath('label_centroid.txt')
 
     label_names = list()
-    label_coords = list()
+    label_centroids = list()
 
     vertno_left = fwd['src'][0]['vertno']
     vertno_right = fwd['src'][1]['vertno']
@@ -198,8 +199,13 @@ def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     # ROI centroids
     ROI_coords = ROI_cortex_MNI_coords + ROI_aseg_MNI_coords
     for coo in ROI_coords:
-        label_coords.append(np.mean(coo, axis=0))
-    np.savetxt(label_coords_file, np.array(label_coords, dtype=float),
+        label_centroids.append(np.mean(coo, axis=0))
+    np.savetxt(label_centroid_file, np.array(label_centroids, dtype=float),
+               fmt="%f %f %f")
+
+    # ROI MNI coords
+    label_coo_MNI_matrix = np.vstack(ROI_coords)
+    np.savetxt(label_coords_file, np.array(label_coo_MNI_matrix, dtype=float),
                fmt="%f %f %f")
 
     ROI_colors = ROI_cortex_color + ROI_aseg_color
