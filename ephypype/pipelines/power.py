@@ -109,7 +109,7 @@ def create_pipeline_power_src_space(main_path, sfreq, freq_bands,
     Inputs (inputnode):
 
         src_file : str
-            path to source reconstruction matric (.npy format)
+            path to source reconstruction matrix (.npy format)
 
     Outputs:
 
