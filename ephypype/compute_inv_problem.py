@@ -263,8 +263,12 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     # compute inverse operator
     print('\n*** COMPUTE INV OP ***\n')
-    if is_fixed or aseg:
+    if is_fixed:
         loose = None
+        depth = None
+        pick_ori = None
+    elif aseg:
+        loose = 1
         depth = None
         pick_ori = None
     else:
