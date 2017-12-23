@@ -12,10 +12,13 @@ https://neuropycon.github.io/neuropycon_doc/index.html
 # Installation
 
 ## Requirements
-Up to now ephypype works only with python2; python3 compatibility is planned for later releases
+ephypype works both with **python2** and **python3**
 
 * numpy
 * scikit-learn
+* ipywidgets
+* matplotlib
+* pandas
 * mne
 * nipype
 * graphpype
