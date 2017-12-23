@@ -38,7 +38,7 @@ def convert_ds_to_raw_fif(ds_file):
         raw = read_raw_ctf(ds_file)
         raw.save(raw_fif_file)
     else:
-        print('*** RAW FIF file %s exists!!!' % raw_fif_file)
+        print(('*** RAW FIF file %s exists!!!' % raw_fif_file))
         
     return raw_fif_file
 
@@ -85,11 +85,11 @@ def compute_ROI_coordinates():
         
         lines = f.readlines()
         
-        print lines
+        print(lines)
                 
         for i,line in enumerate(lines[1:]):
             
-            print line
+            print(line)
             
             split_line = line.strip().split(':')
             
@@ -102,35 +102,35 @@ def compute_ROI_coordinates():
                 ROI_names.append(correct_label)
                 
                 
-                print split_line[1].strip().split(' ')
+                print((split_line[1].strip().split(' ')))
                 
-                vertex_indexes = np.array(map(int,split_line[1].strip().split(' ')))
+                vertex_indexes = np.array(list(map(int,split_line[1].strip().split(' '))))
                 
-                print vertex_indexes
+                print(vertex_indexes)
                 
                 np_vertex_indexes = vertex_indexes -1 
                 
-                print np_vertex_indexes
+                print(np_vertex_indexes)
                 
-                print coord_vertices_victor[np_vertex_indexes]
+                print((coord_vertices_victor[np_vertex_indexes]))
                 
                 mean_coord = np.mean(coord_vertices_victor[np_vertex_indexes,:],axis = 0)
                 
-                print mean_coord
+                print(mean_coord)
                 
                 ROI_mean_coords.append(mean_coord)
                 #np_vertice_indexes
             
-        print ROI_names
+        print(ROI_names)
         
-        print len(ROI_names)
+        print((len(ROI_names)))
         
         
         np_ROI_mean_coords = np.array(ROI_mean_coords)
         
-        print np_ROI_mean_coords
+        print(np_ROI_mean_coords)
         
-        print np_ROI_mean_coords.shape
+        print((np_ROI_mean_coords.shape))
         
         np.savetxt(parv.MEG_ROI_coords_file,np_ROI_mean_coords, fmt = "%f")
         
@@ -177,7 +177,7 @@ def test_import_data():
 		#print(raw.ch_names)
 		#0/0
 
-		print(len(raw.ch_names))
+		print((len(raw.ch_names)))
 
 		select_electrodes = np.array([ch_name[0] == 'M' for ch_name in raw.ch_names],dtype = 'bool')
 
@@ -187,14 +187,14 @@ def test_import_data():
 		#data,times = raw[:,start:stop]
 
 		data,times = raw[:,:]
-		print(data.shape)
+		print((data.shape))
 
 		#0/0
 		electrode_data = data[select_electrodes,]
 
 		#electrode_data = data[np.where(select_electrodes == True),]
 
-		print(electrode_data.shape)
+		print((electrode_data.shape))
 
 		basename = os.path.splitext(fif_f)[0]
 

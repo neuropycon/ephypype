@@ -21,7 +21,7 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
-        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors)
+        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors, fir_design='firwin')
         filt_str = '_filt'
 
     if down_sfreq:
@@ -33,7 +33,7 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     return savename
 
 
-def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components):
+def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution"""
 
     import os
@@ -59,7 +59,7 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components):
     # We pass a float value between 0 and 1 to select n_components based on the
     # percentage of variance explained by the PCA components.
 
-    reject = dict(mag=1e-1, grad=1e-9)
+    # reject = dict(mag=1e-1, grad=1e-9)
     flat = dict(mag=1e-13, grad=1e-13)
 
     ica = ICA(n_components=n_components, method='fastica', max_iter=500)
@@ -122,9 +122,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components):
     ica_sol_file = os.path.abspath(basename + '_ica_solution.fif')
 
     ica.save(ica_sol_file)
-    # raw_ica = ica.apply(raw)
+    raw_ica = ica.apply(raw)
     raw_ica_file = os.path.abspath(basename + '_ica' + ext)
-    raw.save(raw_ica_file)
+    raw_ica.save(raw_ica_file)
 
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
@@ -143,7 +143,7 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     subj_path, basename, ext = split_f(fif_file)
     (data_path,  sbj_name) = os.path.split(subj_path)
 
-    print('*** SBJ %s' % subject_id + '***')
+    print(('*** SBJ %s' % subject_id + '***'))
 
     # Read raw
     current_dir = os.getcwd()
@@ -154,7 +154,7 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)):  
         raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
       
-    print('*** raw_ica_file %s' % raw_ica_file + '***')
+    print(('*** raw_ica_file %s' % raw_ica_file + '***'))
     raw = mne.io.read_raw_fif(raw_ica_file, preload=True)
 
     # load ICA
@@ -166,33 +166,31 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
       
     if os.path.exists(ica_sol_file) is False:
-        print('$$$ Warning, no %s found' % ica_sol_file)
+        print(('$$$ Warning, no %s found' % ica_sol_file))
         sys.exit()
     else:
         ica = read_ica(ica_sol_file)
 
-    print('\n *** ica.exclude before set components= ', ica.exclude)
+    print(('\n *** ica.exclude before set components= ', ica.exclude))
     if subject_id in n_comp_exclude:
-        print('*** ICA to be excluded for sbj %s ' % subject_id)
-        print(' ' + str(n_comp_exclude[subject_id]) + '***')
+        print(('*** ICA to be excluded for sbj %s ' % subject_id))
+        print((' ' + str(n_comp_exclude[subject_id]) + '***'))
         session_dict = n_comp_exclude[subject_id]
         session_names = list(session_dict.keys())
 
         componentes = []
         for s in session_names:
-            # if basename.find(s) > -1:
-	    componentes = session_dict[s]
-            #    break
-
+            componentes = session_dict[s]
+            
         if len(componentes) == 0:
             print('\n no ICA to be excluded \n')
         else:
-            print('\n *** ICA to be excluded for session %s ' % s + \
-                    ' ' + str(componentes) + ' *** \n')
+            print(('\n *** ICA to be excluded for session %s ' % s + \
+                    ' ' + str(componentes) + ' *** \n'))
 
     ica.exclude = componentes
 
-    print('\n *** ica.exclude after set components = ', ica.exclude)
+    print(('\n *** ica.exclude after set components = ', ica.exclude))
 
 
     # apply ICA to raw data 
@@ -228,17 +226,13 @@ def get_epochs_info(raw_fname):
 
 
 def get_raw_sfreq(raw_fname):
-    from mne.io import Raw
+    import mne
 
-    raw = Raw(raw_fname, preload=True)
-    return raw.info['sfreq']
-
-
-# def get_epochs_info(raw_fname):
-#    from mne.io import Raw
-#
-#    raw = Raw(raw_fname, preload=True)
-#    return raw.info['epochs']
+    try:
+        data = mne.io.read_raw_fif(raw_fname)
+    except:
+        data = mne.read_epochs(raw_fname)
+    return data.info['sfreq']
 
 
 def create_reject_dict(raw_info):
@@ -320,12 +314,12 @@ def create_ts(raw_fname):
 
     data, times = raw[select_sensors, :]
 
-    print(data.shape)
+    print((data.shape))
     
     ts_file = os.path.abspath(basename + '.npy')
     np.save(ts_file, data)
-    print('\n *** TS FILE ' + ts_file + '*** \n')
-    print('*** raw.info[sfreq] = ' + str(raw.info['sfreq']))
+    print(('\n *** TS FILE ' + ts_file + '*** \n'))
+    print(('*** raw.info[sfreq] = ' + str(raw.info['sfreq'])))
         
     return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
 
@@ -438,7 +432,7 @@ def generate_report(raw, ica, subj_name, basename,
                                section='ICA - muscles')
 
     report_filename = os.path.join(basename + "-report.html")
-    print('******* ' + report_filename)
+    print(('******* ' + report_filename))
     report.save(report_filename, open_browser=False, overwrite=True)
     return report_filename
 

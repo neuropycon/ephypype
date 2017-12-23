@@ -32,8 +32,13 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
 
     fwd_filename = traits.File(exists=True, desc='LF matrix', mandatory=True)
 
-    is_epoched = traits.Bool(desc='if true raw data will be epoched',
+    is_epoched = traits.Bool(False, usedefault=True,
+                             desc='if true raw data will be epoched',
                              mandatory=False)
+
+    is_fixed = traits.Bool(False, usedefault=True,
+                           desc='if true we use fixed orientation',
+                           mandatory=False)
 
     events_id = traits.Dict(None, desc='the id of all events to consider.',
                             mandatory=False)
@@ -62,7 +67,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
 
-    save_stc = traits.Bool('False', desc='if true save stc', usedefault=True,
+    save_stc = traits.Bool(False, desc='if true save stc', usedefault=True,
 			   mandatory=False)
 
 
@@ -103,6 +108,8 @@ class InverseSolution(BaseInterface):
         is_evoked: bool
             if True the raw data will be averaged according to the events
             contained in the dict events_id
+        is_fixed : bool
+            if True we use fixed orientation
         inv_method : str
             the inverse method to use; possible choices: MNE, dSPM, sLORETA
         snr : float
@@ -129,6 +136,7 @@ class InverseSolution(BaseInterface):
         cov_filename = self.inputs.cov_filename
         fwd_filename = self.inputs.fwd_filename
         is_epoched = self.inputs.is_epoched
+        is_fixed = self.inputs.is_fixed
         events_id = self.inputs.events_id
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
@@ -145,7 +153,8 @@ class InverseSolution(BaseInterface):
                                  cov_filename, is_epoched, events_id,
                                  t_min, t_max, is_evoked,
                                  snr, inv_method, parc,
-                                 aseg, aseg_labels, save_stc)
+                                 aseg, aseg_labels, save_stc,
+                                 is_fixed)
 
         return runtime
 
@@ -230,8 +239,8 @@ class NoiseCovariance(BaseInterface):
                 events = find_events(raw)
 
                 if not op.isfile(self.cov_fname_out):
-                    print '\n*** COMPUTE COV FROM EPOCHS ***\n' + \
-                        self.cov_fname_out
+                    print(('\n*** COMPUTE COV FROM EPOCHS ***\n' + \
+                        self.cov_fname_out))
 
                     reject = create_reject_dict(raw.info)
                     picks = pick_types(raw.info, meg=True, ref_meg=False,
@@ -246,16 +255,16 @@ class NoiseCovariance(BaseInterface):
                                                    method='diagonal_fixed')
                     write_cov(self.cov_fname_out, noise_cov)
                 else:
-                    print '\n *** NOISE cov file %s exists!!! \n' \
-                        % self.cov_fname_out
+                    print(('\n *** NOISE cov file %s exists!!! \n' \
+                        % self.cov_fname_out))
             else:
                 '\n *** RAW DATA \n'
                 for er_fname in glob.glob(op.join(data_path, cov_fname_in)):
-                    print '\n found file name %s  \n' % er_fname
+                    print(('\n found file name %s  \n' % er_fname))
 
                 try:
                     if er_fname.rfind('cov.fif') > -1:
-                        print '\n *** NOISE cov file %s exists!! \n' % er_fname
+                        print(('\n *** NOISE cov file %s exists!! \n' % er_fname))
                         self.cov_fname_out = er_fname
                     else:
                         if er_fname.rfind('.fif') > -1:
@@ -277,14 +286,14 @@ class NoiseCovariance(BaseInterface):
                                                                reject=reject)
                             write_cov(self.cov_fname_out, noise_cov)
                         else:
-                            print '\n *** NOISE cov file %s exists!!! \n' \
-                                % self.cov_fname_out
+                            print(('\n *** NOISE cov file %s exists!!! \n' \
+                                % self.cov_fname_out))
                 except NameError:
                     sys.exit("No covariance matrix as input!")
                                     # TODO creare una matrice diagonale?
 
         else:
-            print '\n *** NOISE cov file %s exists!!! \n' % cov_fname_in
+            print(('\n *** NOISE cov file %s exists!!! \n' % cov_fname_in))
             self.cov_fname_out = cov_fname_in
 
         return runtime

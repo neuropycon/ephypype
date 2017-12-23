@@ -6,7 +6,7 @@ graphpype and nipype
 
 # Documentation
 
-https://neuropycon.github.io/neuropycon_doc/ephypype.html
+https://neuropycon.github.io/neuropycon_doc/index.html
 
 
 # Installation
