@@ -151,9 +151,9 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         raw_ica_file = os.path.join(current_dir, '../ica', basename + '_ica' + ext)
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)):
         raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)):  
+    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)):
         raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
-      
+
     print('*** raw_ica_file %s' % raw_ica_file + '***')
     raw = mne.io.read_raw_fif(raw_ica_file, preload=True)
 
@@ -162,9 +162,9 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         ica_sol_file = os.path.join(current_dir, '../ica', basename + '_ica_solution.fif')
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')):
         ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')):  
+    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')):
         ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
-      
+
     if os.path.exists(ica_sol_file) is False:
         print('$$$ Warning, no %s found' % ica_sol_file)
         sys.exit()
@@ -181,7 +181,7 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         componentes = []
         for s in session_names:
             # if basename.find(s) > -1:
-	    componentes = session_dict[s]
+            componentes = session_dict[s]
             #    break
 
         if len(componentes) == 0:
@@ -195,7 +195,7 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     print('\n *** ica.exclude after set components = ', ica.exclude)
 
 
-    # apply ICA to raw data 
+    # apply ICA to raw data
     new_raw_ica_file = os.path.join(subj_path, basename + '_ica-raw.fif')
     raw_ica = ica.apply(raw)
 
@@ -211,7 +211,7 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
     else:
         return raw_ica, channel_coords_file, channel_names_file, raw.info['sfreq']
-        
+
 
 def get_raw_info(raw_fname):
     from mne.io import Raw
@@ -268,26 +268,26 @@ def create_ts(raw_fname):
 
     Inputs:
 
-	raw_fname : str
-	    pathname of the raw data to read 
+        raw_fname : str
+            pathname of the raw data to read
 
     Outputs:
 
         ts_file : str
-	    pathname of the numpy file (.npy) containing the data read from raw_fname
-	  
+            pathname of the numpy file (.npy) containing the data read from raw_fname
+
         channel_coords_file : str
-	    pathname of .txt file containing the channels coordinates
-	  
+            pathname of .txt file containing the channels coordinates
+
         channel_names_file : str
-	    pathname of .txt file containing the channels labels
-	  
+            pathname of .txt file containing the channels labels
+
         sfreq : float
-	    sampling frequency
+            sampling frequency
 
     """
 
-    
+
     import os
     import numpy as np
 
@@ -321,12 +321,12 @@ def create_ts(raw_fname):
     data, times = raw[select_sensors, :]
 
     print(data.shape)
-    
+
     ts_file = os.path.abspath(basename + '.npy')
     np.save(ts_file, data)
     print('\n *** TS FILE ' + ts_file + '*** \n')
     print('*** raw.info[sfreq] = ' + str(raw.info['sfreq']))
-        
+
     return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
 
 
@@ -354,8 +354,8 @@ def generate_report(raw, ica, subj_name, basename,
 
     # Plot estimated latent sources given the unmixing matrix.
     fig_ecg_ts = ica.plot_sources(raw, show_picks, exclude=ecg_inds,
-				  title=ica_title % 'ecg' + ' in 30s',
-				  start=0, stop=30, show=is_show)
+                                  title=ica_title % 'ecg' + ' in 30s',
+                                  start=0, stop=30, show=is_show)
 
     # topoplot of unmixing matrix columns
     fig_ecg_comp = ica.plot_components(show_picks,
@@ -367,7 +367,7 @@ def generate_report(raw, ica, subj_name, basename,
     fig = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
     report.add_figs_to_section(fig,
                                captions=['Scores of ICs related to ECG',
-					 'Time Series plots of ICs (ECG)',
+                                         'Time Series plots of ICs (ECG)',
                                          'TopoMap of ICs (ECG)',
                                          'Time-locked ECG sources'],
                                section='ICA - ECG')
@@ -419,11 +419,11 @@ def generate_report(raw, ica, subj_name, basename,
     fig = ica.plot_components(picks=ic_nums, show=False)
     report.add_figs_to_section(fig, captions=['All IC topographies'],
                                section='ICA - muscles')
-    
+
     fig = ica.plot_sources(raw, start=0, stop=None, title='All IC time series')
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
-    
+
     psds = []
     captions_psd = []
     ica_src = ica.get_sources(raw)
@@ -484,7 +484,7 @@ def create_epochs(fif_file, ep_length):
 
     epochs = Epochs(raw, events=events, tmin=0, tmax=ep_length,
                     preload=True, picks=picks, proj=False,
-                    add_eeg_ref=False, flat=flat, reject=reject)
+                    flat=flat, reject=reject)
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)
