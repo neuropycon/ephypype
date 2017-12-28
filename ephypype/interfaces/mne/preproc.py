@@ -19,7 +19,7 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
     ecg_ch_name = traits.String(desc='name of ecg channel')
     eog_ch_name = traits.String(desc='name of eog channel')
     n_components = traits.Float(desc='number of ica components')
-
+    reject = traits.Dict(desc='rejection parameters', mandatory=False)
 
 class CompIcaOutputSpec(TraitedSpec):
     """Output specification for CompIca"""
@@ -51,9 +51,13 @@ class CompIca(BaseInterface):
         ecg_ch_name = self.inputs.ecg_ch_name
         eog_ch_name = self.inputs.eog_ch_name
         n_components = self.inputs.n_components
+        reject = self.inputs.reject
 
+        if reject == traits.Undefined:
+            reject = dict(mag=4e-12, grad=4000e-13)
+            
         ica_output = compute_ica(fif_file, ecg_ch_name,
-                                 eog_ch_name, n_components)
+                                 eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
         self.ica_ts_file = ica_output[2]

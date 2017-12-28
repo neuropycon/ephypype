@@ -13,7 +13,7 @@ def get_ext_file(raw_file):
 
     subj_path, basename, ext = split_f(raw_file)
 
-    print raw_file
+    print(raw_file)
     is_ds = False
     if ext is 'ds':
         is_ds = True
@@ -105,14 +105,14 @@ def create_pipeline_preproc_meeg(main_path,
     from nipype.interfaces.utility import IdentityInterface, Function
 
     import nipype
-    print nipype.__version__
+    print((nipype.__version__))
 
     import nipype.pipeline.engine as pe
 
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    print '*** main_path -> %s' % main_path + ' ***'
+    print(('*** main_path -> %s' % main_path + ' ***'))
 
     # define the inputs of the pipeline
     inputnode = pe.Node(IdentityInterface(fields=['raw_file', 'subject_id']),
@@ -160,6 +160,9 @@ def create_pipeline_preproc_meeg(main_path,
             ica_node.inputs.n_components = variance
             ica_node.inputs.ecg_ch_name = ECG_ch_name
             ica_node.inputs.eog_ch_name = EoG_ch_name
+            
+            if reject:
+                ica_node.inputs.reject = reject
 
             pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
 

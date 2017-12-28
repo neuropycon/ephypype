@@ -15,14 +15,14 @@ def compute_spectral_connectivity(data,con_method,sfreq,fmin,fmax,mode = 'cwt_mo
             data = data.reshape(1,data.shape[0],data.shape[1])
 
         elif con_method in ['pli','plv','ppc' ,'pli','pli2_unbiased' ,'wpli' ,'wpli2_debiased']:
-            print "warning, only work with epoched time series"
+            print("warning, only work with epoched time series")
             sys.exit()
         
         
     if mode == 'multitaper':
         
         con_matrix, freqs, times, n_epochs, n_tapers  = spectral_connectivity(data, method=con_method, sfreq=sfreq, fmin= fmin, fmax=fmax, faverage=True, tmin=None, mode = 'multitaper',   mt_adaptive=False, n_jobs=1)
-        print con_matrix.shape
+        print((con_matrix.shape))
         
         con_matrix = np.array(con_matrix[:,:,0])
         
@@ -31,14 +31,14 @@ def compute_spectral_connectivity(data,con_method,sfreq,fmin,fmax,mode = 'cwt_mo
         frequencies = np.arange(fmin, fmax, 1)
         n_cycles = frequencies / 7.
         
-        print data
+        print(data)
         
         con_matrix, freqs, times, n_epochs, n_tapers  = spectral_connectivity(data, method=con_method, sfreq=sfreq, faverage=True, tmin=None, mode='cwt_morlet',   cwt_frequencies= frequencies, cwt_n_cycles= n_cycles, n_jobs=1)
         
         con_matrix = np.mean(np.array(con_matrix[:,:,0,:]),axis = 2)
         
-    print con_matrix.shape
-    print np.min(con_matrix),np.max(con_matrix)
+    print((con_matrix.shape))
+    print((np.min(con_matrix),np.max(con_matrix)))
         
     return con_matrix
 
@@ -50,7 +50,7 @@ def compute_and_save_spectral_connectivity(data,con_method,sfreq,fmin,fmax,index
     import numpy as np
     from scipy.io import savemat
     
-    print data.shape
+    print((data.shape))
 
     from ephypype.spectral import compute_spectral_connectivity
 
@@ -75,11 +75,11 @@ def compute_and_save_multi_spectral_connectivity(all_data,con_method,sfreq,fmin,
     import numpy
     from ephypype.spectral import compute_and_save_spectral_connectivity
     
-    print all_data.shape
+    print((all_data.shape))
           
     if len(all_data.shape) != 3:
         
-        print "Warning, all_data should have several samples"
+        print("Warning, all_data should have several samples")
         
         return []
     
@@ -89,11 +89,11 @@ def compute_and_save_multi_spectral_connectivity(all_data,con_method,sfreq,fmin,
 
         cur_data = all_data[i,:,:]
 
-        print cur_data.shape
+        print((cur_data.shape))
         
         data = cur_data.reshape(1,cur_data.shape[0],cur_data.shape[1])
 
-        print data.shape
+        print((data.shape))
         
         conmat_file = compute_and_save_spectral_connectivity(data,con_method,sfreq,fmin,fmax,index = i,mode = mode,export_to_matlab = export_to_matlab)
             
@@ -125,8 +125,8 @@ def plot_circular_connectivity(conmat, label_names, node_colors, node_order, vmi
     # Angles
     node_angles = circular_layout(label_names, node_order, start_pos=90,
                                 group_boundaries=[0, len(label_names) / 2])
-    print conmat
-    print node_angles.astype(int)
+    print(conmat)
+    print((node_angles.astype(int)))
     
     conmat = conmat + np.transpose(conmat)
     
@@ -166,11 +166,11 @@ def filter_adj_plot_mat(conmat_file,labels_file,sep_label_name,k_neigh):
     
     labels = [line.strip().split(sep_label_name) for line in open(labels_file)]
     
-    print labels
+    print(labels)
     
     triu_indices = np.triu_indices(len(labels),1)
     
-    print triu_indices
+    print(triu_indices)
             
     adj_mat = np.zeros(shape = (len(labels),len(labels)),dtype = bool)
                    
@@ -178,18 +178,18 @@ def filter_adj_plot_mat(conmat_file,labels_file,sep_label_name,k_neigh):
                     
         adj_plots = [(a[0] == b[0]) and ((int(a[1]) + i + 1 )== int(b[1])) for a,b in combinations(labels,2)]
         
-        print len(adj_plots)
+        print((len(adj_plots)))
         
         adj_mat[triu_indices] =  adj_mat[triu_indices] + adj_plots
         
-        print np.sum(adj_mat == True)
+        print((np.sum(adj_mat == True)))
         
-    print adj_mat
+    print(adj_mat)
     
     ### loading ad filtering conmat_file
     conmat = np.load(conmat_file)
     
-    print conmat
+    print(conmat)
     
     assert conmat.shape[0] == len(labels), "warning, wrong dimensions between labels and conmat"
     
@@ -201,7 +201,7 @@ def filter_adj_plot_mat(conmat_file,labels_file,sep_label_name,k_neigh):
     
     filtered_conmat[x,y] = 0.0
     
-    print filtered_conmat
+    print(filtered_conmat)
     
     filtered_conmat_file = os.path.abspath("filtered_conmat.npy")
     

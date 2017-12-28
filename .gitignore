@@ -1,3 +1,6 @@
-mse
 *.pyc
-*.egg-info
+*.mat
+*.bak
+*~
+crash*
+*.egg-info/*
