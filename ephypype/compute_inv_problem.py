@@ -84,6 +84,8 @@ def read_noise_cov(cov_fname, raw_info):
     return noise_cov
 
 # TODO remove it!!! not used
+
+
 def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
     import os.path as op
     import numpy as np
@@ -132,6 +134,7 @@ def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
 
     return ts_file
 
+
 '''
 +---------------------+-----------+-----------+-----------+-----------------+--------------+
 | Inverse desired                             | Forward parameters allowed                 |
@@ -156,6 +159,8 @@ def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
 '''
 
 # TODO too long function -> put lines code about labels in a new little function
+
+
 def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                          cov_fname, is_epoched=False, events_id=[],
                          t_min=None, t_max=None, is_evoked=False,
@@ -391,4 +396,3 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                                sbj_id, sbj_dir)
 
     return ts_file, labels_file, label_names_file, label_coords_file
-

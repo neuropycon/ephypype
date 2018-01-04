@@ -4,7 +4,6 @@ Lead Field computation functions
 # Author: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 
 
-
 def create_bem_sol(sbj_dir, sbj_id):
     import os.path as op
     import mne
@@ -92,9 +91,9 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
 
     bem_dir = op.join(sbj_dir, sbj_id, 'bem')
 
-    src_aseg_fname = op.join(bem_dir, '%s-%s-aseg-src.fif' %(sbj_id, spacing))
+    src_aseg_fname = op.join(bem_dir, '%s-%s-aseg-src.fif' % (sbj_id, spacing))
     if not op.isfile(src_aseg_fname):
-        
+
         aseg_fname = op.join(sbj_dir, sbj_id, 'mri/aseg.mgz')
 
         if spacing == 'oct-6':
@@ -111,14 +110,14 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
                                                       volume_label=l,
                                                       subjects_dir=sbj_dir)
             src += vol_label
-    
+
         if save_mixed_src_space:
             mne.write_source_spaces(src_aseg_fname, src, overwrite=True)
             print(('\n*** source space file {} written ***\n'.format(src_aseg_fname)))
-            
+
         # Export source positions to nift file
         nii_fname = op.join(bem_dir, '%s-%s-aseg-src.nii' % (sbj_id, spacing))
-    
+
         # Combine the source spaces
         src.export_volume(nii_fname, mri_resolution=True)
     else:
@@ -170,7 +169,7 @@ def compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
     import mne
 
     fwd = mne.make_forward_solution(raw_info, trans_fname, src, bem,
-                                    mindist=5.0, # ignore sources <= 0mm from inner skull
+                                    mindist=5.0,  # ignore sources <= 0mm from inner skull
                                     meg=True, eeg=False,
                                     n_jobs=2)
 

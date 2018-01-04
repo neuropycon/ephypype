@@ -2,6 +2,7 @@
 
 from ephypype.aux_tools import nostdout
 
+
 def ep2ts(fif_file):
     """Read fif file with raw data or epochs and save
     timeseries to .npy
@@ -21,4 +22,3 @@ def ep2ts(fif_file):
     save_path = op.abspath('ts_epochs.npy')
     save(save_path, data)
     return save_path
-

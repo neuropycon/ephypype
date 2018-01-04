@@ -6,8 +6,8 @@ from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec
 
 from ephypype.preproc import compute_ica,\
-                                   preprocess_fif,\
-                                   create_epochs
+    preprocess_fif,\
+    create_epochs
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
@@ -20,6 +20,7 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
     eog_ch_name = traits.String(desc='name of eog channel')
     n_components = traits.Float(desc='number of ica components')
     reject = traits.Dict(desc='rejection parameters', mandatory=False)
+
 
 class CompIcaOutputSpec(TraitedSpec):
     """Output specification for CompIca"""
@@ -55,7 +56,7 @@ class CompIca(BaseInterface):
 
         if reject == traits.Undefined:
             reject = dict(mag=4e-12, grad=4000e-13)
-            
+
         ica_output = compute_ica(fif_file, ecg_ch_name,
                                  eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]

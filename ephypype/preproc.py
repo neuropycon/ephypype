@@ -21,7 +21,8 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
-        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors, fir_design='firwin')
+        raw.filter(l_freq=l_freq, h_freq=h_freq,
+                   picks=select_sensors, fir_design='firwin')
         filt_str = '_filt'
 
     if down_sfreq:
@@ -44,7 +45,6 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 
     from nipype.utils.filemanip import split_filename as split_f
-
 
     subj_path, basename, ext = split_f(fif_file)
 
@@ -148,22 +148,28 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     # Read raw
     current_dir = os.getcwd()
     if os.path.exists(os.path.join(current_dir, '../ica', basename + '_ica' + ext)):
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_ica' + ext)
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_ica' + ext)
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)):
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_ica' + ext)
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)):
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
-      
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
+
     print(('*** raw_ica_file %s' % raw_ica_file + '***'))
     raw = mne.io.read_raw_fif(raw_ica_file, preload=True)
 
     # load ICA
     if os.path.exists(os.path.join(current_dir, '../ica', basename + '_ica_solution.fif')):
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_ica_solution.fif')
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_ica_solution.fif')
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')):
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_ica_solution.fif')
     elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')):
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
 
     if os.path.exists(ica_sol_file) is False:
         print(('$$$ Warning, no %s found' % ica_sol_file))
@@ -181,17 +187,16 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         componentes = []
         for s in session_names:
             componentes = session_dict[s]
-            
+
         if len(componentes) == 0:
             print('\n no ICA to be excluded \n')
         else:
-            print(('\n *** ICA to be excluded for session %s ' % s + \
-                    ' ' + str(componentes) + ' *** \n'))
+            print(('\n *** ICA to be excluded for session %s ' % s +
+                   ' ' + str(componentes) + ' *** \n'))
 
     ica.exclude = componentes
 
     print(('\n *** ica.exclude after set components = ', ica.exclude))
-
 
     # apply ICA to raw data
     new_raw_ica_file = os.path.join(subj_path, basename + '_ica-raw.fif')
@@ -203,7 +208,8 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     print(ica_sol_file)
     ica.save(ica_sol_file)
 
-    ts_file, channel_coords_file, channel_names_file, raw.info['sfreq'] = create_ts(new_raw_ica_file)
+    ts_file, channel_coords_file, channel_names_file, raw.info['sfreq'] = create_ts(
+        new_raw_ica_file)
 
     if is_sensor_space:
         return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
@@ -242,7 +248,7 @@ def create_reject_dict(raw_info):
     picks_mag = pick_types(raw_info, meg='mag', ref_meg=False)
     picks_grad = pick_types(raw_info, meg='grad', ref_meg=False)
 
-    reject=dict()
+    reject = dict()
     if picks_mag.size != 0:
         reject['mag'] = 4e-12
     if picks_grad.size != 0:
@@ -254,7 +260,6 @@ def create_reject_dict(raw_info):
 
 
 def create_ts(raw_fname):
-
     """
     Description:
 
@@ -280,7 +285,6 @@ def create_ts(raw_fname):
             sampling frequency
 
     """
-
 
     import os
     import numpy as np
@@ -315,12 +319,12 @@ def create_ts(raw_fname):
     data, times = raw[select_sensors, :]
 
     print((data.shape))
-    
+
     ts_file = os.path.abspath(basename + '.npy')
     np.save(ts_file, data)
     print(('\n *** TS FILE ' + ts_file + '*** \n'))
     print(('*** raw.info[sfreq] = ' + str(raw.info['sfreq'])))
-        
+
     return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
 
 
