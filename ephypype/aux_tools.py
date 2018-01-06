@@ -1,4 +1,9 @@
-""" Aux functions """
+"""
+
+Aux functions
+AUTOR: dmalt
+
+"""
 
 from contextlib import contextmanager
 import os
@@ -65,6 +70,7 @@ def get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
     if freq_band_name in freq_band_names:
         print(freq_band_name)
-        print((freq_band_names.index(freq_band_name)))
+        print(freq_band_names.index(freq_band_name))
 
         return freq_bands[freq_band_names.index(freq_band_name)]
+    return None

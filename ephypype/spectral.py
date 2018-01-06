@@ -1,12 +1,11 @@
 # Author: David Meunier <david_meunier_79@hotmail.fr>
 
-import numpy as np
 
+# ------------------- compute spectral connectivity ------------------------- #
+def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
+                                  mode='cwt_morlet'):
 
-# compute spectral connectivity #############################################################################"
-
-def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax, mode='cwt_morlet'):
-
+    print('MODE is {}'.format(mode))
     import numpy as np
     from mne.connectivity import spectral_connectivity
 
@@ -14,14 +13,18 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax, mode='cwt
         if con_method in ['coh', 'cohy', 'imcoh']:
             data = data.reshape(1, data.shape[0], data.shape[1])
 
-        elif con_method in ['pli', 'plv', 'ppc', 'pli', 'pli2_unbiased', 'wpli', 'wpli2_debiased']:
+        elif con_method in ['pli', 'plv', 'ppc', 'pli',
+                            'pli2_unbiased', 'wpli', 'wpli2_debiased']:
             print("warning, only work with epoched time series")
             sys.exit()
 
     if mode == 'multitaper':
 
-        con_matrix, freqs, times, n_epochs, n_tapers = spectral_connectivity(
-            data, method=con_method, sfreq=sfreq, fmin=fmin, fmax=fmax, faverage=True, tmin=None, mode='multitaper',   mt_adaptive=False, n_jobs=1)
+        con_matrix, _, _, _, _ = spectral_connectivity(
+            data, method=con_method, sfreq=sfreq, fmin=fmin,
+            fmax=fmax, faverage=True, tmin=None, mode='multitaper',
+            mt_adaptive=False, n_jobs=1)
+
         print((con_matrix.shape))
 
         con_matrix = np.array(con_matrix[:, :, 0])
@@ -33,30 +36,35 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax, mode='cwt
 
         print(data)
 
-        con_matrix, freqs, times, n_epochs, n_tapers = spectral_connectivity(
-            data, method=con_method, sfreq=sfreq, faverage=True, tmin=None, mode='cwt_morlet',   cwt_frequencies=frequencies, cwt_n_cycles=n_cycles, n_jobs=1)
+        con_matrix, _, _, _, _ = spectral_connectivity(
+            data, method=con_method, sfreq=sfreq, faverage=True,
+            tmin=None, mode='cwt_morlet', cwt_frequencies=frequencies,
+            cwt_n_cycles=n_cycles, n_jobs=1)
 
         con_matrix = np.mean(np.array(con_matrix[:, :, 0, :]), axis=2)
+    else:
+        print('Time-frequency transformation mode is not set')
+        return None
 
-    print((con_matrix.shape))
-    print((np.min(con_matrix), np.max(con_matrix)))
+    print(con_matrix.shape)
+    print(np.min(con_matrix), np.max(con_matrix))
 
     return con_matrix
 
-############################################################# compute and save #############################################################
 
+# ----------------------- compute and save  ----------------------- #
+def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
+                                           index=0, mode='cwt_morlet',
+                                           export_to_matlab=False):
 
-def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax, index=0, mode='cwt_morlet', export_to_matlab=False):
-
-    import sys
     import os
 
     import numpy as np
     from scipy.io import savemat
 
-    print((data.shape))
+    print(data.shape)
 
-    from ephypype.spectral import compute_spectral_connectivity
+    # from ephypype.spectral import compute_spectral_connectivity
 
     con_matrix = compute_spectral_connectivity(
         data, con_method, sfreq, fmin, fmax, mode)
@@ -72,14 +80,15 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax, 
             "conmat_" + str(index) + "_" + con_method + ".mat")
 
         savemat(conmat_matfile, {
-                "conmat": con_matrix + np.transpose(con_matrix)})
+            "conmat": con_matrix + np.transpose(con_matrix)})
 
     return conmat_file
 
 
-def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq, fmin, fmax, mode='cwt_morlet', export_to_matlab=False):
+def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
+                                                 fmin, fmax, mode='cwt_morlet',
+                                                 export_to_matlab=False):
 
-    import numpy
     from ephypype.spectral import compute_and_save_spectral_connectivity
 
     print((all_data.shape))
@@ -103,29 +112,19 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq, fm
         print((data.shape))
 
         conmat_file = compute_and_save_spectral_connectivity(
-            data, con_method, sfreq, fmin, fmax, index=i, mode=mode, export_to_matlab=export_to_matlab)
-
-        # print data.shape
-
-        #con_matrix, freqs, times, n_epochs, n_tapers  = spectral_connectivity(data, method=con_method, mode='multitaper', sfreq=sfreq, fmin= freq_band[0], fmax=freq_band[1], faverage=True, tmin=None,    mt_adaptive=False, n_jobs=1)
-
-        #con_matrix = np.array(con_matrix[:,:,0])
-
-        # print con_matrix.shape
-        # print np.min(con_matrix),np.max(con_matrix)
-
-        #conmat_file = os.path.abspath("conmat_"+ con_method + "_" + str(i) + ".npy")
-
-        # np.save(conmat_file,con_matrix)
+            data, con_method, sfreq, fmin, fmax, index=i,
+            mode=mode, export_to_matlab=export_to_matlab)
 
         conmat_files.append(conmat_file)
 
     return conmat_files
 
-########################################################### plot spectral connectivity #################################################################
 
+# -------------------- plot spectral connectivity -------------------- #
+def plot_circular_connectivity(conmat, label_names, node_colors, node_order,
+                               vmin=0.3, vmax=1.0, nb_lines=200, fname="_def"):
+    """Plot circular connectivity"""
 
-def plot_circular_connectivity(conmat, label_names, node_colors, node_order, vmin=0.3, vmax=1.0, nb_lines=200, fname="_def"):
     import os
     import numpy as np
     from mne.viz import circular_layout, plot_connectivity_circle
@@ -139,8 +138,8 @@ def plot_circular_connectivity(conmat, label_names, node_colors, node_order, vmi
 
     conmat = conmat + np.transpose(conmat)
 
-    # Plot the graph using node colors from the FreeSurfer parcellation. We only
-    # show the 300 strongest connections.
+    # Plot the graph using node colors from the FreeSurfer parcellation.
+    # We only show the 300 strongest connections.
     fig, _ = plot_connectivity_circle(conmat,
                                       label_names,
                                       n_lines=nb_lines,
@@ -154,7 +153,7 @@ def plot_circular_connectivity(conmat, label_names, node_colors, node_order, vmi
 
     # plt.show()
     # print fig
-    ##plot_conmat_file = os.path.abspath('circle.png')
+    # plot_conmat_file = os.path.abspath('circle.png')
     plot_conmat_file = os.path.abspath('circle_' + fname + '.eps')
     fig.savefig(plot_conmat_file, facecolor='black')
     # fig.savefig(plot_conmat_file)
@@ -167,6 +166,7 @@ def plot_circular_connectivity(conmat, label_names, node_colors, node_order, vmi
 
 
 def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
+    """Filter adjacency matrix"""
 
     import numpy as np
     import os
@@ -192,7 +192,7 @@ def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
 
         adj_mat[triu_indices] = adj_mat[triu_indices] + adj_plots
 
-        print((np.sum(adj_mat == True)))
+        print(np.sum(adj_mat))
 
     print(adj_mat)
 
@@ -208,9 +208,9 @@ def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
 
     # print np.transpose(adj_mat) == True
 
-    x, y = np.where(adj_mat == True)
+    xx, yy = np.where(adj_mat)
 
-    filtered_conmat[x, y] = 0.0
+    filtered_conmat[xx, yy] = 0.0
 
     print(filtered_conmat)
 
