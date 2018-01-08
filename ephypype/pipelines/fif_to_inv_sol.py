@@ -28,7 +28,6 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
                                           save_stc=False,
                                           save_mixed_src_space=False,
                                           is_fixed=False):
-
     """
     Description:
 
@@ -102,7 +101,6 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     if aseg:
         LF_computation.inputs.aseg_labels = aseg_labels
         LF_computation.inputs.save_mixed_src_space = save_mixed_src_space
-        
 
     pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
 

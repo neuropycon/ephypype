@@ -129,7 +129,7 @@ def compute_mean_band_psd(psds_file, freq_bands):
         min_fr = freq_bands[f][0]
         max_fr = freq_bands[f][1]
         print(('*** frequency band [{}, {}] ***\n'.format(min_fr, max_fr)))
-        M_px[:, f] = np.mean(psds[:, (freqs >= min_fr)*(freqs <= max_fr)], 1)
+        M_px[:, f] = np.mean(psds[:, (freqs >= min_fr) * (freqs <= max_fr)], 1)
 
     psds_mean_fname = _save_M_px(psds_file, M_px)
 

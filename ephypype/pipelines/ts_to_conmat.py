@@ -11,11 +11,12 @@ import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 #,Function
 
-from ephypype.interfaces.mne.spectral import  SpectralConn,PlotSpectralConn
+from ephypype.interfaces.mne.spectral import SpectralConn, PlotSpectralConn
 from ephypype.nodes.ts_tools import SplitWindows
 
-### to modify and add in "Nodes"
+# to modify and add in "Nodes"
 #from ephypype.spectral import  filter_adj_plot_mat
+
 
 def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          pipeline_name='ts_to_conmat',
@@ -26,7 +27,6 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          mode='multitaper',
                                                          is_sensor_space=True,
                                                          epoch_window_length=None):
-    
     """
     Description:
 
@@ -54,7 +54,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
              True if we compute connectivity on sensor space
 
     Inputs (inputnode):
-    
+
         ts_file : str
             path to the time series file in .npy format
         freq_band : float
@@ -63,91 +63,94 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
             sampling frequency
         labels_file : str
             path to the file containing a list of labels associated with nodes
-        
+
     Outputs:
 
         pipeline : instance of Workflow
-    
+
     """
 
-    
-    
     if multi_con:
         pipeline_name = pipeline_name + '_multicon'
-        
-    pipeline = pe.Workflow(name= pipeline_name)
+
+    pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
-        
+
 #    inputnode = pe.Node(IdentityInterface(fields=['ts_file','freq_band','sfreq','labels_file','epoch_window_length','is_sensor_space','index']), name='inputnode')
     inputnode = pe.Node(IdentityInterface(fields=['ts_file', 'sfreq',
                                                   'freq_band',
                                                   'labels_file']), name='inputnode')
     if len(n_windows) == 0:
-            
+
         print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple trials $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-        
-        #### spectral
-        spectral = pe.Node(interface = SpectralConn(), name = "spectral")
-        
-        spectral.inputs.con_method = con_method  
+
+        # spectral
+        spectral = pe.Node(interface=SpectralConn(), name="spectral")
+
+        spectral.inputs.con_method = con_method
         spectral.inputs.export_to_matlab = export_to_matlab
 #        spectral.inputs.sfreq = sfreq
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         if epoch_window_length:
             spectral.inputs.epoch_window_length = epoch_window_length
-        
+
         pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(inputnode, 'ts_file', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
 #        pipeline.connect(inputnode, 'epoch_window_length', spectral, 'epoch_window_length')
 
-        #### plot spectral
+        # plot spectral
         if multi_con:
-            plot_spectral = pe.MapNode(interface = PlotSpectralConn(), name = "plot_spectral",iterfield = ['conmat_file'])
-            
-            plot_spectral.inputs.is_sensor_space = is_sensor_space        
-            pipeline.connect(inputnode,  'labels_file',plot_spectral,'labels_file')
-    #        pipeline.connect(inputnode,  'is_sensor_space',plot_spectral,'is_sensor_space')        
-            pipeline.connect(spectral, "conmat_files",    plot_spectral, 'conmat_file')
-            
+            plot_spectral = pe.MapNode(interface=PlotSpectralConn(
+            ), name="plot_spectral", iterfield=['conmat_file'])
+
+            plot_spectral.inputs.is_sensor_space = is_sensor_space
+            pipeline.connect(inputnode,  'labels_file',
+                             plot_spectral, 'labels_file')
+    #        pipeline.connect(inputnode,  'is_sensor_space',plot_spectral,'is_sensor_space')
+            pipeline.connect(spectral, "conmat_files",
+                             plot_spectral, 'conmat_file')
+
         else:
-            
-            plot_spectral = pe.Node(interface = PlotSpectralConn(), name = "plot_spectral")
-            
-            plot_spectral.inputs.is_sensor_space = is_sensor_space        
-            pipeline.connect(inputnode,  'labels_file',plot_spectral,'labels_file')
-    #        pipeline.connect(inputnode,  'is_sensor_space',plot_spectral,'is_sensor_space')        
-            pipeline.connect(spectral, "conmat_file",    plot_spectral, 'conmat_file')
-        
-        
+
+            plot_spectral = pe.Node(
+                interface=PlotSpectralConn(), name="plot_spectral")
+
+            plot_spectral.inputs.is_sensor_space = is_sensor_space
+            pipeline.connect(inputnode,  'labels_file',
+                             plot_spectral, 'labels_file')
+    #        pipeline.connect(inputnode,  'is_sensor_space',plot_spectral,'is_sensor_space')
+            pipeline.connect(spectral, "conmat_file",
+                             plot_spectral, 'conmat_file')
+
     else:
-        
+
         print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Multiple windows, multiple trials  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         print(n_windows)
-        
-        ### win_ts
-        ##### 
-        win_ts = pe.Node(interface = SplitWindows(), name = "win_ts")            
+
+        # win_ts
+        #####
+        win_ts = pe.Node(interface=SplitWindows(), name="win_ts")
         win_ts.inputs.n_windows = n_windows
-        
+
         pipeline.connect(inputnode, 'ts_file', win_ts, 'ts_file')
 
-        
-        #### spectral
-        spectral = pe.MapNode(interface = SpectralConn(), name = "spectral",iterfield = ['ts_file'])
-        
-        spectral.inputs.con_method = con_method  
-        spectral.inputs.export_to_matlab = export_to_matlab            
+        # spectral
+        spectral = pe.MapNode(interface=SpectralConn(),
+                              name="spectral", iterfield=['ts_file'])
+
+        spectral.inputs.con_method = con_method
+        spectral.inputs.export_to_matlab = export_to_matlab
         spectral.inputs.sfreq = sfreq
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         spectral.inputs.epoch_window_length = epoch_window_length
-        
+
         #pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(win_ts, 'win_ts_files', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
-        
+
         #pipeline.connect(inputnode, 'index', spectral, 'index')
         #pipeline.connect(inputnode, 'epoch_window_length', spectral, 'epoch_window_length')
 

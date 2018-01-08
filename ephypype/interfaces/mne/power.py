@@ -19,7 +19,7 @@ class PowerInputSpec(BaseInterfaceInputSpec):
     sfreq = traits.Float(desc='sampling frequency', mandatory=False)
 
     nfft = traits.Int(desc='the length of FFT used', mandatory=False)
-    overlap = traits.Float(desc='The number of points of overlap between segments', 
+    overlap = traits.Float(desc='The number of points of overlap between segments',
                            mandatory=False)
 
     method = traits.Enum('welch', 'multitaper',

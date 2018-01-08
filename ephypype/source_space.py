@@ -12,21 +12,22 @@ def get_ROI(labels_cortex, vertno_left, vertno_right):
 
     label_vertidx = list()
     label_name = list()
-    label_coords = list()    
+    label_coords = list()
 
     for label in labels_cortex:
         if label.hemi == 'lh':
             this_vertno = np.intersect1d(vertno_left, label.vertices)
             vertidx_hemi = np.searchsorted(vertno_left, this_vertno)
-            
+
         elif label.hemi == 'rh':
             this_vertno = np.intersect1d(vertno_right, label.vertices)
-            vertidx_hemi = len(vertno_left) + np.searchsorted(vertno_right,this_vertno)
+            vertidx_hemi = len(vertno_left) + \
+                np.searchsorted(vertno_right, this_vertno)
 
         vertidx_ROI = np.searchsorted(label.vertices, this_vertno)
         label_vertidx.append(vertidx_hemi)
         label_name.append(label.name)
-        label_coords.append(label.pos[vertidx_ROI, :]*1000)
+        label_coords.append(label.pos[vertidx_ROI, :] * 1000)
 
     ROI = dict(label_name=label_name, label_vertidx=label_vertidx,
                label_coords=label_coords)
@@ -37,7 +38,6 @@ def get_ROI(labels_cortex, vertno_left, vertno_right):
 # convert the ROI coords to MNI space
 def convert_cortex_MRI_to_MNI(labels_cortex, vertno_left, vertno_right,
                               sbj, sbj_dir):
-
     """
     Convert the coordinates of the ROIs cortex to MNI space
 
@@ -103,7 +103,7 @@ def convert_aseg_head_to_MNI(labels_aseg, mri_head_t, sbj, sbj_dir):
         # before we go from head to MRI (surface RAS)
         aseg_coo = label.pos
         aseg_coo_MRI_RAS = apply_trans(head_mri_t, aseg_coo)
-        coo_MNI, _ = mne.aseg_vertex_to_mni(aseg_coo_MRI_RAS*1000,
+        coo_MNI, _ = mne.aseg_vertex_to_mni(aseg_coo_MRI_RAS * 1000,
                                             sbj, sbj_dir)
         ROI_aseg_MNI_coords.append(coo_MNI)
         ROI_aseg_name.append(label.name)

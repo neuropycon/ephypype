@@ -1,4 +1,9 @@
-""" Aux functions """
+"""
+
+Aux functions
+AUTOR: dmalt
+
+"""
 
 from contextlib import contextmanager
 import os
@@ -7,7 +12,7 @@ import os
 # Define a context manager to suppress stdout and stderr.
 class suppress_stdout_stderr(object):
     """
-    
+
     A context manager for doing a "deep suppression" of stdout and stderr in
     Python, i.e. will suppress all print, even if the print originates in a
     compiled C/Fortran sub-function.
@@ -16,10 +21,10 @@ class suppress_stdout_stderr(object):
     exited (at least, I think that is why it lets exceptions through).
 
     """
-    
+
     def __init__(self):
         # Open a pair of null files
-        self.null_fds =  [os.open(os.devnull,os.O_RDWR) for x in range(2)]
+        self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
         # Save the actual stdout (1) and stderr (2) file descriptors.
         self.save_fds = (os.dup(1), os.dup(2))
 
@@ -35,8 +40,6 @@ class suppress_stdout_stderr(object):
         # Close the null files
         os.close(self.null_fds[0])
         os.close(self.null_fds[1])
-
-
 
 
 @contextmanager
@@ -67,6 +70,7 @@ def get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
     if freq_band_name in freq_band_names:
         print(freq_band_name)
-        print((freq_band_names.index(freq_band_name)))
+        print(freq_band_names.index(freq_band_name))
 
         return freq_bands[freq_band_names.index(freq_band_name)]
+    return None

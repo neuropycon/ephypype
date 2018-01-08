@@ -68,7 +68,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
                               mandatory=False)
 
     save_stc = traits.Bool(False, desc='if true save stc', usedefault=True,
-			   mandatory=False)
+                           mandatory=False)
 
 
 class InverseSolutionConnOutputSpec(TraitedSpec):
@@ -239,8 +239,8 @@ class NoiseCovariance(BaseInterface):
                 events = find_events(raw)
 
                 if not op.isfile(self.cov_fname_out):
-                    print(('\n*** COMPUTE COV FROM EPOCHS ***\n' + \
-                        self.cov_fname_out))
+                    print(('\n*** COMPUTE COV FROM EPOCHS ***\n' +
+                           self.cov_fname_out))
 
                     reject = create_reject_dict(raw.info)
                     picks = pick_types(raw.info, meg=True, ref_meg=False,
@@ -255,8 +255,8 @@ class NoiseCovariance(BaseInterface):
                                                    method='diagonal_fixed')
                     write_cov(self.cov_fname_out, noise_cov)
                 else:
-                    print(('\n *** NOISE cov file %s exists!!! \n' \
-                        % self.cov_fname_out))
+                    print(('\n *** NOISE cov file %s exists!!! \n'
+                           % self.cov_fname_out))
             else:
                 '\n *** RAW DATA \n'
                 for er_fname in glob.glob(op.join(data_path, cov_fname_in)):
@@ -275,7 +275,7 @@ class NoiseCovariance(BaseInterface):
                             er_fname = er_fname.replace('.ds', '-raw-cov.fif')
 
                         self.cov_fname_out = op.join(data_path, er_fname)
-                        
+
                         if not op.isfile(self.cov_fname_out):
                             reject = create_reject_dict(er_raw.info)
                             picks = pick_types(er_raw.info, meg=True,
@@ -286,11 +286,11 @@ class NoiseCovariance(BaseInterface):
                                                                reject=reject)
                             write_cov(self.cov_fname_out, noise_cov)
                         else:
-                            print(('\n *** NOISE cov file %s exists!!! \n' \
-                                % self.cov_fname_out))
+                            print(('\n *** NOISE cov file %s exists!!! \n'
+                                   % self.cov_fname_out))
                 except NameError:
                     sys.exit("No covariance matrix as input!")
-                                    # TODO creare una matrice diagonale?
+                    # TODO creare una matrice diagonale?
 
         else:
             print(('\n *** NOISE cov file %s exists!!! \n' % cov_fname_in))

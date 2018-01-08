@@ -39,174 +39,179 @@ def convert_ds_to_raw_fif(ds_file):
         raw.save(raw_fif_file)
     else:
         print(('*** RAW FIF file %s exists!!!' % raw_fif_file))
-        
+
     return raw_fif_file
 
 
-#def convert_ds_to_raw_fif(ds_file):
+# def convert_ds_to_raw_fif(ds_file):
 
-	#import os
+    #import os
 
-	#from nipype.utils.filemanip import split_filename as split_f
+    #from nipype.utils.filemanip import split_filename as split_f
 
-	#subj_path,basename,ext = split_f(ds_file)
+    #subj_path,basename,ext = split_f(ds_file)
 
-	
-	##basename = os.path.splitext(ds_file)[0]
+    ##basename = os.path.splitext(ds_file)[0]
 
-	#print subj_path,basename,ext
-	##0/0
+    # print subj_path,basename,ext
+    # 0/0
 
-	#raw_fif_file = os.path.join(subj_path,basename + "_raw.fif")
+    #raw_fif_file = os.path.join(subj_path,basename + "_raw.fif")
 
-	#os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,ds_file) + " --fif " + raw_fif_file)
+    #os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,ds_file) + " --fif " + raw_fif_file)
 
-	#return raw_fif_file
+    # return raw_fif_file
 
 
 def compute_ROI_coordinates():
 
     import params_victor as parv
-    
-        
-    label_vertices_victor_file = os.path.join(parv.data_path,"label_vertices_victor.txt")
-    
-    coord_vertices_victor_file = os.path.join(parv.data_path,"coord_vertices_victor.txt")
-    
-    coord_vertices_victor =  np.array(np.loadtxt(coord_vertices_victor_file, dtype = 'float'))
-    
+
+    label_vertices_victor_file = os.path.join(
+        parv.data_path, "label_vertices_victor.txt")
+
+    coord_vertices_victor_file = os.path.join(
+        parv.data_path, "coord_vertices_victor.txt")
+
+    coord_vertices_victor = np.array(np.loadtxt(
+        coord_vertices_victor_file, dtype='float'))
+
     print(coord_vertices_victor)
-    
+
     ROI_names = []
-    
+
     ROI_mean_coords = []
-    
-    with open(label_vertices_victor_file,'r') as f:
-        
+
+    with open(label_vertices_victor_file, 'r') as f:
+
         lines = f.readlines()
-        
+
         print(lines)
-                
-        for i,line in enumerate(lines[1:]):
-            
+
+        for i, line in enumerate(lines[1:]):
+
             print(line)
-            
+
             split_line = line.strip().split(':')
-            
+
             if len(split_line) == 2:
-                
+
                 label = split_line[0]
-                
-                correct_label =  "_".join(label.split(" "))
-                
+
+                correct_label = "_".join(label.split(" "))
+
                 ROI_names.append(correct_label)
-                
-                
+
                 print((split_line[1].strip().split(' ')))
-                
-                vertex_indexes = np.array(list(map(int,split_line[1].strip().split(' '))))
-                
+
+                vertex_indexes = np.array(
+                    list(map(int, split_line[1].strip().split(' '))))
+
                 print(vertex_indexes)
-                
-                np_vertex_indexes = vertex_indexes -1 
-                
+
+                np_vertex_indexes = vertex_indexes - 1
+
                 print(np_vertex_indexes)
-                
+
                 print((coord_vertices_victor[np_vertex_indexes]))
-                
-                mean_coord = np.mean(coord_vertices_victor[np_vertex_indexes,:],axis = 0)
-                
+
+                mean_coord = np.mean(
+                    coord_vertices_victor[np_vertex_indexes, :], axis=0)
+
                 print(mean_coord)
-                
+
                 ROI_mean_coords.append(mean_coord)
-                #np_vertice_indexes
-            
+                # np_vertice_indexes
+
         print(ROI_names)
-        
+
         print((len(ROI_names)))
-        
-        
+
         np_ROI_mean_coords = np.array(ROI_mean_coords)
-        
+
         print(np_ROI_mean_coords)
-        
+
         print((np_ROI_mean_coords.shape))
-        
-        np.savetxt(parv.MEG_ROI_coords_file,np_ROI_mean_coords, fmt = "%f")
-        
-        np.savetxt(parv.MEG_ROI_names_file,np.array(ROI_names,dtype = str), fmt = "%s")
 
-        
-# --------------------- testing 
+        np.savetxt(parv.MEG_ROI_coords_file, np_ROI_mean_coords, fmt="%f")
+
+        np.savetxt(parv.MEG_ROI_names_file, np.array(
+            ROI_names, dtype=str), fmt="%s")
+
+
+# --------------------- testing
 def test_convert_data():
-	
-	subj_path = os.path.join(main_path ,'balai')
 
-	print(subj_path)
+    subj_path = os.path.join(main_path, 'balai')
 
-	ds_files = [f for f in os.listdir(subj_path) if f.endswith("ds")]
+    print(subj_path)
 
-	print(ds_files)
+    ds_files = [f for f in os.listdir(subj_path) if f.endswith("ds")]
 
-	for ds_f in ds_files:
+    print(ds_files)
 
-		basename = os.path.splitext(ds_f)[0]
+    for ds_f in ds_files:
 
-		print(basename)
+        basename = os.path.splitext(ds_f)[0]
 
-		os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,ds_f) + " --fif " + os.path.join(subj_path,basename + "_raw.fif"))
+        print(basename)
 
-		0/0
+        os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,
+                                                                    ds_f) + " --fif " + os.path.join(subj_path, basename + "_raw.fif"))
+
+        0 / 0
+
 
 def test_import_data():
-	
-	subj_path = os.path.join(main_path ,'balai')
 
-	print(subj_path)
+    subj_path = os.path.join(main_path, 'balai')
 
-	fif_files = [f for f in os.listdir(subj_path) if f.endswith("fif")]
+    print(subj_path)
 
-	print(fif_files)
+    fif_files = [f for f in os.listdir(subj_path) if f.endswith("fif")]
 
-	for fif_f in fif_files:
+    print(fif_files)
 
-		raw = mne.io.Raw(os.path.join(subj_path,fif_f))
+    for fif_f in fif_files:
 
-		print(raw)
+        raw = mne.io.Raw(os.path.join(subj_path, fif_f))
 
-		#print(raw.ch_names)
-		#0/0
+        print(raw)
 
-		print((len(raw.ch_names)))
+        # print(raw.ch_names)
+        # 0/0
 
-		select_electrodes = np.array([ch_name[0] == 'M' for ch_name in raw.ch_names],dtype = 'bool')
+        print((len(raw.ch_names)))
 
-		#print select_electrodes
-		#start, stop = raw.time_as_index([0, 100])
+        select_electrodes = np.array(
+            [ch_name[0] == 'M' for ch_name in raw.ch_names], dtype='bool')
 
-		#data,times = raw[:,start:stop]
+        # print select_electrodes
+        #start, stop = raw.time_as_index([0, 100])
 
-		data,times = raw[:,:]
-		print((data.shape))
+        #data,times = raw[:,start:stop]
 
-		#0/0
-		electrode_data = data[select_electrodes,]
+        data, times = raw[:, :]
+        print((data.shape))
 
-		#electrode_data = data[np.where(select_electrodes == True),]
+        # 0/0
+        electrode_data = data[select_electrodes, ]
 
-		print((electrode_data.shape))
+        #electrode_data = data[np.where(select_electrodes == True),]
 
-		basename = os.path.splitext(fif_f)[0]
+        print((electrode_data.shape))
 
-		np_filename = os.path.join(subj_path,basename + ".npy")
+        basename = os.path.splitext(fif_f)[0]
 
-		np.save(np_filename,electrode_data)
+        np_filename = os.path.join(subj_path, basename + ".npy")
 
-		0/0
+        np.save(np_filename, electrode_data)
+
+        0 / 0
+
 
 if __name__ == '__main__':
-    	#test_convert_data()
-	#test_import_data()
+    # test_convert_data()
+    # test_import_data()
 
-        compute_ROI_coordinates()
-        
+    compute_ROI_coordinates()
