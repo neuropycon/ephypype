@@ -74,6 +74,7 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
         roi_name.append(label.name)
         roi_color.append(label.color)
 
+
     # TODO check!
 #    nvert_ROI = [len(vn) for vn in roi_mni_coords]
 #    if np.sum(nvert_ROI) != (len(vertno_left) + len(vertno_right)):
@@ -91,34 +92,35 @@ def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
     """Convert aseg head to MNI."""
     import mne
     import numpy as np
-    from mne.transforms import apply_trans, invert_transform
 
-    roi_aseg_mni_coords = list()
-    roi_aseg_name = list()
-    roi_aseg_color = list()
+    ROI_aseg_MNI_coords = list()
+    ROI_aseg_name = list()
+    ROI_aseg_color = list()
 
     # get the MRI (surface RAS) -> head matrix
-    head_mri_t = invert_transform(mri_head_t)  # head->MRI (surface RAS)
+    # head_mri_t = invert_transform(mri_head_t)  # head->MRI (surface RAS)
     for label in labels_aseg:
         print(('sub structure {} \n'.format(label.name)))
         # before we go from head to MRI (surface RAS)
         aseg_coo = label.pos
-        aseg_coo_mri_ras = apply_trans(head_mri_t, aseg_coo)
-        coo_mni, _ = mne.aseg_vertex_to_mni(aseg_coo_mri_ras * 1000,
-                                            sbj, sbj_dir)
-        roi_aseg_mni_coords.append(coo_mni)
-        roi_aseg_name.append(label.name)
-        roi_aseg_color.append(label.color)
+        # aseg_coo_MRI_RAS = apply_trans(head_mri_t, aseg_coo)
+        # coo_MNI, _ = mne.aseg_vertex_to_mni(aseg_coo_MRI_RAS * 1000,
+        #                                  sbj, sbj_dir)
+        coo_MNI = mne.head_to_mni(aseg_coo, sbj, mri_head_t, sbj_dir)
 
-    nvert_roi = [len(vn) for vn in roi_aseg_mni_coords]
+        ROI_aseg_MNI_coords.append(coo_MNI)
+        ROI_aseg_name.append(label.name)
+        ROI_aseg_color.append(label.color)
+
+    nvert_roi = [len(vn) for vn in ROI_aseg_MNI_coords]
     nvert_src = [l.pos.shape[0] for l in labels_aseg]
     if np.sum(nvert_roi) != np.sum(nvert_src):
         raise RuntimeError('number of vol ssrc space vertices must be equal to \
                             the total number of ROI vertices')
 
-    roi_mni = dict(ROI_aseg_name=roi_aseg_name,
-                   ROI_aseg_MNI_coords=roi_aseg_mni_coords,
-                   ROI_aseg_color=roi_aseg_color)
+    roi_mni = dict(ROI_aseg_name=ROI_aseg_name,
+                   ROI_aseg_MNI_coords=ROI_aseg_MNI_coords,
+                   ROI_aseg_color=ROI_aseg_color)
 
     return roi_mni
 
