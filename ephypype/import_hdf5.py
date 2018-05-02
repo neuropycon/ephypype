@@ -58,6 +58,7 @@ def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
 
     write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
 
+<<<<<<< HEAD
 
 def import_hdf5_file(hdf5_file, data_field_name='F'):
 
@@ -80,4 +81,6 @@ def import_hdf5_file(hdf5_file, data_field_name='F'):
 
     return ts_file
 
+=======
+>>>>>>> 69f7807... added hdf5 utils
      
