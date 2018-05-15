@@ -11,7 +11,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
-from ephypype.compute_inv_problem import compute_rois_inv_sol
+from ephypype.compute_inv_problem import compute_inverse_solution
 from ephypype.preproc import create_reject_dict
 from mne import find_events, compute_raw_covariance, compute_covariance
 from mne import pick_types, write_cov, Epochs
@@ -69,8 +69,12 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
 
-    save_stc = traits.Bool(False, desc='if true save stc', usedefault=True,
-                           mandatory=False)
+    all_src_space = traits.Bool(False, desc='if true compute inverse on all \
+                                source space', usedefault=True,
+                                mandatory=False)
+
+    ROIs_mean = traits.Bool(True, desc='if true compute mean on ROIs',
+                            usedefault=True, mandatory=False)
 
 
 class InverseSolutionConnOutputSpec(TraitedSpec):
@@ -90,43 +94,45 @@ class InverseSolution(BaseInterface):
 
     Parameters
     ----------
-    sbj_id : str
-        subject name
-    sbj_dir : str
-        Freesurfer directory
-    raw_filename : str
-        filename of the raw data
-    cov_filename : str
-        filename of the noise covariance matrix
-    fwd_filename : str
-        filename of the forward operator
-    is_epoched : bool
-        if True and events_id = None the input data are epoch data
-        in the format -epo.fif
-        if True and events_id is not None, the raw data are epoched
-        according to events_id and t_min and t_max values
-    events_id: dict
-        the dict of events
-    t_min, t_max: int (defualt None)
-        define the time interval in which to epoch the raw data
-    is_evoked: bool
-        if True the raw data will be averaged according to the events
-        contained in the dict events_id
-    is_fixed : bool
-        if True we use fixed orientation
-    inv_method : str
-        the inverse method to use; possible choices: MNE, dSPM, sLORETA
-    snr : float
-        the SNR value used to define the regularization parameter
-    parc: str
-        the parcellation defining the ROIs atlas in the source space
-    aseg: bool
-        if True a mixed source space will be created and the sub cortical
-        regions defined in aseg_labels will be added to the source space
-    aseg_labels: list
-        list of substructures we want to include in the mixed source space
-    save_stc: bool
-        if True the stc will be saved
+        sbj_id : str
+            subject name
+        sbj_dir : str
+            Freesurfer directory
+        raw_filename : str
+            filename of the raw data
+        cov_filename : str
+            filename of the noise covariance matrix
+        fwd_filename : str
+            filename of the forward operator
+        is_epoched : bool
+            if True and events_id = None the input data are epoch data
+            in the format -epo.fif
+            if True and events_id is not None, the raw data are epoched
+            according to events_id and t_min and t_max values
+        events_id: dict
+            the dict of events
+        t_min, t_max: int (defualt None)
+            define the time interval in which to epoch the raw data
+        is_evoked: bool
+            if True the raw data will be averaged according to the events
+            contained in the dict events_id
+        is_fixed : bool
+            if True we use fixed orientation
+        inv_method : str
+            the inverse method to use; possible choices: MNE, dSPM, sLORETA
+        snr : float
+            the SNR value used to define the regularization parameter
+        parc: str
+            the parcellation defining the ROIs atlas in the source space
+        aseg: bool
+            if True a mixed source space will be created and the sub cortical
+            regions defined in aseg_labels will be added to the source space
+        aseg_labels: list
+            list of substructures we want to include in the mixed source space
+        all_src_space: bool
+            if True we compute the inverse for all points of the s0urce space
+        ROIs_mean: bool
+            if True we compute the mean of estimated time series on ROIs
     """
 
     input_spec = InverseSolutionConnInputSpec
@@ -150,15 +156,17 @@ class InverseSolution(BaseInterface):
         parc = self.inputs.parc
         aseg = self.inputs.aseg
         aseg_labels = self.inputs.aseg_labels
-        save_stc = self.inputs.save_stc
+        all_src_space = self.inputs.all_src_space
+        ROIs_mean = self.inputs.ROIs_mean
 
         self.ts_file, self.labels, self.label_names, self.label_coords = \
-            compute_rois_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
-                                 cov_filename, is_epoched, events_id,
-                                 t_min, t_max, is_evoked,
-                                 snr, inv_method, parc,
-                                 aseg, aseg_labels, save_stc,
-                                 is_fixed)
+            compute_inverse_solution(raw_filename, sbj_id, sbj_dir,
+                                     fwd_filename, cov_filename,
+                                     is_epoched, events_id,
+                                     t_min, t_max, is_evoked,
+                                     snr, inv_method, parc,
+                                     aseg, aseg_labels, all_src_space,
+                                     ROIs_mean, is_fixed)
 
         return runtime
 
