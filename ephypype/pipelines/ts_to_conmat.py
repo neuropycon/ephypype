@@ -26,7 +26,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          n_windows=[],
                                                          mode='multitaper',
                                                          is_sensor_space=True,
-                                                         epoch_window_length=None):
+                                                         epoch_window_length=None,
+                                                         gathering_method = "mean"):
     """
     Description:
 
@@ -39,7 +40,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         pipeline_name: str (default 'ts_to_conmat')
             name of the pipeline
         con_method : str
-            metric computed on time series for connectivity; possible choice: "coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased"     
+            metric computed on time series for connectivity; 
+            possible choices: "coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased"     
         multi_con : bool (default False)
             True if multiple connectivity matrices are exported
         export_to_matlab : bool (default False)
@@ -53,6 +55,11 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         is_sensor_space : bool (default True)
              True if we compute connectivity on sensor space
 
+        gathering_method : str
+             how the connectivity matrices are gathered
+             possible choices: "mean", "max" or "none": 
+             (now a paramter of SpectralConn node)
+             
     Inputs (inputnode):
 
         ts_file : str
@@ -92,6 +99,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
 #        spectral.inputs.sfreq = sfreq
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
+        spectral.inputs.gathering_method = gathering_method
+        
         if epoch_window_length:
             spectral.inputs.epoch_window_length = epoch_window_length
 
@@ -146,7 +155,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         spectral.inputs.epoch_window_length = epoch_window_length
-
+        spectral.inputs.gathering_method = gathering_method
+        
         #pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(win_ts, 'win_ts_files', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
