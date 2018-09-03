@@ -46,6 +46,7 @@ install:
 
 
 script:
+    # Run test with coverage
     - if [[ "${TEST}" == "standard" ]]; then
           py.test --cov;
       fi;
