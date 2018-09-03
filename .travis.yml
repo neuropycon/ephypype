@@ -36,7 +36,7 @@ before_install:
 
 install:
     # Create the python environment ;
-    - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy pip;
+    - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy pip cython matplotlib;
     - source activate testenv
     # Testing dependencies
     - pip install codecov pytest pytest-cov;
