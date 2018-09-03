@@ -57,6 +57,7 @@ notifications:
 
 
 after_success:
+    # Code coverage
     - if [ "${TEST}" == "standard" ]; then
         codecov;
       fi
