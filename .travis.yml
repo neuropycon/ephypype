@@ -52,6 +52,7 @@ script:
     - if [[ "${TEST}" == "standard" ]]; then
           py.test --cov;
       fi;
+    - flake8 --count ephypype
 
 
 notifications:
