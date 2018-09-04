@@ -3,6 +3,8 @@ language: python
 cache:
   pip: true
   apt: true
+  directories:
+  - ~/mne_data/
 
 sudo: false
 dist: trusty
@@ -19,6 +21,7 @@ matrix:
 
 
 before_install:
+    # See https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI :
     # Instal miniconda
     - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
         wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -43,7 +46,6 @@ install:
     # Install ephypype
     - cd ${SRC_DIR}
     - pip install -e .
-
 
 script:
     # Run test with coverage
