@@ -78,7 +78,6 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
             
             #print (con_matrix)
             print (np.mean(np.array(con_matrix), axis=3))
-            0/0
             
             con_matrix = np.amax(np.mean(np.array(con_matrix), axis=3),axis = 2)
             
