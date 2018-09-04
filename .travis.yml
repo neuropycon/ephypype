@@ -43,6 +43,8 @@ install:
     - source activate testenv
     # Testing dependencies
     - pip install codecov pytest pytest-cov;
+    - pip install mne nipype
+    - pip install -q flake8
     # Install ephypype
     - cd ${SRC_DIR}
     - pip install -e .
