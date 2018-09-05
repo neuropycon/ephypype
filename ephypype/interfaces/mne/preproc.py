@@ -11,6 +11,7 @@ from ephypype.preproc import compute_ica,\
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for CompIca"""
 
     fif_file = traits.File(exists=True,
@@ -23,6 +24,7 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
 
 
 class CompIcaOutputSpec(TraitedSpec):
+
     """Output specification for CompIca"""
 
     ica_file = traits.File(exists=True,
@@ -42,6 +44,7 @@ class CompIcaOutputSpec(TraitedSpec):
 
 
 class CompIca(BaseInterface):
+
     """Compute ICA solution on raw fif data"""
 
     input_spec = CompIcaInputSpec
@@ -76,6 +79,7 @@ class CompIca(BaseInterface):
 
 
 class PreprocFifInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for PreprocFif"""
 
     fif_file = traits.File(exists=True,
@@ -87,6 +91,7 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
 
 
 class PreprocFifOutputSpec(TraitedSpec):
+
     """Output specification for PreprocFif"""
 
     fif_file = traits.File(exists=True,
@@ -95,6 +100,7 @@ class PreprocFifOutputSpec(TraitedSpec):
 
 
 class PreprocFif(BaseInterface):
+
     """Interface for preproc.preprocess_fif"""
 
     input_spec = PreprocFifInputSpec
@@ -118,6 +124,7 @@ class PreprocFif(BaseInterface):
 
 
 class CreateEpInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for CreateEp"""
 
     fif_file = traits.File(exists=True,
@@ -127,6 +134,7 @@ class CreateEpInputSpec(BaseInterfaceInputSpec):
 
 
 class CreateEpOutputSpec(TraitedSpec):
+
     """Output specification for CreateEp"""
 
     epo_fif_file = traits.File(exists=True,
@@ -135,6 +143,7 @@ class CreateEpOutputSpec(TraitedSpec):
 
 
 class CreateEp(BaseInterface):
+
     """Interface for preproc.create_epochs"""
 
     input_spec = CreateEpInputSpec

@@ -27,7 +27,8 @@ def return_full_mat(mat, elec_labels, all_elec_labels):
 
     # if undirected (values are not the same on both triangular parts
     if np.sum(mat[np.tril_indices(mat.shape[0], k=-1)]) != np.sum(mat[np.triu_indices(mat.shape[0], k=1)]):
-        # if np.sum(mat[np.tril_indices(mat.shape,k =-1)]) == 0.0 and np.sum(mat[np.triu_indices(mat.shape,k =1)]) != 0.0:
+        # if np.sum(mat[np.tril_indices(mat.shape,k =-1)]) == 0.0 and
+        # np.sum(mat[np.triu_indices(mat.shape,k =1)]) != 0.0:
 
         mat = mat + np.transpose(mat)
 

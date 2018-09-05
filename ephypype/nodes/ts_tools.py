@@ -15,7 +15,7 @@ from nipype.interfaces.base import File
 
 from nipype.utils.filemanip import split_filename as split_f
 
-############################################################################################### SplitWindows #####################################################################################################
+##########################################################################
 
 #from ephypype.import_mat import import_tsmat_to_ts
 
@@ -78,7 +78,8 @@ class SplitWindows(BaseInterface):
 
             if 0 <= n_win[0] and n_win[1] <= np_ts.shape[2]:
 
-                # print "OK for : 0 <= {} and {} <= {}".format(n_win[0],n_win[1],np_ts.shape[2])
+                # print "OK for : 0 <= {} and {} <=
+                # {}".format(n_win[0],n_win[1],np_ts.shape[2])
 
                 win_ts = []
 

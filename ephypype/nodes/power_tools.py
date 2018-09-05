@@ -10,6 +10,7 @@ from nipype.interfaces.base import BaseInterface,\
 
 
 class PowerBandInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for PowerBand"""
     psds_file = traits.File(exists=True,
                             desc='psd tensor and frequencies in .npz format',
@@ -19,6 +20,7 @@ class PowerBandInputSpec(BaseInterfaceInputSpec):
 
 
 class PowerBandOutputSpec(TraitedSpec):
+
     """Output spec for PowerBand"""
 
     mean_power_band_file = traits.File(exists=True,

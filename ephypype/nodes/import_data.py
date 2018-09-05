@@ -15,6 +15,7 @@ from nipype.interfaces.base import File
 
 # ----------------- ImportMat ----------------------------- #
 class ImportMatInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for ImportMat"""
     tsmat_file = traits.File(exists=True,
                              desc='time series in .mat (matlab format)',
@@ -30,6 +31,7 @@ class ImportMatInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportMatOutputSpec(TraitedSpec):
+
     """Output spec for Import Mat"""
 
     ts_file = traits.File(exists=True, desc="time series in .npy format")
@@ -94,7 +96,7 @@ class ImportMat(BaseInterface):
         return outputs
 
 
-######################################################################################## ImportBrainVisionAscii #####################################################################################################
+##########################################################################
 
 class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
 
@@ -123,6 +125,7 @@ class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportBrainVisionAsciiOutputSpec(TraitedSpec):
+
     """Output specification for ImportBrainVisionAscii"""
 
     splitted_ts_file = traits.File(
@@ -206,7 +209,7 @@ class ImportBrainVisionAscii(BaseInterface):
 
         return outputs
 
-######################################################################################## ImportBrainVisionVhdr #####################################################################################################
+##########################################################################
 
 
 class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
@@ -224,6 +227,7 @@ class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportBrainVisionVhdrOutputSpec(TraitedSpec):
+
     """Output specification for ImportBrainVisionVhdr"""
 
     splitted_ts_file = traits.File(
@@ -323,15 +327,17 @@ class ImportBrainVisionVhdr(BaseInterface):
 
         return outputs
 
-######################################################################################## Ep2ts #####################################################################################################
+##########################################################################
 
 
 class Ep2tsInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for Ep2ts"""
     fif_file = File(exists=True, desc='fif file with epochs', mandatory=True)
 
 
 class Ep2tsOutputSpec(TraitedSpec):
+
     ''' Output specification for Ep2ts '''
     ts_file = traits.File(exists=True, desc="time series in .npy format")
 
@@ -372,6 +378,7 @@ class Ep2ts(BaseInterface):
 
 
 class ConvertDs2FifInputSpec(BaseInterfaceInputSpec):
+
     """Input specification for ImportMat"""
     ds_file = traits.Directory(exists=True,
                                desc='raw .ds file',
@@ -379,6 +386,7 @@ class ConvertDs2FifInputSpec(BaseInterfaceInputSpec):
 
 
 class ConvertDs2FifOutputSpec(TraitedSpec):
+
     ''' Output spec for Import Mat '''
 
     fif_file = traits.File(exists=True, desc='raw .fif file')

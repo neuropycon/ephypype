@@ -28,10 +28,12 @@ def create_bem_sol(sbj_dir, sbj_id):
         # performed by MNE python functions mne.bem.make_watershed_bem
         if not (op.isfile(sbj_inner_skull_fname) or
                 op.isfile(inner_skull_fname)):
-            print((inner_skull_fname + '---> FILE NOT FOUND!!!---> BEM computed'))
+            print(
+                (inner_skull_fname + '---> FILE NOT FOUND!!!---> BEM computed'))
             make_watershed_bem(sbj_id, sbj_dir, overwrite=True)
         else:
-            print(('\n*** inner skull %s surface exists!!!\n' % inner_skull_fname))
+            print(
+                ('\n*** inner skull %s surface exists!!!\n' % inner_skull_fname))
 
         # Create a BEM model for a subject
         surfaces = mne.make_bem_model(sbj_id, ico=4, conductivity=[0.3],
@@ -113,7 +115,8 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
 
         if save_mixed_src_space:
             mne.write_source_spaces(src_aseg_fname, src, overwrite=True)
-            print(('\n*** source space file {} written ***\n'.format(src_aseg_fname)))
+            print(
+                ('\n*** source space file {} written ***\n'.format(src_aseg_fname)))
 
         # Export source positions to nift file
         nii_fname = op.join(bem_dir, '%s-%s-aseg-src.nii' % (sbj_id, spacing))
@@ -121,7 +124,8 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
         # Combine the source spaces
         src.export_volume(nii_fname, mri_resolution=True)
     else:
-        print(('\n*** source space file {} exists!!!\n'.format(src_aseg_fname)))
+        print(
+            ('\n*** source space file {} exists!!!\n'.format(src_aseg_fname)))
         src = mne.read_source_spaces(src_aseg_fname)
         print(('src contains {} src spaces'.format(len(src))))
         for s in src[2:]:
@@ -169,7 +173,8 @@ def compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
     import mne
 
     fwd = mne.make_forward_solution(raw_info, trans_fname, src, bem,
-                                    mindist=5.0,  # ignore sources <= 0mm from inner skull
+                                    # ignore sources <= 0mm from inner skull
+                                    mindist=5.0,
                                     meg=True, eeg=False,
                                     n_jobs=2)
 

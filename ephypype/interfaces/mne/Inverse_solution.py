@@ -80,6 +80,7 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
 
 
 class InverseSolution(BaseInterface):
+
     """
     Compute the inverse solution on raw or epoch data considering N_r regions
     in source space based on a FreeSurfer cortical parcellation
@@ -197,6 +198,7 @@ class NoiseCovarianceConnOutputSpec(TraitedSpec):
 
 
 class NoiseCovariance(BaseInterface):
+
     """
     Compute the noise covariance matrix
 
@@ -264,7 +266,8 @@ class NoiseCovariance(BaseInterface):
 
                 try:
                     if er_fname.rfind('cov.fif') > -1:
-                        print(('\n *** NOISE cov file %s exists!! \n' % er_fname))
+                        print(
+                            ('\n *** NOISE cov file %s exists!! \n' % er_fname))
                         self.cov_fname_out = er_fname
                     else:
                         if er_fname.rfind('.fif') > -1:

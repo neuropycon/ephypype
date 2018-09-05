@@ -16,12 +16,13 @@ from nipype.utils.filemanip import split_filename as split_f
 
 
 from ephypype.spectral import compute_and_save_spectral_connectivity, \
-                              compute_and_save_multi_spectral_connectivity, \
-                              plot_circular_connectivity
+    compute_and_save_multi_spectral_connectivity, \
+    plot_circular_connectivity
 
 
 # -------------------------- SpectralConn -------------------------- #
 class SpectralConnInputSpec(BaseInterfaceInputSpec):
+
     """Input specification"""
 
     ts_file = traits.File(
@@ -55,6 +56,7 @@ class SpectralConnInputSpec(BaseInterfaceInputSpec):
 
 
 class SpectralConnOutputSpec(TraitedSpec):
+
     """Output specification"""
 
     conmat_file = File(
@@ -66,6 +68,7 @@ class SpectralConnOutputSpec(TraitedSpec):
 
 
 class SpectralConn(BaseInterface):
+
     """
     Description:
 
@@ -197,6 +200,7 @@ class SpectralConn(BaseInterface):
 
 
 class PlotSpectralConnInputSpec(BaseInterfaceInputSpec):
+
     """Input specification"""
 
     conmat_file = traits.File(
@@ -216,6 +220,7 @@ class PlotSpectralConnInputSpec(BaseInterfaceInputSpec):
 
 
 class PlotSpectralConnOutputSpec(TraitedSpec):
+
     """Output specification"""
 
     plot_conmat_file = File(
@@ -223,6 +228,7 @@ class PlotSpectralConnOutputSpec(TraitedSpec):
 
 
 class PlotSpectralConn(BaseInterface):
+
     """
 
     Description:

@@ -44,6 +44,7 @@ class LFComputationConnOutputSpec(TraitedSpec):
 
 
 class LFComputation(BaseInterface):
+
     """
     Compute the Lead Field matrix using MNE Python functions
 

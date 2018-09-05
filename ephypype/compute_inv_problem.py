@@ -158,7 +158,8 @@ def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
 +---------------------+-----------+-----------+-----------+-----------------+--------------+       
 '''
 
-# TODO too long function -> put lines code about labels in a new little function
+# TODO too long function -> put lines code about labels in a new little
+# function
 
 
 def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,

@@ -40,6 +40,7 @@ class PowerOutputSpec(TraitedSpec):
 
 
 class Power(BaseInterface):
+
     """
     Compute power spectral density on epochs or raw data
     """
