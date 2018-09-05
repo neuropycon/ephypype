@@ -1,7 +1,7 @@
+"""Power computation module.
+
+Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
 """
-Power computation module
-"""
-# Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
 
 from nipype.interfaces.base import BaseInterface, \
     BaseInterfaceInputSpec, traits, File, TraitedSpec
@@ -9,6 +9,8 @@ from ephypype.power import compute_and_save_psd, compute_and_save_src_psd
 
 
 class PowerInputSpec(BaseInterfaceInputSpec):
+    """Power input spec."""
+
     data_file = traits.File(exists=True,
                             desc='File with mne.Epochs or mne.io.Raw or .npy',
                             mandatory=True)
@@ -19,7 +21,7 @@ class PowerInputSpec(BaseInterfaceInputSpec):
     sfreq = traits.Float(desc='sampling frequency', mandatory=False)
 
     nfft = traits.Int(desc='the length of FFT used', mandatory=False)
-    overlap = traits.Float(desc='The number of points of overlap between segments',
+    overlap = traits.Float(desc='Number of points of overlap between segments',
                            mandatory=False)
 
     method = traits.Enum('welch', 'multitaper',
@@ -35,14 +37,15 @@ class PowerInputSpec(BaseInterfaceInputSpec):
 
 
 class PowerOutputSpec(TraitedSpec):
+    """Power output spec."""
+
     psds_file = File(exists=True,
                      desc='psd tensor and frequencies in .npz format')
 
 
 class Power(BaseInterface):
-    """
-    Compute power spectral density on epochs or raw data
-    """
+    """Compute power spectral density on epochs or raw data."""
+
     input_spec = PowerInputSpec
     output_spec = PowerOutputSpec
 

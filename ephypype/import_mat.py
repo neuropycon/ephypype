@@ -1,11 +1,13 @@
-# -*- coding: utf-8 -*-
+"""Import mat."""
 
 
 # def preprocess_mat_to_conmat(mat_file,):
+
+
 def import_mat_to_conmat(mat_file, data_field_name='F',
                          orig_channel_names_file=None,
                          orig_channel_coords_file=None):
-
+    """Import mat to conmat."""
     import os
     import numpy as np
     from nipype.utils.filemanip import split_filename as split_f
@@ -41,21 +43,24 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
         channel_names_file = os.path.abspath('correct_channel_names.txt')
         np.savetxt(channel_names_file, correct_channel_names, fmt='%s')
 
-    if orig_channel_names_file is not None and orig_channel_coords_file is not None:
+    if all([k is not None for k in (orig_channel_names_file,
+                                    orig_channel_coords_file)]):
         return ts_file, channel_coords_file, channel_names_file
     else:
         return ts_file
 
 
-def import_tsmat_to_ts(tsmat_file, data_field_name='F', good_channels_field_name='ChannelFlag'):
-    #,orig_channel_names_file,orig_channel_coords_file):
+def import_tsmat_to_ts(tsmat_file, data_field_name='F',
+                       good_channels_field_name='ChannelFlag'):
+    """Import tsmat to ts."""
+    # ,orig_channel_names_file,orig_channel_coords_file):
 
     import os
     import numpy as np
 
-    import mne
+    # import mne
+    # from mne.io import RawArray
 
-    from mne.io import RawArray
     from nipype.utils.filemanip import split_filename as split_f
 
     from scipy.io import loadmat
@@ -70,8 +75,7 @@ def import_tsmat_to_ts(tsmat_file, data_field_name='F', good_channels_field_name
 
     print([key for key in list(mat.keys())])
 
-    if good_channels_field_name != None:
-
+    if good_channels_field_name is not None:
         print("Using good channels to sort channels")
         good_channels = np.array(mat[good_channels_field_name])
         print((good_channels.shape))
@@ -96,14 +100,15 @@ def import_tsmat_to_ts(tsmat_file, data_field_name='F', good_channels_field_name
 
 
 def import_amplmat_to_ts(tsmat_file):
-    #,orig_channel_names_file,orig_channel_coords_file):
+    """Import amplmat to ts."""
+    # ,orig_channel_names_file,orig_channel_coords_file):
 
     import os
     import numpy as np
 
-    import mne
+    # import mne
+    # from mne.io import RawArray
 
-    from mne.io import RawArray
     from nipype.utils.filemanip import split_filename as split_f
 
     from scipy.io import loadmat
@@ -114,8 +119,8 @@ def import_amplmat_to_ts(tsmat_file):
 
     mat = loadmat(tsmat_file)
 
-    #field_name = basename.split('_')[0]
-    #field_name = basename.split('_')[1]
+    # field_name = basename.split('_')[0]
+    # field_name = basename.split('_')[1]
     # print field_name
 
     raw_data = np.array(mat['F'], dtype="f")
@@ -141,14 +146,15 @@ def import_amplmat_to_ts(tsmat_file):
     return ts_file
 
 
-def import_mat_to_ts(mat_file, orig_channel_names_file, orig_channel_coords_file):
-
+def import_mat_to_ts(mat_file, orig_channel_names_file,
+                     orig_channel_coords_file):
+    """Import mat to ts."""
     import os
     import numpy as np
 
-    import mne
+    # import mne
+    # from mne.io import RawArray
 
-    from mne.io import RawArray
     from nipype.utils.filemanip import split_filename as split_f
 
     from scipy.io import loadmat
@@ -158,7 +164,7 @@ def import_mat_to_ts(mat_file, orig_channel_names_file, orig_channel_coords_file
     mat = loadmat(mat_file)
 
     field_name = basename.split('_')[0]
-#    field_name = basename.split('_')[1]
+    # field_name = basename.split('_')[1]
     print('************************************ \n')
     print(field_name)
     print((mat[field_name].shape))
@@ -172,10 +178,11 @@ def import_mat_to_ts(mat_file, orig_channel_names_file, orig_channel_coords_file
     print(elec_names)
     # 0/0
 
-    #select_sensors = np.arange(21)
+    # select_sensors = np.arange(21)
 
-    select_sensors, = np.where(np.array([elec.startswith('EMG') or elec.startswith(
-        'EOG') for elec in elec_names], dtype='bool') == False)
+    cond = [elec.startswith('EMG') or elec.startswith(
+        'EOG') for elec in elec_names]
+    select_sensors, = np.where(np.array(cond, dtype='bool') is False)
     print(select_sensors)
 
     # save electrode locations
@@ -209,7 +216,7 @@ def import_mat_to_ts(mat_file, orig_channel_names_file, orig_channel_coords_file
 
 
 def concat_ts(all_ts_files):
-
+    """Concat ts."""
     import numpy as np
     import os
 
@@ -239,8 +246,8 @@ def concat_ts(all_ts_files):
     return concat_ts_file
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    test_loadmat()
+    # test_loadmat()
 
 # $MNE_ROOT/bin/mne_ctf2fiff --ds balai_speech-oscill_20130716_01.ds/

@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+"""Prepare data."""
+import os
+
+import numpy as np
 
 
 def format_electrodes_xls(data_path, xls_electrodes_file):
-
+    """Format electrodes to xls."""
+    import pandas as pd
     electrode_file = os.path.join(data_path, xls_electrodes_file)
 
     df = pd.read_excel(electrode_file)
@@ -37,7 +42,8 @@ def format_electrodes_xls(data_path, xls_electrodes_file):
     # replacing each electrode by new name, or by -1 if does not exists
 
     df.loc[pd.notnull(df["replace or remove"]),
-           "name_brain region"] = df["replace or remove"][pd.notnull(df["replace or remove"])]
+           "name_brain region"] = df["replace or remove"][pd.notnull(
+               df["replace or remove"])]
 
     # saving each rat independtly
 
