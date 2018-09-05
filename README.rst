@@ -1,5 +1,9 @@
 .. _readme:
 
+.. image:: https://travis-ci.org/neuropycon/ephypype.svg?branch=master
+    :target: https://travis-ci.org/neuropycon/ephypype
+
+
 README
 ******
 
