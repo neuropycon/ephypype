@@ -2,7 +2,8 @@
 import re
 
 import numpy as np
-from itertools import iter, combinations
+import itertools as iter
+from itertools import combinations
 
 from mne.viz import circular_layout, plot_connectivity_circle
 import matplotlib.pyplot as plt
