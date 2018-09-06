@@ -1,13 +1,17 @@
-# Author: David Meunier <david_meunier_79@hotmail.fr>
+"""Spectral functions.
+
+Author: David Meunier <david_meunier_79@hotmail.fr>
+"""
 
 
 # ------------------- compute spectral connectivity ------------------------- #
 def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                                   mode='cwt_morlet'):
-
+    """Compute spectral connectivity."""
     print('MODE is {}'.format(mode))
     import numpy as np
     from mne.connectivity import spectral_connectivity
+    import sys
 
     if len(data.shape) < 3:
         if con_method in ['coh', 'cohy', 'imcoh']:
@@ -56,7 +60,7 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                                            index=0, mode='cwt_morlet',
                                            export_to_matlab=False):
-
+    """Compute and save spectral connectivity."""
     import os
 
     import numpy as np
@@ -88,7 +92,7 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
                                                  fmin, fmax, mode='cwt_morlet',
                                                  export_to_matlab=False):
-
+    """Compute and save multi-spectral connectivity."""
     from ephypype.spectral import compute_and_save_spectral_connectivity
 
     print((all_data.shape))
@@ -123,8 +127,7 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
 # -------------------- plot spectral connectivity -------------------- #
 def plot_circular_connectivity(conmat, label_names, node_colors, node_order,
                                vmin=0.3, vmax=1.0, nb_lines=200, fname="_def"):
-    """Plot circular connectivity"""
-
+    """Plot circular connectivity."""
     import os
     import numpy as np
     from mne.viz import circular_layout, plot_connectivity_circle
@@ -166,8 +169,7 @@ def plot_circular_connectivity(conmat, label_names, node_colors, node_order,
 
 
 def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
-    """Filter adjacency matrix"""
-
+    """Filter adjacency matrix."""
     import numpy as np
     import os
 

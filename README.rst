@@ -3,6 +3,11 @@
 .. image:: https://travis-ci.org/neuropycon/ephypype.svg?branch=master
     :target: https://travis-ci.org/neuropycon/ephypype
 
+.. image::  https://ci.appveyor.com/api/projects/status/yt7662m83pq3t6gl/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/neuropycon/ephypype/branch/master
+
+.. image:: https://codecov.io/gh/neuropycon/ephypype/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/neuropycon/ephypype
 
 README
 ******

@@ -1,10 +1,12 @@
+"""Lead Field computation functions.
+
+Author:
+    Annalisa Pascarella <a.pascarella@iac.cnr.it>
 """
-Lead Field computation functions
-"""
-# Author: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 
 
 def create_bem_sol(sbj_dir, sbj_id):
+    """Create bem solution."""
     import os.path as op
     import mne
 
@@ -28,10 +30,12 @@ def create_bem_sol(sbj_dir, sbj_id):
         # performed by MNE python functions mne.bem.make_watershed_bem
         if not (op.isfile(sbj_inner_skull_fname) or
                 op.isfile(inner_skull_fname)):
-            print((inner_skull_fname + '---> FILE NOT FOUND!!!---> BEM computed'))
+            print("%s ---> FILE NOT FOUND!!!---> BEM "
+                  "computed" % inner_skull_fname)
             make_watershed_bem(sbj_id, sbj_dir, overwrite=True)
         else:
-            print(('\n*** inner skull %s surface exists!!!\n' % inner_skull_fname))
+            print(("\n*** inner skull %s surface "
+                   "exists!!!\n" % inner_skull_fname))
 
         # Create a BEM model for a subject
         surfaces = mne.make_bem_model(sbj_id, ico=4, conductivity=[0.3],
@@ -60,6 +64,7 @@ def create_bem_sol(sbj_dir, sbj_id):
 
 
 def create_src_space(sbj_dir, sbj_id, spacing):
+    """Create a source space."""
     import os.path as op
     import mne
 
@@ -86,6 +91,7 @@ def create_src_space(sbj_dir, sbj_id, spacing):
 
 def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
                               save_mixed_src_space):
+    """Create a miwed source space."""
     import os.path as op
     import mne
 
@@ -113,7 +119,8 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
 
         if save_mixed_src_space:
             mne.write_source_spaces(src_aseg_fname, src, overwrite=True)
-            print(('\n*** source space file {} written ***\n'.format(src_aseg_fname)))
+            print("\n*** source space file {} written "
+                  "***\n".format(src_aseg_fname))
 
         # Export source positions to nift file
         nii_fname = op.join(bem_dir, '%s-%s-aseg-src.nii' % (sbj_id, spacing))
@@ -121,7 +128,8 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
         # Combine the source spaces
         src.export_volume(nii_fname, mri_resolution=True)
     else:
-        print(('\n*** source space file {} exists!!!\n'.format(src_aseg_fname)))
+        print("\n*** source space file {} "
+              "exists!!!\n".format(src_aseg_fname))
         src = mne.read_source_spaces(src_aseg_fname)
         print(('src contains {} src spaces'.format(len(src))))
         for s in src[2:]:
@@ -131,6 +139,7 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
 
 
 def is_trans(raw_fname):
+    """Check if coregistration file."""
     import glob
     import os.path as op
 
@@ -140,9 +149,9 @@ def is_trans(raw_fname):
 
     # check if the co-registration file was created
     # if not raise an runtime error
-#    i_ica = raw_fname.find('ica')
-#    if i_ica != -1:
-#        raw_fname = raw_fname[:i_ica]
+    # i_ica = raw_fname.find('ica')
+    # if i_ica != -1:
+    #     raw_fname = raw_fname[:i_ica]
 
     raw_fname_4trans = raw_fname
     raw_fname_4trans = raw_fname_4trans.replace('_', '*')
@@ -163,14 +172,12 @@ def is_trans(raw_fname):
 
 
 def compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
-    """
-    Compute leadfield matrix by BEM
-    """
+    """Compute leadfield matrix by BEM."""
     import mne
 
+    mindist = 5.  # ignore sources <= 0mm from inner skull
     fwd = mne.make_forward_solution(raw_info, trans_fname, src, bem,
-                                    mindist=5.0,  # ignore sources <= 0mm from inner skull
-                                    meg=True, eeg=False,
+                                    mindist=mindist, meg=True, eeg=False,
                                     n_jobs=2)
 
     mne.write_forward_solution(fwd_filename, fwd, overwrite=True)

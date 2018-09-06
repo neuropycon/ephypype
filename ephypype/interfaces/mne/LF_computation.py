@@ -1,6 +1,8 @@
-# Created on Mon May  2 17:24:00 2016
-# @author: pasca
+"""LF computation.
 
+Created on Mon May  2 17:24:00 2016
+@author: pasca
+"""
 import os.path as op
 
 from nipype.utils.filemanip import split_filename as split_f
@@ -14,6 +16,7 @@ from ephypype.compute_fwd_problem import is_trans, compute_fwd_sol
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):
+    """LF computation conn input spec."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
 
@@ -39,33 +42,35 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
 
 
 class LFComputationConnOutputSpec(TraitedSpec):
+    """LF computation conn output spec."""
 
     fwd_filename = File(exists=False, desc='LF matrix')
 
 
 class LFComputation(BaseInterface):
-    """
-    Compute the Lead Field matrix using MNE Python functions
+    """Compute the Lead Field matrix using MNE Python functions.
 
     Parameters
-        sbj_id : str
-            subject name
-        sbj_dir : str
-            Freesurfer directory
-        raw_info : dict
-            information dictionary of the raw data
-        raw_filename : str
-            filename of the raw data
-        spacing : str (default 'ico-5')
-            spacing to use to setup a source space
-        aseg: bool (defualt False)
-            if True a mixed source space will be created and the sub cortical
-            regions defined in aseg_labels will be added to the source space
-        aseg_labels: list (default [])
-            list of substructures we want to include in the mixed source space
-        save_mixed_src_space: bool (default False)
-            if True save the mixed src space
+    ----------
+    sbj_id : str
+        subject name
+    sbj_dir : str
+        Freesurfer directory
+    raw_info : dict
+        information dictionary of the raw data
+    raw_filename : str
+        filename of the raw data
+    spacing : str (default 'ico-5')
+        spacing to use to setup a source space
+    aseg: bool (defualt False)
+        if True a mixed source space will be created and the sub cortical
+        regions defined in aseg_labels will be added to the source space
+    aseg_labels: list (default [])
+        list of substructures we want to include in the mixed source space
+    save_mixed_src_space: bool (default False)
+        if True save the mixed src space
     """
+
     input_spec = LFComputationConnInputSpec
     output_spec = LFComputationConnOutputSpec
 

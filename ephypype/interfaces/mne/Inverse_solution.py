@@ -1,3 +1,4 @@
+"""MNE inverse solution."""
 # Created on Mon May  2 17:24:00 2016
 # @author: pasca
 
@@ -10,7 +11,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
-from ephypype.compute_inv_problem import compute_ROIs_inv_sol
+from ephypype.compute_inv_problem import compute_rois_inv_sol
 from ephypype.preproc import create_reject_dict
 from mne import find_events, compute_raw_covariance, compute_covariance
 from mne import pick_types, write_cov, Epochs
@@ -18,6 +19,7 @@ from mne.io import read_raw_fif, read_raw_ctf
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
+    """Inverse slution conn input spec."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
 
@@ -72,6 +74,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
 
 
 class InverseSolutionConnOutputSpec(TraitedSpec):
+    """Inverse solution conn output spec."""
 
     ts_file = File(exists=False, desc='source reconstruction in .npy format')
     labels = File(exists=False, desc='labels file in pickle format')
@@ -80,51 +83,52 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
 
 
 class InverseSolution(BaseInterface):
-    """
-    Compute the inverse solution on raw or epoch data considering N_r regions
-    in source space based on a FreeSurfer cortical parcellation
+    """Compute the inverse solution on raw or epoch data.
+
+    This class is considering N_r regions in source space based on a FreeSurfer
+    cortical parcellation.
 
     Parameters
-
-        sbj_id : str
-            subject name
-        sbj_dir : str
-            Freesurfer directory
-        raw_filename : str
-            filename of the raw data
-        cov_filename : str
-            filename of the noise covariance matrix
-        fwd_filename : str
-            filename of the forward operator
-        is_epoched : bool
-            if True and events_id = None the input data are epoch data
-            in the format -epo.fif
-            if True and events_id is not None, the raw data are epoched
-            according to events_id and t_min and t_max values
-        events_id: dict
-            the dict of events
-        t_min, t_max: int (defualt None)
-            define the time interval in which to epoch the raw data
-        is_evoked: bool
-            if True the raw data will be averaged according to the events
-            contained in the dict events_id
-        is_fixed : bool
-            if True we use fixed orientation
-        inv_method : str
-            the inverse method to use; possible choices: MNE, dSPM, sLORETA
-        snr : float
-            the SNR value used to define the regularization parameter
-        parc: str
-            the parcellation defining the ROIs atlas in the source space
-        aseg: bool
-            if True a mixed source space will be created and the sub cortical
-            regions defined in aseg_labels will be added to the source space
-        aseg_labels: list
-            list of substructures we want to include in the mixed source space
-        save_stc: bool
-            if True the stc will be saved
-
+    ----------
+    sbj_id : str
+        subject name
+    sbj_dir : str
+        Freesurfer directory
+    raw_filename : str
+        filename of the raw data
+    cov_filename : str
+        filename of the noise covariance matrix
+    fwd_filename : str
+        filename of the forward operator
+    is_epoched : bool
+        if True and events_id = None the input data are epoch data
+        in the format -epo.fif
+        if True and events_id is not None, the raw data are epoched
+        according to events_id and t_min and t_max values
+    events_id: dict
+        the dict of events
+    t_min, t_max: int (defualt None)
+        define the time interval in which to epoch the raw data
+    is_evoked: bool
+        if True the raw data will be averaged according to the events
+        contained in the dict events_id
+    is_fixed : bool
+        if True we use fixed orientation
+    inv_method : str
+        the inverse method to use; possible choices: MNE, dSPM, sLORETA
+    snr : float
+        the SNR value used to define the regularization parameter
+    parc: str
+        the parcellation defining the ROIs atlas in the source space
+    aseg: bool
+        if True a mixed source space will be created and the sub cortical
+        regions defined in aseg_labels will be added to the source space
+    aseg_labels: list
+        list of substructures we want to include in the mixed source space
+    save_stc: bool
+        if True the stc will be saved
     """
+
     input_spec = InverseSolutionConnInputSpec
     output_spec = InverseSolutionConnOutputSpec
 
@@ -149,7 +153,7 @@ class InverseSolution(BaseInterface):
         save_stc = self.inputs.save_stc
 
         self.ts_file, self.labels, self.label_names, self.label_coords = \
-            compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
+            compute_rois_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                                  cov_filename, is_epoched, events_id,
                                  t_min, t_max, is_evoked,
                                  snr, inv_method, parc,
@@ -171,6 +175,7 @@ class InverseSolution(BaseInterface):
 
 
 class NoiseCovarianceConnInputSpec(BaseInterfaceInputSpec):
+    """Noise covariance conn input spec."""
 
     cov_fname_in = traits.File(exists=False, desc='file name for Noise \
                                Covariance Matrix')
@@ -192,30 +197,32 @@ class NoiseCovarianceConnInputSpec(BaseInterfaceInputSpec):
 
 
 class NoiseCovarianceConnOutputSpec(TraitedSpec):
+    """Noise covariance conn output spec."""
 
     cov_fname_out = File(exists=False, desc='Noise covariances matrix')
 
 
 class NoiseCovariance(BaseInterface):
-    """
-    Compute the noise covariance matrix
+    """Compute the noise covariance matrix.
 
     Parameters
-        raw_filename : str
-            filename of the raw data
-        cov_fname_in : str
-            filename of the noise covariance matrix
-        is_epoched : bool
-            True if we want to epoch the data
-        is_evoked : bool
-            True if we want to analyze evoked data
-        events_id : dict
-            the id of all events to consider
-        t_min : float
-            start time before event
-        tmax : float
-            end time after event
+    ----------
+    raw_filename : str
+        filename of the raw data
+    cov_fname_in : str
+        filename of the noise covariance matrix
+    is_epoched : bool
+        True if we want to epoch the data
+    is_evoked : bool
+        True if we want to analyze evoked data
+    events_id : dict
+        the id of all events to consider
+    t_min : float
+        start time before event
+    tmax : float
+        end time after event
     """
+
     input_spec = NoiseCovarianceConnInputSpec
     output_spec = NoiseCovarianceConnOutputSpec
 
@@ -264,7 +271,8 @@ class NoiseCovariance(BaseInterface):
 
                 try:
                     if er_fname.rfind('cov.fif') > -1:
-                        print(('\n *** NOISE cov file %s exists!! \n' % er_fname))
+                        print("\n *** NOISE cov file %s exists!! "
+                              "\n" % er_fname)
                         self.cov_fname_out = er_fname
                     else:
                         if er_fname.rfind('.fif') > -1:

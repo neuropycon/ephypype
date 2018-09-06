@@ -1,14 +1,16 @@
+"""Import txt."""
 # -*- coding: utf-8 -*-
 
 
-def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";", keep_electrodes=""):
-
+def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
+              keep_electrodes=""):
+    """Split txt."""
     import os
 
     import numpy as np
     import pandas as pd
 
-    if repair == True:
+    if repair is True:
 
         df_data = []
         elec_names = []
@@ -34,7 +36,7 @@ def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";", keep_
 
                 elec_names.append(name)
 
-                #elec_names.append("".join(name.split(" ")))
+                # elec_names.append("".join(name.split(" ")))
 
                 data = splitted_line[1]
 
@@ -44,8 +46,8 @@ def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";", keep_
 
                 new_data = data.replace(" ", sep)
 
-                df_data.append([float(data.replace(",", "."))
-                                for data in new_data.split(sep)])
+                df_data.append([float(d.replace(",", "."))
+                                for d in new_data.split(sep)])
 
                 # print df_data
 
@@ -76,18 +78,18 @@ def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";", keep_
     if sep_label_name != "":
         if len(list_keep_electrodes) == 0:
 
-            keep = np.array([len(index.split(sep_label_name))
-                             == 2 for index in list_indexes], dtype="int")
+            keep = [len(index.split(
+                        sep_label_name)) == 2 for index in list_indexes]
         else:
 
-            keep = np.array([len(index.split(sep_label_name)) ==
-                             2 and index in list_keep_electrodes for index in list_indexes], dtype="int")
+            keep = [len(index.split(sep_label_name)) == 2 and index in
+                    list_keep_electrodes for index in list_indexes]
     else:
         if len(list_keep_electrodes) == 0:
             keep = np.ones(shape=np_indexes.shape)
         else:
-            keep = np.array(
-                [index in list_keep_electrodes for index in list_indexes], dtype="int")
+            keep = [index in list_keep_electrodes for index in list_indexes]
+    keep = keep.astype(int)
 
     print(keep)
 
@@ -134,8 +136,8 @@ def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";", keep_
 
 
 def read_brainvision_vhdr(vhdr_file, sample_size):
-
-    import os
+    """Read brainvision vhdr files."""
+    # import os
     import mne
     import numpy as np
 

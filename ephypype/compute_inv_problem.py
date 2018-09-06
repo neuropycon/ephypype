@@ -1,26 +1,30 @@
-# Created on Thu Oct  8 17:53:07 2015
-# @author: pasca
+"""Compute inverse problem.
+
+Created on Thu Oct  8 17:53:07 2015
+@author: pasca
+"""
 
 
 def compute_noise_cov(cov_fname, raw):
-    """
-    Compute noise covariance data from a continuous segment of raw data.
+    """Compute noise covariance data from a continuous segment of raw data.
+
     Employ empty room data (collected without the subject) to calculate
-    the full noise covariance matrix.
-    This is recommended for analyzing ongoing spontaneous activity.
+    the full noise covariance matrix. This is recommended for analyzing ongoing
+    spontaneous activity.
 
-    Inputs
-        cov_fname : str
-            noise covariance file name
-        raw : Raw
-            the raw data
+    Parameters
+    ----------
+    cov_fname : str
+        noise covariance file name
+    raw : Raw
+        the raw data
 
-    Output
-        cov_fname : str
-            noise covariance file name in which is saved the noise covariance
-            matrix
+    Returns
+    -------
+    cov_fname : str
+        noise covariance file name in which is saved the noise covariance
+        matrix
     """
-
     import os.path as op
 
     from mne import compute_raw_covariance, pick_types, write_cov
@@ -49,18 +53,19 @@ def compute_noise_cov(cov_fname, raw):
 
 
 def read_noise_cov(cov_fname, raw_info):
-    """
-    Read a noise covariance matrix from cov_fname
+    """Read a noise covariance matrix from cov_fname.
 
-    Inputs
-        cov_fname : str
-            noise covariance file name
-        raw_info : dict
-            dictionary containing the information about the raw data
+    Parameters
+    ----------
+    cov_fname : str
+        noise covariance file name
+    raw_info : dict
+        dictionary containing the information about the raw data
 
-    Outputs
-        noise_cov : Covariance
-            the noise covariance matrix
+    Returns
+    -------
+    noise_cov : Covariance
+        the noise covariance matrix
     """
     import os.path as op
     import numpy as np
@@ -74,9 +79,9 @@ def read_noise_cov(cov_fname, raw_info):
                                exclude='bads')
         ch_names = [raw_info['ch_names'][i] for i in picks]
 
-        C = mne.Covariance(data=np.identity(len(picks)), names=ch_names,
+        c = mne.Covariance(data=np.identity(len(picks)), names=ch_names,
                            bads=[], projs=[], nfree=0)
-        mne.write_cov(cov_fname, C)
+        mne.write_cov(cov_fname, c)
     else:
         print(('*** noise covariance file %s exists!!!' % cov_fname))
         noise_cov = mne.read_cov(cov_fname)
@@ -87,6 +92,7 @@ def read_noise_cov(cov_fname, raw_info):
 
 
 def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
+    """Compute ts inverse solution."""
     import os.path as op
     import numpy as np
     import mne
@@ -137,7 +143,7 @@ def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
 
 '''
 +---------------------+-----------+-----------+-----------+-----------------+--------------+
-| Inverse desired                             | Forward parameters allowed                 |
+| Inverse desired                             | Forward parameters allowed                 |  # noqa
 +=====================+===========+===========+===========+=================+==============+
 |                     | **loose** | **depth** | **fixed** | **force_fixed** | **surf_ori** |
 +---------------------+-----------+-----------+-----------+-----------------+--------------+
@@ -155,72 +161,74 @@ def compute_ts_inv_sol(raw, fwd_filename, cov_fname, snr, inv_method, aseg):
 | | Depth weighted    |           |           |           |                 |              |
 +---------------------+-----------+-----------+-----------+-----------------+--------------+
 | | Fixed constraint  | None      | None      | True      | True            | True         |
-+---------------------+-----------+-----------+-----------+-----------------+--------------+       
++---------------------+-----------+-----------+-----------+-----------------+--------------+
 '''
 
-# TODO too long function -> put lines code about labels in a new little function
+# TODO too long function -> put lines code about labels in a new little
+# function
 
 
-def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
+def compute_rois_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
                          cov_fname, is_epoched=False, events_id=[],
                          t_min=None, t_max=None, is_evoked=False,
                          snr=1.0, inv_method='MNE',
                          parc='aparc', aseg=False, aseg_labels=[],
                          save_stc=False, is_fixed=False):
-    """
-    Compute the inverse solution on raw/epoched data and return the average
-    time series computed in the N_r regions of the source space defined by
-    the specified cortical parcellation
+    """Compute the inverse solution on raw/epoched data.
 
-    Inputs
-        raw_filename : str
-            filename of the raw/epoched data
-        sbj_id : str
-            subject name
-        sbj_dir : str
-            Freesurfer directory
-        fwd_filename : str
-            filename of the forward operator
-        cov_filename : str
-            filename of the noise covariance matrix
-        is_epoched : bool
-            if True and events_id = None the input data are epoch data
-            in the format -epo.fif
-            if True and events_id is not None, the raw data are epoched
-            according to events_id and t_min and t_max values
-        events_id: dict
-            the dict of events
-        t_min, t_max: int
-            define the time interval in which to epoch the raw data
-        is_evoked: bool
-            if True the raw data will be averaged according to the events
-            contained in the dict events_id
-        inv_method : str
-            the inverse method to use; possible choices: MNE, dSPM, sLORETA
-        snr : float
-            the SNR value used to define the regularization parameter
-        parc: str
-            the parcellation defining the ROIs atlas in the source space
-        aseg: bool
-            if True a mixed source space will be created and the sub cortical
-            regions defined in aseg_labels will be added to the source space
-        aseg_labels: list
-            list of substructures we want to include in the mixed source space
-        save_stc: bool
-            if True the stc will be saved
+    This function return the average time series computed in the N_r regions of
+    the source space defined by the specified cortical parcellation
 
-    Outputs
-        ts_file : str
-            filename of the file where are saved the ROIs time series
-        labels_file : str
-            filename of the file where are saved the ROIs of the parcellation
-        label_names_file : str
-            filename of the file where are saved the name of the ROIs of the
-            parcellation
-        label_coords_file : str
-            filename of the file where are saved the coordinates of the
-            centroid of the ROIs of the parcellation
+    Parameters
+    ----------
+    raw_filename : str
+        filename of the raw/epoched data
+    sbj_id : str
+        subject name
+    sbj_dir : str
+        Freesurfer directory
+    fwd_filename : str
+        filename of the forward operator
+    cov_filename : str
+        filename of the noise covariance matrix
+    is_epoched : bool
+        if True and events_id = None the input data are epoch data
+        in the format -epo.fif
+        if True and events_id is not None, the raw data are epoched
+        according to events_id and t_min and t_max values
+    events_id: dict
+        the dict of events
+    t_min, t_max: int
+        define the time interval in which to epoch the raw data
+    is_evoked: bool
+        if True the raw data will be averaged according to the events
+        contained in the dict events_id
+    inv_method : str
+        the inverse method to use; possible choices: MNE, dSPM, sLORETA
+    snr : float
+        the SNR value used to define the regularization parameter
+    parc: str
+        the parcellation defining the ROIs atlas in the source space
+    aseg: bool
+        if True a mixed source space will be created and the sub cortical
+        regions defined in aseg_labels will be added to the source space
+    aseg_labels: list
+        list of substructures we want to include in the mixed source space
+    save_stc: bool
+        if True the stc will be saved
 
+    Returns
+    -------
+    ts_file : str
+        filename of the file where are saved the ROIs time series
+    labels_file : str
+        filename of the file where are saved the ROIs of the parcellation
+    label_names_file : str
+        filename of the file where are saved the name of the ROIs of the
+        parcellation
+    label_coords_file : str
+        filename of the file where are saved the coordinates of the
+        centroid of the ROIs of the parcellation
     """
     import os.path as op
     import numpy as np
@@ -235,7 +243,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     from nipype.utils.filemanip import split_filename as split_f
 
     from ephypype.preproc import create_reject_dict
-    from ephypype.source_space import create_MNI_label_files
+    from ephypype.source_space import create_mni_label_files
 
     try:
         traits.undefined(events_id)
@@ -389,10 +397,10 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     print((labels[0].pos))
     print((len(labels)))
 
-
-#    labels_file, label_names_file, label_coords_file = create_label_files(labels)
+    # labels_file, label_names_file, label_coords_file = \
+    # create_label_files(labels)
     labels_file, label_names_file, label_coords_file = \
-        create_MNI_label_files(forward, labels_cortex, labels_aseg,
+        create_mni_label_files(forward, labels_cortex, labels_aseg,
                                sbj_id, sbj_dir)
 
     return ts_file, labels_file, label_names_file, label_coords_file
