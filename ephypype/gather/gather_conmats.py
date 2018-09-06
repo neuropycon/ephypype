@@ -26,13 +26,13 @@ def natural_keys(text):
 def return_full_mat(mat, elec_labels, all_elec_labels):
     """Get full mat."""
     n_labs = len(elec_labels)
-    assert (len(mat.shape) == 2 and mat.shape[0] == mat.shape[1],
-            "Error mat shape = {} should be a 2D squared ndarray "
-            "(matrix)".format(mat.shape))
-    assert (n_labs == mat.shape[0] and n_labs == mat.shape[1],
-            "Error, both mat dimension {} {} should be the same as "
-            "elec_labels {}".format(mat.shape[0], mat.shape[1],
-                                    len(elec_labels)))
+    assert len(mat.shape) == 2 and mat.shape[0] == mat.shape[1], (
+        "Error mat shape = {} should be a 2D squared ndarray "
+        "(matrix)".format(mat.shape))
+    assert n_labs == mat.shape[0] and n_labs == mat.shape[1], (
+        "Error, both mat dimension {} {} should be the same as "
+        "elec_labels {}".format(mat.shape[0], mat.shape[1],
+                                len(elec_labels)))
 
     # if undirected (values are not the same on both triangular parts
     if np.sum(mat[np.tril_indices(mat.shape[0], k=-1)]) != np.sum(mat[
@@ -75,10 +75,10 @@ def plot_tab_circular_connectivity(list_list_conmat, all_elec_labels,
 
     if len(list_list_conmat) != 1:
         for i, j in combinations(list(range(nb_lines)), 2):
-            assert (len(list_list_conmat[i]) == len(list_list_conmat[j]),
-                    "error, not all the same length {} != "
-                    "{}".format(len(list_list_conmat[i]),
-                                len(list_list_conmat[j])))
+            assert len(list_list_conmat[i]) == len(list_list_conmat[j]), (
+                "Error, not all the same length {} != "
+                "{}".format(len(list_list_conmat[i]),
+                            len(list_list_conmat[j])))
 
     nb_cols = len(list_list_conmat[0])
 
@@ -105,10 +105,10 @@ def plot_tab_circular_connectivity(list_list_conmat, all_elec_labels,
     if len(row_labels) == 0:
         row_labels = ['Line {}'.format(row) for row in range(nb_lines)]
 
-    assert (len(column_labels) == nb_cols,
-            "Error, specifying invalid number of column labels")
-    assert (len(row_labels) == nb_lines,
-            "Error, specifying invalid number of line labels")
+    assert len(column_labels) == nb_cols, (
+        "Error, specifying invalid number of column labels")
+    assert len(row_labels) == nb_lines, (
+        "Error, specifying invalid number of line labels")
 
     for index_sess, list_conmat in enumerate(list_list_conmat):
 
