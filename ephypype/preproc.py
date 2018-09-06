@@ -248,7 +248,7 @@ def get_raw_sfreq(raw_fname):
 
     try:
         data = mne.io.read_raw_fif(raw_fname)
-    except:
+    except:  # noqa
         data = mne.read_epochs(raw_fname)
     return data.info['sfreq']
 
