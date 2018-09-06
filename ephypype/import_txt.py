@@ -46,8 +46,8 @@ def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
 
                 new_data = data.replace(" ", sep)
 
-                df_data.append([float(data.replace(",", "."))
-                                for data in new_data.split(sep)])
+                df_data.append([float(d.replace(",", "."))
+                                for d in new_data.split(sep)])
 
                 # print df_data
 
