@@ -79,4 +79,3 @@ def import_hdf5_file(hdf5_file, data_field_name='F'):
     np.save(ts_file, raw_data)
 
     return ts_file
-     

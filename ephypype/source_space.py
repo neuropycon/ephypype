@@ -74,12 +74,11 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
         roi_name.append(label.name)
         roi_color.append(label.color)
 
-
     # TODO check!
-#    nvert_ROI = [len(vn) for vn in roi_mni_coords]
-#    if np.sum(nvert_ROI) != (len(vertno_left) + len(vertno_right)):
-#        raise RuntimeError('number of src space vertices must be equal to \
-#                            the total number of ROI vertices')
+    #    nvert_ROI = [len(vn) for vn in roi_mni_coords]
+    #    if np.sum(nvert_ROI) != (len(vertno_left) + len(vertno_right)):
+    #        raise RuntimeError('number of src space vertices must be equal \
+    #                            to the total number of ROI vertices')
 
     roi_mni = dict(ROI_name=roi_name, ROI_MNI_coords=roi_mni_coords,
                    ROI_color=roi_color)
