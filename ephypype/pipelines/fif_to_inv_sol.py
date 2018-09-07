@@ -7,10 +7,10 @@ import nipype.pipeline.engine as pe
 
 from nipype.interfaces.utility import IdentityInterface
 
-from ephypype.preproc import get_raw_info, get_epochs_info
-from ephypype.interfaces.mne.LF_computation import LFComputation
-from ephypype.interfaces.mne.Inverse_solution import NoiseCovariance
-from ephypype.interfaces.mne.Inverse_solution import InverseSolution
+from ..preproc import get_raw_info, get_epochs_info
+from ..interfaces.mne.LF_computation import LFComputation
+from ..interfaces.mne.Inverse_solution import NoiseCovariance
+from ..interfaces.mne.Inverse_solution import InverseSolution
 
 
 def create_pipeline_source_reconstruction(main_path, sbj_dir,
@@ -25,10 +25,10 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
                                           aseg=False,
                                           aseg_labels=[],
                                           noise_cov_fname=None,
-                                          save_stc=False,
+                                          all_src_space=False,
+                                          ROIs_mean=True,
                                           save_mixed_src_space=False,
                                           is_fixed=False):
-
     """
     Description:
 
@@ -70,8 +70,10 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
         noise_cov_fname: str (default None)
             template for the path to either the noise covariance matrix file or
             the empty room data
-        save_stc: bool (defualt False)
-            if True the stc will be saved
+        all_src_space: bool
+            if True we compute the inverse for all points of the s0urce space
+        ROIs_mean: bool
+            if True we compute the mean of estimated time series on ROIs
         save_mixed_src_space: bool (defualt False)
             if True the mixed src space will be saved in the FS folder
 
@@ -102,7 +104,6 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     if aseg:
         LF_computation.inputs.aseg_labels = aseg_labels
         LF_computation.inputs.save_mixed_src_space = save_mixed_src_space
-        
 
     pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
 
@@ -157,7 +158,8 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     if aseg:
         inv_solution.inputs.aseg_labels = aseg_labels
 
-    inv_solution.inputs.save_stc = save_stc
+    inv_solution.inputs.all_src_space = all_src_space
+    inv_solution.inputs.ROIs_mean = ROIs_mean
 
     pipeline.connect(inputnode, 'sbj_id', inv_solution, 'sbj_id')
     pipeline.connect(inputnode, 'raw', inv_solution, 'raw_filename')

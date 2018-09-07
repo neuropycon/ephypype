@@ -1,19 +1,19 @@
-from ephypype.power import compute_and_save_psd
-import os
+"""Test power."""
+import matplotlib
+matplotlib.use('Agg')  # for testing don't use X server
 
-def test_power_welch():
+import mne  # noqa
+
+from ephypype.power import compute_and_save_psd  # noqa
+
+data_path = mne.datasets.sample.data_path()
+raw_fname = data_path + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
+
+
+def test_power():
+    """Test computing and saving PSD."""
     fmin = 0.1
     fmax = 300
-    epochs_fname = 'test-epo.fif'
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    epochs_fname_abs = os.path.join(dir_path, epochs_fname)
-    compute_and_save_psd(epochs_fname_abs, fmin, fmax, method='welch')
 
-
-def test_power_multitaper():
-    fmin = 0.1
-    fmax = 300
-    epochs_fname = 'test-epo.fif'
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    epochs_fname_abs = os.path.join(dir_path, epochs_fname)
-    compute_and_save_psd(epochs_fname_abs, fmin, fmax, method='multitaper')
+    compute_and_save_psd(raw_fname, fmin, fmax, method='welch')
+    compute_and_save_psd(raw_fname, fmin, fmax, method='multitaper')

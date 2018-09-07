@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
-"""Preprocessing functions"""
-# Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
-#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+"""Preprocessing functions.
+
+Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
+         Annalisa Pascarella <a.pascarella@iac.cnr.it>
+"""
 
 
 def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
-    """Filter and downsample data"""
-
+    """Filter and downsample data."""
     import os
     from mne.io import read_raw_fif
     from mne import pick_types
@@ -21,7 +21,8 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
-        raw.filter(l_freq=l_freq, h_freq=h_freq, picks=select_sensors, fir_design='firwin')
+        raw.filter(l_freq=l_freq, h_freq=h_freq,
+                   picks=select_sensors, fir_design='firwin')
         filt_str = '_filt'
 
     if down_sfreq:
@@ -34,8 +35,7 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
 
 
 def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
-    """Compute ica solution"""
-
+    """Compute ica solution."""
     import os
 
     import mne
@@ -44,7 +44,6 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 
     from nipype.utils.filemanip import split_filename as split_f
-
 
     subj_path, basename, ext = split_f(fif_file)
 
@@ -129,8 +128,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
 
-def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
+def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
                                       is_sensor_space):
+    """Preprocess ICA fif to ts."""
     import os
     import sys
 
@@ -141,30 +141,43 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     from ephypype.preproc import create_ts
 
     subj_path, basename, ext = split_f(fif_file)
-    (data_path,  sbj_name) = os.path.split(subj_path)
+    (data_path, sbj_name) = os.path.split(subj_path)
 
     print(('*** SBJ %s' % subject_id + '***'))
 
     # Read raw
     current_dir = os.getcwd()
-    if os.path.exists(os.path.join(current_dir, '../ica', basename + '_ica' + ext)):
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_ica' + ext)
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)):
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_ica' + ext)
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)):  
-        raw_ica_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
-      
+    if os.path.exists(os.path.join(current_dir, '../ica',
+                                   basename + '_ica' + ext)):
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_ica' + ext)
+    elif os.path.exists(os.path.join(current_dir, '../ica',
+                                     basename + '_filt_ica' + ext)):
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_ica' + ext)
+    elif os.path.exists(os.path.join(current_dir, '../ica',
+                                     basename + '_filt_dsamp_ica' + ext)):
+        raw_ica_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
+
     print(('*** raw_ica_file %s' % raw_ica_file + '***'))
     raw = mne.io.read_raw_fif(raw_ica_file, preload=True)
 
     # load ICA
-    if os.path.exists(os.path.join(current_dir, '../ica', basename + '_ica_solution.fif')):
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_ica_solution.fif')
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')):
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_ica_solution.fif')
-    elif os.path.exists(os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')):  
-        ica_sol_file = os.path.join(current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
-      
+    if os.path.exists(os.path.join(current_dir, '../ica',
+                                   basename + '_ica_solution.fif')):
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_ica_solution.fif')
+    elif os.path.exists(os.path.join(current_dir, '../ica',
+                                     basename + '_filt_ica_solution.fif')):
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_ica_solution.fif')
+    elif os.path.exists(os.path.join(current_dir, '../ica',
+                                     basename + "_filt_dsamp_ica_solution."
+                                     "fif")):
+        ica_sol_file = os.path.join(
+            current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
+
     if os.path.exists(ica_sol_file) is False:
         print(('$$$ Warning, no %s found' % ica_sol_file))
         sys.exit()
@@ -181,19 +194,18 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
         componentes = []
         for s in session_names:
             componentes = session_dict[s]
-            
+
         if len(componentes) == 0:
             print('\n no ICA to be excluded \n')
         else:
-            print(('\n *** ICA to be excluded for session %s ' % s + \
-                    ' ' + str(componentes) + ' *** \n'))
+            print(('\n *** ICA to be excluded for session %s ' % s +
+                   ' ' + str(componentes) + ' *** \n'))
 
     ica.exclude = componentes
 
     print(('\n *** ica.exclude after set components = ', ica.exclude))
 
-
-    # apply ICA to raw data 
+    # apply ICA to raw data
     new_raw_ica_file = os.path.join(subj_path, basename + '_ica-raw.fif')
     raw_ica = ica.apply(raw)
 
@@ -203,15 +215,19 @@ def preprocess_set_ICA_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     print(ica_sol_file)
     ica.save(ica_sol_file)
 
-    ts_file, channel_coords_file, channel_names_file, raw.info['sfreq'] = create_ts(new_raw_ica_file)
+    (ts_file, channel_coords_file, channel_names_file,
+     raw.info['sfreq']) = create_ts(new_raw_ica_file)
 
     if is_sensor_space:
-        return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
+        return (ts_file, channel_coords_file, channel_names_file,
+                raw.info['sfreq'])
     else:
-        return raw_ica, channel_coords_file, channel_names_file, raw.info['sfreq']
-        
+        return (raw_ica, channel_coords_file, channel_names_file,
+                raw.info['sfreq'])
+
 
 def get_raw_info(raw_fname):
+    """Get info from raw."""
     from mne.io import Raw
 
     raw = Raw(raw_fname, preload=True)
@@ -219,6 +235,7 @@ def get_raw_info(raw_fname):
 
 
 def get_epochs_info(raw_fname):
+    """Get epoch info."""
     from mne import read_epochs
 
     epochs = read_epochs(raw_fname)
@@ -226,23 +243,25 @@ def get_epochs_info(raw_fname):
 
 
 def get_raw_sfreq(raw_fname):
+    """Get raw sfreq."""
     import mne
 
     try:
         data = mne.io.read_raw_fif(raw_fname)
-    except:
+    except:  # noqa
         data = mne.read_epochs(raw_fname)
     return data.info['sfreq']
 
 
 def create_reject_dict(raw_info):
+    """Create reject dir."""
     from mne import pick_types
 
     picks_eog = pick_types(raw_info, meg=False, ref_meg=False, eog=True)
     picks_mag = pick_types(raw_info, meg='mag', ref_meg=False)
     picks_grad = pick_types(raw_info, meg='grad', ref_meg=False)
 
-    reject=dict()
+    reject = dict()
     if picks_mag.size != 0:
         reject['mag'] = 4e-12
     if picks_grad.size != 0:
@@ -254,34 +273,25 @@ def create_reject_dict(raw_info):
 
 
 def create_ts(raw_fname):
+    """Read a raw data in **.fif** format.
 
+    Parameters
+    ----------
+    raw_fname : str
+        pathname of the raw data to read
+
+    Returns
+    -------
+    ts_file : str
+        pathname of the numpy file (.npy) containing the data read from
+        raw_fname
+    channel_coords_file : str
+        pathname of .txt file containing the channels coordinates
+    channel_names_file : str
+        pathname of .txt file containing the channels labels
+    sfreq : float
+        sampling frequency
     """
-    Description:
-
-        Read a raw data in **.fif** format
-
-    Inputs:
-
-	raw_fname : str
-	    pathname of the raw data to read 
-
-    Outputs:
-
-        ts_file : str
-	    pathname of the numpy file (.npy) containing the data read from raw_fname
-	  
-        channel_coords_file : str
-	    pathname of .txt file containing the channels coordinates
-	  
-        channel_names_file : str
-	    pathname of .txt file containing the channels labels
-	  
-        sfreq : float
-	    sampling frequency
-
-    """
-
-    
     import os
     import numpy as np
 
@@ -303,7 +313,7 @@ def create_ts(raw_fname):
 
     channel_coords_file = os.path.abspath('correct_channel_coords.txt')
     np.savetxt(channel_coords_file, sens_loc, fmt=str("%s"))
-    #np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = "%d")
+    # np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = "%d")
 
     # save electrode names
     sens_names = np.array([raw.ch_names[pos] for pos in select_sensors],
@@ -315,20 +325,19 @@ def create_ts(raw_fname):
     data, times = raw[select_sensors, :]
 
     print((data.shape))
-    
+
     ts_file = os.path.abspath(basename + '.npy')
     np.save(ts_file, data)
     print(('\n *** TS FILE ' + ts_file + '*** \n'))
     print(('*** raw.info[sfreq] = ' + str(raw.info['sfreq'])))
-        
+
     return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
 
 
 def generate_report(raw, ica, subj_name, basename,
                     ecg_evoked, ecg_scores, ecg_inds, ecg_ch_name,
                     eog_evoked, eog_scores, eog_inds, eog_ch_name):
-    """Generate report for ica solution"""
-
+    """Generate report for ica solution."""
     from mne.report import Report
     import numpy as np
     import os
@@ -348,8 +357,8 @@ def generate_report(raw, ica, subj_name, basename,
 
     # Plot estimated latent sources given the unmixing matrix.
     fig_ecg_ts = ica.plot_sources(raw, show_picks, exclude=ecg_inds,
-				  title=ica_title % 'ecg' + ' in 30s',
-				  start=0, stop=30, show=is_show)
+                                  title=ica_title % 'ecg' + ' in 30s',
+                                  start=0, stop=30, show=is_show)
 
     # topoplot of unmixing matrix columns
     fig_ecg_comp = ica.plot_components(show_picks,
@@ -361,7 +370,7 @@ def generate_report(raw, ica, subj_name, basename,
     fig = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
     report.add_figs_to_section(fig,
                                captions=['Scores of ICs related to ECG',
-					 'Time Series plots of ICs (ECG)',
+                                         'Time Series plots of ICs (ECG)',
                                          'TopoMap of ICs (ECG)',
                                          'Time-locked ECG sources'],
                                section='ICA - ECG')
@@ -413,11 +422,11 @@ def generate_report(raw, ica, subj_name, basename,
     fig = ica.plot_components(picks=ic_nums, show=False)
     report.add_figs_to_section(fig, captions=['All IC topographies'],
                                section='ICA - muscles')
-    
+
     fig = ica.plot_sources(raw, start=0, stop=None, title='All IC time series')
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
-    
+
     psds = []
     captions_psd = []
     ica_src = ica.get_sources(raw)
@@ -438,7 +447,7 @@ def generate_report(raw, ica, subj_name, basename,
 
 
 def create_events(raw, epoch_length):
-    """Create events to split raw into epochs"""
+    """Create events to split raw into epochs."""
     import numpy as np
     file_length = raw.n_times
     first_samp = raw.first_samp
@@ -455,9 +464,10 @@ def create_events(raw, epoch_length):
 
 
 def create_epochs(fif_file, ep_length):
-    """Split raw .fif file into epochs of
-    length ep_length with rejection criteria"""
+    """Split raw .fif file into epochs.
 
+    Splitted epochs have a length ep_length with rejection criteria.
+    """
     import os
     from mne.io import Raw
     from mne import Epochs
@@ -478,7 +488,7 @@ def create_epochs(fif_file, ep_length):
 
     epochs = Epochs(raw, events=events, tmin=0, tmax=ep_length,
                     preload=True, picks=picks, proj=False,
-                    add_eeg_ref=False, flat=flat, reject=reject)
+                    flat=flat, reject=reject)
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)

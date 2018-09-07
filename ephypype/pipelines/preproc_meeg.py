@@ -1,14 +1,14 @@
-"""
-Preprocessing Pipeline
-"""
-# Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
-#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+"""Preprocessing Pipeline.
 
+Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
+         Annalisa Pascarella <a.pascarella@iac.cnr.it>
+"""
 import matplotlib
 matplotlib.use('PS')
 
 
 def get_ext_file(raw_file):
+    """Get file extension."""
     from nipype.utils.filemanip import split_filename as split_f
 
     subj_path, basename, ext = split_f(raw_file)
@@ -30,78 +30,70 @@ def get_ext_file(raw_file):
 # is_set_ICA_components=True  => specify the dataset for we want to recompute
 #                               the ICA
 # in Elekta data, ICA routine automatically looks for EEG61, EEG62
-def create_pipeline_preproc_meeg(main_path,
-                                 pipeline_name='preproc_meeg',
-                                 data_type='fif',
-                                 l_freq=1, h_freq=150, down_sfreq=300,
-                                 is_ICA=True, variance=0.95,
-                                 ECG_ch_name='', EoG_ch_name='',
-                                 reject=None,
+
+
+def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg',  # noqa
+                                 data_type='fif', l_freq=1, h_freq=150,
+                                 down_sfreq=300, is_ICA=True, variance=0.95,
+                                 ECG_ch_name='', EoG_ch_name='', reject=None,
                                  is_set_ICA_components=False,
-                                 n_comp_exclude=[],
-                                 is_sensor_space=True):
+                                 n_comp_exclude=[], is_sensor_space=True):
+    """Preprocessing pipeline.
 
+    Parameters
+    ----------
+    main_path : str
+        main path to of the pipeline
+    pipeline_name: str (default 'preproc_meeg')
+        name of the pipeline
+    data_type: str (default 'fif')
+        data type: 'fif' or 'ds'
+    l_freq: float (default 1)
+        low cut-off frequency in Hz
+    h_freq: float (default 150)
+        high cut-off frequency in Hz
+    down_sfreq: float (default 300)
+        sampling frequency at which the data are downsampled
+    is_ICA : boolean (default True)
+        if True apply ICA to automatically remove ECG and EoG artifacts
+    variance: float (default 0.95)
+        float between 0 and 1: the ICA components will be selected by the
+        cumulative percentage of explained variance
+    ECG_ch_name: str (default '')
+        the name of ECG channels
+    EoG_ch_name: str (default '')
+        the name of EoG channels
+    reject: dict | None
+        rejection parameters based on peak-to-peak amplitude. Valid keys
+        are 'grad' | 'mag' | 'eeg' | 'eog' | 'ecg'. If reject is None then
+        no rejection is done
+    is_set_ICA_components: boolean (default False)
+        set to True if we had the ICA of the raw data, checked the Report
+        and want to exclude some ICA components based on their topographies
+        and time series
+        if True, we have to fill the dictionary variable n_comp_exclude
+    n_comp_exclude: dict
+        if is_set_ICA_components=True, it has to be a dict containing for
+        each subject and for each session the components to be excluded
+    is_sensor_space: boolean (default True)
+        True if we perform the analysis in sensor space and we use the
+        pipeline as lego with the connectivity or inverse pipeline
+
+    Inputs (inputnode)
+    ------------------
+    raw_file : str
+        path to raw meg data in fif format
+    subject_id : str
+        subject id
+
+    Outputs
+    -------
+    pipeline : instance of Workflow
     """
-    Description:
-
-        Preprocessing pipeline
-
-    Inputs:
-
-        main_path : str
-            main path to of the pipeline
-        pipeline_name: str (default 'preproc_meeg')
-            name of the pipeline
-        data_type: str (default 'fif')
-            data type: 'fif' or 'ds'
-        l_freq: float (default 1)
-            low cut-off frequency in Hz
-        h_freq: float (default 150)
-            high cut-off frequency in Hz
-        down_sfreq: float (default 300)
-            sampling frequency at which the data are downsampled
-        is_ICA : boolean (default True)
-            if True apply ICA to automatically remove ECG and EoG artifacts
-        variance: float (default 0.95)
-            float between 0 and 1: the ICA components will be selected by the
-            cumulative percentage of explained variance
-        ECG_ch_name: str (default '')
-            the name of ECG channels
-        EoG_ch_name: str (default '')
-            the name of EoG channels
-        reject: dict | None
-            rejection parameters based on peak-to-peak amplitude. Valid keys
-            are 'grad' | 'mag' | 'eeg' | 'eog' | 'ecg'. If reject is None then
-            no rejection is done
-        is_set_ICA_components: boolean (default False)
-            set to True if we had the ICA of the raw data, checked the Report
-            and want to exclude some ICA components based on their topographies
-            and time series
-            if True, we have to fill the dictionary variable n_comp_exclude
-        n_comp_exclude: dict
-            if is_set_ICA_components=True, it has to be a dict containing for
-            each subject and for each session the components to be excluded
-        is_sensor_space: boolean (default True)
-            True if we perform the analysis in sensor space and we use the
-            pipeline as lego with the connectivity or inverse pipeline
-
-    Inputs (inputnode):
-
-        raw_file : str
-            path to raw meg data in fif format
-        subject_id : str
-            subject id
-
-    Outputs:
-
-        pipeline : instance of Workflow
-
-    """
-
     from ephypype.interfaces.mne.preproc import PreprocFif
     from ephypype.interfaces.mne.preproc import CompIca
     from ephypype.nodes.import_data import ConvertDs2Fif
-    from ephypype.preproc import preprocess_set_ICA_comp_fif_to_ts
+    from ephypype.preproc import preprocess_set_ica_comp_fif_to_ts
     from nipype.interfaces.utility import IdentityInterface, Function
 
     import nipype
@@ -137,15 +129,14 @@ def create_pipeline_preproc_meeg(main_path,
 
     if is_ICA:
         if is_set_ICA_components:
-            ica_node = pe.Node(interface=Function(input_names=['fif_file',
-                                                               'subject_id',
-                                                               'n_comp_exclude',
-                                                               'is_sensor_space'],
-                                                  output_names=['out_file',
-                                                                'channel_coords_file',
-                                                                'channel_names_file',
-                                                                'sfreq'],
-                                                  function=preprocess_set_ICA_comp_fif_to_ts),
+            inp = ['fif_file', 'subject_id', 'n_comp_exclude',
+                   'is_sensor_space']
+            out = ['out_file', 'channel_coords_file', 'channel_names_file',
+                   'sfreq']
+            fcn = preprocess_set_ica_comp_fif_to_ts
+            ica_node = pe.Node(interface=Function(input_names=inp,
+                                                  output_names=out,
+                                                  function=fcn),
                                name='ica_set_comp')
 
             ica_node.inputs.n_comp_exclude = n_comp_exclude
@@ -160,11 +151,10 @@ def create_pipeline_preproc_meeg(main_path,
             ica_node.inputs.n_components = variance
             ica_node.inputs.ecg_ch_name = ECG_ch_name
             ica_node.inputs.eog_ch_name = EoG_ch_name
-            
+
             if reject:
                 ica_node.inputs.reject = reject
 
             pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
 
     return pipeline
-

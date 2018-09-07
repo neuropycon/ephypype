@@ -1,2 +1,3 @@
-from . import interfaces
-from . import gather
+from . import interfaces  # noqa
+from . import gather  # noqa
+__version__ = '0.1.dev0'

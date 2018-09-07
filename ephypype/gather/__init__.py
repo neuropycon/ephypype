@@ -1,1 +1,1 @@
-from . import gather_conmats
+from . import gather_conmats  # noqa
