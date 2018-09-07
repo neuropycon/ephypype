@@ -50,15 +50,10 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
         return ts_file
 
 
-<<<<<<< HEAD
 def import_tsmat_to_ts(tsmat_file, data_field_name='F',
                        good_channels_field_name='ChannelFlag'):
     """Import tsmat to ts."""
     # ,orig_channel_names_file,orig_channel_coords_file):
-=======
-def import_tsmat_to_ts(tsmat_file, data_field_name='F', good_channels_field_name='ChannelFlag'):
-    #,orig_channel_names_file,orig_channel_coords_file):
->>>>>>> 92271ae... added hdf5 utils
 
     import os
     import numpy as np
