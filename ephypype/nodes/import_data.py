@@ -83,8 +83,71 @@ class ImportMat(BaseInterface):
         return outputs
 
 
-# ------------------- ImportBrainVisionAscii -------------------
+# ----------------- ImportHdf5 ----------------------------- #
+class ImportHdf5InputSpec(BaseInterfaceInputSpec):
+    """Input specification for ImportHdf5"""
+    ts_hdf5_file = traits.File(exists=True,
+                               desc='time series in .hdf5 (hdf5 format)',
+                               mandatory=True)
 
+    data_field_name = traits.String('dataset', desc='Name of dataset',
+                                    usedefault=True)
+
+
+class ImportHdf5OutputSpec(TraitedSpec):
+    """Output spec for ImportHdf5"""
+
+    ts_file = traits.File(exists=True, desc="time series in .npy format")
+
+
+class ImportHdf5(BaseInterface):
+
+    """
+    Description:
+
+    Import hdf5 file to numpy ndarry
+
+    Inputs:
+
+    ts_hdf5_file:
+        type = File, exists=True, desc='nodes * time series
+               in .hdf5, mandatory=True
+
+    data_field_name
+        type = String, default = 'dataset', desc='Name of the dataset',
+        usedefault=True
+
+    Outputs:
+
+    ts_file
+        type = File, exists=True, desc="time series in .npy format"
+
+    """
+
+    input_spec = ImportMatInputSpec
+    output_spec = ImportMatOutputSpec
+
+    def _run_interface(self, runtime):
+
+        from ephypype.import_hdf5 import read_hdf5
+
+        ts_hdf5_file = self.inputs.ts_hdf5_file
+        data_field_name = self.inputs.data_field_name
+
+        self.ts_file = read_hdf5(ts_hdf5_file, dataset_name=data_field_name)
+
+        return runtime
+
+    def _list_outputs(self):
+
+        outputs = self._outputs().get()
+
+        outputs['ts_file'] = self.ts_file
+
+        return outputs
+
+
+# ------------------- ImportBrainVisionAscii -------------------
 class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
     """Import brainvision ascii input spec."""
 
@@ -195,9 +258,8 @@ class ImportBrainVisionAscii(BaseInterface):
 
         return outputs
 
+
 # ------------------- ImportBrainVisionVhdr -------------------
-
-
 class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
     """Import brainvision vhdr inut spec."""
 
@@ -310,9 +372,8 @@ class ImportBrainVisionVhdr(BaseInterface):
 
         return outputs
 
+
 # ------------------- Ep2ts -------------------
-
-
 class Ep2tsInputSpec(BaseInterfaceInputSpec):
     """Input specification for Ep2ts."""
 

@@ -21,5 +21,6 @@ if __name__ == "__main__":
         lisence='BSD 3',
         install_requires=['mne>=0.14',
                           'nipype',
-                          'configparser']
+                          'configparser',
+                          'h5py']
     )
