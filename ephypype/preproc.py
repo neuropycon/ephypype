@@ -84,6 +84,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     else:
         ecg_ch_name = None
 
+    # set ref_meg to 'auto'
+    select_sensors = mne.pick_types(raw.info, meg=True,
+                                    ref_meg='auto', exclude='bads')
     ecg_epochs = create_ecg_epochs(raw, tmin=-0.5, tmax=0.5,
                                    picks=select_sensors,
                                    ch_name=ecg_ch_name)
@@ -427,18 +430,21 @@ def generate_report(raw, ica, subj_name, basename,
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
 
-    psds = []
-    captions_psd = []
-    ica_src = ica.get_sources(raw)
-    for i_ic in ic_nums:
-        fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
-        fig.set_figheight(3)
-        fig.set_figwidth(5)
-        psds.append(fig)
-        captions_psd.append('IC #' + str(i_ic))
+    try:
+        psds = []
+        captions_psd = []
+        ica_src = ica.get_sources(raw)
+        for i_ic in ic_nums:
+            fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
+            fig.set_figheight(3)
+            fig.set_figwidth(5)
+            psds.append(fig)
+            captions_psd.append('IC #' + str(i_ic))
 
-    report.add_figs_to_section(figs=psds, captions=captions_psd,
-                               section='ICA - muscles')
+        report.add_figs_to_section(figs=psds, captions=captions_psd,
+                                   section='ICA - muscles')
+    except:  # noqa
+        pass
 
     report_filename = os.path.join(basename + "-report.html")
     print(('******* ' + report_filename))
