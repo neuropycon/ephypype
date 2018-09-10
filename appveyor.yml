@@ -27,10 +27,11 @@ install:
   - "conda update -q conda"
   - "conda info -a"
   # Create conda env
-  - "conda create -q -n testenv python=%PYTHON_VERSION% numpy pip cython matplotlib pytest"
+  - "conda create -q -n testenv python=%PYTHON_VERSION% numpy pip cython matplotlib pytest h5py"
   - "activate testenv"
   - "python -m pip install --upgrade pip"
   - "pip install pypiwin32"
+  - "pip install mne nipype"
   # Install ephypype
   - "pip install -e ."
 

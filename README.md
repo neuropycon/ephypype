@@ -21,7 +21,6 @@ ephypype works both with **python2** and **python3**
 * pandas
 * mne
 * nipype
-* graphpype
 
 ## Install package
 ### Install ephypype

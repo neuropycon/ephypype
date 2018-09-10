@@ -1,5 +1,7 @@
-"""Interfaces for preprocessing nodes"""
-# Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
+"""Interfaces for preprocessing nodes.
+
+Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
+"""
 
 
 from nipype.interfaces.base import BaseInterface,\
@@ -11,7 +13,7 @@ from ephypype.preproc import compute_ica,\
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
-    """Input specification for CompIca"""
+    """Input specification for CompIca."""
 
     fif_file = traits.File(exists=True,
                            desc='raw meg data in fif format',
@@ -23,7 +25,7 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
 
 
 class CompIcaOutputSpec(TraitedSpec):
-    """Output specification for CompIca"""
+    """Output specification for CompIca."""
 
     ica_file = traits.File(exists=True,
                            desc='file with raw file in .fif',
@@ -42,7 +44,7 @@ class CompIcaOutputSpec(TraitedSpec):
 
 
 class CompIca(BaseInterface):
-    """Compute ICA solution on raw fif data"""
+    """Compute ICA solution on raw fif data."""
 
     input_spec = CompIcaInputSpec
     output_spec = CompIcaOutputSpec
@@ -76,7 +78,7 @@ class CompIca(BaseInterface):
 
 
 class PreprocFifInputSpec(BaseInterfaceInputSpec):
-    """Input specification for PreprocFif"""
+    """Input specification for PreprocFif."""
 
     fif_file = traits.File(exists=True,
                            desc='raw meg data in fif format',
@@ -87,7 +89,7 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
 
 
 class PreprocFifOutputSpec(TraitedSpec):
-    """Output specification for PreprocFif"""
+    """Output specification for PreprocFif."""
 
     fif_file = traits.File(exists=True,
                            desc='.fif file',
@@ -95,7 +97,7 @@ class PreprocFifOutputSpec(TraitedSpec):
 
 
 class PreprocFif(BaseInterface):
-    """Interface for preproc.preprocess_fif"""
+    """Interface for preproc.preprocess_fif."""
 
     input_spec = PreprocFifInputSpec
     output_spec = PreprocFifOutputSpec
@@ -118,7 +120,7 @@ class PreprocFif(BaseInterface):
 
 
 class CreateEpInputSpec(BaseInterfaceInputSpec):
-    """Input specification for CreateEp"""
+    """Input specification for CreateEp."""
 
     fif_file = traits.File(exists=True,
                            desc='raw meg data in fif format',
@@ -127,7 +129,7 @@ class CreateEpInputSpec(BaseInterfaceInputSpec):
 
 
 class CreateEpOutputSpec(TraitedSpec):
-    """Output specification for CreateEp"""
+    """Output specification for CreateEp."""
 
     epo_fif_file = traits.File(exists=True,
                                desc='-epo.fif file',
@@ -135,7 +137,7 @@ class CreateEpOutputSpec(TraitedSpec):
 
 
 class CreateEp(BaseInterface):
-    """Interface for preproc.create_epochs"""
+    """Interface for preproc.create_epochs."""
 
     input_spec = CreateEpInputSpec
     output_spec = CreateEpOutputSpec

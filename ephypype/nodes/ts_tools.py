@@ -1,61 +1,59 @@
 # -*- coding: utf-8 -*-
-"""
-
-Description:
-
-All nodes for import that are NOT specific to a ephy package
-"""
+"""All nodes for import that are NOT specific to a ephy package."""
 import numpy as np
 import os
 
-from nipype.interfaces.base import BaseInterface, \
-    BaseInterfaceInputSpec, traits, TraitedSpec, isdefined
+from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
+                                    traits, TraitedSpec)
 
-from nipype.interfaces.base import File
+# from nipype.interfaces.base import File
 
-from nipype.utils.filemanip import split_filename as split_f
+# from nipype.utils.filemanip import split_filename as split_f
 
-############################################################################################### SplitWindows #####################################################################################################
+# ####################### SplitWindows #######################
 
-#from ephypype.import_mat import import_tsmat_to_ts
+# from ephypype.import_mat import import_tsmat_to_ts
 
 
 class SplitWindowsInputSpec(BaseInterfaceInputSpec):
+    """Split window input spec."""
 
     ts_file = traits.File(
         exists=True, desc='nodes * time series in .npy format', mandatory=True)
 
-    n_windows = traits.List(
-        traits.Tuple, desc='List of start and stop points (tuple of two integers) of temporal windows', mandatory=True)
+    n_windows = traits.List(traits.Tuple, desc='List of start and stop points \
+                            (tuple of two integers) of temporal windows',
+                            mandatory=True)
 
 
 class SplitWindowsOutputSpec(TraitedSpec):
+    """Split window output spec."""
 
     win_ts_files = traits.List(traits.File(
         exists=True), desc="List of files with splitted timeseries by windows")
 
 
 class SplitWindows(BaseInterface):
+    """Split time series in several windows for all trials.
 
-    """
-    Description:
+    Then save each ndarray as an independant numpy file .npy
 
-    Split time series in several windows for all trials, and save each ndarray as an independant numpy file .npy
-
-    Inputs:
-
+    Parameters
+    ----------
     ts_file:
-        type = File, exists=True, desc='nodes * time series in .npy format', mandatory=True
+        type = File, exists=True, desc='nodes * time series in .npy format',
+        mandatory=True
+    n_windows
+        type = List(Tuple), desc='List of start and stop points (tuple of two
+        integers)of temporal windows', mandatory = True
 
-    n_windows 
-        type = List(Tuple), desc='List of start and stop points (tuple of two integers)of temporal windows', mandatory = True
-
-    Outputs:
-
-    ts_file 
+    Returns
+    -------
+    ts_file
         type = File, exists=True, desc="time series in .npy format"
 
     """
+
     input_spec = SplitWindowsInputSpec
     output_spec = SplitWindowsOutputSpec
 
@@ -78,7 +76,8 @@ class SplitWindows(BaseInterface):
 
             if 0 <= n_win[0] and n_win[1] <= np_ts.shape[2]:
 
-                # print "OK for : 0 <= {} and {} <= {}".format(n_win[0],n_win[1],np_ts.shape[2])
+                # print "OK for : 0 <= {} and {} <= {}".format(n_win[0],
+                # n_win[1],np_ts.shape[2])
 
                 win_ts = []
 
@@ -92,7 +91,8 @@ class SplitWindows(BaseInterface):
 
                 win_ts = np.array(win_ts)
 
-                #win_ts = np.array([np_ts[trial_index,:,n_win[0]:n_win[1]]] for trial_index in range(np_ts.shape[0]))
+                # win_ts = np.array([np_ts[trial_index,:,n_win[0]:n_win[1]]]
+                # for trial_index in range(np_ts.shape[0]))
 
                 print((win_ts.shape))
 

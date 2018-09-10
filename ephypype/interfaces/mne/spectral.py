@@ -1,9 +1,9 @@
 
 # -*- coding: utf-8 -*-
+"""Definition of nodes for computing and plotting spectral connectivity.
+
+Author: David Meunier <david_meunier_79@hotmail.fr>
 """
-Definition of nodes for computing and plotting spectral connectivity
-"""
-# Author: David Meunier <david_meunier_79@hotmail.fr>
 
 
 import pickle
@@ -15,14 +15,14 @@ from nipype.interfaces.base import BaseInterface, \
 from nipype.utils.filemanip import split_filename as split_f
 
 
-from ephypype.spectral import compute_and_save_spectral_connectivity, \
-                              compute_and_save_multi_spectral_connectivity, \
-                              plot_circular_connectivity
+from ephypype.spectral import (compute_and_save_spectral_connectivity,
+                               compute_and_save_multi_spectral_connectivity,
+                               plot_circular_connectivity)
 
 
 # -------------------------- SpectralConn -------------------------- #
 class SpectralConnInputSpec(BaseInterfaceInputSpec):
-    """Input specification"""
+    """Input specification."""
 
     ts_file = traits.File(
         exists=True, desc='nodes * time series in .npy format', mandatory=True)
@@ -58,7 +58,7 @@ class SpectralConnInputSpec(BaseInterfaceInputSpec):
 
 
 class SpectralConnOutputSpec(TraitedSpec):
-    """Output specification"""
+    """Output specification."""
 
     conmat_file = File(
         exists=False, desc="mean spectral connectivty matrix in .npy format")
@@ -69,54 +69,44 @@ class SpectralConnOutputSpec(TraitedSpec):
 
 
 class SpectralConn(BaseInterface):
-    """
-    Description:
+    """Compute spectral connectivity in a given frequency bands.
 
-    Compute spectral connectivity in a given frequency bands
-
-    Inputs:
-
+    Parameters
+    ----------
     ts_file
         type = File , exists=True, desc='nodes * time series in .npy format',
         mandatory=True
-
     sfreq
         type = Float, desc='sampling frequency', mandatory=True
-
     freq_band
         type = List(Float) , exists=True, desc='frequency bands',
         mandatory=True
-
     con_method
         type = Enum("coh", "imcoh", "plv", "pli", "wpli",
                     "pli2_unbiased", "ppc", "cohy", "wpli2_debiased"),
         desc='metric computed on time series for connectivity'
-
     epoch_window_length
         type = Float, desc='epoched data', mandatory=False
-
     export_to_matlab
         type = Bool, default = False,
         desc='If conmat is exported to .mat format as well',
         usedefault = True
-
     index:
         type = Int, default = 0,
         desc='What to add to the name of the file',
         usedefault = True
-
     multi_con:
         type Bool, default = False,
         desc='If multiple connectivity matrices are exported',
         usedefault = True
 
-    Outputs:
-
+    Returns
+    -------
     conmat_file
         type = File, exists=True,
         desc="spectral connectivty matrix in .npy format"
-
     """
+
     input_spec = SpectralConnInputSpec
     output_spec = SpectralConnOutputSpec
 
@@ -200,7 +190,7 @@ class SpectralConn(BaseInterface):
 
 
 class PlotSpectralConnInputSpec(BaseInterfaceInputSpec):
-    """Input specification"""
+    """Input specification."""
 
     conmat_file = traits.File(
         exists=True, desc='connectivity matrix in .npy format', mandatory=True)
@@ -219,48 +209,38 @@ class PlotSpectralConnInputSpec(BaseInterfaceInputSpec):
 
 
 class PlotSpectralConnOutputSpec(TraitedSpec):
-    """Output specification"""
+    """Output specification."""
 
     plot_conmat_file = File(
         exists=True, desc="plot spectral connectivity matrix in .eps format")
 
 
 class PlotSpectralConn(BaseInterface):
-    """
+    """Plot connectivity matrix using mne plot_circular_connectivity function.
 
-    Description:
-
-    Plot connectivity matrix using mne plot_circular_connectivity function
-
-    Inputs:
-
+    Parameters
+    ----------
     conmat_file
         type = File, exists=True, desc='connectivity matrix in .npy format',
         mandatory=True
-
     is_sensor_space
         type = Bool, default = True,
         desc = 'if True uses labels as returned from mne', usedefault = True
-
     vmin
         type = Float, default = 0.3, desc='min scale value', usedefault = True
-
     vmax
         type = Float, default = 1.0, desc='max scale value', usedefault = True
-
     nb_lines
         type = Int, default = 200, desc='nb lines kept in the representation',
         usedefault = True
-
     labels_file
         type = File, desc='list of labels associated with nodes'
 
-    Outputs:
-
+    Returns
+    -------
     plot_conmat_file
         type = File, exists=True,
         desc="plot spectral connectivity matrix in .eps format"
-
     """
 
     input_spec = PlotSpectralConnInputSpec
@@ -271,8 +251,7 @@ class PlotSpectralConn(BaseInterface):
         self.plot_conmat_file = []
 
     def _run_interface(self, runtime):
-        """Run interface"""
-
+        """Run interface."""
         print('in PlotSpectralConn')
 
         # reading matrix and base filename from conmat_file
@@ -302,11 +281,11 @@ class PlotSpectralConn(BaseInterface):
 
             else:
                 with open(self.inputs.labels_file, 'rb') as f:
-                    ROI = pickle.load(f)
+                    roi = pickle.load(f)
 
-                label_coords = ROI['ROI_coords']
-                node_colors = ROI['ROI_colors']
-                label_names = ROI['ROI_names']
+                label_coords = roi['ROI_coords']
+                node_colors = roi['ROI_colors']
+                label_names = roi['ROI_names']
 
                 print('\n ********************** \n')
                 print((len(label_names)))

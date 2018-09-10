@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""Import ctf."""
 
 import os
 import mne
@@ -14,10 +14,7 @@ import numpy as np
 
 # -------------------- nodes (Function)
 def convert_ds_to_raw_fif(ds_file):
-    """Convert from CTF .ds to .fif and save
-    result in pipeline folder structure
-
-    """
+    """CTF .ds to .fif and save result in pipeline folder structure."""
     import os
     import os.path as op
 
@@ -45,26 +42,27 @@ def convert_ds_to_raw_fif(ds_file):
 
 # def convert_ds_to_raw_fif(ds_file):
 
-    #import os
+    # import os
 
-    #from nipype.utils.filemanip import split_filename as split_f
+    # from nipype.utils.filemanip import split_filename as split_f
 
-    #subj_path,basename,ext = split_f(ds_file)
+    # subj_path, basename, ext = split_f(ds_file)
 
-    ##basename = os.path.splitext(ds_file)[0]
+    # basename = os.path.splitext(ds_file)[0]
 
-    # print subj_path,basename,ext
+    # print subj_path, basename, ext
     # 0/0
 
-    #raw_fif_file = os.path.join(subj_path,basename + "_raw.fif")
+    # raw_fif_file = os.path.join(subj_path, basename + "_raw.fif")
 
-    #os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,ds_file) + " --fif " + raw_fif_file)
+    # os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(
+    #     subj_path, ds_file) + " --fif " + raw_fif_file)
 
     # return raw_fif_file
 
 
-def compute_ROI_coordinates():
-
+def compute_roi_coordinates():
+    """Compute ROI coordinates."""
     import params_victor as parv
 
     label_vertices_victor_file = os.path.join(
@@ -78,9 +76,9 @@ def compute_ROI_coordinates():
 
     print(coord_vertices_victor)
 
-    ROI_names = []
+    roi_names = []
 
-    ROI_mean_coords = []
+    roi_mean_coords = []
 
     with open(label_vertices_victor_file, 'r') as f:
 
@@ -100,7 +98,7 @@ def compute_ROI_coordinates():
 
                 correct_label = "_".join(label.split(" "))
 
-                ROI_names.append(correct_label)
+                roi_names.append(correct_label)
 
                 print((split_line[1].strip().split(' ')))
 
@@ -120,28 +118,29 @@ def compute_ROI_coordinates():
 
                 print(mean_coord)
 
-                ROI_mean_coords.append(mean_coord)
+                roi_mean_coords.append(mean_coord)
                 # np_vertice_indexes
 
-        print(ROI_names)
+        print(roi_names)
 
-        print((len(ROI_names)))
+        print((len(roi_names)))
 
-        np_ROI_mean_coords = np.array(ROI_mean_coords)
+        np_roi_mean_coords = np.array(roi_mean_coords)
 
-        print(np_ROI_mean_coords)
+        print(np_roi_mean_coords)
 
-        print((np_ROI_mean_coords.shape))
+        print((np_roi_mean_coords.shape))
 
-        np.savetxt(parv.MEG_ROI_coords_file, np_ROI_mean_coords, fmt="%f")
+        np.savetxt(parv.MEG_ROI_coords_file, np_roi_mean_coords, fmt="%f")
 
         np.savetxt(parv.MEG_ROI_names_file, np.array(
-            ROI_names, dtype=str), fmt="%s")
+            roi_names, dtype=str), fmt="%s")
 
 
 # --------------------- testing
 def test_convert_data():
-
+    """Test data conversion."""
+    from params import main_path
     subj_path = os.path.join(main_path, 'balai')
 
     print(subj_path)
@@ -156,14 +155,16 @@ def test_convert_data():
 
         print(basename)
 
-        os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(subj_path,
-                                                                    ds_f) + " --fif " + os.path.join(subj_path, basename + "_raw.fif"))
+        os.system("$MNE_ROOT/bin/mne_ctf2fiff --ds " + os.path.join(
+            subj_path, ds_f) + " --fif " + os.path.join(
+            subj_path, basename + "_raw.fif"))
 
         0 / 0
 
 
 def test_import_data():
-
+    """Test import data."""
+    from params import main_path
     subj_path = os.path.join(main_path, 'balai')
 
     print(subj_path)
@@ -187,9 +188,9 @@ def test_import_data():
             [ch_name[0] == 'M' for ch_name in raw.ch_names], dtype='bool')
 
         # print select_electrodes
-        #start, stop = raw.time_as_index([0, 100])
+        # start, stop = raw.time_as_index([0, 100])
 
-        #data,times = raw[:,start:stop]
+        # data,times = raw[:,start:stop]
 
         data, times = raw[:, :]
         print((data.shape))
@@ -197,7 +198,7 @@ def test_import_data():
         # 0/0
         electrode_data = data[select_electrodes, ]
 
-        #electrode_data = data[np.where(select_electrodes == True),]
+        # electrode_data = data[np.where(select_electrodes == True),]
 
         print((electrode_data.shape))
 
@@ -214,4 +215,4 @@ if __name__ == '__main__':
     # test_convert_data()
     # test_import_data()
 
-    compute_ROI_coordinates()
+    compute_roi_coordinates()

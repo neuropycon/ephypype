@@ -39,10 +39,12 @@ before_install:
 
 install:
     # Create the python environment ;
-    - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy pip cython matplotlib;
+    - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION numpy pip cython matplotlib h5py;
     - source activate testenv
     # Testing dependencies
     - pip install codecov pytest pytest-cov;
+    - pip install mne nipype
+    - pip install -q flake8
     # Install ephypype
     - cd ${SRC_DIR}
     - pip install -e .
@@ -52,6 +54,7 @@ script:
     - if [[ "${TEST}" == "standard" ]]; then
           py.test --cov;
       fi;
+    - flake8 --count ephypype
 
 
 notifications:
