@@ -18,7 +18,7 @@ if __name__ == "__main__":
                      as Node for electrophy (EEG/MEG)\
                      pipelines within nipype framework',
         lisence='BSD 3',
-        install_requires=['mne>=0.14',
+        install_requires=['mne>=0.16',
                           'nipype',
                           'configparser',
                           'h5py']
