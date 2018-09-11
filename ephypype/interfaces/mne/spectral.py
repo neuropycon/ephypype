@@ -52,9 +52,9 @@ class SpectralConnInputSpec(BaseInterfaceInputSpec):
     multi_con = traits.Bool(
         False, desc='If multiple connectivity matrices are exported',
         usedefault=True)
-    
+
     gathering_method = traits.Enum("mean", "max", "none",
-                             desc='gathering_method',usedefault=True)
+                                   desc='gathering_method', usedefault=True)
 
 
 class SpectralConnOutputSpec(TraitedSpec):
@@ -169,7 +169,7 @@ class SpectralConn(BaseInterface):
             self.conmat_file = compute_and_save_spectral_connectivity(
                 data=data, con_method=con_method, index=index, sfreq=sfreq,
                 fmin=freq_band[0], fmax=freq_band[1],
-                export_to_matlab=export_to_matlab, mode=mode, gathering_method = gathering_method)
+                export_to_matlab=export_to_matlab, mode=mode, gathering_method=gathering_method)
 
         return runtime
 

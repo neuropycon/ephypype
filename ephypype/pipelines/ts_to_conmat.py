@@ -23,7 +23,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
                                                          mode='multitaper',
                                                          is_sensor_space=True,
                                                          epoch_window_length=None,
-                                                         gathering_method = "mean"):
+                                                         gathering_method="mean"):
     """
     Description:
 
@@ -55,7 +55,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
              how the connectivity matrices are gathered
              possible choices: "mean", "max" or "none": 
              (now a paramter of SpectralConn node)
-             
+
     Inputs (inputnode):
 
         ts_file : str
@@ -72,8 +72,6 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         pipeline : instance of Workflow
 
     """
-
-
 
     if multi_con:
         pipeline_name = pipeline_name + '_multicon'
@@ -99,7 +97,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         spectral.inputs.gathering_method = gathering_method
-        
+
         if epoch_window_length:
             spectral.inputs.epoch_window_length = epoch_window_length
 
@@ -158,7 +156,6 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         spectral.inputs.mode = mode
         spectral.inputs.epoch_window_length = epoch_window_length
         spectral.inputs.gathering_method = gathering_method
-        
 
         # pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(win_ts, 'win_ts_files', spectral, 'ts_file')
