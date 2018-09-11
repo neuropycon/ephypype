@@ -3,13 +3,14 @@
 """Setup configuration."""
 
 from setuptools import setup, find_packages
+import ephypype
 
+VERSION = ephypype.__version__
 
 if __name__ == "__main__":
     setup(
         name='ephypype',
-        # version=VERSION,
-        version='0.1.dev0',
+        version=VERSION,
         packages=find_packages(),
         author=['David Meunier',
                 'Annalisa Pascarella',
@@ -18,7 +19,7 @@ if __name__ == "__main__":
                      as Node for electrophy (EEG/MEG)\
                      pipelines within nipype framework',
         lisence='BSD 3',
-        install_requires=['mne>=0.16',
+        install_requires=['mne>=0.14',
                           'nipype',
                           'configparser',
                           'h5py']
