@@ -342,6 +342,8 @@ def generate_report(raw, ica, subj_name, basename,
                     eog_evoked, eog_scores, eog_inds, eog_ch_name):
     """Generate report for ica solution."""
     from mne.report import Report
+    from mne.time_frequency import psd_multitaper
+    import matplotlib.pyplot as plt
     import numpy as np
     import os
     report = Report()
@@ -430,21 +432,30 @@ def generate_report(raw, ica, subj_name, basename,
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
 
-    try:
-        psds = []
-        captions_psd = []
-        ica_src = ica.get_sources(raw)
-        for i_ic in ic_nums:
-            fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
-            fig.set_figheight(3)
-            fig.set_figwidth(5)
-            psds.append(fig)
-            captions_psd.append('IC #' + str(i_ic))
+    psds_fig = []
+    captions_psd = []
+    ica_src = ica.get_sources(raw)
+    for i_ic in ic_nums:
+        # fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
+        # fig.set_figheight(3)
+        # fig.set_figwidth(5)
 
-        report.add_figs_to_section(figs=psds, captions=captions_psd,
-                                   section='ICA - muscles')
-    except:  # noqa
-        pass
+        psds, freqs = psd_multitaper(ica_src, picks=i_ic, fmax=140,
+                                     tmax=60)
+        psds = np.squeeze(psds)
+
+        f, ax = plt.subplots()
+        psds = 10 * np.log10(psds)
+
+        ax.plot(freqs, psds, color='k')
+        ax.set(title='PSD', xlabel='Frequency',
+               ylabel='Power Spectral Density (dB)')
+
+        psds_fig.append(f)
+        captions_psd.append('IC #' + str(i_ic))
+
+    report.add_figs_to_section(figs=psds_fig, captions=captions_psd,
+                               section='ICA - muscles')
 
     report_filename = os.path.join(basename + "-report.html")
     print(('******* ' + report_filename))
