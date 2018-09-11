@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Setup configuration."""
 
+import os
 from setuptools import setup, find_packages
 import ephypype
 
