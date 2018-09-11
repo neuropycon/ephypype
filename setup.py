@@ -4,6 +4,7 @@
 
 import os
 from setuptools import setup, find_packages
+import ephypype
 
 VERSION = None
 with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
@@ -14,7 +15,6 @@ with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
         
 if VERSION is None:
     raise RuntimeError('Could not determine version')
-
 
 if __name__ == "__main__":
     setup(
@@ -28,7 +28,7 @@ if __name__ == "__main__":
                      as Node for electrophy (EEG/MEG)\
                      pipelines within nipype framework',
         lisence='BSD 3',
-        install_requires=['mne>=0.16',
+        install_requires=['mne>=0.14',
                           'nipype',
                           'configparser',
                           'h5py']
