@@ -428,7 +428,8 @@ def generate_report(raw, ica, subj_name, basename,
     report.add_figs_to_section(fig, captions=['All IC topographies'],
                                section='ICA - muscles')
 
-    fig = ica.plot_sources(raw, start=0, stop=None, title='All IC time series')
+    fig = ica.plot_sources(raw, start=0, stop=None, show=False,
+                           title='All IC time series')
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
 
