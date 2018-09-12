@@ -1,9 +1,6 @@
-"""Test power."""
-import matplotlib
-matplotlib.use('Agg')  # for testing don't use X server
-
-import os.path as op  # noqa
-import mne  # noqa
+"""Test import_ctf."""
+import mne
+import os.path as op
 
 from ephypype.import_ctf import convert_ds_to_raw_fif  # noqa
 from mne.datasets.brainstorm import bst_auditory  # noqa
