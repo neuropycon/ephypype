@@ -13,10 +13,6 @@ def convert_ds_to_raw_fif(ds_file):
     _, basename, ext = split_f(ds_file)
     # print(subj_path, basename, ext)
     raw = read_raw_ctf(ds_file)
-    # raw_fif_file = os.path.abspath(basename + "_raw.fif")
-
-    # raw.save(raw_fif_file)
-    # return raw_fif_file
 
     raw_fif_file = os.path.abspath(basename + "_raw.fif")
 
