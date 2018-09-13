@@ -33,7 +33,7 @@ def test_compute_ica():
     """Test compute ICA on raw data."""
     ECG_ch_name = 'ECG'
     EoG_ch_name = 'HEOG, VEOG'
-    variance = 0.95
+    variance = 25
 
     reject = dict(mag=5e-12, grad=5000e-13)
 
