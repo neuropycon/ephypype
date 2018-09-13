@@ -31,8 +31,8 @@ def test_preprocess_fif():
 
 def test_compute_ica():
     """Test compute ICA on raw data."""
-    ECG_ch_name = 'ECG'
-    EoG_ch_name = 'HEOG, VEOG'
+    ecg_ch_name = 'ECG'
+    eog_ch_name = 'HEOG, VEOG'
     variance = 25
 
     reject = dict(mag=5e-12, grad=5000e-13)
@@ -45,4 +45,4 @@ def test_compute_ica():
     raw.save(segment_raw_fname, tmin=0, tmax=60, overwrite=True)
 
     # compute ica on raw data
-    compute_ica(segment_raw_fname, ECG_ch_name, EoG_ch_name, variance, reject)
+    compute_ica(segment_raw_fname, ecg_ch_name, eog_ch_name, variance, reject)

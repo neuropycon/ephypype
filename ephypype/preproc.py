@@ -437,9 +437,6 @@ def generate_report(raw, ica, subj_name, basename,
     captions_psd = []
     ica_src = ica.get_sources(raw)
     for i_ic in ic_nums:
-        # fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
-        # fig.set_figheight(3)
-        # fig.set_figwidth(5)
 
         psds, freqs = psd_multitaper(ica_src, picks=i_ic, fmax=140,
                                      tmax=60)
