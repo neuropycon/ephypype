@@ -23,7 +23,7 @@ graphpype and nipype
     Documentation
     =============
 
-    https://annapasca.github.io/neuropype/ephypype/ephypype.html
+    https://neuropycon.github.io/neuropycon_doc/index.html
 
 
 Installation
@@ -41,11 +41,9 @@ ephypype works both with **python2** and **python3**
 * pandas
 * mne
 * nipype
-* graphpype
 
 Some of these dependencies you should install manually (see :ref:`conda_install`), others are installed automatically
-during ephypype installation (see :ref:`ephy_install`).
-To install graphpype see :ref:`graph_install`. 
+during ephypype installation (see :ref:`ephy_install`). 
 
 We also recommend to install the  development master version of |MNE install| (see :ref:`mne_install`).
 
@@ -77,21 +75,22 @@ Install ephypype
 
 .. _graph_install:
 
-Install graphpype
-+++++++++++++++++++++++
-
-.. code-block:: bash 
-
-    git clone https://github.com/neuropycon/graphpype.git
-    cd graphpype
-    pip install .
-    cd ..
-
-see |README_graph| for more information.
-
-.. |README_graph| raw:: html
-
-   <a href="https://github.com/neuropycon/graphpype/blob/master/README.md" target="_blank">README</a>
+.. 
+    Install graphpype
+    +++++++++++++++++++++++
+    
+    .. code-block:: bash 
+    
+        git clone https://github.com/neuropycon/graphpype.git
+        cd graphpype
+        pip install .
+        cd ..
+    
+    see |README_graph| for more information.
+    
+    .. |README_graph| raw:: html
+    
+       <a href="https://github.com/neuropycon/graphpype/blob/master/README.md" target="_blank">README</a>
 
 
 .. _mne_install:
