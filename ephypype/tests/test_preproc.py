@@ -44,4 +44,5 @@ def test_compute_ica():
     segment_raw_fname = raw_fname.replace('raw.fif', '0_60s_raw.fif')
     raw.save(segment_raw_fname, tmin=0, tmax=60, overwrite=True)
 
+    # compute ica on raw data
     compute_ica(segment_raw_fname, ECG_ch_name, EoG_ch_name, variance, reject)
