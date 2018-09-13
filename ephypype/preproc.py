@@ -67,7 +67,7 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     # -------------------- Save ica timeseries ---------------------------- #
     ica_ts_file = os.path.abspath(basename + "_ica-tseries.fif")
     ica_src = ica.get_sources(raw)
-    ica_src.save(ica_ts_file)
+    ica_src.save(ica_ts_file, overwrite=True)
     ica_src = None
     # --------------------------------------------------------------------- #
 
@@ -126,7 +126,7 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     ica.save(ica_sol_file)
     raw_ica = ica.apply(raw)
     raw_ica_file = os.path.abspath(basename + '_ica' + ext)
-    raw_ica.save(raw_ica_file)
+    raw_ica.save(raw_ica_file, overwrite=True)
 
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
