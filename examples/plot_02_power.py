@@ -1,13 +1,23 @@
+"""
+==============
+Power pipeline
+==============
+The power pipeline computes the power spectral density (PSD)
+on epochs or raw data on sensor space or source space.
+The mean PSD for each selected frequency band is also
+computed and saved in a numpy file.
+"""
+
 import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
 import nipype.interfaces.io as nio
 
 from ephypype.pipelines.power import create_pipeline_power
 
-from params_power import main_path, data_path
-from params_power import subject_ids, sessions
-from params_power import power_analysis_name
-from params_power import fmin, fmax, power_method, is_epoched, freq_bands
+from params.power import main_path, data_path # noqa: E402
+from params.power import subject_ids, sessions # noqa: E402
+from params.power import power_analysis_name # noqa: E402
+from params.power import fmin, fmax, power_method, is_epoched, freq_bands # noqa: E402
 
 
 def create_infosource():

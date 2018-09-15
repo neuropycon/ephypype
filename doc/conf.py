@@ -22,6 +22,7 @@
 
 from datetime import date
 import sphinx_gallery  # noqa
+from sphinx_gallery.sorting import FileNameSortKey
 import sphinx_bootstrap_theme
 
 # -- General configuration ------------------------------------------------
@@ -185,6 +186,7 @@ sphinx_gallery_conf = {
     'gallery_dirs': 'auto_examples',
     'filename_pattern': '^((?!sgskip).)*$',
     'backreferences_dir': 'generated',
+    'within_subsection_order': FileNameSortKey,
     'reference_url': {
         'mne': 'http://mne-tools.github.io/stable/',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
