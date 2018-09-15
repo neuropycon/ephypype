@@ -1,3 +1,13 @@
+"""
+======================================
+Using ephypype to preprocess your data
+======================================
+The preprocessing pipeline runs the ICA algorithm for an
+automatic removal of eyes and heart related artefacts.
+A report is automatically generated and can be used to correct
+and/or fine-tune the correction in each subject
+"""
+
 import nipype.pipeline.engine as pe
 import nipype.interfaces.io as nio
 
@@ -5,10 +15,10 @@ from nipype.interfaces.utility import IdentityInterface
 
 from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg
 
-from params_ica import main_path, data_path, subject_ids, sessions
-from params_ica import preproc_pipeline_name
-from params_ica import data_type, down_sfreq, l_freq, h_freq
-from params_ica import variance, ECG_ch_name, EoG_ch_name
+from params.ica import main_path, data_path, subject_ids, sessions
+from params.ica import preproc_pipeline_name
+from params.ica import data_type, down_sfreq, l_freq, h_freq
+from params.ica import variance, ECG_ch_name, EoG_ch_name
 
 
 def create_infosource():

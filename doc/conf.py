@@ -191,3 +191,9 @@ sphinx_gallery_conf = {
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference'
     }
 }
+
+import sys
+import os.path as op
+
+path = op.join(op.dirname(__file__), '../examples/')
+sys.path.insert(0, path)
