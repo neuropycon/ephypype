@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ephypype.preproc &#8212; ephypype 0.1dev0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.4/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for ephypype.preproc</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Preprocessing functions.</span>
+
+<span class="sd">Authors: Dmitrii Altukhov &lt;dm-altukhov@ya.ru&gt;</span>
+<span class="sd">         Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="preprocess_fif"><a class="viewcode-back" href="../../index.html#ephypype.preproc.preprocess_fif">[docs]</a><span class="k">def</span> <span class="nf">preprocess_fif</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">down_sfreq</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter and downsample data.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">from</span> <span class="nn">mne.io</span> <span class="k">import</span> <span class="n">read_raw_fif</span>
+    <span class="kn">from</span> <span class="nn">mne</span> <span class="k">import</span> <span class="n">pick_types</span>
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">fif_file</span><span class="p">)</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">read_raw_fif</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">filt_str</span><span class="p">,</span> <span class="n">down_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">select_sensors</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eeg</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">l_freq</span> <span class="ow">or</span> <span class="n">h_freq</span><span class="p">:</span>
+        <span class="n">raw</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">l_freq</span><span class="o">=</span><span class="n">l_freq</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="n">h_freq</span><span class="p">,</span>
+                   <span class="n">picks</span><span class="o">=</span><span class="n">select_sensors</span><span class="p">,</span> <span class="n">fir_design</span><span class="o">=</span><span class="s1">&#39;firwin&#39;</span><span class="p">)</span>
+        <span class="n">filt_str</span> <span class="o">=</span> <span class="s1">&#39;_filt&#39;</span>
+
+    <span class="k">if</span> <span class="n">down_sfreq</span><span class="p">:</span>
+        <span class="n">raw</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">sfreq</span><span class="o">=</span><span class="n">down_sfreq</span><span class="p">,</span> <span class="n">npad</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stim_picks</span><span class="o">=</span><span class="n">select_sensors</span><span class="p">)</span>
+        <span class="n">down_str</span> <span class="o">=</span> <span class="s1">&#39;_dsamp&#39;</span>
+
+    <span class="n">savename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="n">filt_str</span> <span class="o">+</span> <span class="n">down_str</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">savename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">savename</span></div>
+
+
+<div class="viewcode-block" id="compute_ica"><a class="viewcode-back" href="../../index.html#ephypype.preproc.compute_ica">[docs]</a><span class="k">def</span> <span class="nf">compute_ica</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">ecg_ch_name</span><span class="p">,</span> <span class="n">eog_ch_name</span><span class="p">,</span> <span class="n">n_components</span><span class="p">,</span> <span class="n">reject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute ica solution.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="kn">import</span> <span class="nn">mne</span>
+    <span class="kn">from</span> <span class="nn">mne.io</span> <span class="k">import</span> <span class="n">read_raw_fif</span>
+    <span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="k">import</span> <span class="n">ICA</span>
+    <span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="k">import</span> <span class="n">create_ecg_epochs</span><span class="p">,</span> <span class="n">create_eog_epochs</span>
+
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">fif_file</span><span class="p">)</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">read_raw_fif</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># select sensors</span>
+    <span class="n">select_sensors</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;bads&#39;</span><span class="p">)</span>
+
+    <span class="c1"># 1) Fit ICA model using the FastICA algorithm</span>
+    <span class="c1"># Other available choices are `infomax` or `extended-infomax`</span>
+    <span class="c1"># We pass a float value between 0 and 1 to select n_components based on the</span>
+    <span class="c1"># percentage of variance explained by the PCA components.</span>
+
+    <span class="c1"># reject = dict(mag=1e-1, grad=1e-9)</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mag</span><span class="o">=</span><span class="mf">1e-13</span><span class="p">,</span> <span class="n">grad</span><span class="o">=</span><span class="mf">1e-13</span><span class="p">)</span>
+
+    <span class="n">ica</span> <span class="o">=</span> <span class="n">ICA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">n_components</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;fastica&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+
+    <span class="n">ica</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">select_sensors</span><span class="p">,</span> <span class="n">reject</span><span class="o">=</span><span class="n">reject</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="n">flat</span><span class="p">)</span>
+    <span class="c1"># -------------------- Save ica timeseries ---------------------------- #</span>
+    <span class="n">ica_ts_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s2">&quot;_ica-tseries.fif&quot;</span><span class="p">)</span>
+    <span class="n">ica_src</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">get_sources</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">ica_src</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ica_ts_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ica_src</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># --------------------------------------------------------------------- #</span>
+
+    <span class="c1"># 2) identify bad components by analyzing latent sources.</span>
+    <span class="c1"># generate ECG epochs use detection via phase statistics</span>
+
+    <span class="c1"># if we just have exclude channels we jump these steps</span>
+    <span class="n">n_max_ecg</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">n_max_eog</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="c1"># check if ecg_ch_name is in the raw channels</span>
+    <span class="k">if</span> <span class="n">ecg_ch_name</span> <span class="ow">in</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">]:</span>
+        <span class="n">raw</span><span class="o">.</span><span class="n">set_channel_types</span><span class="p">({</span><span class="n">ecg_ch_name</span><span class="p">:</span> <span class="s1">&#39;ecg&#39;</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ecg_ch_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># set ref_meg to &#39;auto&#39;</span>
+    <span class="n">select_sensors</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                    <span class="n">ref_meg</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;bads&#39;</span><span class="p">)</span>
+    <span class="n">ecg_epochs</span> <span class="o">=</span> <span class="n">create_ecg_epochs</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                   <span class="n">picks</span><span class="o">=</span><span class="n">select_sensors</span><span class="p">,</span>
+                                   <span class="n">ch_name</span><span class="o">=</span><span class="n">ecg_ch_name</span><span class="p">)</span>
+
+    <span class="n">ecg_inds</span><span class="p">,</span> <span class="n">ecg_scores</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">find_bads_ecg</span><span class="p">(</span><span class="n">ecg_epochs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;ctps&#39;</span><span class="p">)</span>
+
+    <span class="n">ecg_evoked</span> <span class="o">=</span> <span class="n">ecg_epochs</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+    <span class="n">ecg_epochs</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">ecg_inds</span> <span class="o">=</span> <span class="n">ecg_inds</span><span class="p">[:</span><span class="n">n_max_ecg</span><span class="p">]</span>
+    <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span> <span class="o">+=</span> <span class="n">ecg_inds</span>
+
+    <span class="n">eog_ch_name</span> <span class="o">=</span> <span class="n">eog_ch_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">eog_ch_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">])):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** EOG CHANNELS FOUND ***&#39;</span><span class="p">)</span>
+        <span class="n">eog_inds</span><span class="p">,</span> <span class="n">eog_scores</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">find_bads_eog</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">ch_name</span><span class="o">=</span><span class="n">eog_ch_name</span><span class="p">)</span>
+        <span class="n">eog_inds</span> <span class="o">=</span> <span class="n">eog_inds</span><span class="p">[:</span><span class="n">n_max_eog</span><span class="p">]</span>
+        <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span> <span class="o">+=</span> <span class="n">eog_inds</span>
+        <span class="n">eog_evoked</span> <span class="o">=</span> <span class="n">create_eog_epochs</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                       <span class="n">picks</span><span class="o">=</span><span class="n">select_sensors</span><span class="p">,</span>
+                                       <span class="n">ch_name</span><span class="o">=</span><span class="n">eog_ch_name</span><span class="p">)</span><span class="o">.</span><span class="n">average</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** NO EOG CHANNELS FOUND!!! ***&#39;</span><span class="p">)</span>
+        <span class="n">eog_inds</span> <span class="o">=</span> <span class="n">eog_scores</span> <span class="o">=</span> <span class="n">eog_evoked</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">report_file</span> <span class="o">=</span> <span class="n">generate_report</span><span class="p">(</span><span class="n">raw</span><span class="o">=</span><span class="n">raw</span><span class="p">,</span> <span class="n">ica</span><span class="o">=</span><span class="n">ica</span><span class="p">,</span> <span class="n">subj_name</span><span class="o">=</span><span class="n">fif_file</span><span class="p">,</span>
+                                  <span class="n">basename</span><span class="o">=</span><span class="n">basename</span><span class="p">,</span>
+                                  <span class="n">ecg_evoked</span><span class="o">=</span><span class="n">ecg_evoked</span><span class="p">,</span> <span class="n">ecg_scores</span><span class="o">=</span><span class="n">ecg_scores</span><span class="p">,</span>
+                                  <span class="n">ecg_inds</span><span class="o">=</span><span class="n">ecg_inds</span><span class="p">,</span> <span class="n">ecg_ch_name</span><span class="o">=</span><span class="n">ecg_ch_name</span><span class="p">,</span>
+                                  <span class="n">eog_evoked</span><span class="o">=</span><span class="n">eog_evoked</span><span class="p">,</span> <span class="n">eog_scores</span><span class="o">=</span><span class="n">eog_scores</span><span class="p">,</span>
+                                  <span class="n">eog_inds</span><span class="o">=</span><span class="n">eog_inds</span><span class="p">,</span> <span class="n">eog_ch_name</span><span class="o">=</span><span class="n">eog_ch_name</span><span class="p">)</span>
+
+    <span class="n">report_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">report_file</span><span class="p">)</span>
+
+    <span class="n">ica_sol_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica_solution.fif&#39;</span><span class="p">)</span>
+
+    <span class="n">ica</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ica_sol_file</span><span class="p">)</span>
+    <span class="n">raw_ica</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="n">raw_ica_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="n">raw_ica</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">raw_ica_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">raw_ica_file</span><span class="p">,</span> <span class="n">ica_sol_file</span><span class="p">,</span> <span class="n">ica_ts_file</span><span class="p">,</span> <span class="n">report_file</span></div>
+
+
+<div class="viewcode-block" id="preprocess_set_ica_comp_fif_to_ts"><a class="viewcode-back" href="../../index.html#ephypype.preproc.preprocess_set_ica_comp_fif_to_ts">[docs]</a><span class="k">def</span> <span class="nf">preprocess_set_ica_comp_fif_to_ts</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">subject_id</span><span class="p">,</span> <span class="n">n_comp_exclude</span><span class="p">,</span>
+                                      <span class="n">is_sensor_space</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Preprocess ICA fif to ts.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+
+    <span class="kn">import</span> <span class="nn">mne</span>
+    <span class="kn">from</span> <span class="nn">mne.preprocessing</span> <span class="k">import</span> <span class="n">read_ica</span>
+
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+    <span class="kn">from</span> <span class="nn">ephypype.preproc</span> <span class="k">import</span> <span class="n">create_ts</span>
+
+    <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">fif_file</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">sbj_name</span><span class="p">)</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">subj_path</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;*** SBJ </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">subject_id</span> <span class="o">+</span> <span class="s1">&#39;***&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Read raw</span>
+    <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                   <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)):</span>
+        <span class="n">raw_ica_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                     <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)):</span>
+        <span class="n">raw_ica_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                     <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_dsamp_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)):</span>
+        <span class="n">raw_ica_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_dsamp_ica&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;*** raw_ica_file </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">raw_ica_file</span> <span class="o">+</span> <span class="s1">&#39;***&#39;</span><span class="p">))</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_ica_file</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># load ICA</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                   <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica_solution.fif&#39;</span><span class="p">)):</span>
+        <span class="n">ica_sol_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica_solution.fif&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                     <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_ica_solution.fif&#39;</span><span class="p">)):</span>
+        <span class="n">ica_sol_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_ica_solution.fif&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span>
+                                     <span class="n">basename</span> <span class="o">+</span> <span class="s2">&quot;_filt_dsamp_ica_solution.&quot;</span>
+                                     <span class="s2">&quot;fif&quot;</span><span class="p">)):</span>
+        <span class="n">ica_sol_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">current_dir</span><span class="p">,</span> <span class="s1">&#39;../ica&#39;</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_filt_dsamp_ica_solution.fif&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ica_sol_file</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;$$$ Warning, no </span><span class="si">%s</span><span class="s1"> found&#39;</span> <span class="o">%</span> <span class="n">ica_sol_file</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ica</span> <span class="o">=</span> <span class="n">read_ica</span><span class="p">(</span><span class="n">ica_sol_file</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** ica.exclude before set components= &#39;</span><span class="p">,</span> <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">subject_id</span> <span class="ow">in</span> <span class="n">n_comp_exclude</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;*** ICA to be excluded for sbj </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">subject_id</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_comp_exclude</span><span class="p">[</span><span class="n">subject_id</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;***&#39;</span><span class="p">))</span>
+        <span class="n">session_dict</span> <span class="o">=</span> <span class="n">n_comp_exclude</span><span class="p">[</span><span class="n">subject_id</span><span class="p">]</span>
+        <span class="n">session_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">session_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">componentes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">session_names</span><span class="p">:</span>
+            <span class="n">componentes</span> <span class="o">=</span> <span class="n">session_dict</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">componentes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> no ICA to be excluded </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** ICA to be excluded for session </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">s</span> <span class="o">+</span>
+                   <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">componentes</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; *** </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+
+    <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="n">componentes</span>
+
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** ica.exclude after set components = &#39;</span><span class="p">,</span> <span class="n">ica</span><span class="o">.</span><span class="n">exclude</span><span class="p">))</span>
+
+    <span class="c1"># apply ICA to raw data</span>
+    <span class="n">new_raw_ica_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;_ica-raw.fif&#39;</span><span class="p">)</span>
+    <span class="n">raw_ica</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+
+    <span class="n">raw_ica</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">new_raw_ica_file</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># save ICA solution</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">ica_sol_file</span><span class="p">)</span>
+    <span class="n">ica</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ica_sol_file</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">channel_coords_file</span><span class="p">,</span> <span class="n">channel_names_file</span><span class="p">,</span>
+     <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])</span> <span class="o">=</span> <span class="n">create_ts</span><span class="p">(</span><span class="n">new_raw_ica_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_sensor_space</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">channel_coords_file</span><span class="p">,</span> <span class="n">channel_names_file</span><span class="p">,</span>
+                <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">raw_ica</span><span class="p">,</span> <span class="n">channel_coords_file</span><span class="p">,</span> <span class="n">channel_names_file</span><span class="p">,</span>
+                <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="get_raw_info"><a class="viewcode-back" href="../../index.html#ephypype.preproc.get_raw_info">[docs]</a><span class="k">def</span> <span class="nf">get_raw_info</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get info from raw.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mne.io</span> <span class="k">import</span> <span class="n">Raw</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">Raw</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="get_epochs_info"><a class="viewcode-back" href="../../index.html#ephypype.preproc.get_epochs_info">[docs]</a><span class="k">def</span> <span class="nf">get_epochs_info</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get epoch info.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mne</span> <span class="k">import</span> <span class="n">read_epochs</span>
+
+    <span class="n">epochs</span> <span class="o">=</span> <span class="n">read_epochs</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">epochs</span><span class="o">.</span><span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="get_raw_sfreq"><a class="viewcode-back" href="../../index.html#ephypype.preproc.get_raw_sfreq">[docs]</a><span class="k">def</span> <span class="nf">get_raw_sfreq</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get raw sfreq.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">mne</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>  <span class="c1"># noqa</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_epochs</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="create_reject_dict"><a class="viewcode-back" href="../../index.html#ephypype.preproc.create_reject_dict">[docs]</a><span class="k">def</span> <span class="nf">create_reject_dict</span><span class="p">(</span><span class="n">raw_info</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create reject dir.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mne</span> <span class="k">import</span> <span class="n">pick_types</span>
+
+    <span class="n">picks_eog</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw_info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eog</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">picks_mag</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw_info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="s1">&#39;mag&#39;</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">picks_grad</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw_info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="s1">&#39;grad&#39;</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">reject</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">picks_mag</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reject</span><span class="p">[</span><span class="s1">&#39;mag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4e-12</span>
+    <span class="k">if</span> <span class="n">picks_grad</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reject</span><span class="p">[</span><span class="s1">&#39;grad&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4000e-13</span>
+    <span class="k">if</span> <span class="n">picks_eog</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">reject</span><span class="p">[</span><span class="s1">&#39;eog&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">150e-6</span>
+
+    <span class="k">return</span> <span class="n">reject</span></div>
+
+
+<div class="viewcode-block" id="create_ts"><a class="viewcode-back" href="../../index.html#ephypype.preproc.create_ts">[docs]</a><span class="k">def</span> <span class="nf">create_ts</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read a raw data in **.fif** format.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_fname : str</span>
+<span class="sd">        pathname of the raw data to read</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ts_file : str</span>
+<span class="sd">        pathname of the numpy file (.npy) containing the data read from</span>
+<span class="sd">        raw_fname</span>
+<span class="sd">    channel_coords_file : str</span>
+<span class="sd">        pathname of .txt file containing the channels coordinates</span>
+<span class="sd">    channel_names_file : str</span>
+<span class="sd">        pathname of .txt file containing the channels labels</span>
+<span class="sd">    sfreq : float</span>
+<span class="sd">        sampling frequency</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="kn">import</span> <span class="nn">mne</span>
+    <span class="kn">from</span> <span class="nn">mne.io</span> <span class="k">import</span> <span class="n">read_raw_fif</span>
+
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">)</span>
+
+    <span class="n">select_sensors</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;bads&#39;</span><span class="p">)</span>
+
+    <span class="c1"># save electrode locations</span>
+    <span class="n">sens_loc</span> <span class="o">=</span> <span class="p">[</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;chs&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;loc&#39;</span><span class="p">][:</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">select_sensors</span><span class="p">]</span>
+    <span class="n">sens_loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sens_loc</span><span class="p">)</span>
+
+    <span class="n">channel_coords_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;correct_channel_coords.txt&#39;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">channel_coords_file</span><span class="p">,</span> <span class="n">sens_loc</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="c1"># np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = &quot;%d&quot;)</span>
+
+    <span class="c1"># save electrode names</span>
+    <span class="n">sens_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">raw</span><span class="o">.</span><span class="n">ch_names</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">select_sensors</span><span class="p">],</span>
+                          <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">)</span>
+
+    <span class="n">channel_names_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;correct_channel_names.txt&#39;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">channel_names_file</span><span class="p">,</span> <span class="n">sens_names</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">))</span>
+
+    <span class="n">data</span><span class="p">,</span> <span class="n">times</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="n">select_sensors</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="nb">print</span><span class="p">((</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="n">ts_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s1">&#39;.npy&#39;</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ts_file</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** TS FILE &#39;</span> <span class="o">+</span> <span class="n">ts_file</span> <span class="o">+</span> <span class="s1">&#39;*** </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;*** raw.info[sfreq] = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])))</span>
+
+    <span class="k">return</span> <span class="n">ts_file</span><span class="p">,</span> <span class="n">channel_coords_file</span><span class="p">,</span> <span class="n">channel_names_file</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="generate_report"><a class="viewcode-back" href="../../index.html#ephypype.preproc.generate_report">[docs]</a><span class="k">def</span> <span class="nf">generate_report</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">ica</span><span class="p">,</span> <span class="n">subj_name</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span>
+                    <span class="n">ecg_evoked</span><span class="p">,</span> <span class="n">ecg_scores</span><span class="p">,</span> <span class="n">ecg_inds</span><span class="p">,</span> <span class="n">ecg_ch_name</span><span class="p">,</span>
+                    <span class="n">eog_evoked</span><span class="p">,</span> <span class="n">eog_scores</span><span class="p">,</span> <span class="n">eog_inds</span><span class="p">,</span> <span class="n">eog_ch_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate report for ica solution.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">mne.report</span> <span class="k">import</span> <span class="n">Report</span>
+    <span class="kn">from</span> <span class="nn">mne.time_frequency</span> <span class="k">import</span> <span class="n">psd_multitaper</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">Report</span><span class="p">()</span>
+
+    <span class="n">ica_title</span> <span class="o">=</span> <span class="s1">&#39;Sources related to </span><span class="si">%s</span><span class="s1"> artifacts (red)&#39;</span>
+    <span class="n">is_show</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># ------------------- Generate report for ECG ------------------------ #</span>
+    <span class="n">fig_ecg_scores</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_scores</span><span class="p">(</span><span class="n">ecg_scores</span><span class="p">,</span>
+                                     <span class="n">exclude</span><span class="o">=</span><span class="n">ecg_inds</span><span class="p">,</span>
+                                     <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;ecg&#39;</span><span class="p">,</span>
+                                     <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+    <span class="c1"># Pick the five largest ecg_scores and plot them</span>
+    <span class="n">show_picks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ecg_scores</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
+
+    <span class="c1"># Plot estimated latent sources given the unmixing matrix.</span>
+    <span class="n">fig_ecg_ts</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_sources</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">show_picks</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">ecg_inds</span><span class="p">,</span>
+                                  <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;ecg&#39;</span> <span class="o">+</span> <span class="s1">&#39; in 30s&#39;</span><span class="p">,</span>
+                                  <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+    <span class="c1"># topoplot of unmixing matrix columns</span>
+    <span class="n">fig_ecg_comp</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">show_picks</span><span class="p">,</span>
+                                       <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;ecg&#39;</span><span class="p">,</span>
+                                       <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+    <span class="c1"># plot ECG sources + selection</span>
+    <span class="n">fig_ecg_src</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_sources</span><span class="p">(</span><span class="n">ecg_evoked</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">ecg_inds</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_ecg_scores</span><span class="p">,</span> <span class="n">fig_ecg_ts</span><span class="p">,</span> <span class="n">fig_ecg_comp</span><span class="p">,</span> <span class="n">fig_ecg_src</span><span class="p">]</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span>
+                               <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Scores of ICs related to ECG&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;Time Series plots of ICs (ECG)&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;TopoMap of ICs (ECG)&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;Time-locked ECG sources&#39;</span><span class="p">],</span>
+                               <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - ECG&#39;</span><span class="p">)</span>
+    <span class="c1"># -------------------- end generate report for ECG ---------------------- #</span>
+
+    <span class="c1"># -------------------------- Generate report for EoG -------------------- #</span>
+    <span class="c1"># check how many EoG ch we have</span>
+    <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">eog_ch_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">])):</span>
+        <span class="n">fig_eog_scores</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_scores</span><span class="p">(</span><span class="n">eog_scores</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="n">eog_inds</span><span class="p">,</span>
+                                         <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;eog&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+        <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig_eog_scores</span><span class="p">,</span>
+                                   <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Scores of ICs related to EOG&#39;</span><span class="p">],</span>
+                                   <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - EOG&#39;</span><span class="p">)</span>
+
+        <span class="n">n_eogs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">eog_scores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_eogs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_eog0</span> <span class="o">=</span> <span class="n">n_eogs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">show_picks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eog_scores</span><span class="p">[</span><span class="n">i</span><span class="p">][:])</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eog0</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_eog0</span><span class="p">):</span>
+                <span class="n">fig_eog_comp</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">show_picks</span><span class="p">[</span><span class="n">i</span><span class="p">][:],</span>
+                                                   <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;eog&#39;</span><span class="p">,</span>
+                                                   <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+                <span class="n">fig</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_eog_comp</span><span class="p">]</span>
+                <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span>
+                                           <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Scores of EoG ICs&#39;</span><span class="p">],</span>
+                                           <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - EOG&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">show_picks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eog_scores</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span>
+            <span class="n">fig_eog_comp</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">show_picks</span><span class="p">,</span>
+                                               <span class="n">title</span><span class="o">=</span><span class="n">ica_title</span> <span class="o">%</span> <span class="s1">&#39;eog&#39;</span><span class="p">,</span>
+                                               <span class="n">colorbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+            <span class="n">fig</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_eog_comp</span><span class="p">]</span>
+            <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;TopoMap of ICs (EOG)&#39;</span><span class="p">],</span>
+                                       <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - EOG&#39;</span><span class="p">)</span>
+
+        <span class="n">fig_eog_src</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_sources</span><span class="p">(</span><span class="n">eog_evoked</span><span class="p">,</span>
+                                       <span class="n">exclude</span><span class="o">=</span><span class="n">eog_inds</span><span class="p">,</span>
+                                       <span class="n">show</span><span class="o">=</span><span class="n">is_show</span><span class="p">)</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig_eog_src</span><span class="p">]</span>
+        <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Time-locked EOG sources&#39;</span><span class="p">],</span>
+                                   <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - EOG&#39;</span><span class="p">)</span>
+    <span class="c1"># ----------------- end generate report for EoG ---------- #</span>
+    <span class="n">ic_nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ica</span><span class="o">.</span><span class="n">n_components_</span><span class="p">))</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_components</span><span class="p">(</span><span class="n">picks</span><span class="o">=</span><span class="n">ic_nums</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;All IC topographies&#39;</span><span class="p">],</span>
+                               <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - muscles&#39;</span><span class="p">)</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">plot_sources</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                           <span class="n">title</span><span class="o">=</span><span class="s1">&#39;All IC time series&#39;</span><span class="p">)</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">captions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;All IC time series&#39;</span><span class="p">],</span>
+                               <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - muscles&#39;</span><span class="p">)</span>
+
+    <span class="n">psds_fig</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">captions_psd</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ica_src</span> <span class="o">=</span> <span class="n">ica</span><span class="o">.</span><span class="n">get_sources</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i_ic</span> <span class="ow">in</span> <span class="n">ic_nums</span><span class="p">:</span>
+
+        <span class="n">psds</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <span class="n">psd_multitaper</span><span class="p">(</span><span class="n">ica_src</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">i_ic</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="mi">140</span><span class="p">,</span>
+                                     <span class="n">tmax</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+        <span class="n">psds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">psds</span><span class="p">)</span>
+
+        <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">psds</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">psds</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">freqs</span><span class="p">,</span> <span class="n">psds</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;PSD&#39;</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Frequency&#39;</span><span class="p">,</span>
+               <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Power Spectral Density (dB)&#39;</span><span class="p">)</span>
+
+        <span class="n">psds_fig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">captions_psd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;IC #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i_ic</span><span class="p">))</span>
+
+    <span class="n">report</span><span class="o">.</span><span class="n">add_figs_to_section</span><span class="p">(</span><span class="n">figs</span><span class="o">=</span><span class="n">psds_fig</span><span class="p">,</span> <span class="n">captions</span><span class="o">=</span><span class="n">captions_psd</span><span class="p">,</span>
+                               <span class="n">section</span><span class="o">=</span><span class="s1">&#39;ICA - muscles&#39;</span><span class="p">)</span>
+
+    <span class="n">report_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">basename</span> <span class="o">+</span> <span class="s2">&quot;-report.html&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;******* &#39;</span> <span class="o">+</span> <span class="n">report_filename</span><span class="p">))</span>
+    <span class="n">report</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">report_filename</span><span class="p">,</span> <span class="n">open_browser</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">report_filename</span></div>
+
+
+<div class="viewcode-block" id="create_events"><a class="viewcode-back" href="../../index.html#ephypype.preproc.create_events">[docs]</a><span class="k">def</span> <span class="nf">create_events</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">epoch_length</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create events to split raw into epochs.&quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="n">file_length</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">n_times</span>
+    <span class="n">first_samp</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">first_samp</span>
+    <span class="n">sfreq</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+    <span class="n">n_samp_in_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">epoch_length</span> <span class="o">*</span> <span class="n">sfreq</span><span class="p">)</span>
+
+    <span class="n">n_epochs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">file_length</span> <span class="o">//</span> <span class="n">n_samp_in_epoch</span><span class="p">)</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i_epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_epochs</span><span class="p">):</span>
+        <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">first_samp</span> <span class="o">+</span> <span class="n">i_epoch</span> <span class="o">*</span> <span class="n">n_samp_in_epoch</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)])</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">events</span></div>
+
+
+<div class="viewcode-block" id="create_epochs"><a class="viewcode-back" href="../../index.html#ephypype.preproc.create_epochs">[docs]</a><span class="k">def</span> <span class="nf">create_epochs</span><span class="p">(</span><span class="n">fif_file</span><span class="p">,</span> <span class="n">ep_length</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split raw .fif file into epochs.</span>
+
+<span class="sd">    Splitted epochs have a length ep_length with rejection criteria.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">from</span> <span class="nn">mne.io</span> <span class="k">import</span> <span class="n">Raw</span>
+    <span class="kn">from</span> <span class="nn">mne</span> <span class="k">import</span> <span class="n">Epochs</span>
+    <span class="kn">from</span> <span class="nn">mne</span> <span class="k">import</span> <span class="n">pick_types</span>
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+    <span class="c1"># flat = dict(mag=0.1e-12, grad=1e-13)</span>
+    <span class="c1"># reject = dict(mag=6e-12, grad=25e-11)</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">reject</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">Raw</span><span class="p">(</span><span class="n">fif_file</span><span class="p">)</span>
+    <span class="n">picks</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eeg</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">ep_length</span><span class="p">:</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="n">create_events</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">ep_length</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;File </span><span class="si">{}</span><span class="s1"> is too short!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fif_file</span><span class="p">))</span>
+
+    <span class="n">epochs</span> <span class="o">=</span> <span class="n">Epochs</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">events</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="n">ep_length</span><span class="p">,</span>
+                    <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">picks</span><span class="p">,</span> <span class="n">proj</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">flat</span><span class="o">=</span><span class="n">flat</span><span class="p">,</span> <span class="n">reject</span><span class="o">=</span><span class="n">reject</span><span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">fif_file</span><span class="p">)</span>
+    <span class="n">savename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s1">&#39;-epo&#39;</span> <span class="o">+</span> <span class="n">ext</span><span class="p">)</span>
+    <span class="n">epochs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">savename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">savename</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Neuropycon Developers. Last updated on 2018-09-16.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

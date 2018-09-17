@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ephypype.aux_tools &#8212; ephypype 0.1dev0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootswatch-3.3.4/flatly/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for ephypype.aux_tools</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Aux functions.</span>
+
+<span class="sd">AUTOR: dmalt</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="k">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="c1"># Define a context manager to suppress stdout and stderr.</span>
+
+<div class="viewcode-block" id="suppress_stdout_stderr"><a class="viewcode-back" href="../../index.html#ephypype.aux_tools.suppress_stdout_stderr">[docs]</a><span class="k">class</span> <span class="nc">suppress_stdout_stderr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># noqa</span>
+    <span class="sd">&quot;&quot;&quot;Context manager.</span>
+
+<span class="sd">    A context manager for doing a &quot;deep suppression&quot; of stdout and stderr in</span>
+<span class="sd">    Python, i.e. will suppress all print, even if the print originates in a</span>
+<span class="sd">    compiled C/Fortran sub-function.</span>
+<span class="sd">    This will not suppress raised exceptions, since exceptions are printed</span>
+<span class="sd">    to stderr just before a script exits, and after the context manager has</span>
+<span class="sd">    exited (at least, I think that is why it lets exceptions through).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Open a pair of null files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_RDWR</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+        <span class="c1"># Save the actual stdout (1) and stderr (2) file descriptors.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span> <span class="o">=</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enter context.&quot;&quot;&quot;</span>
+        <span class="c1"># Assign the null pointers to stdout and stderr.</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Exit context.&quot;&quot;&quot;</span>
+        <span class="c1"># Re-assign the real stdout/stderr back to (1) and (2)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Close the null files</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_fds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="nostdout"><a class="viewcode-back" href="../../index.html#ephypype.aux_tools.nostdout">[docs]</a><span class="k">def</span> <span class="nf">nostdout</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Kill standart output.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    &gt;&gt; with nostdout():</span>
+<span class="sd">           raw = mne.io.Raw(fname)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># -- Works both in python2 and python3 -- #</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+    <span class="c1"># --------------------------------------- #</span>
+    <span class="n">save_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+    <span class="k">yield</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">save_stdout</span></div>
+
+
+<div class="viewcode-block" id="get_freq_band"><a class="viewcode-back" href="../../index.html#ephypype.aux_tools.get_freq_band">[docs]</a><span class="k">def</span> <span class="nf">get_freq_band</span><span class="p">(</span><span class="n">freq_band_name</span><span class="p">,</span> <span class="n">freq_band_names</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get frequency band.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">freq_band_name</span> <span class="ow">in</span> <span class="n">freq_band_names</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">freq_band_name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">freq_band_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">freq_band_name</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">freq_bands</span><span class="p">[</span><span class="n">freq_band_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">freq_band_name</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Neuropycon Developers. Last updated on 2018-09-16.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
