@@ -140,7 +140,7 @@ install:
 	# --depth 1 is a speed optimization since we don't need the
 	# history prior to the last commit
 	# -b gh-pages fetches only the branch for the gh-pages
-	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/neuropycon/mne-bids _build/ephypype.github.io
+	git clone -b gh-pages --single-branch --no-checkout --depth 1 https://github.com/neuropycon/ephypype _build/ephypype.github.io
 	touch _build/ephypype.github.io/.nojekyll
 	make html
 	cd _build/ && \
