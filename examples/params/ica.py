@@ -1,9 +1,11 @@
 """ Parameters file for run_preprocess_pipeline.py """
+import os.path as op
+import ephypype
+from ephypype.datasets import fetch_omega_dataset
 
 data_type = 'ds'
-
-main_path = '/home/mainak/Desktop/projects/github_repos/BIDS-examples/sample_BIDS_omega'
-data_path = main_path
+base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
+data_path = fetch_omega_dataset(base_path)
 
 subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
 sessions = ['ses-0001']

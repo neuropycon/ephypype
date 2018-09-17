@@ -1,11 +1,12 @@
 """ Parameters file for run_power_analysis.py or run_src_power_analysis.py"""
+import os.path as op
+import ephypype
+from ephypype.datasets import fetch_omega_dataset
+
+base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
+data_path = fetch_omega_dataset(base_path)
 
 data_type = 'fif'
-
-main_path = '/home/mainak/Desktop/projects/github_repos/BIDS-examples/sample_BIDS_omega'
-
-data_path = main_path
-
 subject_ids = ['sub-0003']
 sessions = ['ses-0001']
 

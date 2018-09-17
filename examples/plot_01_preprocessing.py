@@ -15,7 +15,7 @@ from nipype.interfaces.utility import IdentityInterface
 
 from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg
 
-from params.ica import main_path, data_path, subject_ids, sessions
+from params.ica import data_path, subject_ids, sessions
 from params.ica import preproc_pipeline_name
 from params.ica import data_type, down_sfreq, l_freq, h_freq
 from params.ica import variance, ECG_ch_name, EoG_ch_name
@@ -59,7 +59,7 @@ def create_workflow_preproc():
     """Create nodes and connect them into a workflow"""
 
     main_workflow = pe.Workflow(name=preproc_pipeline_name)
-    main_workflow.base_dir = main_path
+    main_workflow.base_dir = data_path
 
     # Info source
     infosource = create_infosource()
@@ -70,7 +70,7 @@ def create_workflow_preproc():
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
     main_workflow.connect(infosource, 'sess_index', datasource, 'sess_index')
 
-    preproc_workflow = create_pipeline_preproc_meeg(main_path,
+    preproc_workflow = create_pipeline_preproc_meeg(data_path,
                                                     l_freq=l_freq,
                                                     h_freq=h_freq,
                                                     down_sfreq=down_sfreq,
