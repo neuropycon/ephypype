@@ -14,7 +14,7 @@ import nipype.interfaces.io as nio
 
 from ephypype.pipelines.power import create_pipeline_power
 
-from params.power import main_path, data_path # noqa: E402
+from params.power import data_path # noqa: E402
 from params.power import subject_ids, sessions # noqa: E402
 from params.power import power_analysis_name # noqa: E402
 from params.power import fmin, fmax, power_method, is_epoched, freq_bands # noqa: E402
@@ -53,7 +53,7 @@ def create_datasource():
 def create_main_workflow_power():
 
     main_workflow = pe.Workflow(name=power_analysis_name)
-    main_workflow.base_dir = main_path
+    main_workflow.base_dir = data_path
 
     # info source
     infosource = create_infosource()
@@ -64,7 +64,7 @@ def create_main_workflow_power():
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
     main_workflow.connect(infosource, 'sess_index', datasource, 'sess_index')
 
-    power_workflow = create_pipeline_power(main_path, freq_bands,
+    power_workflow = create_pipeline_power(data_path, freq_bands,
                                            fmin=fmin, fmax=fmax,
                                            method=power_method,
                                            is_epoched=is_epoched)
