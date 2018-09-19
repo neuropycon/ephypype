@@ -26,7 +26,7 @@ from ephypype.datasets import fetch_omega_dataset
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
 
-data_type = 'ds'
+data_type = 'fif'
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
@@ -89,7 +89,7 @@ def create_datasource():
                          name='datasource')
 
     datasource.inputs.base_directory = data_path
-    datasource.inputs.template = '*%s/%s/meg/%s*rest*.ds'
+    datasource.inputs.template = '*%s/%s/meg/%s*rest*raw.fif'
 
     datasource.inputs.template_args = dict(raw_file=[['subject_id',
                                                       'sess_index',
