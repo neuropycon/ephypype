@@ -116,7 +116,8 @@ html_theme_options = {
         ("Gallery", "auto_examples/index"),
         ("API", "api"),
         ("Github", "https://github.com/neuropycon/ephypype", True),
-    ]}
+    ],
+    'bootswatch_theme': "united"}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -180,7 +181,6 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-
 sphinx_gallery_conf = {
     'examples_dirs': '../examples',
     'gallery_dirs': 'auto_examples',
@@ -190,7 +190,8 @@ sphinx_gallery_conf = {
     'reference_url': {
         'mne': 'http://mne-tools.github.io/stable/',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
-        'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference'
+        'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
+        'nipype': 'https://nipype.readthedocs.io/en/latest/api'
     }
 }
 
