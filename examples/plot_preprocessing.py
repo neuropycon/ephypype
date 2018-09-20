@@ -16,12 +16,11 @@ and/or fine-tune the correction in each subject
 import os.path as op
 
 import nipype.pipeline.engine as pe
-import nipype.interfaces.io as nio
-
-from nipype.interfaces.utility import IdentityInterface
 
 import ephypype
+from ephypype.nodes import create_iterator, create_datagrabber
 from ephypype.datasets import fetch_omega_dataset
+
 
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
@@ -31,86 +30,40 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# and define the subject_id and sessions
+# then set the parameters for preprocessing
 
-subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-sessions = ['ses-0001']
-
+# filtering
 down_sfreq = 800
 l_freq = 0.1
 h_freq = 150
-
-###############################################################################
-# then set the ICA variables
-
 is_ICA = True  # if True we apply ICA to remove ECG and EoG artifacts
-
-###############################################################################
-# specify ECG and EoG channel names if we know them
-
 ECG_ch_name = 'ECG'
 EoG_ch_name = 'HEOG, VEOG'
 variance = 0.95
-
-###############################################################################
-# and a few more parameters
-
 reject = dict(mag=5e-12, grad=5000e-13)
 
-# pipeline directory within the main_path dir
-preproc_pipeline_name = 'preprocessing_pipeline'
+###############################################################################
+# Then, we create our workflow and specify the `base_dir` which tells
+# nipype the directory in which to store the outputs.
+
+main_workflow = pe.Workflow(name='preprocessing_pipeline')
+main_workflow.base_dir = data_path
 
 ###############################################################################
 # Then we create a node to pass input filenames to DataGrabber from nipype
 
-
-def create_infosource():
-    """Create node which passes input filenames to DataGrabber"""
-
-    infosource = pe.Node(interface=IdentityInterface(fields=['subject_id',
-                                                             'sess_index']),
-                         name="infosource")
-
-    infosource.iterables = [('subject_id', subject_ids),
-                            ('sess_index', sessions)]
-
-    return infosource
-
+subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
+session_ids = ['ses-0001']
+infosource = create_iterator(['subject_id', 'session_id'],
+                             [subject_ids, session_ids])
 
 ###############################################################################
-# and a node to grab data.
+# and a node to grab data. The template_args in this node iterate upon
+# the values in the infosource node
 
-def create_datasource():
-    """"Create node to grab data"""
-
-    datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id',
-                                                             'sess_index'],
-                                                   outfields=['raw_file']),
-                         name='datasource')
-
-    datasource.inputs.base_directory = data_path
-    datasource.inputs.template = '*%s/%s/meg/%s*rest*raw.fif'
-
-    datasource.inputs.template_args = dict(raw_file=[['subject_id',
-                                                      'sess_index',
-                                                      'subject_id']])
-
-    datasource.inputs.sort_filelist = True
-
-    return datasource
-
-
-###############################################################################
-# Finally, we create our workflow
-
-main_workflow = pe.Workflow(name=preproc_pipeline_name)
-main_workflow.base_dir = data_path
-
-###############################################################################
-# and create the nodes to grab the data
-
-infosource = create_infosource()
-datasource = create_datasource()
+template_path = '*%s/%s/meg/%s*rest*raw.fif'
+template_args = [['subject_id', 'session_id', 'subject_id']]
+datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
@@ -124,22 +77,30 @@ preproc_workflow = create_pipeline_preproc_meeg(
     data_type=data_type)
 
 ###############################################################################
-# We then connect the nodes two at a time
+# We then connect the nodes two at a time. First, we connect the two outputs
+# (subject_id and session_id) of the infosource node to the datasource node.
+# So, these two nodes taken together can grab data.
 
 main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
-main_workflow.connect(infosource, 'sess_index', datasource, 'sess_index')
+main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
+
+###############################################################################
+# Similarly, for the inputnode of the preproc_workflow. Things will become
+# clearer in a moment when we plot the graph of the workflow.
+
 main_workflow.connect(infosource, 'subject_id',
                       preproc_workflow, 'inputnode.subject_id')
 main_workflow.connect(datasource, 'raw_file',
                       preproc_workflow, 'inputnode.raw_file')
 
 ###############################################################################
-# Now, write the workflow graph (optional)
+# To do so, we first write the workflow graph (optional)
 
 main_workflow.write_graph(graph2use='colored')  # colored
 
 ###############################################################################
-# and visualize it
+# and visualize it. Take a moment to pause and notice how the connections
+# here correspond to how we connected the nodes.
 
 from scipy.misc import imread # noqa
 import matplotlib.pyplot as plt # noqa
@@ -149,7 +110,7 @@ plt.imshow(img)
 plt.axis('off')
 
 ###############################################################################
-# And finally execute the workflow
+# Finally, we are now ready to execute our workflow.
 
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
