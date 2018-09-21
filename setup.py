@@ -22,5 +22,9 @@ if __name__ == "__main__":
         install_requires=['mne>=0.14',
                           'nipype',
                           'configparser',
-                          'h5py']
+                          'h5py'],
+    entry_points='''
+        [console_scripts]
+        neuropycon=ephypype.commands.neuropycon:cli
+    '''
     )
