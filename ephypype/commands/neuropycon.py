@@ -4,7 +4,7 @@
 #
 # License: BSD (3-clause)
 
-import click
+from ..externals import click
 import nipype.pipeline.engine as pe
 
 
