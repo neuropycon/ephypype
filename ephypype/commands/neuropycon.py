@@ -27,7 +27,7 @@ def cli(ncpu, plugin, save_path, workflow_name, verbose):
     output_greeting()
 
 
-#  Connect all the nodes into a workflow  {{{process_pipeline
+#  ----------------- Connect all the nodes into a workflow ----------------- #
 @cli.resultcallback()
 def process_pipeline(nodes, ncpu, plugin, save_path, workflow_name, verbose):
     """Create main workflow"""
@@ -38,15 +38,15 @@ def process_pipeline(nodes, ncpu, plugin, save_path, workflow_name, verbose):
     workflow = pe.Workflow(name=workflow_name)
     workflow.base_dir = (save_path)
 
-    in_out = {'path_node': ('key',         'path'),
-              'ep2npy'   : ('fif_file',    'ts_file'),
-              'pwr'      : ('epochs_file', 'pwr_file'),
-              'sp_conn'  : ('ts_file',     'conmat_file'),
-              'mse'      : ('ts_file',     'mse_file'),
-              'ica'      : ('fif_file',    'ica_file'),
-              'preproc'  : ('fif_file',    'fif_file'),
-              'ds2fif'   : ('ds_file',     'fif_file'),
-              'epoching' : ('fif_file',    'epo_fif_file')}
+    in_out = {'path_node': ('key', 'path'),
+              'ep2npy': ('fif_file', 'ts_file'),
+              'pwr': ('epochs_file', 'pwr_file'),
+              'sp_conn': ('ts_file', 'conmat_file'),
+              'mse': ('ts_file', 'mse_file'),
+              'ica': ('fif_file', 'ica_file'),
+              'preproc': ('fif_file', 'fif_file'),
+              'ds2fif': ('ds_file', 'fif_file'),
+              'epoching': ('fif_file', 'epo_fif_file')}
 
     workflow.connect(input_node, 'keys', path_node, 'key')
     prev_node = path_node
@@ -81,10 +81,10 @@ def process_pipeline(nodes, ncpu, plugin, save_path, workflow_name, verbose):
                 workflow.run(plugin='Linear')
             elif plugin == 'PBS':
                 workflow.run(plugin='PBS')
-#  process_pipeline}}} #
+# -------------------------------------------------------------------------- #
 
 
-#  Input node {{{input #
+# ------------------------------- input node ------------------------------- #
 @cli.command('input')
 @click.argument('fif_files', nargs=-1, type=click.Path(exists=True))
 def infosrc(fif_files):
@@ -125,10 +125,10 @@ def infosrc(fif_files):
     infosource.iterables = [('keys', list(iter_mapping.keys()))]
     path_node.inputs.iter_mapping = iter_mapping
     return infosource, path_node
-#  input}}} #
+# -------------------------------------------------------------------------- #
 
 
-#  Power spectral density node  {{{psd #
+# ---------------------- power spectral density node ---------------------- #
 @cli.command('psd')
 @click.option('--fmin', default=0.,
               help='lower frequency bound; default=0')
@@ -154,10 +154,10 @@ def psd(fmin, fmax):
     power.inputs.fmax = fmax
     power.inputs.method = 'welch'
     return power
-#  psd}}} #
+# ------------------------------------------------------------------------- #
 
 
-#  Connectivity {{{conn #
+# --------------------------- connectivity node --------------------------- #
 @cli.command('conn')
 @click.option('--band', '-b', nargs=2, type=click.Tuple([float, float]),
               prompt='Input frequency bin',
@@ -188,10 +188,10 @@ def connectivity(band, method, sfreq, tf_mode):
     sp_conn.inputs.mode = tf_mode
     sp_conn.iterables = [('freq_band', freq_bands), ('con_method', method)]
     return sp_conn
-#  conn}}} #
+# ------------------------------------------------------------------------- #
 
 
-#  Epochs to numpy node {{{ep2npy #
+# -------------------------- epochs to numpy node -------------------------- #
 @cli.command('ep2npy')
 def fif_ep_2_ts():
     """Convert .fif epochs to npy timeseries"""
@@ -199,10 +199,10 @@ def fif_ep_2_ts():
     from ..nodes.import_data import Ep2ts
     ep2ts = pe.Node(interface=Ep2ts(), name='ep2npy')
     return ep2ts
-#  ep2npy}}} #
+# -------------------------------------------------------------------------- #
 
 
-#  Multiscale entropy node {{{mse #
+# ------------------------ Multiscale entropy node  ------------------------ #
 @cli.command('mse')
 @click.option('-m', default=2)
 @click.option('-r', default=0.2)
@@ -223,10 +223,10 @@ def multiscale(m, r):
     mse.inputs.m = m
     mse.inputs.r = r
     return mse
-#  mse}}} #
+# -------------------------------------------------------------------------- #
 
 
-#  ica {{{ica #
+# -------------------------------- ica node -------------------------------- #
 @cli.command('ica')
 @click.option('--n-components', '-n', default=0.95)
 @click.option('--ecg-ch-name', '-c', type=click.STRING, default='')
@@ -239,10 +239,10 @@ def ica(n_components, ecg_ch_name, eog_ch_name):
     ica_node.inputs.ecg_ch_name = ecg_ch_name
     ica_node.inputs.eog_ch_name = eog_ch_name
     return ica_node
-#  ica}}} #
+# -------------------------------------------------------------------------- #
 
 
-#  Preproc node {{{preproc #
+# ------------------------------ Preproc node  ------------------------------ #
 @cli.command('preproc')
 @click.option('--l-freq', '-l', type=click.FLOAT)
 @click.option('--h-freq', '-h', type=click.FLOAT)
@@ -263,10 +263,10 @@ def preproc(l_freq, h_freq, ds_freq):
         preproc_node.inputs.down_sfreq = ds_freq
 
     return preproc_node
-#  preproc}}} #
+# --------------------------------------------------------------------------- #
 
 
-#  DS2FIF node {{{ds2fif #
+# ------------------------------- ds2fif node ------------------------------- #
 @cli.command('ds2fif')
 def ds2fif():
     """Convert CTF .ds raw data to .fif format"""
@@ -275,10 +275,10 @@ def ds2fif():
     ds2fif_node = pe.Node(interface=ConvertDs2Fif(), name='ds2fif')
 
     return ds2fif_node
-#  ds2fif}}} #
+# --------------------------------------------------------------------------- #
 
 
-#  Create_epochs node {{{epoch #
+# --------------------------- create epochs node --------------------------- #
 @cli.command('epoch')
 @click.option('--length', '-l', type=click.FLOAT,
               help='epoch length')
@@ -293,7 +293,7 @@ def epoch(length):
     epoch_node.inputs.ep_length = length
 
     return epoch_node
-#  epoch}}} #
+# -------------------------------------------------------------------------- #
 
 
 def map_path(key, iter_mapping):
