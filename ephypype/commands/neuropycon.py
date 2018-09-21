@@ -1,11 +1,12 @@
 """Command line interface for ephypype package"""
-# TODO: autocompletion
-#       consider merging conn and ep2ts nodes
-#       create additional node for plugin option so
-#       the -n option can be invoked only in multiproc
+
+# Authors: Dmitrii Altukhov <daltuhov@hse.ru>
+#
+# License: BSD (3-clause)
 
 import click
 import nipype.pipeline.engine as pe
+
 
 @click.group(chain=True)
 @click.option('--ncpu', '-n', default=1, help='number of CPUs to use\
@@ -31,7 +32,6 @@ def cli(ncpu, plugin, save_path, workflow_name, verbose):
 @cli.resultcallback()
 def process_pipeline(nodes, ncpu, plugin, save_path, workflow_name, verbose):
     """Create main workflow"""
-    from nipype import config, logging
 
     input_node, path_node = nodes[-1]
 
@@ -63,8 +63,6 @@ def process_pipeline(nodes, ncpu, plugin, save_path, workflow_name, verbose):
 
         prev_node = node
     click.echo()
-    # config.update_config({'logging': {'log_to_file': True}})
-    # logging.update_logging(config)
     if verbose:
         if plugin == 'MultiProc':
             workflow.run(plugin='MultiProc', plugin_args={'n_procs': ncpu})
