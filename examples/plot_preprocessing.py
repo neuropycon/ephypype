@@ -117,5 +117,3 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 # Run workflow locally on 3 CPUs
 main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
 
-###############################################################################
-# Now leave a comment about the outputs and where they are stored.
