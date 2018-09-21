@@ -9,6 +9,9 @@
 .. image:: https://codecov.io/gh/neuropycon/ephypype/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/neuropycon/ephypype
 
+.. image:: https://circleci.com/gh/neuropycon/ephypype.svg?style=svg
+    :target: https://circleci.com/gh/neuropycon/ephypype
+
 README
 ******
 
@@ -18,13 +21,10 @@ Description
 Neuropycon package of functions for electrophysiology analysis, can be used from
 graphpype and nipype
 
+Documentation
+=============
 
-..
-    Documentation
-    =============
-
-    https://neuropycon.github.io/neuropycon_doc/index.html
-
+https://neuropycon.github.io/ephypype
 
 Installation
 =============
@@ -32,7 +32,7 @@ Installation
 Requirements
 ------------
 
-ephypype works both with **python2** and **python3**
+ephypype works with **python2** and **python3**
 
 * numpy
 * scikit-learn
