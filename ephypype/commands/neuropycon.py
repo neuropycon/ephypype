@@ -6,6 +6,7 @@
 
 from ..externals import click
 import nipype.pipeline.engine as pe
+import os
 
 
 @click.group(chain=True)
@@ -17,7 +18,7 @@ import nipype.pipeline.engine as pe
  computation, MultiProc parallel computation on local\
  machine and PBS to compute on cluster',
               default='MultiProc')
-@click.option('--save-path', '-s', type=click.Path(), default='.',
+@click.option('--save-path', '-s', type=click.Path(), default=os.getcwd(),
               help='path to store results')
 @click.option('--workflow-name', '-w', default='my_workflow',
               help='name of destination directory')
