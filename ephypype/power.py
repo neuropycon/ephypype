@@ -39,7 +39,7 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     # np.save(freqs_file, freqs)
     '''
     psds_fname = _save_psd(data_fname, psds, freqs)
-    _save_psd_img(data_fname, psds, freqs, is_epoched, method)
+    # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
     '''
     # save PSD as img

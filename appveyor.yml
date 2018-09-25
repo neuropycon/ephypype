@@ -31,7 +31,7 @@ install:
   - "activate testenv"
   - "python -m pip install --upgrade pip"
   - "pip install pypiwin32"
-  - "pip install mne nipype"
+  - "pip install mne nipype scikit-learn"
   # Install ephypype
   - "pip install -e ."
 

@@ -4,7 +4,6 @@
 
 import os
 from setuptools import setup, find_packages
-import ephypype
 
 VERSION = None
 with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
