@@ -281,9 +281,7 @@ def ds2fif():
 @click.option('--length', '-l', type=click.FLOAT,
               help='epoch length')
 def epoch(length):
-    """Epoch raw .fif resting state data
-
-    """
+    """Epoch raw .fif resting state data"""
     from ..interfaces.mne.preproc import CreateEp
 
     epoch_node = pe.Node(interface=CreateEp(), name='epoching')
@@ -299,7 +297,7 @@ def map_path(key, iter_mapping):
     return iter_mapping[key]
 
 
-#  Greeting {{{greeting #
+# ------------------------------- Greeting --------------------------------- #
 def output_greeting():
     """Output greeting"""
 
@@ -312,6 +310,5 @@ def output_greeting():
  |_| \_|\___|\__,_|_|  \___/|_|    \__, |\_____\___/|_| |_|    `(_( (-' `-'.-)
                                     __/ |                          `-.__.-'=/
                                    |___/                              `._`='
-                                                                        \\''',
-                           fg='magenta'))
-#  greeting}}} #
+                                                                        \\
+''', fg='magenta'))
