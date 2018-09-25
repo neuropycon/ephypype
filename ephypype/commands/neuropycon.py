@@ -158,7 +158,6 @@ def psd(fmin, fmax):
 # --------------------------- connectivity node --------------------------- #
 @cli.command('conn')
 @click.option('--band', '-b', nargs=2, type=click.Tuple([float, float]),
-              prompt='Input frequency bin',
               multiple=True, help='frequency band')
 @click.option('--method', '-m', nargs=1,
               type=click.Choice(["coh", "imcoh", "plv", "pli",
