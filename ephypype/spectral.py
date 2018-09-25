@@ -20,7 +20,7 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
         elif con_method in ['pli', 'plv', 'ppc', 'pli',
                             'pli2_unbiased', 'wpli', 'wpli2_debiased']:
-            print("warning, only work with epoched time series")
+            print("warning, {} only work with epoched time series".format(con_method))
             sys.exit()
 
     if mode == 'multitaper':
@@ -51,6 +51,7 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
         else:
             print('Unknown gathering method')
             return None
+        
         print((con_matrix.shape))
 
     elif mode == 'cwt_morlet':
@@ -65,11 +66,6 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                 tmin=None, mode='cwt_morlet', cwt_freqs=frequencies,
                 cwt_n_cycles=n_cycles, n_jobs=1)
 
-            # con_matrix, _, _, _, _ = spectral_connectivity(
-            #data, method=con_method, sfreq=sfreq, faverage=True,
-            # tmin=None, mode='cwt_morlet', cwt_frequencies=frequencies,
-            # cwt_n_cycles=n_cycles, n_jobs=1)
-
             con_matrix = np.mean(np.array(con_matrix[:, :, 0, :]), axis=2)
 
             print(con_matrix)
@@ -81,8 +77,6 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
             #print (con_matrix)
             print(np.mean(np.array(con_matrix), axis=3))
-            0 / 0
-
             con_matrix = np.amax(np.mean(np.array(con_matrix), axis=3), axis=2)
 
         elif gathering_method == "none":
@@ -113,7 +107,7 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 # ----------------------- compute and save  ----------------------- #
 def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                                            index=0, mode='cwt_morlet',
-                                           export_to_matlab=False, gathering_method="mean"):
+                                           export_to_matlab=False, gathering_method="mean", save_dir = None):
     """Compute and save spectral connectivity."""
 
     import os
@@ -128,15 +122,21 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
     con_matrix = compute_spectral_connectivity(
         data, con_method, sfreq, fmin, fmax, mode, gathering_method=gathering_method)
 
-    conmat_file = os.path.abspath(
-        "conmat_" + str(index) + "_" + con_method + ".npy")
+    if save_dir is not None:
+        conmat_file = os.path.join(save_dir, "conmat_"+str(index)+"_"+con_method+".npy")
+
+    else:
+        conmat_file = os.path.abspath("conmat_"+str(index)+"_"+con_method+".npy")
 
     np.save(conmat_file, con_matrix)
 
     if export_to_matlab:
+            
+        if save_dir is not None:
+            conmat_file = os.path.join(save_dir, "conmat_"+str(index)+"_"+con_method+".mat")
 
-        conmat_matfile = os.path.abspath(
-            "conmat_" + str(index) + "_" + con_method + ".mat")
+        else:
+            conmat_file = os.path.abspath("conmat_"+str(index)+"_"+con_method+".mat")
 
         savemat(conmat_matfile, {
             "conmat": con_matrix + np.transpose(con_matrix)})
@@ -146,7 +146,7 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
 def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
                                                  fmin, fmax, mode='cwt_morlet',
-                                                 export_to_matlab=False, gathering_method="mean"):
+                                                 export_to_matlab=False, gathering_method="mean", save_dir = None):
 
     from ephypype.spectral import compute_and_save_spectral_connectivity
 
@@ -172,7 +172,7 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
 
         conmat_file = compute_and_save_spectral_connectivity(
             cur_data, con_method, sfreq, fmin, fmax, index=i,
-            mode=mode, export_to_matlab=export_to_matlab, gathering_method=gathering_method)
+            mode=mode, export_to_matlab=export_to_matlab, gathering_method=gathering_method, save_dir = save_dir)
 
         conmat_files.append(conmat_file)
 
