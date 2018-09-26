@@ -9,8 +9,7 @@ from nipype.interfaces.utility import IdentityInterface
 from ephypype.interfaces.mne.spectral import SpectralConn, PlotSpectralConn
 from ephypype.nodes.ts_tools import SplitWindows
 
-def create_pipeline_time_series_to_spectral_connectivity(
-        main_path,
+def create_pipeline_time_series_to_spectral_connectivity(main_path,
         pipeline_name='ts_to_conmat',
         con_method='coh',
         multi_con=False,
