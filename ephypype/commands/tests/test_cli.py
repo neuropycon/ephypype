@@ -2,7 +2,6 @@
 import os
 import os.path as op
 from ephypype.commands import neuropycon
-from ephypype.externals import click
 from click.testing import CliRunner
 
 
