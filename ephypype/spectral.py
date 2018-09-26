@@ -102,18 +102,19 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
     return con_matrix
 
-
 # ----------------------- compute and save  ----------------------- #
-def compute_and_save_spectral_connectivity(
-        data,
-        con_method,
-        sfreq,
-        fmin,
-        fmax,
-        index=0,
-        mode='cwt_morlet',
-        export_to_matlab=False,
-        gathering_method="mean"):
+
+
+def compute_and_save_spectral_connectivity(data,
+                                           con_method,
+                                           sfreq,
+                                           fmin,
+                                           fmax,
+                                           index=0,
+                                           mode='cwt_morlet',
+                                           export_to_matlab=False,
+                                           gathering_method="mean",
+                                           save_dir=None):
     """Compute and save spectral connectivity."""
 
     import os
@@ -134,15 +135,26 @@ def compute_and_save_spectral_connectivity(
         mode,
         gathering_method=gathering_method)
 
-    conmat_file = os.path.abspath(
-        "conmat_" + str(index) + "_" + con_method + ".npy")
+    if save_dir is not None:
+        conmat_file = os.path.join(save_dir,
+            "conmat_{}_{}.npy".format(str(index),con_method))
+
+    else:
+        conmat_file = os.path.abspath(
+            "conmat_{}_{}.npy".format(str(index),con_method)
 
     np.save(conmat_file, con_matrix)
 
     if export_to_matlab:
 
-        conmat_matfile = os.path.abspath(
-            "conmat_" + str(index) + "_" + con_method + ".mat")
+        if save_dir is not None:
+            conmat_file = os.path.join(
+                save_dir,
+                "conmat_{}_{}.mat".format(str(index),con_method))
+
+        else:
+            conmat_file = os.path.abspath(
+                "conmat_{}_{}.mat".format(str(index),con_method)
 
         savemat(conmat_matfile, {
             "conmat": con_matrix + np.transpose(con_matrix)})
@@ -150,15 +162,15 @@ def compute_and_save_spectral_connectivity(
     return conmat_file
 
 
-def compute_and_save_multi_spectral_connectivity(
-        all_data,
-        con_method,
-        sfreq,
-        fmin,
-        fmax,
-        mode='cwt_morlet',
-        export_to_matlab=False,
-        gathering_method="mean"):
+def compute_and_save_multi_spectral_connectivity(all_data,
+                                                 con_method,
+                                                 sfreq,
+                                                 fmin,
+                                                 fmax,
+                                                 mode='cwt_morlet',
+                                                 export_to_matlab=False,
+                                                 gathering_method="mean",
+                                                 save_dir=None):
 
     from ephypype.spectral import compute_and_save_spectral_connectivity
 
@@ -185,7 +197,7 @@ def compute_and_save_multi_spectral_connectivity(
         conmat_file = compute_and_save_spectral_connectivity(
             cur_data, con_method, sfreq, fmin, fmax, index=i,
             mode=mode, export_to_matlab=export_to_matlab,
-            gathering_method=gathering_method)
+            gathering_method=gathering_method, save_dir=save_dir)
 
         conmat_files.append(conmat_file)
 
