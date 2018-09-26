@@ -276,29 +276,3 @@ def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
     np.save(filtered_conmat_file, np.transpose(filtered_conmat))
 
     return filtered_conmat_file
-
-if __name__ == '__main__':
-
-    import numpy as np
-
-    # 10 epochs, 100 signaux, 1000 pas de temps
-    big_mat = np.random.rand(10, 100, 1000)
-    print(big_mat.shape)
-
-    #val = compute_and_save_spectral_connectivity(big_mat, con_method = 'coh', sfreq = 100, fmin = 5, fmax = 50, mode = 'cwt_morlet', gathering_method = "mean")
-
-    #val = compute_and_save_spectral_connectivity(big_mat, con_method = 'coh', sfreq = 100, fmin = 5, fmax = 50, mode = 'cwt_morlet', gathering_method = "max")
-
-    val = compute_and_save_spectral_connectivity(
-        big_mat, con_method='coh', sfreq=100, fmin=5, fmax=50, mode='cwt_morlet', gathering_method="none")
-
-    print(val)
-
-    #val = compute_and_save_spectral_connectivity(big_mat, con_method = 'coh', sfreq = 100, fmin = 5, fmax = 50, mode = 'multitaper', gathering_method = "max")
-    #print (val)
-
-    #val = compute_and_save_spectral_connectivity(big_mat, con_method = 'coh', sfreq = 100, fmin = 5, fmax = 50, mode = 'multitaper', gathering_method = "mean")
-
-    #val = compute_and_save_spectral_connectivity(big_mat, con_method = 'coh', sfreq = 100, fmin = 5, fmax = 50, mode = 'multitaper', gathering_method = "none")
-
-    print(val)
