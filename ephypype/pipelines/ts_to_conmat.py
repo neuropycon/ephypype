@@ -28,7 +28,8 @@ def create_pipeline_time_series_to_spectral_connectivity(
     """
     Description:
 
-        Connectivity pipeline: compute spectral connectivity in a given frequency bands
+        Connectivity pipeline: compute spectral connectivity 
+        in a given frequency bands
 
     Inputs:
 
@@ -38,15 +39,19 @@ def create_pipeline_time_series_to_spectral_connectivity(
             name of the pipeline
         con_method : str
             metric computed on time series for connectivity;
-            possible choices: "coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased"
+            possible choices: "coh","imcoh","plv","pli","wpli",
+            "pli2_unbiased","ppc","cohy","wpli2_debiased"
         multi_con : bool (default False)
             True if multiple connectivity matrices are exported
         export_to_matlab : bool (default False)
-            True if conmat is exported to .mat format as well
+            True if conmat is exported to .mat 
+            format as well
         n_windows : list
-            list of start and stop points (tuple of two integers) of temporal windows
+            list of start and stop points 
+            (tuple of two integers) of temporal windows
         mode : str (default 'multipaper')
-             mode for computing frequency bands; possible choice: "multitaper","cwt_morlet"
+             mode for computing frequency bands; 
+             possible choice: "multitaper","cwt_morlet"
         epoch_window_length : float
              epoched data
         is_sensor_space : bool (default True)
@@ -66,7 +71,8 @@ def create_pipeline_time_series_to_spectral_connectivity(
         sfreq : float
             sampling frequency
         labels_file : str
-            path to the file containing a list of labels associated with nodes
+            path to the file containing a list of 
+            labels associated with nodes
 
     Outputs:
 

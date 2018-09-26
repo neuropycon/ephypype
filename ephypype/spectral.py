@@ -65,11 +65,6 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                 tmin=None, mode='cwt_morlet', cwt_freqs=frequencies,
                 cwt_n_cycles=n_cycles, n_jobs=1)
 
-            # con_matrix, _, _, _, _ = spectral_connectivity(
-            #data, method=con_method, sfreq=sfreq, faverage=True,
-            # tmin=None, mode='cwt_morlet', cwt_frequencies=frequencies,
-            # cwt_n_cycles=n_cycles, n_jobs=1)
-
             con_matrix = np.mean(np.array(con_matrix[:, :, 0, :]), axis=2)
 
             print(con_matrix)
@@ -79,9 +74,7 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                 tmin=None, mode='cwt_morlet', cwt_freqs=frequencies,
                 cwt_n_cycles=n_cycles, n_jobs=1)
 
-            #print (con_matrix)
             print(np.mean(np.array(con_matrix), axis=3))
-            0 / 0
 
             con_matrix = np.amax(np.mean(np.array(con_matrix), axis=3), axis=2)
 
@@ -191,7 +184,8 @@ def compute_and_save_multi_spectral_connectivity(
 
         conmat_file = compute_and_save_spectral_connectivity(
             cur_data, con_method, sfreq, fmin, fmax, index=i,
-            mode=mode, export_to_matlab=export_to_matlab, gathering_method=gathering_method)
+            mode=mode, export_to_matlab=export_to_matlab, 
+            gathering_method=gathering_method)
 
         conmat_files.append(conmat_file)
 

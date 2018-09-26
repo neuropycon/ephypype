@@ -128,7 +128,6 @@ class SpectralConn(BaseInterface):
         mode = self.inputs.mode
         multi_con = self.inputs.multi_con
         gathering_method = self.inputs.gathering_method
-        
         print(mode)
 
         if epoch_window_length == traits.Undefined:
@@ -164,14 +163,14 @@ class SpectralConn(BaseInterface):
             self.conmat_files = compute_and_save_multi_spectral_connectivity(
                 all_data=data, con_method=con_method, sfreq=sfreq,
                 fmin=freq_band[0], fmax=freq_band[1],
-                export_to_matlab=export_to_matlab, mode=mode, 
+                export_to_matlab=export_to_matlab, mode=mode,
                 gathering_method=gathering_method)
 
         else:
             self.conmat_file = compute_and_save_spectral_connectivity(
                 data=data, con_method=con_method, index=index, sfreq=sfreq,
                 fmin=freq_band[0], fmax=freq_band[1],
-                export_to_matlab=export_to_matlab, mode=mode, 
+                export_to_matlab=export_to_matlab, mode=mode,
                 gathering_method=gathering_method)
 
         return runtime
