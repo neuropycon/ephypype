@@ -14,16 +14,17 @@ from ephypype.nodes.ts_tools import SplitWindows
 #from ephypype.spectral import  filter_adj_plot_mat
 
 
-def create_pipeline_time_series_to_spectral_connectivity(main_path,
-                                                         pipeline_name='ts_to_conmat',
-                                                         con_method='coh',
-                                                         multi_con=False,
-                                                         export_to_matlab=False,
-                                                         n_windows=[],
-                                                         mode='multitaper',
-                                                         is_sensor_space=True,
-                                                         epoch_window_length=None,
-                                                         gathering_method="mean"):
+def create_pipeline_time_series_to_spectral_connectivity(
+        main_path,
+        pipeline_name='ts_to_conmat',
+        con_method='coh',
+        multi_con=False,
+        export_to_matlab=False,
+        n_windows=[],
+        mode='multitaper',
+        is_sensor_space=True,
+        epoch_window_length=None,
+        gathering_method="mean"):
     """
     Description:
 
@@ -36,8 +37,8 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
         pipeline_name: str (default 'ts_to_conmat')
             name of the pipeline
         con_method : str
-            metric computed on time series for connectivity; 
-            possible choices: "coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased"     
+            metric computed on time series for connectivity;
+            possible choices: "coh","imcoh","plv","pli","wpli","pli2_unbiased","ppc","cohy","wpli2_debiased"
         multi_con : bool (default False)
             True if multiple connectivity matrices are exported
         export_to_matlab : bool (default False)
@@ -53,7 +54,7 @@ def create_pipeline_time_series_to_spectral_connectivity(main_path,
 
         gathering_method : str
              how the connectivity matrices are gathered
-             possible choices: "mean", "max" or "none": 
+             possible choices: "mean", "max" or "none":
              (now a paramter of SpectralConn node)
 
     Inputs (inputnode):

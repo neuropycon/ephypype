@@ -111,9 +111,16 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
 
 # ----------------------- compute and save  ----------------------- #
-def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
-                                           index=0, mode='cwt_morlet',
-                                           export_to_matlab=False, gathering_method="mean"):
+def compute_and_save_spectral_connectivity(
+        data,
+        con_method,
+        sfreq,
+        fmin,
+        fmax,
+        index=0,
+        mode='cwt_morlet',
+        export_to_matlab=False,
+        gathering_method="mean"):
     """Compute and save spectral connectivity."""
 
     import os
@@ -126,7 +133,13 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
     # from ephypype.spectral import compute_spectral_connectivity
 
     con_matrix = compute_spectral_connectivity(
-        data, con_method, sfreq, fmin, fmax, mode, gathering_method=gathering_method)
+        data,
+        con_method,
+        sfreq,
+        fmin,
+        fmax,
+        mode,
+        gathering_method=gathering_method)
 
     conmat_file = os.path.abspath(
         "conmat_" + str(index) + "_" + con_method + ".npy")
@@ -144,9 +157,15 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
     return conmat_file
 
 
-def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
-                                                 fmin, fmax, mode='cwt_morlet',
-                                                 export_to_matlab=False, gathering_method="mean"):
+def compute_and_save_multi_spectral_connectivity(
+        all_data,
+        con_method,
+        sfreq,
+        fmin,
+        fmax,
+        mode='cwt_morlet',
+        export_to_matlab=False,
+        gathering_method="mean"):
 
     from ephypype.spectral import compute_and_save_spectral_connectivity
 
