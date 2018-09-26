@@ -67,7 +67,7 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     # -------------------- Save ica timeseries ---------------------------- #
     ica_ts_file = os.path.abspath(basename + "_ica-tseries.fif")
     ica_src = ica.get_sources(raw)
-    ica_src.save(ica_ts_file)
+    ica_src.save(ica_ts_file, overwrite=True)
     ica_src = None
     # --------------------------------------------------------------------- #
 
@@ -84,6 +84,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     else:
         ecg_ch_name = None
 
+    # set ref_meg to 'auto'
+    select_sensors = mne.pick_types(raw.info, meg=True,
+                                    ref_meg='auto', exclude='bads')
     ecg_epochs = create_ecg_epochs(raw, tmin=-0.5, tmax=0.5,
                                    picks=select_sensors,
                                    ch_name=ecg_ch_name)
@@ -123,7 +126,7 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     ica.save(ica_sol_file)
     raw_ica = ica.apply(raw)
     raw_ica_file = os.path.abspath(basename + '_ica' + ext)
-    raw_ica.save(raw_ica_file)
+    raw_ica.save(raw_ica_file, overwrite=True)
 
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
@@ -339,6 +342,8 @@ def generate_report(raw, ica, subj_name, basename,
                     eog_evoked, eog_scores, eog_inds, eog_ch_name):
     """Generate report for ica solution."""
     from mne.report import Report
+    from mne.time_frequency import psd_multitaper
+    import matplotlib.pyplot as plt
     import numpy as np
     import os
     report = Report()
@@ -423,21 +428,31 @@ def generate_report(raw, ica, subj_name, basename,
     report.add_figs_to_section(fig, captions=['All IC topographies'],
                                section='ICA - muscles')
 
-    fig = ica.plot_sources(raw, start=0, stop=None, title='All IC time series')
+    fig = ica.plot_sources(raw, start=0, stop=None, show=False,
+                           title='All IC time series')
     report.add_figs_to_section(fig, captions=['All IC time series'],
                                section='ICA - muscles')
 
-    psds = []
+    psds_fig = []
     captions_psd = []
     ica_src = ica.get_sources(raw)
     for i_ic in ic_nums:
-        fig = ica_src.plot_psd(tmax=60, picks=[i_ic], fmax=140, show=False)
-        fig.set_figheight(3)
-        fig.set_figwidth(5)
-        psds.append(fig)
+
+        psds, freqs = psd_multitaper(ica_src, picks=i_ic, fmax=140,
+                                     tmax=60)
+        psds = np.squeeze(psds)
+
+        f, ax = plt.subplots()
+        psds = 10 * np.log10(psds)
+
+        ax.plot(freqs, psds, color='k')
+        ax.set(title='PSD', xlabel='Frequency',
+               ylabel='Power Spectral Density (dB)')
+
+        psds_fig.append(f)
         captions_psd.append('IC #' + str(i_ic))
 
-    report.add_figs_to_section(figs=psds, captions=captions_psd,
+    report.add_figs_to_section(figs=psds_fig, captions=captions_psd,
                                section='ICA - muscles')
 
     report_filename = os.path.join(basename + "-report.html")
