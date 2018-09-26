@@ -9,11 +9,6 @@ from nipype.interfaces.utility import IdentityInterface
 from ephypype.interfaces.mne.spectral import SpectralConn, PlotSpectralConn
 from ephypype.nodes.ts_tools import SplitWindows
 
-# to modify and add in "Nodes"
-
-#from ephypype.spectral import  filter_adj_plot_mat
-
-
 def create_pipeline_time_series_to_spectral_connectivity(
         main_path,
         pipeline_name='ts_to_conmat',
@@ -28,7 +23,7 @@ def create_pipeline_time_series_to_spectral_connectivity(
     """
     Description:
 
-        Connectivity pipeline: compute spectral connectivity 
+        Connectivity pipeline: compute spectral connectivity
         in a given frequency bands
 
     Inputs:
@@ -44,13 +39,13 @@ def create_pipeline_time_series_to_spectral_connectivity(
         multi_con : bool (default False)
             True if multiple connectivity matrices are exported
         export_to_matlab : bool (default False)
-            True if conmat is exported to .mat 
+            True if conmat is exported to .mat
             format as well
         n_windows : list
-            list of start and stop points 
+            list of start and stop points
             (tuple of two integers) of temporal windows
         mode : str (default 'multipaper')
-             mode for computing frequency bands; 
+             mode for computing frequency bands;
              possible choice: "multitaper","cwt_morlet"
         epoch_window_length : float
              epoched data
@@ -71,7 +66,7 @@ def create_pipeline_time_series_to_spectral_connectivity(
         sfreq : float
             sampling frequency
         labels_file : str
-            path to the file containing a list of 
+            path to the file containing a list of
             labels associated with nodes
 
     Outputs:
