@@ -184,7 +184,7 @@ def compute_and_save_multi_spectral_connectivity(
 
         conmat_file = compute_and_save_spectral_connectivity(
             cur_data, con_method, sfreq, fmin, fmax, index=i,
-            mode=mode, export_to_matlab=export_to_matlab, 
+            mode=mode, export_to_matlab=export_to_matlab,
             gathering_method=gathering_method)
 
         conmat_files.append(conmat_file)
