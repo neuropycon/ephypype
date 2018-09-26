@@ -4,3 +4,10 @@
 *~
 crash*
 *.egg-info/*
+
+# Sphinx documentation
+doc/_build/
+doc/auto_examples/
+
+# Examples data files
+examples/sample_BIDS_omega
