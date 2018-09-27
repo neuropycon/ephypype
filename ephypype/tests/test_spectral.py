@@ -16,9 +16,6 @@ print(ephypype.__path__)
 
 print(ephypype.__version__)
 
-#data_path = mne.datasets.sample.data_path()
-#raw_fname = data_path + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
-
 time_length = 10000
 nb_ROI = 10
 
@@ -31,13 +28,6 @@ fmax = 300
 
 ts_mat = np.random.rand(nb_ROI, time_length) * \
     np.random.choice([-1, 1], size=(nb_ROI, time_length))
-
-
-ts_mat_trials = np.random.rand(nb_trials, nb_ROI, time_length) * \
-    np.random.choice([-1, 1], size=(nb_trials, nb_ROI, time_length))
-
-# testing compute_spectral_connectivit
-
 
 def test_compute_spectral_connectivity_one_trial():
     """Test compute_spectral_connectivity plv with one trial."""
@@ -53,6 +43,9 @@ def test_compute_spectral_connectivity_one_trial():
 
     print(exception_one_plv)
 
+
+ts_mat_trials = np.random.rand(nb_trials, nb_ROI, time_length) * \
+    np.random.choice([-1, 1], size=(nb_trials, nb_ROI, time_length))
 
 def test_compute_spectral_connectivity_mean_max():
     """Test compute_spectral_connectivity mean and max."""
@@ -81,12 +74,10 @@ def test_compute_spectral_connectivity_mean_max():
     assert np.all(
         res_mean <= res_max), "error, all mean values should be lower than max values"
 
-# testing test_compute_and_save_multi_spectral_connectivity
-
 tmp_dir = "/tmp/ephypype_test"
 
-
 def test_compute_and_save_multi_spectral_connectivity():
+    """testing test_compute_and_save_multi_spectral_connectivity"""
 
     os.makedirs(tmp_dir)
 
@@ -107,10 +98,3 @@ def test_compute_and_save_multi_spectral_connectivity():
         len(tmp_files), nb_trials)
 
     shutil.rmtree(tmp_dir)
-
-if __name__ == '__main__':
-
-    test_compute_spectral_connectivity_one_trial()
-    # test_compute_spectral_connectivity_mean_max()
-
-    # test_compute_and_save_multi_spectral_connectivity()
