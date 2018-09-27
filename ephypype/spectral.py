@@ -136,25 +136,25 @@ def compute_and_save_spectral_connectivity(data,
         gathering_method=gathering_method)
 
     if save_dir is not None:
-        conmat_file = os.path.join(save_dir,
-            "conmat_{}_{}.npy".format(str(index),con_method))
+        conmat_file = os.path.join(
+            save_dir,"conmat_{}_{}.npy".format(str(index), con_method))
 
     else:
         conmat_file = os.path.abspath(
-            "conmat_{}_{}.npy".format(str(index),con_method))
+            "conmat_{}_{}.npy".format(str(index), con_method))
 
     np.save(conmat_file, con_matrix)
 
     if export_to_matlab:
 
         if save_dir is not None:
-            conmat_file = os.path.join(
+            conmat_matfile = os.path.join(
                 save_dir,
-                "conmat_{}_{}.mat".format(str(index),con_method))
+                "conmat_{}_{}.mat".format(str(index), con_method))
 
         else:
-            conmat_file = os.path.abspath(
-                "conmat_{}_{}.mat".format(str(index),con_method))
+            conmat_matfile = os.path.abspath(
+                "conmat_{}_{}.mat".format(str(index), con_method))
 
         savemat(conmat_matfile, {
             "conmat": con_matrix + np.transpose(con_matrix)})

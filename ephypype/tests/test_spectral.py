@@ -23,16 +23,20 @@ nb_trials = 50
 
 sfreq = 500
 
-fmin = 0.1
+fmin = 5
 fmax = 300
 
 ts_mat = np.random.rand(nb_ROI, time_length) * \
     np.random.choice([-1, 1], size=(nb_ROI, time_length))
 
+
 def test_compute_spectral_connectivity_one_trial():
     """Test compute_spectral_connectivity plv with one trial."""
-    with pytest.raises(SystemExit, message="OK caught SystemExit as expected for plv with one trial") as exception_one_plv:
-        res_plv = compute_spectral_connectivity(
+    with pytest.raises(SystemExit,
+                       message=("SystemExit for plv with one trial"))\
+            as exception_one_plv:
+
+        compute_spectral_connectivity(
             data=ts_mat,
             con_method="plv",
             mode="multitaper",
@@ -46,6 +50,7 @@ def test_compute_spectral_connectivity_one_trial():
 
 ts_mat_trials = np.random.rand(nb_trials, nb_ROI, time_length) * \
     np.random.choice([-1, 1], size=(nb_trials, nb_ROI, time_length))
+
 
 def test_compute_spectral_connectivity_mean_max():
     """Test compute_spectral_connectivity mean and max."""
@@ -71,10 +76,10 @@ def test_compute_spectral_connectivity_mean_max():
 
     print(res_max)
 
-    assert np.all(
-        res_mean <= res_max), "error, all mean values should be lower than max values"
+    assert np.all(res_mean <= res_max), "mean higher max !"
 
 tmp_dir = "/tmp/ephypype_test"
+
 
 def test_compute_and_save_multi_spectral_connectivity():
     """testing test_compute_and_save_multi_spectral_connectivity"""
@@ -94,7 +99,7 @@ def test_compute_and_save_multi_spectral_connectivity():
     # list all created files
     tmp_files = os.listdir(tmp_dir)
 
-    assert len(tmp_files) == nb_trials, "There should an equal number of files {} as trials {}".format(
-        len(tmp_files), nb_trials)
+    assert len(tmp_files) == nb_trials, ("number of files {} != nb trials {}"
+                                         .format(len(tmp_files), nb_trials))
 
     shutil.rmtree(tmp_dir)
