@@ -141,7 +141,7 @@ def compute_and_save_spectral_connectivity(data,
 
     else:
         conmat_file = os.path.abspath(
-            "conmat_{}_{}.npy".format(str(index),con_method)
+            "conmat_{}_{}.npy".format(str(index),con_method))
 
     np.save(conmat_file, con_matrix)
 
@@ -154,7 +154,7 @@ def compute_and_save_spectral_connectivity(data,
 
         else:
             conmat_file = os.path.abspath(
-                "conmat_{}_{}.mat".format(str(index),con_method)
+                "conmat_{}_{}.mat".format(str(index),con_method))
 
         savemat(conmat_matfile, {
             "conmat": con_matrix + np.transpose(con_matrix)})
