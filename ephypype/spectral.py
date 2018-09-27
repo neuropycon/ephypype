@@ -137,7 +137,7 @@ def compute_and_save_spectral_connectivity(data,
 
     if save_dir is not None:
         conmat_file = os.path.join(
-            save_dir,"conmat_{}_{}.npy".format(str(index), con_method))
+            save_dir, "conmat_{}_{}.npy".format(str(index), con_method))
 
     else:
         conmat_file = os.path.abspath(
