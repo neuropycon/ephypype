@@ -1,1 +1,1 @@
-from . import mne
+from . import mne  # noqa

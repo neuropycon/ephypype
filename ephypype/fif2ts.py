@@ -1,14 +1,11 @@
-""" fif convertors """
+"""fif convertors."""
 
 from ephypype.aux_tools import nostdout
 
 
 def ep2ts(fif_file):
-    """Read fif file with raw data or epochs and save
-    timeseries to .npy
-    """
+    """Read fif file with raw data or epochs and save timeseries to .npy."""
     from mne import read_epochs
-    from mne import pick_types
 
     from numpy import save
     import os.path as op

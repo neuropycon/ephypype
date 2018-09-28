@@ -1,15 +1,14 @@
-"""Power functions"""
-# Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
+"""Power functions.
+
+Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
+"""
 
 
 def compute_and_save_psd(data_fname, fmin=0, fmax=120,
                          method='welch', is_epoched=False,
                          n_fft=256, n_overlap=0,
                          picks=None, proj=False, n_jobs=1, verbose=None):
-    """
-    Load epochs/raw from file,
-    compute psd and save the result in numpy arrays
-    """
+    """Load epochs/raw from file, compute psd and save the result."""
     from mne import read_epochs
     from mne.io import read_raw_fif
 
@@ -40,7 +39,7 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     # np.save(freqs_file, freqs)
     '''
     psds_fname = _save_psd(data_fname, psds, freqs)
-    _save_psd_img(data_fname, psds, freqs, is_epoched, method)
+    # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
     '''
     # save PSD as img
@@ -71,10 +70,7 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
                              is_epoched=False,
                              n_fft=256, n_overlap=0,
                              n_jobs=1, verbose=None):
-    """
-    Load epochs/raw from file,
-    compute psd and save the result in numpy arrays
-    """
+    """Load epochs/raw from file, compute psd and save the result."""
     import numpy as np
 
     # from mne.time_frequency import psd_array_welch
@@ -105,7 +101,7 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
 
 
 def compute_mean_band_psd(psds_file, freq_bands):
-
+    """Compute mean band psd."""
     import numpy as np
 
     npzfile = np.load(psds_file)
@@ -123,21 +119,20 @@ def compute_mean_band_psd(psds_file, freq_bands):
     n_row, _ = psds.shape
     n_fr = len(freq_bands)
 
-    M_px = np.empty([n_row, n_fr])
+    m_px = np.empty([n_row, n_fr])
 
     for f in range(n_fr):
         min_fr = freq_bands[f][0]
         max_fr = freq_bands[f][1]
         print(('*** frequency band [{}, {}] ***\n'.format(min_fr, max_fr)))
-        M_px[:, f] = np.mean(psds[:, (freqs >= min_fr) * (freqs <= max_fr)], 1)
+        m_px[:, f] = np.mean(psds[:, (freqs >= min_fr) * (freqs <= max_fr)], 1)
 
-    psds_mean_fname = _save_M_px(psds_file, M_px)
+    psds_mean_fname = _save_m_px(psds_file, m_px)
 
     return psds_mean_fname
 
 
-def _save_M_px(psds_file, M_px):
-
+def _save_m_px(psds_file, m_px):
     import os
     import numpy as np
 
@@ -147,14 +142,13 @@ def _save_M_px(psds_file, M_px):
 
     psds_mean_fname = basename + '-mean_band.npy'
     psds_mean_fname = os.path.abspath(psds_mean_fname)
-    print((M_px.shape))
-    np.save(psds_mean_fname, M_px)
+    print((m_px.shape))
+    np.save(psds_mean_fname, m_px)
 
     return psds_mean_fname
 
 
 def _save_psd(data_fname, psds, freqs):
-
     import os
     import numpy as np
 
@@ -172,7 +166,6 @@ def _save_psd(data_fname, psds, freqs):
 
 
 def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
-
     import os
     import matplotlib.pyplot as plt
     import numpy as np

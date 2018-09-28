@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
+"""Power tools.
+
 Created on Tue Jun 13 15:10:04 2017
 
 @author: pasca
@@ -10,7 +11,8 @@ from nipype.interfaces.base import BaseInterface,\
 
 
 class PowerBandInputSpec(BaseInterfaceInputSpec):
-    """Input specification for PowerBand"""
+    """Input specification for PowerBand."""
+
     psds_file = traits.File(exists=True,
                             desc='psd tensor and frequencies in .npz format',
                             mandatory=True)
@@ -19,34 +21,29 @@ class PowerBandInputSpec(BaseInterfaceInputSpec):
 
 
 class PowerBandOutputSpec(TraitedSpec):
-    """Output spec for PowerBand"""
+    """Output spec for PowerBand."""
 
     mean_power_band_file = traits.File(exists=True,
                                        desc="mean psd in bands in .npy format")
 
 
 class PowerBand(BaseInterface):
+    """Compute mean power spectral density for each frequency band.
 
-    """
-    Description:
+    Then, it's save in a  numpy file .npy
 
-        Compute mean power spectral density for each frequency band and save it
-         as  numpy file .npy
-
-    Inputs:
-
+    Parameters
+    ----------
     psds_file
         type = File, exists=True, desc='psd tensor and frequencies in .npz
                format', mandatory=True
-
     freq_bands
         type = List of Float, desc='frequency bands', mandatory=True
 
-    Outputs:
-
+    Returns
+    -------
     mean_power_band_file
         type = File, exists=True, desc="mean psd in bands in .npy format"
-
     """
 
     input_spec = PowerBandInputSpec

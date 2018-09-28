@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-
-Description:
-
-All nodes for import that are NOT specific to a ephy package
-"""
+"""All nodes for import that are NOT specific to a ephy package."""
 import os
 
 from nipype.interfaces.base import BaseInterface,\
@@ -15,7 +10,8 @@ from nipype.interfaces.base import File
 
 # ----------------- ImportMat ----------------------------- #
 class ImportMatInputSpec(BaseInterfaceInputSpec):
-    """Input specification for ImportMat"""
+    """Input specification for ImportMat."""
+
     tsmat_file = traits.File(exists=True,
                              desc='time series in .mat (matlab format)',
                              mandatory=True)
@@ -30,38 +26,31 @@ class ImportMatInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportMatOutputSpec(TraitedSpec):
-    """Output spec for Import Mat"""
+    """Output spec for Import Mat."""
 
     ts_file = traits.File(exists=True, desc="time series in .npy format")
 
 
 class ImportMat(BaseInterface):
+    """Import matlab file to numpy ndarry, and save it as numpy file .npy.
 
-    """
-    Description:
-
-    Import matlab file to numpy ndarry, and save it as numpy file .npy
-
-    Inputs:
-
+    Parameters
+    ----------
     tsmat_file:
         type = File, exists=True, desc='nodes * time series
                in .mat (matlab format format', mandatory=True
-
     data_field_name
         type = String, default = 'F', desc='Name of the structure in matlab',
         usedefault=True
-
     good_channels_field_name
         type = String, default = 'ChannelFlag',
                desc='Boolean structure for choosing nodes,
                name of structure in matlab file'
 
-    Outputs:
-
+    Returns
+    -------
     ts_file
         type = File, exists=True, desc="time series in .npy format"
-
     """
 
     input_spec = ImportMatInputSpec
@@ -94,24 +83,90 @@ class ImportMat(BaseInterface):
         return outputs
 
 
-######################################################################################## ImportBrainVisionAscii #####################################################################################################
+# ----------------- ImportHdf5 ----------------------------- #
+class ImportHdf5InputSpec(BaseInterfaceInputSpec):
+    """Input specification for ImportHdf5"""
+    ts_hdf5_file = traits.File(exists=True,
+                               desc='time series in .hdf5 (hdf5 format)',
+                               mandatory=True)
 
+    data_field_name = traits.String('dataset', desc='Name of dataset',
+                                    usedefault=True)
+
+
+class ImportHdf5OutputSpec(TraitedSpec):
+    """Output spec for ImportHdf5"""
+
+    ts_file = traits.File(exists=True, desc="time series in .npy format")
+
+
+class ImportHdf5(BaseInterface):
+
+    """
+    Description:
+
+    Import hdf5 file to numpy ndarry
+
+    Inputs:
+
+    ts_hdf5_file:
+        type = File, exists=True, desc='nodes * time series
+               in .hdf5, mandatory=True
+
+    data_field_name
+        type = String, default = 'dataset', desc='Name of the dataset',
+        usedefault=True
+
+    Outputs:
+
+    ts_file
+        type = File, exists=True, desc="time series in .npy format"
+
+    """
+
+    input_spec = ImportMatInputSpec
+    output_spec = ImportMatOutputSpec
+
+    def _run_interface(self, runtime):
+
+        from ephypype.import_hdf5 import read_hdf5
+
+        ts_hdf5_file = self.inputs.ts_hdf5_file
+        data_field_name = self.inputs.data_field_name
+
+        self.ts_file = read_hdf5(ts_hdf5_file, dataset_name=data_field_name)
+
+        return runtime
+
+    def _list_outputs(self):
+
+        outputs = self._outputs().get()
+
+        outputs['ts_file'] = self.ts_file
+
+        return outputs
+
+
+# ------------------- ImportBrainVisionAscii -------------------
 class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
+    """Import brainvision ascii input spec."""
 
     txt_file = File(exists=True,
                     desc='Ascii text file exported from BrainVision',
                     mandatory=True)
 
-    sample_size = traits.Float(desc='Size (number of time points) of all samples',
+    sample_size = traits.Float(desc='Size (nb of time points) of all samples',
                                mandatory=True)
 
     sep_label_name = traits.String("",
                                    desc='Separator between electrode name \
-                                         (normally a capital letter) and contact numbers',
+                                         (normally a capital letter) and \
+                                         contact numbers',
                                    usedefault=True)
 
     repair = traits.Bool(True,
-                         desc='Repair file if behaves strangely (adding space sometimes...)',
+                         desc='Repair file if behaves strangely (adding \
+                         space sometimes...)',
                          usedefault=True)
 
     sep = traits.Str(
@@ -123,7 +178,7 @@ class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportBrainVisionAsciiOutputSpec(TraitedSpec):
-    """Output specification for ImportBrainVisionAscii"""
+    """Output specification for ImportBrainVisionAscii."""
 
     splitted_ts_file = traits.File(
         exists=True, desc='splitted time series in .npy format')
@@ -133,42 +188,38 @@ class ImportBrainVisionAsciiOutputSpec(TraitedSpec):
 
 
 class ImportBrainVisionAscii(BaseInterface):
+    """Import IntraEEG Brain Vision (unsplitted) ascii time series txt file.
 
-    """
-    Description:
+    The splitted time series in .npy format, as well as electrode names in txt
+    format
 
-    Import IntraEEG Brain Vision (unsplitted) ascii time series txt file and
-    return splitted time series in .npy format, as well as electrode names in txt format
-
-    Inputs:
-
+    Parameters
+    ----------
     txt_file
-        type = File, exists=True, desc='Ascii text file exported from BrainVision', mandatory=True
-
+        type = File, exists=True, desc='Ascii text file exported from
+        BrainVision', mandatory=True
     sample_size
-        type = Int, desc = "Size (number of time points) of all samples", mandatory = True
-
+        type = Int, desc = "Size (number of time points) of all samples",
+        mandatory = True
     sep_label_name
         type = String, default = "", desc='Separator between electrode name
         (normally a capital letter) and contact numbers', usedefault=True
-
     repair
         type = Bool, default = True, desc='Repair file if behaves strangely
         (adding space sometimes...)', usedefault  = True
-
     sep
-        type = String, default = ";","Separator between time points",usedefault = True)
+        type = String, default = ";","Separator between time points",
+        usedefault = True)
 
-    Outputs:
-
+    Returns
+    -------
     splitted_ts_file
         type  = File, exists=True, desc="splitted time series in .npy format"
 
     elec_names_file
         type = File, exists=True, desc="electrode names in txt format"
-
-
     """
+
     input_spec = ImportBrainVisionAsciiInputSpec
     output_spec = ImportBrainVisionAsciiOutputSpec
 
@@ -191,7 +242,8 @@ class ImportBrainVisionAscii(BaseInterface):
         print(keep_electrodes)
 
         split_txt(txt_file=txt_file, sample_size=sample_size,
-                  sep_label_name=sep_label_name, repair=repair, sep=sep, keep_electrodes=keep_electrodes)
+                  sep_label_name=sep_label_name, repair=repair, sep=sep,
+                  keep_electrodes=keep_electrodes)
 
         return runtime
 
@@ -206,17 +258,17 @@ class ImportBrainVisionAscii(BaseInterface):
 
         return outputs
 
-######################################################################################## ImportBrainVisionVhdr #####################################################################################################
 
-
+# ------------------- ImportBrainVisionVhdr -------------------
 class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
+    """Import brainvision vhdr inut spec."""
 
     vhdr_file = File(exists=True,
                      desc='Vhdr file exported from BrainVision',
                      mandatory=True)
 
-    sample_size = traits.Float(desc='Size (number of time points) of all samples',
-                               mandatory=True)
+    sample_size = traits.Float(desc='Size (number of time points) of all \
+                               samples', mandatory=True)
 
     keep_electrodes = traits.String("",
                                     desc='keep_electrodes',
@@ -224,7 +276,7 @@ class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
 
 
 class ImportBrainVisionVhdrOutputSpec(TraitedSpec):
-    """Output specification for ImportBrainVisionVhdr"""
+    """Output specification for ImportBrainVisionVhdr."""
 
     splitted_ts_file = traits.File(
         exists=True, desc='splitted time series in .npy format')
@@ -234,31 +286,28 @@ class ImportBrainVisionVhdrOutputSpec(TraitedSpec):
 
 
 class ImportBrainVisionVhdr(BaseInterface):
+    """Import IntraEEG Brain Vision (unsplitted) vhdr time series txt file.
 
-    """
-    Description:
+    Then splitted time series in .npy format, as well as electrode names in txt
+    format
 
-    Import IntraEEG Brain Vision (unsplitted) vhdr time series txt file and
-    return splitted time series in .npy format, as well as electrode names in txt format
-
-    Inputs:
-
+    Parameters
+    ----------
     vhdr_file
-        type = File, exists=True, desc='Ascii text file exported from BrainVision', mandatory=True
-
+        type = File, exists=True, desc='Ascii text file exported from
+        BrainVision', mandatory=True
     sample_size
-        type = Int, desc = "Size (number of time points) of all samples", mandatory = True
+        type = Int, desc = "Size (number of time points) of all samples",
+        mandatory = True
 
-    Outputs:
-
+    Returns
+    -------
     splitted_ts_file
         type  = File, exists=True, desc="splitted time series in .npy format"
-
     elec_names_file
         type = File, exists=True, desc="electrode names in txt format"
-
-
     """
+
     input_spec = ImportBrainVisionVhdrInputSpec
     output_spec = ImportBrainVisionVhdrOutputSpec
 
@@ -286,8 +335,8 @@ class ImportBrainVisionVhdr(BaseInterface):
 
             print(list_keep_electrodes)
 
-            keep = np.array(
-                [ch_name in list_keep_electrodes for ch_name in ch_names], dtype='int')
+            lst = [ch_name in list_keep_electrodes for ch_name in ch_names]
+            keep = np.array(lst, dtype='int')
 
             print(keep)
             keep_ch_names = np_ch_names[keep == 1]
@@ -323,31 +372,22 @@ class ImportBrainVisionVhdr(BaseInterface):
 
         return outputs
 
-######################################################################################## Ep2ts #####################################################################################################
 
-
+# ------------------- Ep2ts -------------------
 class Ep2tsInputSpec(BaseInterfaceInputSpec):
-    """Input specification for Ep2ts"""
+    """Input specification for Ep2ts."""
+
     fif_file = File(exists=True, desc='fif file with epochs', mandatory=True)
 
 
 class Ep2tsOutputSpec(TraitedSpec):
-    ''' Output specification for Ep2ts '''
+    """Output specification for Ep2ts."""
+
     ts_file = traits.File(exists=True, desc="time series in .npy format")
 
 
 class Ep2ts(BaseInterface):
-
-    """
-    Description:
-
-    Convert electa fif raw or epochs file to numpy matrix format
-
-    Inputs:
-
-    Outputs:
-
-    """
+    """Convert electa fif raw or epochs file to numpy matrix format."""
 
     input_spec = Ep2tsInputSpec
     output_spec = Ep2tsOutputSpec
@@ -372,28 +412,22 @@ class Ep2ts(BaseInterface):
 
 
 class ConvertDs2FifInputSpec(BaseInterfaceInputSpec):
-    """Input specification for ImportMat"""
+    """Input specification for ImportMat."""
+
     ds_file = traits.Directory(exists=True,
                                desc='raw .ds file',
                                mandatory=True)
 
 
 class ConvertDs2FifOutputSpec(TraitedSpec):
-    ''' Output spec for Import Mat '''
+    """Output spec for Import Mat."""
 
     fif_file = traits.File(exists=True, desc='raw .fif file')
 
 
 class ConvertDs2Fif(BaseInterface):
+    """.ds to fif conversion."""
 
-    """
-    Description:
-
-    Inputs:
-
-    Outputs:
-
-    """
     input_spec = ConvertDs2FifInputSpec
     output_spec = ConvertDs2FifOutputSpec
 
