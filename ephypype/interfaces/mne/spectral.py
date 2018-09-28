@@ -53,6 +53,9 @@ class SpectralConnInputSpec(BaseInterfaceInputSpec):
         False, desc='If multiple connectivity matrices are exported',
         usedefault=True)
 
+    gathering_method = traits.Enum("mean", "max", "none",
+                                   desc='gathering_method', usedefault=True)
+
 
 class SpectralConnOutputSpec(TraitedSpec):
     """Output specification."""
