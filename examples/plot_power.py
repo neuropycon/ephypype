@@ -70,7 +70,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. To instantiate the preprocessing node, we import it
+# nodes we created. To instantiate the power node, we import it
 # and pass our parameters to it.
 
 from ephypype.pipelines.power import create_pipeline_power # noqa
@@ -117,4 +117,4 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
