@@ -49,5 +49,6 @@ def test_ep2ts():
     assert_equal(epo_ts.shape, epochs.get_data().shape)
     assert_array_almost_equal(epo_ts, epochs.get_data())
 
+    os.remove(epo_filepath)
     os.rmdir(tmp_dir)
     os.chdir(current_wd)
