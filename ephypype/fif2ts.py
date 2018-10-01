@@ -4,7 +4,7 @@ from ephypype.aux_tools import nostdout
 
 
 def ep2ts(fif_file):
-    """Read fif file with raw data or epochs and save timeseries to .npy."""
+    """Read fif file with epoched data and save timeseries to .npy."""
     from mne import read_epochs
 
     from numpy import save
