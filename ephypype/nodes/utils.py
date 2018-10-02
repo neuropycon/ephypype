@@ -6,7 +6,7 @@
 # License: BSD (3-clause)
 
 import nipype.pipeline.engine as pe
-from nipype.interfaces.utility import IdentityInterface
+from nipype.interfaces.utility import IdentityInterface, Function
 import nipype.interfaces.io as nio
 
 
@@ -73,3 +73,21 @@ def create_datagrabber(data_path, template_path, template_args):
     datasource.inputs.sort_filelist = True
 
     return datasource
+
+
+def get_frequency_band(freq_band_names, freq_bands):
+
+    from ephypype.aux_tools import get_freq_band
+
+    get_frequency_node = pe.Node(interface=Function(
+            input_names=['freq_band_name',
+                         'freq_band_names',
+                         'freq_bands'],
+            output_names=['freq_bands'],
+            function=get_freq_band),
+            name='get_frequency_node')
+
+    get_frequency_node.inputs.freq_band_names = freq_band_names
+    get_frequency_node.inputs.freq_bands = freq_bands
+
+    return get_frequency_node
