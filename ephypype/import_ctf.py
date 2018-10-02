@@ -11,7 +11,6 @@ def convert_ds_to_raw_fif(ds_file):
     from mne.io import read_raw_ctf
 
     _, basename, ext = split_f(ds_file)
-    # print(subj_path, basename, ext)
     raw = read_raw_ctf(ds_file)
 
     raw_fif_file = os.path.abspath(basename + "_raw.fif")
