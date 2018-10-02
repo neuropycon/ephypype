@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""All nodes for import that are NOT specific to a ephy package."""
+"""All nodes for import data in different formats (mat, hdf5, fif, ds,
+brainvision)."""
+
 import os
 
 from nipype.interfaces.base import BaseInterface,\
@@ -147,7 +149,7 @@ class ImportHdf5(BaseInterface):
         return outputs
 
 
-# ------------------- ImportBrainVisionAscii -------------------
+# ------------------- ImportBrainVisionAscii ------------------- #
 class ImportBrainVisionAsciiInputSpec(BaseInterfaceInputSpec):
     """Import brainvision ascii input spec."""
 
@@ -259,7 +261,7 @@ class ImportBrainVisionAscii(BaseInterface):
         return outputs
 
 
-# ------------------- ImportBrainVisionVhdr -------------------
+# ------------------- ImportBrainVisionVhdr ------------------- #
 class ImportBrainVisionVhdrInputSpec(BaseInterfaceInputSpec):
     """Import brainvision vhdr inut spec."""
 
@@ -373,7 +375,7 @@ class ImportBrainVisionVhdr(BaseInterface):
         return outputs
 
 
-# ------------------- Ep2ts -------------------
+# ------------------- Ep2ts ------------------- #
 class Ep2tsInputSpec(BaseInterfaceInputSpec):
     """Input specification for Ep2ts."""
 
@@ -387,7 +389,7 @@ class Ep2tsOutputSpec(TraitedSpec):
 
 
 class Ep2ts(BaseInterface):
-    """Convert electa fif raw or epochs file to numpy matrix format."""
+    """Convert electa epoched data file to numpy matrix format."""
 
     input_spec = Ep2tsInputSpec
     output_spec = Ep2tsOutputSpec
@@ -411,6 +413,7 @@ class Ep2ts(BaseInterface):
         return outputs
 
 
+# ------------------- ds2fif --------------------------- #
 class ConvertDs2FifInputSpec(BaseInterfaceInputSpec):
     """Input specification for ImportMat."""
 
@@ -446,5 +449,72 @@ class ConvertDs2Fif(BaseInterface):
         outputs = self._outputs().get()
 
         outputs["fif_file"] = self.fif_file
+
+        return outputs
+
+
+# ------------------- fif2npy --------------------------- #
+class Fif2TsInputSpec(BaseInterfaceInputSpec):
+    """Input specification for Fif2Ts."""
+
+    fif_file = File(exists=True, desc='fif file', mandatory=True)
+
+
+class Fif2TsOutputSpec(TraitedSpec):
+    """Output specification for Fif2Ts."""
+
+    ts_file = traits.File(exists=True, desc="time series in .npy format")
+    channel_coords_file = traits.File(
+            exists=True, desc="channels coordinates in .txt format")
+    channel_names_file = traits.File(
+            exists=True, desc="channels labels in .txt format")
+    sfreq = traits.Float(desc='sampling frequency', mandatory=True)
+
+
+class Fif2Ts(BaseInterface):
+    """Import Elekta raw data in .fif format.
+
+    Save the data time series in .npy format, as well as the channels names
+    and location in txt format.
+
+    Parameters
+    ----------
+    fif_file
+        type = File, exists=True, desc='fif file', mandatory=True
+
+    Returns
+    -------
+    ts_file
+        type  = File, exists=True, desc="data time series in .npy format"
+    channel_coords_file
+        type = File, exists=True, desc="channels coordinates in txt format"
+    channel_names_file
+        type = File, exists=True, desc="channels names in txt format"
+    sfreq
+        type = Float, desc="sampling frequency"
+    """
+
+    input_spec = Fif2TsInputSpec
+    output_spec = Fif2TsOutputSpec
+
+    def _run_interface(self, runtime):
+
+        from ephypype.fif2ts import create_ts
+
+        fif_file = self.inputs.fif_file
+
+        self.ts_file, self.channel_coords_file, self.channel_names_file, \
+            self.sfreq = create_ts(fif_file)
+
+        return runtime
+
+    def _list_outputs(self):
+
+        outputs = self._outputs().get()
+
+        outputs['ts_file'] = self.ts_file
+        outputs['channel_coords_file'] = self.channel_coords_file
+        outputs['channel_names_file'] = self.channel_names_file
+        outputs['sfreq'] = self.sfreq
 
         return outputs
