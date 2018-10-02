@@ -49,8 +49,8 @@ def compute_spectral_connectivity(data,
                 fmax=fmax, faverage=False, tmin=None, mode='multitaper',
                 mt_adaptive=False, n_jobs=1)
         else:
-            print('Unknown gathering method')
-            return None
+            raise ValueError('Unknown gathering method')
+        
     elif mode == 'cwt_morlet':
 
         frequencies = np.arange(fmin, fmax, 1)
@@ -65,8 +65,7 @@ def compute_spectral_connectivity(data,
 
         con_matrix = np.mean(np.array(con_matrix[:, :, 0, :]), axis=2)
     else:
-        print('Time-frequency transformation mode is not set')
-        return None
+        raise ValueError('Time-frequency transformation mode is not set')
 
     print(con_matrix.shape)
     print(np.min(con_matrix), np.max(con_matrix))
