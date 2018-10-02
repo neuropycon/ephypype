@@ -465,9 +465,9 @@ class Fif2TsOutputSpec(TraitedSpec):
 
     ts_file = traits.File(exists=True, desc="time series in .npy format")
     channel_coords_file = traits.File(
-            exists=True, desc="channels coordinates in .txt format")
+        exists=True, desc="channels coordinates in .txt format")
     channel_names_file = traits.File(
-            exists=True, desc="channels labels in .txt format")
+        exists=True, desc="channels labels in .txt format")
     sfreq = traits.Float(desc='sampling frequency', mandatory=True)
 
 

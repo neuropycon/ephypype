@@ -80,12 +80,12 @@ def get_frequency_band(freq_band_names, freq_bands):
     from ephypype.aux_tools import get_freq_band
 
     get_frequency_node = pe.Node(interface=Function(
-            input_names=['freq_band_name',
-                         'freq_band_names',
-                         'freq_bands'],
-            output_names=['freq_bands'],
-            function=get_freq_band),
-            name='get_frequency_node')
+        input_names=['freq_band_name',
+                     'freq_band_names',
+                     'freq_bands'],
+        output_names=['freq_bands'],
+        function=get_freq_band),
+        name='get_frequency_node')
 
     get_frequency_node.inputs.freq_band_names = freq_band_names
     get_frequency_node.inputs.freq_bands = freq_bands

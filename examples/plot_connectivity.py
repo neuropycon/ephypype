@@ -71,8 +71,8 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity # noqa
 spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
-        data_path, con_method=con_method,
-        epoch_window_length=epoch_window_length)
+    data_path, con_method=con_method,
+    epoch_window_length=epoch_window_length)
 
 ###############################################################################
 # The connectivity node need two auxiliary nodes: one node reads the raw data
