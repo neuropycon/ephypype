@@ -1,9 +1,6 @@
 """Import mat."""
 
 
-# def preprocess_mat_to_conmat(mat_file,):
-
-
 def import_mat_to_conmat(mat_file, data_field_name='F',
                          orig_channel_names_file=None,
                          orig_channel_coords_file=None):
@@ -17,7 +14,6 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
     subj_path, basename, ext = split_f(mat_file)
 
     mat = loadmat(mat_file)
-
     print((mat[data_field_name].shape))
 
     raw_data = np.array(mat[data_field_name], dtype='f')
@@ -53,13 +49,9 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
 def import_tsmat_to_ts(tsmat_file, data_field_name='F',
                        good_channels_field_name='ChannelFlag'):
     """Import tsmat to ts."""
-    # ,orig_channel_names_file,orig_channel_coords_file):
 
     import os
     import numpy as np
-
-    # import mne
-    # from mne.io import RawArray
 
     from nipype.utils.filemanip import split_filename as split_f
 
@@ -101,7 +93,6 @@ def import_tsmat_to_ts(tsmat_file, data_field_name='F',
 
 def import_amplmat_to_ts(tsmat_file):
     """Import amplmat to ts."""
-    # ,orig_channel_names_file,orig_channel_coords_file):
 
     import os
     import numpy as np
@@ -152,11 +143,7 @@ def import_mat_to_ts(mat_file, orig_channel_names_file,
     import os
     import numpy as np
 
-    # import mne
-    # from mne.io import RawArray
-
     from nipype.utils.filemanip import split_filename as split_f
-
     from scipy.io import loadmat
 
     subj_path, basename, ext = split_f(mat_file)
@@ -176,9 +163,6 @@ def import_mat_to_ts(mat_file, orig_channel_names_file,
     elec_names = [line.strip() for line in open(orig_channel_names_file)]
 
     print(elec_names)
-    # 0/0
-
-    # select_sensors = np.arange(21)
 
     cond = [elec.startswith('EMG') or elec.startswith(
         'EOG') for elec in elec_names]
@@ -232,10 +216,8 @@ def concat_ts(all_ts_files):
 
         if i == 0:
             concat_ts = ts.copy()
-            # print concat_ts.shape
         else:
             concat_ts = np.concatenate((concat_ts, ts), axis=0)
-            # print concat_ts.shape
 
     print((concat_ts.shape))
 
@@ -244,10 +226,3 @@ def concat_ts(all_ts_files):
     np.save(concat_ts_file, concat_ts)
 
     return concat_ts_file
-
-
-# if __name__ == '__main__':
-
-    # test_loadmat()
-
-# $MNE_ROOT/bin/mne_ctf2fiff --ds balai_speech-oscill_20130716_01.ds/

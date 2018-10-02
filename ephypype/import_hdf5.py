@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 10 19:14:23 2018
+"""Import hdf5."""
 
-@author: pasca
-"""
 import numpy as np
 import h5py
 
