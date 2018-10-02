@@ -46,7 +46,10 @@ reject = dict(mag=5e-12, grad=5000e-13)
 # Then, we create our workflow and specify the `base_dir` which tells
 # nipype the directory in which to store the outputs.
 
-main_workflow = pe.Workflow(name='preprocessing_pipeline')
+# workflow directory within the `base_dir`
+preproc_pipeline_name = 'preprocessing_pipeline'
+
+main_workflow = pe.Workflow(name=preproc_pipeline_name)
 main_workflow.base_dir = data_path
 
 ###############################################################################
@@ -104,7 +107,7 @@ main_workflow.write_graph(graph2use='colored')  # colored
 
 from scipy.misc import imread # noqa
 import matplotlib.pyplot as plt # noqa
-img = plt.imread(op.join(data_path, 'preprocessing_pipeline', 'graph.png'))
+img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
