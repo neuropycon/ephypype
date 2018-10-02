@@ -17,7 +17,7 @@ def test_ep2ts():
     """Test data conversion."""
 
     current_wd = os.getcwd()
-    tmp_dir = tempfile.mkdtemp('Temp')
+    tmp_dir = tempfile.mkdtemp()
 
     os.chdir(tmp_dir)
 
@@ -49,6 +49,4 @@ def test_ep2ts():
     assert_equal(epo_ts.shape, epochs.get_data().shape)
     assert_array_almost_equal(epo_ts, epochs.get_data())
 
-    os.remove(epo_filepath)
-    os.rmdir(tmp_dir)
     os.chdir(current_wd)
