@@ -4,19 +4,17 @@ Author: David Meunier <david_meunier_79@hotmail.fr>
 """
 import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface
-# ,Function
 
 from ephypype.interfaces.mne.spectral import SpectralConn, PlotSpectralConn
 from ephypype.nodes.ts_tools import SplitWindows
 
+
 # to modify and add in "Nodes"
-# from ephypype.spectral import  filter_adj_plot_mat
-
-
 def create_pipeline_time_series_to_spectral_connectivity(
         main_path, pipeline_name='ts_to_conmat', con_method='coh',
         multi_con=False, export_to_matlab=False, n_windows=[],
-        mode='multitaper', is_sensor_space=True, epoch_window_length=None):
+        mode='multitaper', is_sensor_space=True, epoch_window_length=None,
+        gathering_method="mean"):
     """Connectivity pipeline.
 
     Compute spectral connectivity in a given frequency bands.
@@ -81,7 +79,7 @@ def create_pipeline_time_series_to_spectral_connectivity(
 
         spectral.inputs.con_method = con_method
         spectral.inputs.export_to_matlab = export_to_matlab
-        # spectral.inputs.sfreq = sfreq
+        spectral.inputs.gathering_method = gathering_method
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         if epoch_window_length:
@@ -90,8 +88,6 @@ def create_pipeline_time_series_to_spectral_connectivity(
         pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(inputnode, 'ts_file', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
-        # pipeline.connect(inputnode, 'epoch_window_length', spectral,
-        # 'epoch_window_length')
 
         # plot spectral
         if multi_con:
@@ -137,17 +133,13 @@ def create_pipeline_time_series_to_spectral_connectivity(
 
         spectral.inputs.con_method = con_method
         spectral.inputs.export_to_matlab = export_to_matlab
-        # spectral.inputs.sfreq = sfreq  # undefined
+        spectral.inputs.gathering_method = gathering_method
         spectral.inputs.multi_con = multi_con
         spectral.inputs.mode = mode
         spectral.inputs.epoch_window_length = epoch_window_length
 
-        # pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
+        pipeline.connect(inputnode, 'sfreq', spectral, 'sfreq')
         pipeline.connect(win_ts, 'win_ts_files', spectral, 'ts_file')
         pipeline.connect(inputnode, 'freq_band', spectral, 'freq_band')
-
-        # pipeline.connect(inputnode, 'index', spectral, 'index')
-        # pipeline.connect(inputnode, 'epoch_window_length', spectral,
-        # 'epoch_window_length')
 
     return pipeline
