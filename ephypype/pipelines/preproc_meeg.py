@@ -3,8 +3,6 @@
 Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
          Annalisa Pascarella <a.pascarella@iac.cnr.it>
 """
-import matplotlib
-matplotlib.use('PS')
 
 
 def get_ext_file(raw_file):
