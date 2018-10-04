@@ -6,7 +6,6 @@ import itertools as iter
 from itertools import combinations
 
 from mne.viz import circular_layout, plot_connectivity_circle
-import matplotlib.pyplot as plt
 
 
 def atoi(text):
@@ -68,6 +67,7 @@ def plot_tab_circular_connectivity(list_list_conmat, all_elec_labels,
                                    color_bar='gist_rainbow', column_labels=[],
                                    row_labels=[]):
     """Plot tab circular conectivity."""
+    import matplotlib.pyplot as plt
     nb_lines = len(list_list_conmat)
     print(nb_lines)
 

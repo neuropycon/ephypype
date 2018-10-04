@@ -1,10 +1,11 @@
 """Test power."""
+
+import mne
+
+from ephypype.preproc import preprocess_fif, compute_ica
+
 import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
-
-import mne  # noqa
-
-from ephypype.preproc import preprocess_fif, compute_ica  # noqa
 
 data_path = mne.datasets.sample.data_path()
 raw_fname = data_path + '/MEG/sample/sample_audvis_raw.fif'

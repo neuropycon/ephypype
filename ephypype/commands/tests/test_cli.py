@@ -4,13 +4,14 @@
 #
 # License: BSD (3-clause)
 
-import matplotlib # noqa
-matplotlib.use('Agg')  # noqa; for testing don't use X server
 
 import os
 import os.path as op
 from ephypype.commands import neuropycon
 from click.testing import CliRunner
+
+import matplotlib
+matplotlib.use('Agg')  # for testing don't use X server
 
 
 def test_input_linear():

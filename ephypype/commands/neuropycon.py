@@ -15,7 +15,7 @@ import os
 @click.option('--plugin', '-p',
               type=click.Choice(['Linear', 'MultiProc', 'PBS']),
               help='plugin to use; use Linear for single-thread\
- computation, MultiProc parallel computation on local\
+ computation, MultiProc for parallel computation on local\
  machine and PBS to compute on cluster',
               default='MultiProc')
 @click.option('--save-path', '-s', type=click.Path(), default=os.getcwd(),

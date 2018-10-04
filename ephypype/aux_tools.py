@@ -1,7 +1,8 @@
-"""Aux functions.
+"""Aux functions"""
 
-AUTOR: dmalt
-"""
+# Authors: Dmitrii Altukhov <daltuhov@hse>
+#
+# License: BSD (3-clause)
 
 from contextlib import contextmanager
 import os
