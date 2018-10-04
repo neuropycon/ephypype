@@ -50,7 +50,7 @@ def compute_spectral_connectivity(data,
                 mt_adaptive=False, n_jobs=1)
         else:
             raise ValueError('Unknown gathering method')
-        
+
     elif mode == 'cwt_morlet':
 
         frequencies = np.arange(fmin, fmax, 1)
