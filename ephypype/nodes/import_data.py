@@ -499,12 +499,12 @@ class Fif2Ts(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.fif2ts import create_ts
+        from ephypype.fif2ts import _get_raw_array
 
         fif_file = self.inputs.fif_file
 
         self.ts_file, self.channel_coords_file, self.channel_names_file, \
-            self.sfreq = create_ts(fif_file)
+            self.sfreq = _get_raw_array(fif_file)
 
         return runtime
 

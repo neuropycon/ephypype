@@ -21,7 +21,7 @@ def ep2ts(fif_file):
     return save_path
 
 
-def create_ts(raw_fname):
+def _get_raw_array(raw_fname):
     """Read a raw data from **.fif** file and save the data time series, the
     sensors coordinates and labels in .npy and .txt files.
 

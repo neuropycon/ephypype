@@ -141,7 +141,7 @@ def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     from mne.preprocessing import read_ica
 
     from nipype.utils.filemanip import split_filename as split_f
-    from ephypype.fif2ts import create_ts
+    from ephypype.fif2ts import _get_raw_array
 
     subj_path, basename, ext = split_f(fif_file)
     (data_path, sbj_name) = os.path.split(subj_path)
@@ -219,7 +219,7 @@ def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
     ica.save(ica_sol_file)
 
     (ts_file, channel_coords_file, channel_names_file,
-     raw.info['sfreq']) = create_ts(new_raw_ica_file)
+     raw.info['sfreq']) = _get_raw_array(new_raw_ica_file)
 
     if is_sensor_space:
         return (ts_file, channel_coords_file, channel_names_file,
