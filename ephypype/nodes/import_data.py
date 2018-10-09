@@ -60,7 +60,7 @@ class ImportMat(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_mat import import_tsmat_to_ts
+        from .import_data import import_tsmat_to_ts
 
         tsmat_file = self.inputs.tsmat_file
 
@@ -131,12 +131,12 @@ class ImportHdf5(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_hdf5 import read_hdf5
+        from ephypype.import_data import _read_hdf5
 
         ts_hdf5_file = self.inputs.ts_hdf5_file
         data_field_name = self.inputs.data_field_name
 
-        self.ts_file = read_hdf5(ts_hdf5_file, dataset_name=data_field_name)
+        self.ts_file = _read_hdf5(ts_hdf5_file, dataset_name=data_field_name)
 
         return runtime
 
@@ -315,7 +315,7 @@ class ImportBrainVisionVhdr(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_txt import read_brainvision_vhdr
+        from .import_data import _read_brainvision_vhdr
         import numpy as np
 
         vhdr_file = self.inputs.vhdr_file
@@ -324,7 +324,7 @@ class ImportBrainVisionVhdr(BaseInterface):
 
         keep_electrodes = self.inputs.keep_electrodes
 
-        np_splitted_ts, ch_names = read_brainvision_vhdr(
+        np_splitted_ts, ch_names = _read_brainvision_vhdr(
             vhdr_file=vhdr_file, sample_size=sample_size)
 
         np_ch_names = np.array(ch_names, dtype='str')
@@ -436,11 +436,11 @@ class ConvertDs2Fif(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_ctf import convert_ds_to_raw_fif
+        from ephypype.import_data import _convert_ds_to_raw_fif
 
         ds_file = self.inputs.ds_file
 
-        self.fif_file = convert_ds_to_raw_fif(ds_file)
+        self.fif_file = _convert_ds_to_raw_fif(ds_file)
 
         return runtime
 
