@@ -28,7 +28,7 @@ def _convert_ds_to_raw_fif(ds_file):
     return raw_fif_file
 
 
-def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
+def _write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
     """
     Create hdf5 file
 
@@ -49,7 +49,7 @@ def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
     hf.close()
 
 
-def read_hdf5(filename, dataset_name='dataset'):
+def _read_hdf5(filename, dataset_name='dataset'):
     """
     Read hdf5 file
 
@@ -75,7 +75,7 @@ def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
     data = np.load(filename)
     print('converting to hdf5')
 
-    write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
+    _write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
 
 
 def import_hdf5_file(hdf5_file, data_field_name='F'):
