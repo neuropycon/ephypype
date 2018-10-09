@@ -76,10 +76,10 @@ Pipelines
 .. toctree::
    :maxdepth: 3
 
-   pipelines/preproc_meeg
-   pipelines/power
-   pipelines/source_reconstruction
-   pipelines/spectral_connectivity
+   preproc_meeg
+   power
+   source_reconstruction
+   spectral_connectivity
 
 
 Installation

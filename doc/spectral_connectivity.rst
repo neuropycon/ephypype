@@ -47,8 +47,8 @@ wraps the MNE Python functions  |spectral_connectivity| and |plot_connectivity_c
 
 
    
-.. figure::  ../../img/graph_dot_conn.jpg
-   :scale: 75 %
+.. figure::  ./img/graph_dot_conn.jpg
+   :width: 25 %
    :align: center
    
 .. note:: A list of the different connectivity measures implemented by MNE can be found in the description of |here|.
@@ -57,4 +57,4 @@ wraps the MNE Python functions  |spectral_connectivity| and |plot_connectivity_c
 
    <a href="http://martinos.org/mne/stable/generated/mne.connectivity.spectral_connectivity.html?highlight=spectral_connectivity#mne.connectivity.spectral_connectivity" target="_blank">spectral_connectivity function</a>
 
-.. seealso:: See :ref:`conn_graph_example` to get an example on how to write a connectivity and graph analysis workflow.
+.. seealso:: See :ref:`sphx_glr_auto_examples_plot_connectivity.py` to get an example on how to write a connectivity and graph analysis workflow.

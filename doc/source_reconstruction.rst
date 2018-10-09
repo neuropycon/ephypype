@@ -23,8 +23,8 @@ In particular:
 
 .. _inv_pipeline:
 
-.. figure::  ../../img/graph_dot_inv.jpg
-   :scale: 75 %
+.. figure::  ./img/graph_dot_inv.jpg
+   :width: 40%
    :align: center
    
 .. warning:: Before to use this pipeline, we need for each subject a template MRI or the individual MRI data.

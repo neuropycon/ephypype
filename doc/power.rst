@@ -25,12 +25,12 @@ of the scipy package.
 
 
 
-.. figure::  ../../img/graph_dot_power.jpg
-   :scale: 75 %
+.. figure::  ./img/graph_dot_power.jpg
+   :width: 20%
    :align: center
    
 
-.. seealso:: See :ref:`power_example` to get an example on how to write a power pipeline in the **sensor space**.
+.. seealso:: See :ref:`sphx_glr_auto_examples_plot_power.py` to get an example on how to write a power pipeline in the **sensor space**.
 
 
 .. |welch| raw:: html

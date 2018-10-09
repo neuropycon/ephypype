@@ -5,7 +5,7 @@ Preprocessing pipeline
 
 The preprocessing pipeline runs the ICA algorithm for an automatic removal of 
 eyes and heart related artefacts. A report is automatically generated and can be used to 
-correct and/or fine-tune the correction in each subject (see the example section :ref:`preproc_example`).
+correct and/or fine-tune the correction in each subject (see the example section :ref:`sphx_glr_auto_examples_plot_preprocessing.py`).
 
 The **input** data can be in **ds** or **fif** format. 
 
@@ -32,12 +32,12 @@ In particular, the node:
 * :py:class:`ica <ephypype.interfaces.mne.preproc.CompIca>` computes ICA solution on raw fif data
 
 
-.. figure::  ../../img/graph_dot_preproc.jpg
-   :scale: 75 %
+.. figure::  ./img/graph_dot_preproc.jpg
+   :width: 20%
    :align: center
    
 .. note:: An **ICA tutorial** with the main functions used in MNE can be found |here|.
-.. seealso:: See :ref:`preproc_example` to get an example on how to write a preprocessing pipeline.
+.. seealso:: See :ref:`sphx_glr_auto_examples_plot_preprocessing.py` to get an example on how to write a preprocessing pipeline.
 
 
 
