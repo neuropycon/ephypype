@@ -79,8 +79,8 @@ spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
 # file in .fif format and extract the data and the channel information; the
 # other node get information on the frequency band we are interested on.
 
-from ephypype.nodes.import_data import Fif2Ts  # noqa
-create_ts_node = pe.Node(interface=Fif2Ts(), name='Fif2Ts')
+from ephypype.nodes.import_data import Fif2Array  # noqa
+create_array_node = pe.Node(interface=Fif2Array(), name='Fif2Array')
 
 frequency_node = get_frequency_band(freq_band_names, freq_bands)
 
@@ -99,16 +99,16 @@ main_workflow.connect(infosource, 'freq_band_name',
                       frequency_node, 'freq_band_name')
 
 ###############################################################################
-# Similarly, for the inputnode of create_ts_node and spectral_workflow. Things
-# will become clearer in a moment when we plot the graph of the workflow.
+# Similarly, for the inputnode of create_array_node and spectral_workflow.
+# Things will become clearer in a moment when we plot the graph of the workflow
 
 main_workflow.connect(datasource, 'raw_file',
-                      create_ts_node, 'fif_file')
+                      create_array_node, 'fif_file')
 
-main_workflow.connect(create_ts_node, 'ts_file',
+main_workflow.connect(create_array_node, 'array_file',
                       spectral_workflow, 'inputnode.ts_file')
 
-main_workflow.connect(create_ts_node, 'channel_names_file',
+main_workflow.connect(create_array_node, 'channel_names_file',
                       spectral_workflow, 'inputnode.labels_file')
 
 
@@ -116,7 +116,7 @@ main_workflow.connect(frequency_node, 'freq_bands',
                       spectral_workflow, 'inputnode.freq_band')
 
 
-main_workflow.connect(create_ts_node, 'sfreq',
+main_workflow.connect(create_array_node, 'sfreq',
                       spectral_workflow, 'inputnode.sfreq')
 
 ###############################################################################

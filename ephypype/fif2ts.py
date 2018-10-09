@@ -32,7 +32,7 @@ def _get_raw_array(raw_fname):
 
     Returns
     -------
-    ts_file : str
+    array_file : str
         pathname of the numpy file (.npy) containing the data read from
         raw_fname
     channel_coords_file : str
@@ -76,9 +76,9 @@ def _get_raw_array(raw_fname):
 
     print((data.shape))
 
-    ts_file = os.path.abspath(basename + '.npy')
-    np.save(ts_file, data)
-    print(('\n *** TS FILE ' + ts_file + '*** \n'))
+    array_file = os.path.abspath(basename + '.npy')
+    np.save(array_file, data)
+    print(('\n *** TS FILE ' + array_file + '*** \n'))
     print(('*** raw.info[sfreq] = ' + str(raw.info['sfreq'])))
 
-    return ts_file, channel_coords_file, channel_names_file, raw.info['sfreq']
+    return array_file, channel_coords_file, channel_names_file, raw.info['sfreq']  # noqa

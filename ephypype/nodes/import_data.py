@@ -454,16 +454,16 @@ class ConvertDs2Fif(BaseInterface):
 
 
 # ------------------- fif2npy --------------------------- #
-class Fif2TsInputSpec(BaseInterfaceInputSpec):
-    """Input specification for Fif2Ts."""
+class Fif2ArrayInputSpec(BaseInterfaceInputSpec):
+    """Input specification for Fif2Array."""
 
     fif_file = File(exists=True, desc='fif file', mandatory=True)
 
 
-class Fif2TsOutputSpec(TraitedSpec):
-    """Output specification for Fif2Ts."""
+class Fif2ArrayOutputSpec(TraitedSpec):
+    """Output specification for Fif2Array."""
 
-    ts_file = traits.File(exists=True, desc="time series in .npy format")
+    array_file = traits.File(exists=True, desc="time series in .npy format")
     channel_coords_file = traits.File(
         exists=True, desc="channels coordinates in .txt format")
     channel_names_file = traits.File(
@@ -471,7 +471,7 @@ class Fif2TsOutputSpec(TraitedSpec):
     sfreq = traits.Float(desc='sampling frequency', mandatory=True)
 
 
-class Fif2Ts(BaseInterface):
+class Fif2Array(BaseInterface):
     """Import Elekta raw data in .fif format.
 
     Save the data time series in .npy format, as well as the channels names
@@ -484,7 +484,7 @@ class Fif2Ts(BaseInterface):
 
     Returns
     -------
-    ts_file
+    array_file
         type  = File, exists=True, desc="data time series in .npy format"
     channel_coords_file
         type = File, exists=True, desc="channels coordinates in txt format"
@@ -494,8 +494,8 @@ class Fif2Ts(BaseInterface):
         type = Float, desc="sampling frequency"
     """
 
-    input_spec = Fif2TsInputSpec
-    output_spec = Fif2TsOutputSpec
+    input_spec = Fif2ArrayInputSpec
+    output_spec = Fif2ArrayOutputSpec
 
     def _run_interface(self, runtime):
 
@@ -503,7 +503,7 @@ class Fif2Ts(BaseInterface):
 
         fif_file = self.inputs.fif_file
 
-        self.ts_file, self.channel_coords_file, self.channel_names_file, \
+        self.array_file, self.channel_coords_file, self.channel_names_file, \
             self.sfreq = _get_raw_array(fif_file)
 
         return runtime
@@ -512,7 +512,7 @@ class Fif2Ts(BaseInterface):
 
         outputs = self._outputs().get()
 
-        outputs['ts_file'] = self.ts_file
+        outputs['array_file'] = self.array_file
         outputs['channel_coords_file'] = self.channel_coords_file
         outputs['channel_names_file'] = self.channel_names_file
         outputs['sfreq'] = self.sfreq
