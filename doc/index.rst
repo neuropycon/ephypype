@@ -12,7 +12,7 @@ python framework.
 Neuropycon project includes two different packages:
 
 * :ref:`ephypype` based on |MNE python| includes pipelines for electrophysiology analysis
-* :ref:`graphpype` based on |radatools| includes pipelines for graph theoretical analysis of neuroimaging data
+* |graphpype| based on |radatools| includes pipelines for graph theoretical analysis of neuroimaging data
 
 
 .. |MNE python| raw:: html
@@ -23,9 +23,9 @@ Neuropycon project includes two different packages:
 
    <a href="http://deim.urv.cat/~sergio.gomez/radatools.php" target="_blank">radatools</a>
 
-.. .. |graphpype| raw:: html
+.. |graphpype| raw:: html
 
-..    <a href="http://davidmeunier79.github.io/graphpype" target="_blank">graphpype</a>
+   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
 
 
 Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular
@@ -62,7 +62,7 @@ Current implementations allow for
 * MEG/EEG data pre-processing and cleaning by an automatic removal of eyes and heart related artifacts
 * sensor or source-level connectivity analyses
 
-The ephypype package provides the main pipelines in the :ref:`pipelines`:
+The ephypype package provides the following **pipelines**:
 
 * the :ref:`preproc_meeg` runs the ICA algorithm for an automatic removal of eyes and heart related artefacts
 * the :ref:`power` computes the power spectral density (PSD) on sensor space
