@@ -39,7 +39,7 @@ def create_iterator(fields, field_values):
 
 
 def create_datagrabber(data_path, template_path, template_args):
-    """"Create node to grab data using DataGrabber in Nipype.
+    """Create node to grab data using DataGrabber in Nipype.
 
     Parameters
     ----------
