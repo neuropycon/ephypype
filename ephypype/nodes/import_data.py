@@ -131,7 +131,7 @@ class ImportHdf5(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_data import _read_hdf5
+        from .import_data import _read_hdf5
 
         ts_hdf5_file = self.inputs.ts_hdf5_file
         data_field_name = self.inputs.data_field_name
@@ -227,7 +227,7 @@ class ImportBrainVisionAscii(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_txt import split_txt
+        from .import_data import _split_txt
 
         txt_file = self.inputs.txt_file
 
@@ -243,9 +243,9 @@ class ImportBrainVisionAscii(BaseInterface):
 
         print(keep_electrodes)
 
-        split_txt(txt_file=txt_file, sample_size=sample_size,
-                  sep_label_name=sep_label_name, repair=repair, sep=sep,
-                  keep_electrodes=keep_electrodes)
+        _split_txt(txt_file=txt_file, sample_size=sample_size,
+                   sep_label_name=sep_label_name, repair=repair, sep=sep,
+                   keep_electrodes=keep_electrodes)
 
         return runtime
 
@@ -436,7 +436,7 @@ class ConvertDs2Fif(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.import_data import _convert_ds_to_raw_fif
+        from .import_data import _convert_ds_to_raw_fif
 
         ds_file = self.inputs.ds_file
 
