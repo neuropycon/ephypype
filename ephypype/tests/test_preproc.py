@@ -2,8 +2,8 @@
 
 import mne
 import os
-import tempfile
 from ephypype.preproc import preprocess_fif, compute_ica
+from ephypype.aux_tools import _create_tmp_dir
 
 import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
@@ -15,10 +15,7 @@ filter_raw_fname = data_path + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
 
 def test_preprocess_fif():
     """Test filter and downsample raw data."""
-    current_wd = os.getcwd()
-    tmp_dir = tempfile.mkdtemp()
-
-    os.chdir(tmp_dir)
+    current_wd = _create_tmp_dir()
 
     l_freq = 0.1
     h_freq = 40
@@ -40,10 +37,7 @@ def test_preprocess_fif():
 
 def test_compute_ica():
     """Test compute ICA on raw data."""
-    current_wd = os.getcwd()
-    tmp_dir = tempfile.mkdtemp()
-
-    os.chdir(tmp_dir)
+    current_wd = _create_tmp_dir()
 
     ecg_ch_name = 'ECG'
     eog_ch_name = 'HEOG, VEOG'

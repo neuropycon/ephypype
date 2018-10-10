@@ -2,9 +2,9 @@
 
 import mne
 import os
-import tempfile
 import numpy as np
 
+from ephypype.aux_tools import _create_tmp_dir
 from ephypype.fif2ts import ep2ts
 from numpy.testing import assert_equal, assert_array_almost_equal
 
@@ -16,10 +16,7 @@ raw_fname = os.path.join(data_path, 'MEG', 'sample',
 def test_ep2ts():
     """Test data conversion."""
 
-    current_wd = os.getcwd()
-    tmp_dir = tempfile.mkdtemp()
-
-    os.chdir(tmp_dir)
+    current_wd = _create_tmp_dir()
 
     # Read data from file:
     raw = mne.io.read_raw_fif(raw_fname)
