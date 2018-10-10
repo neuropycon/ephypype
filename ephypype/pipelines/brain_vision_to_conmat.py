@@ -2,25 +2,12 @@
 # Author: David Meunier <david_meunier_79@hotmail.fr>
 
 import nipype.pipeline.engine as pe
-
-# from nipype.interfaces.utility import Function
 from nipype.interfaces.utility import IdentityInterface
-
-
-# from ephypype.interfaces.mne.spectral import SpectralConn, PlotSpectralConn
-
-# from ephypype.spectral import  multiple_spectral_proc
 
 from ephypype.nodes.import_data import (ImportBrainVisionAscii,
                                         ImportBrainVisionVhdr)
 
-# from ephypype.nodes.ts_tools import SplitWindows
-
-
 from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity  # noqa
-
-# TODO
-# from ephypype.nodes.? import filter_adj_plot_mat
 
 
 def create_pipeline_brain_vision_ascii_to_spectral_connectivity(

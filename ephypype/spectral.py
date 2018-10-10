@@ -3,8 +3,8 @@
 Author: David Meunier <david_meunier_79@hotmail.fr>
 """
 import os
-
 import numpy as np
+
 from scipy.io import savemat
 
 from mne.connectivity import spectral_connectivity
@@ -77,20 +77,29 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                                            index=0, mode='cwt_morlet',
                                            export_to_matlab=False,
-                                           gathering_method="mean"):
+                                           gathering_method="mean",
+                                           save_dir=None):
     """Compute and save spectral connectivity."""
-    con_matrix = compute_spectral_connectivity(
-        data, con_method, sfreq, fmin, fmax, mode, gathering_method)
+    con_matrix = compute_spectral_connectivity(data, con_method, sfreq, fmin,
+                                               fmax, mode, gathering_method)
 
-    conmat_file = os.path.abspath(
-        "conmat_" + str(index) + "_" + con_method + ".npy")
+    if save_dir is not None:
+        conmat_file = os.path.join(save_dir, "conmat_{}_{}.npy".format(
+            index, con_method))
+    else:
+        conmat_file = os.path.abspath("conmat_{}_{}.npy".format(
+            index, con_method))
 
     np.save(conmat_file, con_matrix)
 
     if export_to_matlab:
 
-        conmat_matfile = os.path.abspath(
-            "conmat_" + str(index) + "_" + con_method + ".mat")
+        if save_dir is not None:
+            conmat_matfile = os.path.join(
+                save_dir, "conmat_{}_{}.mat".format(index, con_method))
+        else:
+            conmat_matfile = os.path.abspath(
+                "conmat_{}_{}.mat".format(index, con_method))
 
         savemat(conmat_matfile, {
             "conmat": con_matrix + np.transpose(con_matrix)})
@@ -101,7 +110,8 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
                                                  fmin, fmax, mode='cwt_morlet',
                                                  export_to_matlab=False,
-                                                 gathering_method="mean"):
+                                                 gathering_method="mean",
+                                                 save_dir=None):
     """Compute and save multi-spectral connectivity."""
     assert len(all_data.shape) == 3, ("Error, \
         all_data should have several samples")
@@ -121,104 +131,51 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
         conmat_file = compute_and_save_spectral_connectivity(
             data, con_method, sfreq, fmin, fmax, index=i,
             mode=mode, export_to_matlab=export_to_matlab,
-            gathering_method=gathering_method)
+            gathering_method=gathering_method, save_dir=save_dir)
 
         conmat_files.append(conmat_file)
 
     return conmat_files
 
 
-def plot_circular_connectivity(conmat, label_names, node_colors, node_order,
-                               vmin=0.3, vmax=1.0, nb_lines=200, fname="_def"):
+def plot_circular_connectivity(conmat, label_names, node_colors=None,
+                               node_order=[], vmin=0.3, vmax=1.0,
+                               nb_lines=200, fname="_def", save_dir=None):
     """Plot circular connectivity."""
-
     import matplotlib.pyplot as plt
+
+    assert len(conmat.shape) == 2, "Error, conmat should be 2D matrix"
+    assert conmat.shape[0] == conmat.shape[1], "Error, conmat should squared"
+    assert conmat.shape[0] == len(label_names), "Error, conmat and labels\
+        should have same length {} != {}".format(
+        conmat.shape[0], len(label_names))
+
+    # if not defined, use label_names
+    if len(node_order) == 0:
+        node_order = label_names
 
     # Angles
     node_angles = circular_layout(label_names, node_order, start_pos=90,
                                   group_boundaries=[0, len(label_names) / 2])
-    print(conmat)
-    print((node_angles.astype(int)))
 
+    # necessary to have symetric matrix
     conmat = conmat + np.transpose(conmat)
 
-    # Plot the graph using node colors from the FreeSurfer parcellation.
-    # We only show the 300 strongest connections.
-    fig, _ = plot_connectivity_circle(conmat,
-                                      label_names,
-                                      n_lines=nb_lines,
+    # Plot the graph
+    fig, _ = plot_connectivity_circle(conmat, label_names, n_lines=nb_lines,
                                       node_angles=node_angles.astype(int),
-                                      node_colors=None,
-                                      fontsize_names=12,
+                                      node_colors=None, fontsize_names=12,
                                       title='All-to-All Connectivity',
-                                      show=False,
-                                      vmin=vmin,
-                                      vmax=vmax)
+                                      show=False, vmin=vmin, vmax=vmax)
 
-    # plt.show()
-    # print fig
-    # plot_conmat_file = os.path.abspath('circle.png')
-    plot_conmat_file = os.path.abspath('circle_' + fname + '.eps')
+    # saving circle file
+    if save_dir is not None:
+        assert os.path.exists(save_dir), ("Error, do not use save_dir if it \
+            does not exists before")
+        plot_conmat_file = os.path.join(save_dir, 'circle_' + fname + '.eps')
+    else:
+        plot_conmat_file = os.path.abspath('circle_' + fname + '.eps')
+
     fig.savefig(plot_conmat_file, facecolor='black')
-    # fig.savefig(plot_conmat_file)
-
     plt.close(fig)
-    # fig1.close()
-    del fig
-
     return plot_conmat_file
-
-
-def filter_adj_plot_mat(conmat_file, labels_file, sep_label_name, k_neigh):
-    """Filter adjacency matrix."""
-    import numpy as np
-    import os
-
-    from itertools import combinations
-
-    labels = [line.strip().split(sep_label_name) for line in open(labels_file)]
-
-    print(labels)
-
-    triu_indices = np.triu_indices(len(labels), 1)
-
-    print(triu_indices)
-
-    adj_mat = np.zeros(shape=(len(labels), len(labels)), dtype=bool)
-
-    for i in range(k_neigh):
-
-        adj_plots = [(a[0] == b[0]) and ((int(a[1]) + i + 1) == int(b[1]))
-                     for a, b in combinations(labels, 2)]
-
-        print((len(adj_plots)))
-
-        adj_mat[triu_indices] = adj_mat[triu_indices] + adj_plots
-
-        print(np.sum(adj_mat))
-
-    print(adj_mat)
-
-    # loading ad filtering conmat_file
-    conmat = np.load(conmat_file)
-
-    print(conmat)
-
-    assert conmat.shape[0] == len(
-        labels), "warning, wrong dimensions between labels and conmat"
-
-    filtered_conmat = np.transpose(conmat).copy()
-
-    # print np.transpose(adj_mat) == True
-
-    xx, yy = np.where(adj_mat)
-
-    filtered_conmat[xx, yy] = 0.0
-
-    print(filtered_conmat)
-
-    filtered_conmat_file = os.path.abspath("filtered_conmat.npy")
-
-    np.save(filtered_conmat_file, np.transpose(filtered_conmat))
-
-    return filtered_conmat_file
