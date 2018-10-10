@@ -293,7 +293,7 @@ def concat_ts(all_ts_files):
     return concat_ts_file
 
 
-def split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
+def _split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
               keep_electrodes=""):
     """Split txt."""
 
