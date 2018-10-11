@@ -104,18 +104,12 @@ main_workflow.connect(infosource, 'freq_band_name',
 
 main_workflow.connect(datasource, 'raw_file',
                       create_array_node, 'fif_file')
-
 main_workflow.connect(create_array_node, 'array_file',
                       spectral_workflow, 'inputnode.ts_file')
-
 main_workflow.connect(create_array_node, 'channel_names_file',
                       spectral_workflow, 'inputnode.labels_file')
-
-
 main_workflow.connect(frequency_node, 'freq_bands',
                       spectral_workflow, 'inputnode.freq_band')
-
-
 main_workflow.connect(create_array_node, 'sfreq',
                       spectral_workflow, 'inputnode.sfreq')
 
