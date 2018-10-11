@@ -91,7 +91,7 @@ def get_frequency_band(freq_band_names, freq_bands):
         The node which recover the frequency band of interest.
     """
 
-    from ephypype.aux_tools import get_freq_band
+    from ..aux_tools import get_freq_band
 
     frequency_node = pe.Node(interface=Function(
         input_names=['freq_band_name',
