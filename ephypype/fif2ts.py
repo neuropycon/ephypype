@@ -44,16 +44,12 @@ def _get_raw_array(raw_fname):
     """
     import os
     import numpy as np
-
     import mne
     from mne.io import read_raw_fif
-
     from nipype.utils.filemanip import split_filename as split_f
 
     raw = read_raw_fif(raw_fname, preload=True)
-
     subj_path, basename, ext = split_f(raw_fname)
-
     select_sensors = mne.pick_types(raw.info, meg=True, ref_meg=False,
                                     exclude='bads')
 
@@ -66,11 +62,11 @@ def _get_raw_array(raw_fname):
     # np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = "%d")
 
     # save electrode names
-    sens_names = np.array([raw.ch_names[pos] for pos in select_sensors],
-                          dtype='str')
+    ch_names = np.array([raw.ch_names[pos] for pos in select_sensors],
+                        dtype='str')
 
     channel_names_file = os.path.abspath('correct_channel_names.txt')
-    np.savetxt(channel_names_file, sens_names, fmt=str('%s'))
+    np.savetxt(channel_names_file, ch_names, fmt=str('%s'))
 
     data, times = raw[select_sensors, :]
 
@@ -78,7 +74,7 @@ def _get_raw_array(raw_fname):
 
     array_file = os.path.abspath(basename + '.npy')
     np.save(array_file, data)
-    print(('\n *** TS FILE ' + array_file + '*** \n'))
-    print(('*** raw.info[sfreq] = ' + str(raw.info['sfreq'])))
+    print('\n *** TS FILE {} *** \n'.format(array_file))
+    print('*** raw.info[sfreq] = {}'.format(raw.info['sfreq']))
 
     return array_file, channel_coords_file, channel_names_file, raw.info['sfreq']  # noqa
