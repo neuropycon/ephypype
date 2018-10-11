@@ -16,7 +16,7 @@ raw_fname = os.path.join(data_path, 'MEG', 'sample',
 def test_ep2ts():
     """Test data conversion."""
 
-    current_wd = _create_tmp_dir()
+    _create_tmp_dir()
 
     # Read data from file:
     raw = mne.io.read_raw_fif(raw_fname)
@@ -45,5 +45,3 @@ def test_ep2ts():
 
     assert_equal(epo_ts.shape, epochs.get_data().shape)
     assert_array_almost_equal(epo_ts, epochs.get_data())
-
-    os.chdir(current_wd)

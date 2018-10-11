@@ -80,9 +80,6 @@ def get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
 def _create_tmp_dir():
     """Create temporary directory"""
-    current_wd = os.getcwd()
     tmp_dir = tempfile.mkdtemp()
 
     os.chdir(tmp_dir)
-
-    return current_wd
