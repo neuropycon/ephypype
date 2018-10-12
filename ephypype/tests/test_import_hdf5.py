@@ -3,7 +3,7 @@
 import mne
 import os.path as op
 
-from .import_data import _write_hdf5, _read_hdf5
+from ephypype.import_data import _write_hdf5, _read_hdf5
 from numpy.testing import assert_array_almost_equal
 
 data_path = mne.datasets.sample.data_path()
