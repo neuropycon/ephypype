@@ -4,6 +4,8 @@
 *~
 crash*
 *.egg-info/*
+.coverage
+.coverage.*
 
 # Sphinx documentation
 doc/_build/
