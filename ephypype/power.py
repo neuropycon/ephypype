@@ -1,13 +1,13 @@
-"""Power functions.
+"""Power functions."""
 
-Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
-"""
+# Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
+#         Annalisa Pascarella <a.pascarella@iac.cnr.it>
 
 
-def compute_and_save_psd(data_fname, fmin=0, fmax=120,
-                         method='welch', is_epoched=False,
-                         n_fft=256, n_overlap=0,
-                         picks=None, proj=False, n_jobs=1, verbose=None):
+def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
+                          method='welch', is_epoched=False,
+                          n_fft=256, n_overlap=0,
+                          picks=None, proj=False, n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
     from mne import read_epochs
     from mne.io import read_raw_fif
@@ -28,16 +28,6 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     else:
         raise Exception('nonexistent method for psd computation')
 
-    '''
-    path, name = os.path.split(data_fname)
-    base, ext = os.path.splitext(name)
-    psds_fname = base + '-psds.npz'
-    # freqs_fname = base + '-freqs.npy'
-    psds_fname = os.path.abspath(psds_fname)
-    # print(psds.shape)
-    np.savez(psds_fname, psds=psds, freqs=freqs)
-    # np.save(freqs_file, freqs)
-    '''
     psds_fname = _save_psd(data_fname, psds, freqs)
     # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
@@ -66,10 +56,10 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     return psds_fname
 
 
-def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
-                             is_epoched=False,
-                             n_fft=256, n_overlap=0,
-                             n_jobs=1, verbose=None):
+def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
+                              is_epoched=False,
+                              n_fft=256, n_overlap=0,
+                              n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
     import numpy as np
 
@@ -81,12 +71,7 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
     print(('src data dim: {}'.format(src_data.shape)))
-    '''
-    psds, freqs = psd_array_welch(src_data, sfreq, fmin=fmin, fmax=fmax,
-                                  n_fft=n_fft, n_overlap=n_overlap,
-                                  n_per_seg=None, n_jobs=1, verbose=None)
-    print('psds data dim: {}'.format(psds.shape))
-    '''
+
     n_freqs = n_fft // 2 + 1
     psds = np.empty([src_data.shape[0], n_freqs])
     for i in range(src_data.shape[0]):
@@ -100,7 +85,7 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     return psds_fname
 
 
-def compute_mean_band_psd(psds_file, freq_bands):
+def _compute_mean_band_psd(psds_file, freq_bands):
     """Compute mean band psd."""
     import numpy as np
 

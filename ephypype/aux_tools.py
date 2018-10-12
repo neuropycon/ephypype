@@ -1,7 +1,7 @@
 """Aux functions"""
 
 # Authors: Dmitrii Altukhov <daltuhov@hse>
-#
+#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
 # License: BSD (3-clause)
 
 from contextlib import contextmanager
@@ -68,7 +68,7 @@ def nostdout():
     sys.stdout = save_stdout
 
 
-def get_freq_band(freq_band_name, freq_band_names, freq_bands):
+def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
     """Get frequency band."""
     if freq_band_name in freq_band_names:
         print(freq_band_name)

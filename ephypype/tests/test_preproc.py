@@ -1,8 +1,9 @@
 """Test power."""
 
 import mne
-from ephypype.preproc import preprocess_fif, compute_ica
+from ephypype.preproc import _preprocess_fif, _compute_ica
 from ephypype.aux_tools import _change_wd
+
 
 import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
@@ -28,8 +29,8 @@ def test_preprocess_fif():
     segment_raw_fname = raw_fname.replace('raw.fif', '0_60s_raw.fif')
     raw.save(segment_raw_fname, tmin=0, tmax=60, overwrite=True)
 
-    preprocess_fif(segment_raw_fname, l_freq=l_freq, h_freq=h_freq,
-                   down_sfreq=down_sfreq)
+    _preprocess_fif(segment_raw_fname, l_freq=l_freq, h_freq=h_freq,
+                    down_sfreq=down_sfreq)
 
 
 def test_compute_ica():
@@ -50,4 +51,4 @@ def test_compute_ica():
     raw.save(segment_raw_fname, tmin=0, tmax=60, overwrite=True)
 
     # compute ica on raw data
-    compute_ica(segment_raw_fname, ecg_ch_name, eog_ch_name, variance, reject)
+    _compute_ica(segment_raw_fname, ecg_ch_name, eog_ch_name, variance, reject)

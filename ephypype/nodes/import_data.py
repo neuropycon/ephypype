@@ -396,7 +396,7 @@ class Ep2ts(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.fif2ts import ep2ts
+        from ephypype.fif2array import ep2ts
 
         fif_file = self.inputs.fif_file
 
@@ -499,7 +499,7 @@ class Fif2Array(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.fif2ts import _get_raw_array
+        from ephypype.fif2array import _get_raw_array
 
         fif_file = self.inputs.fif_file
 
