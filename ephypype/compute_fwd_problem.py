@@ -1,8 +1,7 @@
-"""Lead Field computation functions.
+"""Lead Field computation functions."""
 
-Author:
-    Annalisa Pascarella <a.pascarella@iac.cnr.it>
-"""
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+# License: BSD (3-clause)
 
 
 def create_bem_sol(sbj_dir, sbj_id):

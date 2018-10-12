@@ -12,7 +12,7 @@ from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ephypype.compute_inv_problem import compute_inverse_solution
-from ephypype.preproc import create_reject_dict
+from ephypype.preproc import _create_reject_dict
 from mne import find_events, compute_raw_covariance, compute_covariance
 from mne import pick_types, write_cov, Epochs
 from mne.io import read_raw_fif, read_raw_ctf
@@ -257,7 +257,7 @@ class NoiseCovariance(BaseInterface):
                     print(('\n*** COMPUTE COV FROM EPOCHS ***\n' +
                            self.cov_fname_out))
 
-                    reject = create_reject_dict(raw.info)
+                    reject = _create_reject_dict(raw.info)
                     picks = pick_types(raw.info, meg=True, ref_meg=False,
                                        exclude='bads')
 
@@ -293,7 +293,7 @@ class NoiseCovariance(BaseInterface):
                         self.cov_fname_out = op.join(data_path, er_fname)
 
                         if not op.isfile(self.cov_fname_out):
-                            reject = create_reject_dict(er_raw.info)
+                            reject = _create_reject_dict(er_raw.info)
                             picks = pick_types(er_raw.info, meg=True,
                                                ref_meg=False, exclude='bads')
 

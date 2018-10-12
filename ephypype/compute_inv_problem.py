@@ -13,7 +13,7 @@ from mne import compute_raw_covariance, pick_types, write_cov
 
 from nipype.utils.filemanip import split_filename as split_f
 
-from .preproc import create_reject_dict
+from .preproc import _create_reject_dict
 from .source_space import create_MNI_label_files
 from .import_data import _write_hdf5
 
@@ -44,7 +44,7 @@ def compute_noise_cov(cov_fname, raw):
         data_path, basename, ext = split_f(raw.info['filename'])
         fname = op.join(data_path, '%s-cov.fif' % basename)
 
-        reject = create_reject_dict(raw.info)
+        reject = _create_reject_dict(raw.info)
 
         picks = pick_types(raw.info, meg=True, ref_meg=False, exclude='bads')
 
@@ -236,7 +236,7 @@ def compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
     if is_epoched and events_id is not None:
         events = mne.find_events(raw)
         picks = mne.pick_types(info, meg=True, eog=True, exclude='bads')
-        reject = create_reject_dict(info)
+        reject = _create_reject_dict(info)
 
         if is_evoked:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
@@ -428,22 +428,6 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-    import os.path as op
-    import numpy as np
-    import mne
-
-    from mne.io import read_raw_fif
-    from mne import read_epochs
-    from mne.minimum_norm import make_inverse_operator, apply_inverse_raw
-    from mne.minimum_norm import apply_inverse_epochs, apply_inverse
-    from mne import get_volume_labels_from_src
-
-    from nipype.utils.filemanip import split_filename as split_f
-
-    from ephypype.preproc import create_reject_dict
-    from ephypype.source_space import create_MNI_label_files
-    from ephypype.import_data import _write_hdf5
-
     try:
         traits.undefined(events_id)
     except NameError:
@@ -498,7 +482,7 @@ def compute_ROIs_inv_sol(raw_filename, sbj_id, sbj_dir, fwd_filename,
     if is_epoched and events_id is not None:
         events = mne.find_events(raw)
         picks = mne.pick_types(info, meg=True, eog=True, exclude='bads')
-        reject = create_reject_dict(info)
+        reject = _create_reject_dict(info)
 
         if is_evoked:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
