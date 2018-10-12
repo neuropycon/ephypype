@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 from ephypype.aux_tools import _change_wd
-from ephypype.fif2ts import ep2ts
+from ephypype.fif2array import ep2ts
 from numpy.testing import assert_equal, assert_array_almost_equal
 
 data_path = mne.datasets.sample.data_path()
