@@ -1,7 +1,8 @@
 """Test power."""
 import mne
-from ephypype.power import compute_and_save_psd
+from ephypype.power import _compute_and_save_psd
 from ephypype.aux_tools import _change_wd
+
 
 import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
@@ -18,5 +19,5 @@ def test_power():
     fmin = 0.1
     fmax = 300
 
-    compute_and_save_psd(raw_fname, fmin, fmax, method='welch')
-    compute_and_save_psd(raw_fname, fmin, fmax, method='multitaper')
+    _compute_and_save_psd(raw_fname, fmin, fmax, method='welch')
+    _compute_and_save_psd(raw_fname, fmin, fmax, method='multitaper')

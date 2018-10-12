@@ -7,9 +7,9 @@ Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
 from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec
 
-from ephypype.preproc import compute_ica,\
-    preprocess_fif,\
-    create_epochs
+from ...preproc import _compute_ica,\
+    _preprocess_fif,\
+    _create_epochs
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
@@ -59,8 +59,8 @@ class CompIca(BaseInterface):
         if reject == traits.Undefined:
             reject = dict(mag=4e-12, grad=4000e-13)
 
-        ica_output = compute_ica(fif_file, ecg_ch_name,
-                                 eog_ch_name, n_components, reject)
+        ica_output = _compute_ica(fif_file, ecg_ch_name,
+                                  eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
         self.ica_ts_file = ica_output[2]
@@ -108,7 +108,7 @@ class PreprocFif(BaseInterface):
         h_freq = self.inputs.h_freq
         down_sfreq = self.inputs.down_sfreq
 
-        result_fif = preprocess_fif(fif_file, l_freq, h_freq, down_sfreq)
+        result_fif = _preprocess_fif(fif_file, l_freq, h_freq, down_sfreq)
 
         self.fif_file = result_fif
         return runtime
@@ -146,7 +146,7 @@ class CreateEp(BaseInterface):
         fif_file = self.inputs.fif_file
         ep_length = self.inputs.ep_length
 
-        result_fif = create_epochs(fif_file, ep_length)
+        result_fif = _create_epochs(fif_file, ep_length)
 
         self.epo_fif_file = result_fif
         return runtime

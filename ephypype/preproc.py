@@ -4,18 +4,26 @@ Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
          Annalisa Pascarella <a.pascarella@iac.cnr.it>
 """
 
+import os
+import sys
+import numpy as np
 
-def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
+from mne import pick_types, read_epochs
+from mne.io import read_raw_fif
+from mne.preprocessing import ICA, read_ica
+from mne.preprocessing import create_ecg_epochs, create_eog_epochs
+from mne.report import Report
+from mne.time_frequency import psd_multitaper
+from nipype.utils.filemanip import split_filename as split_f
+
+from .fif2array import _get_raw_array
+
+
+def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     """Filter and downsample data."""
-    import os
-    from mne.io import read_raw_fif
-    from mne import pick_types
-    from nipype.utils.filemanip import split_filename as split_f
-
     _, basename, ext = split_f(fif_file)
 
     raw = read_raw_fif(fif_file, preload=True)
-
     filt_str, down_str = '', ''
 
     select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
@@ -24,7 +32,6 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
         raw.filter(l_freq=l_freq, h_freq=h_freq,
                    picks=select_sensors, fir_design='firwin')
         filt_str = '_filt'
-
     if down_sfreq:
         raw.resample(sfreq=down_sfreq, npad=0, stim_picks=select_sensors)
         down_str = '_dsamp'
@@ -34,31 +41,20 @@ def preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     return savename
 
 
-def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
+def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution."""
-    import os
-
-    import mne
-    from mne.io import read_raw_fif
-    from mne.preprocessing import ICA
-    from mne.preprocessing import create_ecg_epochs, create_eog_epochs
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     subj_path, basename, ext = split_f(fif_file)
-
     raw = read_raw_fif(fif_file, preload=True)
 
     # select sensors
-    select_sensors = mne.pick_types(raw.info, meg=True,
-                                    ref_meg=False, exclude='bads')
+    select_sensors = pick_types(raw.info, meg=True,
+                                ref_meg=False, exclude='bads')
 
     # 1) Fit ICA model using the FastICA algorithm
     # Other available choices are `infomax` or `extended-infomax`
     # We pass a float value between 0 and 1 to select n_components based on the
     # percentage of variance explained by the PCA components.
 
-    # reject = dict(mag=1e-1, grad=1e-9)
     flat = dict(mag=1e-13, grad=1e-13)
 
     ica = ICA(n_components=n_components, method='fastica', max_iter=500)
@@ -85,8 +81,8 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
         ecg_ch_name = None
 
     # set ref_meg to 'auto'
-    select_sensors = mne.pick_types(raw.info, meg=True,
-                                    ref_meg='auto', exclude='bads')
+    select_sensors = pick_types(raw.info, meg=True,
+                                ref_meg='auto', exclude='bads')
     ecg_epochs = create_ecg_epochs(raw, tmin=-0.5, tmax=0.5,
                                    picks=select_sensors,
                                    ch_name=ecg_ch_name)
@@ -112,17 +108,18 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
         print('*** NO EOG CHANNELS FOUND!!! ***')
         eog_inds = eog_scores = eog_evoked = None
 
-    report_file = generate_report(raw=raw, ica=ica, subj_name=fif_file,
-                                  basename=basename,
-                                  ecg_evoked=ecg_evoked, ecg_scores=ecg_scores,
-                                  ecg_inds=ecg_inds, ecg_ch_name=ecg_ch_name,
-                                  eog_evoked=eog_evoked, eog_scores=eog_scores,
-                                  eog_inds=eog_inds, eog_ch_name=eog_ch_name)
-
+    report_file = _generate_report(raw=raw, ica=ica, subj_name=fif_file,
+                                   basename=basename,
+                                   ecg_evoked=ecg_evoked,
+                                   ecg_scores=ecg_scores,
+                                   ecg_inds=ecg_inds,
+                                   ecg_ch_name=ecg_ch_name,
+                                   eog_evoked=eog_evoked,
+                                   eog_scores=eog_scores,
+                                   eog_inds=eog_inds,
+                                   eog_ch_name=eog_ch_name)
     report_file = os.path.abspath(report_file)
-
     ica_sol_file = os.path.abspath(basename + '_ica_solution.fif')
-
     ica.save(ica_sol_file)
     raw_ica = ica.apply(raw)
     raw_ica_file = os.path.abspath(basename + '_ica' + ext)
@@ -131,18 +128,9 @@ def compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     return raw_ica_file, ica_sol_file, ica_ts_file, report_file
 
 
-def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
-                                      is_sensor_space):
+def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
+                                       is_sensor_space):
     """Preprocess ICA fif to ts."""
-    import os
-    import sys
-
-    import mne
-    from mne.preprocessing import read_ica
-
-    from nipype.utils.filemanip import split_filename as split_f
-    from ephypype.fif2ts import _get_raw_array
-
     subj_path, basename, ext = split_f(fif_file)
     (data_path, sbj_name) = os.path.split(subj_path)
 
@@ -164,7 +152,7 @@ def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
             current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
 
     print(('*** raw_ica_file %s' % raw_ica_file + '***'))
-    raw = mne.io.read_raw_fif(raw_ica_file, preload=True)
+    raw = read_raw_fif(raw_ica_file, preload=True)
 
     # load ICA
     if os.path.exists(os.path.join(current_dir, '../ica',
@@ -231,35 +219,27 @@ def preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
 
 def get_raw_info(raw_fname):
     """Get info from raw."""
-    from mne.io import Raw
-
-    raw = Raw(raw_fname, preload=True)
+    raw = read_raw_fif(raw_fname, preload=True)
     return raw.info
 
 
 def get_epochs_info(raw_fname):
     """Get epoch info."""
-    from mne import read_epochs
-
     epochs = read_epochs(raw_fname)
     return epochs.info
 
 
 def get_raw_sfreq(raw_fname):
     """Get raw sfreq."""
-    import mne
-
     try:
-        data = mne.io.read_raw_fif(raw_fname)
+        data = read_raw_fif(raw_fname)
     except:  # noqa
-        data = mne.read_epochs(raw_fname)
+        data = read_epochs(raw_fname)
     return data.info['sfreq']
 
 
-def create_reject_dict(raw_info):
+def _create_reject_dict(raw_info):
     """Create reject dir."""
-    from mne import pick_types
-
     picks_eog = pick_types(raw_info, meg=False, ref_meg=False, eog=True)
     picks_mag = pick_types(raw_info, meg='mag', ref_meg=False)
     picks_grad = pick_types(raw_info, meg='grad', ref_meg=False)
@@ -275,15 +255,12 @@ def create_reject_dict(raw_info):
     return reject
 
 
-def generate_report(raw, ica, subj_name, basename,
-                    ecg_evoked, ecg_scores, ecg_inds, ecg_ch_name,
-                    eog_evoked, eog_scores, eog_inds, eog_ch_name):
+def _generate_report(raw, ica, subj_name, basename,
+                     ecg_evoked, ecg_scores, ecg_inds, ecg_ch_name,
+                     eog_evoked, eog_scores, eog_inds, eog_ch_name):
     """Generate report for ica solution."""
-    from mne.report import Report
-    from mne.time_frequency import psd_multitaper
     import matplotlib.pyplot as plt
-    import numpy as np
-    import os
+
     report = Report()
 
     ica_title = 'Sources related to %s artifacts (red)'
@@ -399,9 +376,8 @@ def generate_report(raw, ica, subj_name, basename,
     return report_filename
 
 
-def create_events(raw, epoch_length):
+def _create_events(raw, epoch_length):
     """Create events to split raw into epochs."""
-    import numpy as np
     file_length = raw.n_times
     first_samp = raw.first_samp
     sfreq = raw.info['sfreq']
@@ -416,32 +392,24 @@ def create_events(raw, epoch_length):
     return events
 
 
-def create_epochs(fif_file, ep_length):
+def _create_epochs(fif_file, ep_length):
     """Split raw .fif file into epochs.
 
     Splitted epochs have a length ep_length with rejection criteria.
     """
-    import os
-    from mne.io import Raw
-    from mne import Epochs
-    from mne import pick_types
-    from nipype.utils.filemanip import split_filename as split_f
-
-    # flat = dict(mag=0.1e-12, grad=1e-13)
-    # reject = dict(mag=6e-12, grad=25e-11)
     flat = None
     reject = None
 
-    raw = Raw(fif_file)
+    raw = read_raw_fif(fif_file)
     picks = pick_types(raw.info, ref_meg=False, eeg=False)
     if raw.times[-1] >= ep_length:
-        events = create_events(raw, ep_length)
+        events = _create_events(raw, ep_length)
     else:
         raise Exception('File {} is too short!'.format(fif_file))
 
-    epochs = Epochs(raw, events=events, tmin=0, tmax=ep_length,
-                    preload=True, picks=picks, proj=False,
-                    flat=flat, reject=reject)
+    epochs = read_epochs(raw, events=events, tmin=0, tmax=ep_length,
+                         preload=True, picks=picks, proj=False,
+                         flat=flat, reject=reject)
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)

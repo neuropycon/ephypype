@@ -294,7 +294,7 @@ def concat_ts(all_ts_files):
 
 
 def _split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
-              keep_electrodes=""):
+               keep_electrodes=""):
     """Split txt."""
 
     if repair is True:

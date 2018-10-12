@@ -5,7 +5,7 @@ Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
 
 from nipype.interfaces.base import BaseInterface, \
     BaseInterfaceInputSpec, traits, File, TraitedSpec
-from ephypype.power import compute_and_save_psd, compute_and_save_src_psd
+from ...power import _compute_and_save_psd, _compute_and_save_src_psd
 
 
 class PowerInputSpec(BaseInterfaceInputSpec):
@@ -62,14 +62,14 @@ class Power(BaseInterface):
         is_sensor_space = self.inputs.is_sensor_space
 
         if is_sensor_space:
-            self.psds_file = compute_and_save_psd(data_file, fmin, fmax,
-                                                  method, is_epoched)
+            self.psds_file = _compute_and_save_psd(data_file, fmin, fmax,
+                                                   method, is_epoched)
         else:
-            self.psds_file = compute_and_save_src_psd(data_file, sfreq,
-                                                      fmin=fmin, fmax=fmax,
-                                                      n_fft=nfft,
-                                                      n_overlap=overlap,
-                                                      is_epoched=is_epoched)
+            self.psds_file = _compute_and_save_src_psd(data_file, sfreq,
+                                                       fmin=fmin, fmax=fmax,
+                                                       n_fft=nfft,
+                                                       n_overlap=overlap,
+                                                       is_epoched=is_epoched)
         return runtime
 
     def _list_outputs(self):
