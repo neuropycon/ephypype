@@ -2,6 +2,7 @@
 
 # Authors: Dmitrii Altukhov <daltuhov@hse>
 #          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#
 # License: BSD (3-clause)
 
 from contextlib import contextmanager
