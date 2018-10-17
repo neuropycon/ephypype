@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Power tools.
 
 Created on Tue Jun 13 15:10:04 2017
