@@ -11,9 +11,9 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
-from .compute_fwd_problem import create_mixed_source_space
-from .compute_fwd_problem import create_bem_sol, create_src_space
-from .compute_fwd_problem import is_trans, compute_fwd_sol
+from ...compute_fwd_problem import create_mixed_source_space
+from ...compute_fwd_problem import create_bem_sol, create_src_space
+from ...compute_fwd_problem import is_trans, compute_fwd_sol
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):

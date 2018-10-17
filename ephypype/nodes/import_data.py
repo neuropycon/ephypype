@@ -9,10 +9,10 @@ from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec, isdefined
 from nipype.interfaces.base import File
 
-from .import_data import import_tsmat_to_ts, _read_hdf5
-from .import_data import _split_txt, _read_brainvision_vhdr
-from .import_data import _convert_ds_to_raw_fif
-from .fif2array import ep2ts, _get_raw_array
+from ..import_data import import_tsmat_to_ts, _read_hdf5
+from ..import_data import _split_txt, _read_brainvision_vhdr
+from ..import_data import _convert_ds_to_raw_fif
+from ..fif2array import ep2ts, _get_raw_array
 
 
 # ----------------- ImportMat ----------------------------- #
