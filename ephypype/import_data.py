@@ -3,7 +3,6 @@ import h5py
 import os
 import mne
 import numpy as np
-import pandas as pd
 
 from nipype.utils.filemanip import split_filename as split_f
 from scipy.io import loadmat
@@ -296,6 +295,7 @@ def concat_ts(all_ts_files):
 def _split_txt(sample_size, txt_file, sep_label_name, repair=True, sep=";",
                keep_electrodes=""):
     """Split txt."""
+    import pandas as pd
 
     if repair is True:
         df_data = []
