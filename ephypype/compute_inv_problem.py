@@ -1,5 +1,9 @@
-# Created on Thu Oct  8 17:53:07 2015
-# @author: pasca
+"""Inverse problem functions."""
+
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#
+# License: BSD (3-clause)
+
 import os.path as op
 import numpy as np
 import mne

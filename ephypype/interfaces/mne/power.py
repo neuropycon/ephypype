@@ -1,7 +1,10 @@
-"""Power computation module.
+"""Power computation module."""
 
-Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
-"""
+# Authors: Dmitrii Altukhov <daltuhov@hse>
+#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#
+# License: BSD (3-clause)
+
 
 from nipype.interfaces.base import BaseInterface, \
     BaseInterfaceInputSpec, traits, File, TraitedSpec
@@ -44,7 +47,35 @@ class PowerOutputSpec(TraitedSpec):
 
 
 class Power(BaseInterface):
-    """Compute power spectral density on epochs or raw data."""
+    """Compute power spectral density on epochs or raw data.
+
+    Inputs
+    ------
+        data_file : str
+            Filename of the data
+        fmin : float
+            Lower psd frequency
+        fmax : float
+            Higher psd frequency
+        sfreq : float
+            Sampling frequency
+        nfft : int
+            The length of FFT used
+        overlap : float
+            Number of points of overlap between segments
+        method : str
+            Power spectral density computation method. Possible values are
+            'welch', 'multitaper'
+        is_epoched : bool
+            If true input data are mne.Epochs
+        is_sensor_space : bool
+            True for PSD on sensor space, False for PSD on source
+
+    Outputs
+    -------
+        psds_file : str
+            Name of the .npz file containing psd tensor and frequencies
+    """
 
     input_spec = PowerInputSpec
     output_spec = PowerOutputSpec

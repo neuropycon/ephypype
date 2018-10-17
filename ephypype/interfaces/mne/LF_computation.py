@@ -1,8 +1,9 @@
-"""LF computation.
+"""LF computation Interface."""
 
-Created on Mon May  2 17:24:00 2016
-@author: pasca
-"""
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#
+# License: BSD (3-clause)
+
 import os.path as op
 
 from nipype.utils.filemanip import split_filename as split_f
@@ -10,32 +11,25 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
-from ephypype.compute_fwd_problem import create_mixed_source_space
-from ephypype.compute_fwd_problem import create_bem_sol, create_src_space
-from ephypype.compute_fwd_problem import is_trans, compute_fwd_sol
+from .compute_fwd_problem import create_mixed_source_space
+from .compute_fwd_problem import create_bem_sol, create_src_space
+from .compute_fwd_problem import is_trans, compute_fwd_sol
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     """LF computation conn input spec."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
-
     sbj_dir = traits.String(exists=True, desc='Freesurfer main directory',
                             mandatory=True)
-
     raw_info = traits.Any(desc='raw info', mandatory=True)
-
     raw_fname = traits.String(desc='raw file name', mandatory=True)
-
     spacing = traits.String(desc='spacing to use to setup a source space',
                             mandatory=False)
-
     aseg = traits.Bool(desc='if true sub structures will be considered',
                        mandatory=False)
-
     aseg_labels = traits.List(desc='list of substructures in the src space',
                               mandatory=False)
-
     save_mixed_src_space = traits.Bool(False, desc='if true save src space',
                                        usedefault=True,
                                        mandatory=False)
@@ -50,8 +44,8 @@ class LFComputationConnOutputSpec(TraitedSpec):
 class LFComputation(BaseInterface):
     """Compute the Lead Field matrix using MNE Python functions.
 
-    Parameters
-    ----------
+    Inputs
+    ------
     sbj_id : str
         subject name
     sbj_dir : str
@@ -69,6 +63,11 @@ class LFComputation(BaseInterface):
         list of substructures we want to include in the mixed source space
     save_mixed_src_space: bool (default False)
         if True save the mixed src space
+
+    Outputs
+    -------
+       fwd_filename : str
+           Filename of the Lead Field matrix
     """
 
     input_spec = LFComputationConnInputSpec
@@ -127,7 +126,6 @@ class LFComputation(BaseInterface):
     def _list_outputs(self):
 
         outputs = self._outputs().get()
-
         outputs['fwd_filename'] = self.fwd_filename
 
         return outputs

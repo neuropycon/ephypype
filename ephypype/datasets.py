@@ -1,3 +1,9 @@
+"""Lead Field computation functions."""
+
+# Authors: Mainak Jas <mainakjas@gmail.com>
+#
+# License: BSD (3-clause)
+
 import os
 import zipfile
 from mne.datasets.utils import _fetch_file

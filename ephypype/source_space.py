@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-"""Source space functions.
+"""Source space functions."""
 
-Created on Tue Jun 20 18:33:28 2017
-
-@author: pasca
-"""
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#
+# License: BSD (3-clause)
 
 
 def get_roi(labels_cortex, vertno_left, vertno_right):

@@ -1,7 +1,9 @@
-"""Spectral functions.
+"""Spectral functions."""
 
-Author: David Meunier <david_meunier_79@hotmail.fr>
-"""
+# Author: David Meunier <david_meunier_79@hotmail.fr>
+#
+# License: BSD (3-clause)
+
 import os
 import numpy as np
 

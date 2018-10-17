@@ -1,7 +1,8 @@
-"""Interfaces for preprocessing nodes.
+"""Interfaces for preprocessing nodes."""
 
-Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
-"""
+# Authors: Dmitrii Altukhov <daltuhov@hse>
+#
+# License: BSD (3-clause)
 
 
 from nipype.interfaces.base import BaseInterface,\
@@ -44,7 +45,32 @@ class CompIcaOutputSpec(TraitedSpec):
 
 
 class CompIca(BaseInterface):
-    """Compute ICA solution on raw fif data."""
+    """Compute ICA solution on raw fif data.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    ecg_ch_name : str
+        Name of ecg channel
+    eog_ch_name : str
+        Name of eog channel
+    n_components : float
+        Number of ica components
+    reject : dict
+        Rejection parameters
+
+    Outputs
+    -------
+    ica_file : str
+        Name of .fif file with raw data
+    ica_sol_file : str
+        Name of .fif file with ica solution
+    ica_ts_file : str
+        Name of .fif file with ica components
+    report_file : str
+        Name of html file with ica report
+    """
 
     input_spec = CompIcaInputSpec
     output_spec = CompIcaOutputSpec
@@ -97,7 +123,24 @@ class PreprocFifOutputSpec(TraitedSpec):
 
 
 class PreprocFif(BaseInterface):
-    """Interface for preproc.preprocess_fif."""
+    """Interface for preproc.preprocess_fif.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    l_freq : float
+        Llower bound for filtering
+    h_freq : float
+        Upper bound for filtering
+    down_sfreq : int
+        Downsampling frequency
+
+    Outputs
+    -------
+    fif_file : str
+        Name of .fif file with preprocessed raw data
+    """
 
     input_spec = PreprocFifInputSpec
     output_spec = PreprocFifOutputSpec
@@ -137,7 +180,20 @@ class CreateEpOutputSpec(TraitedSpec):
 
 
 class CreateEp(BaseInterface):
-    """Interface for preproc.create_epochs."""
+    """Interface for preproc.create_epochs.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    ep_length : str
+        Epoch length in seconds
+
+    Outputs
+    -------
+    epo_fif_file : str
+        Name of .fif file with epoched data
+    """
 
     input_spec = CreateEpInputSpec
     output_spec = CreateEpOutputSpec
