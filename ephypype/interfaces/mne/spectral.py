@@ -13,10 +13,9 @@ from nipype.interfaces.base import BaseInterface, \
 
 from nipype.utils.filemanip import split_filename as split_f
 
-
-from ..spectral import (compute_and_save_spectral_connectivity,
-                        compute_and_save_multi_spectral_connectivity,
-                        plot_circular_connectivity)
+from ...spectral import (compute_and_save_spectral_connectivity,
+                         compute_and_save_multi_spectral_connectivity,
+                         plot_circular_connectivity)
 
 
 # -------------------------- SpectralConn -------------------------- #
