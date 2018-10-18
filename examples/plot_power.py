@@ -1,20 +1,22 @@
 """
+.. _power:
+
 =============================================
 Using ephypype to compute PSD on sensor space
 =============================================
 The power pipeline computes the power spectral density (PSD)
-on epochs or raw data on sensor space or source space.
-The mean PSD for each selected frequency band is also
+on epochs or raw data on **sensor space** or **source space**.
+The **mean PSD** for each selected frequency band is also
 computed and saved in a numpy file.
+
+The input data shoud be in **fif** or **numpy** format.
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 #          Mainak Jas <mainakjas@gmail.com>
-
 # License: BSD (3-clause)
 
 import os.path as op
-
 import nipype.pipeline.engine as pe
 
 import ephypype
@@ -73,8 +75,21 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. To instantiate the power node, we import it
-# and pass our parameters to it.
+# nodes we created. The power pipeline in the **sensor space** is implemented
+# by the function :func:`ephypype.pipelines.power.create_pipeline_power`, thus
+# to instantiate this power pipeline node, we import it and pass our parameters
+# to it.
+# The power pipeline contains only one node :class:`ephypype.interfaces.mne.power.Power`
+# that wraps the MNE Python functions  |welch|, |multitaper| computing the PSD
+# using Welch's method and multitapers respectively.
+#
+# .. |welch| raw:: html
+#
+#    <a href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_welch.html#mne.time_frequency.psd_welch" target="_blank">mne.time_frequency.psd_welch</a>
+#
+# .. |multitaper| raw:: html
+#
+#    <a href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" target="_blank">mne.time_frequency.psd_multitaper</a>
 
 from ephypype.pipelines.power import create_pipeline_power # noqa
 power_workflow = create_pipeline_power(data_path, freq_bands,
@@ -121,3 +136,13 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
 main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+
+###############################################################################
+# The outputs are the **psd tensor and frequencies in .npz format** and the
+# **mean PSD in .npy format** stored in the workflow directory defined by
+# `base_dir`
+#
+# .. note:: The power pipeline in the **source space** is implemented by the function
+#   :func:`ephypype.pipelines.power.create_pipeline_power_src_space`
+#   and its Node :class:`ephypype.interfaces.mne.power.Power` compute the PSD
+#   by the welch function of the scipy package.
