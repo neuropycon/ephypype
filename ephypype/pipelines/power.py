@@ -12,7 +12,7 @@ from ephypype.interfaces.mne.power import Power
 from ephypype.nodes.power_tools import PowerBand
 
 
-def create_pipeline_power(main_path, freq_bands, pipeline_name='power',
+def create_pipeline_power(main_path, freq_bands, pipeline_name='power_pipeline',  # noqa
                           fmin=0, fmax=300, method='welch',
                           is_epoched=False):
     """Power pipeline.
