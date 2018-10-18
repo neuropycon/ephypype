@@ -14,7 +14,7 @@ from mne.viz import circular_layout, plot_connectivity_circle
 
 
 def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
-                                  mode='cwt_morlet', gathering_method="mean"):
+                                   mode='cwt_morlet', gathering_method="mean"):
     """compute spectral connectivity"""
     print('MODE is {}'.format(mode))
 
