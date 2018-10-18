@@ -4,10 +4,10 @@ import shutil
 import numpy as np
 import glob
 
-from ephypype.spectral import (compute_spectral_connectivity,
-                               compute_and_save_spectral_connectivity,
-                               compute_and_save_multi_spectral_connectivity,
-                               plot_circular_connectivity)  # noqa
+from ephypype.spectral import (_compute_spectral_connectivity,
+                               _compute_and_save_spectral_connectivity,
+                               _compute_and_save_multi_spectral_connectivity,
+                               _plot_circular_connectivity)  # noqa
 
 import pytest
 
@@ -41,49 +41,49 @@ os.makedirs(tmp_dir)
 
 
 def test_compute_spectral_connectivity_one_trial():
-    """Test compute_spectral_connectivity plv with one trial."""
+    """Test _compute_spectral_connectivity plv with one trial."""
     with pytest.raises(ValueError, message="Expecting ValueError"):
-        compute_spectral_connectivity(data=ts_mat, con_method="plv",
-                                      mode="multitaper", fmin=fmin, fmax=fmax,
-                                      sfreq=sfreq, gathering_method='mean')
+        _compute_spectral_connectivity(data=ts_mat, con_method="plv",
+                                       mode="multitaper", fmin=fmin, fmax=fmax,
+                                       sfreq=sfreq, gathering_method='mean')
 
 
 def test_compute_and_save_spectral_connectivity():
-    compute_and_save_spectral_connectivity(data=ts_mat_trials,
-                                           con_method="plv", mode="multitaper",
-                                           fmin=fmin, fmax=fmax, sfreq=sfreq,
-                                           gathering_method='mean',
-                                           save_dir=tmp_dir)
+    _compute_and_save_spectral_connectivity(data=ts_mat_trials,
+                                            con_method="plv", mode="multitaper",  # noqa
+                                            fmin=fmin, fmax=fmax, sfreq=sfreq,
+                                            gathering_method='mean',
+                                            save_dir=tmp_dir)
 
     assert os.path.exists(os.path.join(tmp_dir, "conmat_0_plv.npy"))
 
 
 def test_compute_spectral_connectivity_mean_max():
-    """Test compute_spectral_connectivity mean and max."""
-    res_mean = compute_spectral_connectivity(data=ts_mat_trials,
+    """Test _compute_spectral_connectivity mean and max."""
+    res_mean = _compute_spectral_connectivity(data=ts_mat_trials,
+                                              con_method="coh",
+                                              mode="multitaper", fmin=fmin,
+                                              fmax=fmax, sfreq=sfreq,
+                                              gathering_method='mean')
+
+    res_max = _compute_spectral_connectivity(data=ts_mat_trials,
                                              con_method="coh",
                                              mode="multitaper", fmin=fmin,
                                              fmax=fmax, sfreq=sfreq,
-                                             gathering_method='mean')
-
-    res_max = compute_spectral_connectivity(data=ts_mat_trials,
-                                            con_method="coh",
-                                            mode="multitaper", fmin=fmin,
-                                            fmax=fmax, sfreq=sfreq,
-                                            gathering_method='max')
+                                             gathering_method='max')
 
     assert np.all(res_mean <= res_max), ("error,\
         all mean values should be lower than max values")
 
 
 def test_compute_and_save_multi_spectral_connectivity():
-    """ testing compute_and_save_multi_spectral_connectivity"""
+    """ testing _compute_and_save_multi_spectral_connectivity"""
     with pytest.raises(AssertionError, message="Expecting AssertionError"):
-        compute_and_save_multi_spectral_connectivity(
+        _compute_and_save_multi_spectral_connectivity(
             all_data=ts_mat, con_method="coh", mode="multitaper", fmin=fmin,
             fmax=fmax, sfreq=sfreq, gathering_method='mean', save_dir=tmp_dir)
 
-    compute_and_save_multi_spectral_connectivity(
+    _compute_and_save_multi_spectral_connectivity(
         all_data=ts_mat_trials, con_method="coh", mode="multitaper", fmin=fmin,
         fmax=fmax, sfreq=sfreq, gathering_method='mean', save_dir=tmp_dir)
 
@@ -93,7 +93,7 @@ def test_compute_and_save_multi_spectral_connectivity():
 
 
 def test_plot_circular_connectivity():
-    """test plot_circular_connectivity"""
-    plot_circular_connectivity(conmat, label_names=labels, save_dir=tmp_dir)
+    """test _plot_circular_connectivity"""
+    _plot_circular_connectivity(conmat, label_names=labels, save_dir=tmp_dir)
 
     assert os.path.exists(os.path.join(tmp_dir, "circle__def.eps")), "Error"
