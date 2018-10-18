@@ -1,11 +1,15 @@
 """
+.. _preproc_meeg:
+
 ======================================
 Using ephypype to preprocess your data
 ======================================
 The preprocessing pipeline runs the ICA algorithm for an
 automatic removal of eyes and heart related artefacts.
 A report is automatically generated and can be used to correct
-and/or fine-tune the correction in each subject
+and/or fine-tune the correction in each subject.
+
+The **input** data can be in **ds** or **fif** format.
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -70,8 +74,22 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. To instantiate the preprocessing node, we import it
-# and pass our parameters to it.
+# nodes we created. The preprocessing pipeline is implemented by the function
+# :func:`ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg`, thus to
+# instantiate the preprocessing pipeline node, we import it and pass our
+# parameters to it.
+# The preprocessing pipeline contains two nodes that are based on the MNE
+# Python functions performing the decomposition of the MEG/EEG signal using an
+# |ICA| algorithm.
+#
+# .. |ICA| raw:: html
+#
+#    <a href="http://martinos.org/mne/stable/auto_tutorials/plot_artifacts_correction_ica.html" target="_blank">ICA</a>
+#
+# In particular, the two nodes are:
+#   
+# * :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
+# * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
 from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg # noqa
 preproc_workflow = create_pipeline_preproc_meeg(
@@ -119,3 +137,12 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
 main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+
+###############################################################################
+# The output is the preprocessed data stored in the workflow directory
+# defined by `base_dir`. 
+#
+# It’s a good rule to inspect the report file saved in the same dir to look at
+# the excluded ICA components. It is also possible to include and exclude more
+# components by using either a jupyter notebook or the preprocessing pipeline
+# with different flag parameters.
