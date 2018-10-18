@@ -13,9 +13,9 @@ from nipype.interfaces.base import BaseInterface, \
 
 from nipype.utils.filemanip import split_filename as split_f
 
-from ...spectral import (compute_and_save_spectral_connectivity,
-                         compute_and_save_multi_spectral_connectivity,
-                         plot_circular_connectivity)
+from ...spectral import (_compute_and_save_spectral_connectivity,
+                         _compute_and_save_multi_spectral_connectivity,
+                         _plot_circular_connectivity)
 
 
 # -------------------------- SpectralConn -------------------------- #
@@ -150,13 +150,13 @@ class SpectralConn(BaseInterface):
             print(data.shape)
 
         if multi_con:
-            self.conmat_files = compute_and_save_multi_spectral_connectivity(
+            self.conmat_files = _compute_and_save_multi_spectral_connectivity(
                 all_data=data, con_method=con_method, sfreq=sfreq,
                 fmin=freq_band[0], fmax=freq_band[1],
                 export_to_matlab=export_to_matlab, mode=mode)
 
         else:
-            self.conmat_file = compute_and_save_spectral_connectivity(
+            self.conmat_file = _compute_and_save_spectral_connectivity(
                 data=data, con_method=con_method, index=index, sfreq=sfreq,
                 fmin=freq_band[0], fmax=freq_band[1],
                 export_to_matlab=export_to_matlab, mode=mode)
@@ -332,7 +332,7 @@ class PlotSpectralConn(BaseInterface):
         print(len(node_order))
         print('\n ********************** \n')
 
-        self.plot_conmat_file = plot_circular_connectivity(
+        self.plot_conmat_file = _plot_circular_connectivity(
             conmat, label_names, node_colors, node_order,
             self.inputs.vmin, self.inputs.vmax, self.inputs.nb_lines, fname)
 
