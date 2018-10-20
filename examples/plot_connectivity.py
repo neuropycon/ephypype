@@ -1,4 +1,6 @@
 """
+.. _spectral_connectivity:
+
 ======================================================
 Using ephypype to compute connectivity on sensor space
 ======================================================
