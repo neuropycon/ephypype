@@ -3,7 +3,7 @@ import mne
 import os
 
 from ephypype.aux_tools import _change_wd
-from ephypype.import_ctf import _convert_ds_to_raw_fif  # noqa
+from ephypype.import_data import _convert_ds_to_raw_fif  # noqa
 
 
 data_path = mne.datasets.testing.data_path()
