@@ -29,7 +29,7 @@ Installation
 Requirements
 ------------
 
-ephypype works with **python2** and **python3**
+ephypype works with **python3**
 
 * numpy
 * scikit-learn
