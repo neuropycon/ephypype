@@ -10,6 +10,7 @@ crash*
 # Sphinx documentation
 doc/_build/
 doc/auto_examples/
+doc/generated/
 
 # Examples data files
 examples/sample_BIDS_omega
