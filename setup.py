@@ -11,7 +11,7 @@ with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
         if line.startswith('__version__'):
             VERSION = line.split('=')[1].strip().strip('\'')
             break
-        
+
 if VERSION is None:
     raise RuntimeError('Could not determine version')
 
