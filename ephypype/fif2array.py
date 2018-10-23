@@ -1,6 +1,11 @@
 """fif convertors."""
 
-from ephypype.aux_tools import nostdout
+import os
+import numpy as np
+import mne
+from mne.io import read_raw_fif
+from nipype.utils.filemanip import split_filename as split_f
+from .aux_tools import nostdout
 
 
 def ep2ts(fif_file):
@@ -42,12 +47,6 @@ def _get_raw_array(raw_fname):
     sfreq : float
         sampling frequency
     """
-    import os
-    import numpy as np
-    import mne
-    from mne.io import read_raw_fif
-    from nipype.utils.filemanip import split_filename as split_f
-
     raw = read_raw_fif(raw_fname, preload=True)
     subj_path, basename, ext = split_f(raw_fname)
     select_sensors = mne.pick_types(raw.info, meg=True, ref_meg=False,

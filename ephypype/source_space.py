@@ -4,11 +4,14 @@
 #
 # License: BSD (3-clause)
 
+import mne
+import pickle
+import numpy as np
+import os.path as op
+
 
 def get_roi(labels_cortex, vertno_left, vertno_right):
     """Get roi."""
-    import numpy as np
-
     label_vertidx = list()
     label_name = list()
     label_coords = list()
@@ -44,9 +47,6 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
     labels_cortex : list
         List of labels.
     """
-    import mne
-    import numpy as np
-
     roi_mni_coords = list()
     roi_name = list()
     roi_color = list()
@@ -87,9 +87,6 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
 # ASEG coo head -> MNI
 def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
     """Convert aseg head to MNI."""
-    import mne
-    import numpy as np
-
     ROI_aseg_MNI_coords = list()
     ROI_aseg_name = list()
     ROI_aseg_color = list()
@@ -124,10 +121,6 @@ def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
 
 def create_label_files(labels):
     """Create label files."""
-    import pickle
-    import numpy as np
-    import os.path as op
-
     labels_file = op.abspath('labels.dat')
     with open(labels_file, "wb") as f:
         pickle.dump(len(labels), f)
@@ -155,10 +148,6 @@ def create_label_files(labels):
 
 def _create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     """Create MNI label files."""
-    import pickle
-    import numpy as np
-    import os.path as op
-
     print(('*** n labels cortex: {} ***'.format(len(labels_cortex))))
     if labels_aseg:
         print(('*** n labels aseg: {} ***'.format(len(labels_aseg))))

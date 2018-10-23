@@ -2,6 +2,13 @@
 
 # Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
 #         Annalisa Pascarella <a.pascarella@iac.cnr.it>
+import os
+import numpy as np
+
+from nipype.utils.filemanip import split_filename as split_f
+from mne import read_epochs
+from mne.io import read_raw_fif
+from scipy.signal import welch
 
 
 def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
@@ -9,8 +16,6 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
                           n_fft=256, n_overlap=0,
                           picks=None, proj=False, n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
-    from mne import read_epochs
-    from mne.io import read_raw_fif
 
     if is_epoched:
         epochs = read_epochs(data_fname)
@@ -61,11 +66,6 @@ def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
                               n_fft=256, n_overlap=0,
                               n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
-    import numpy as np
-
-    # from mne.time_frequency import psd_array_welch
-    from scipy.signal import welch
-
     src_data = np.load(data_fname)
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
@@ -87,8 +87,6 @@ def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
 
 def _compute_mean_band_psd(psds_file, freq_bands):
     """Compute mean band psd."""
-    import numpy as np
-
     npzfile = np.load(psds_file)
     print(('the .npz file contain {} \n'.format(npzfile.files)))
 
@@ -118,11 +116,6 @@ def _compute_mean_band_psd(psds_file, freq_bands):
 
 
 def _save_m_px(psds_file, m_px):
-    import os
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     data_path, basename, ext = split_f(psds_file)
 
     psds_mean_fname = basename + '-mean_band.npy'
@@ -134,11 +127,6 @@ def _save_m_px(psds_file, m_px):
 
 
 def _save_psd(data_fname, psds, freqs):
-    import os
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     data_path, basename, ext = split_f(data_fname)
 
     psds_fname = basename + '-psds.npz'
@@ -151,11 +139,7 @@ def _save_psd(data_fname, psds, freqs):
 
 
 def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
-    import os
     import matplotlib.pyplot as plt
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
 
     data_path, basename, ext = split_f(data_fname)
     psds_img_fname = basename + '-psds.png'
