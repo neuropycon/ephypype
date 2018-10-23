@@ -153,7 +153,7 @@ def create_label_files(labels):
     return labels_file, label_names_file, label_coords_file
 
 
-def create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
+def _create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     """Create MNI label files."""
     import pickle
     import numpy as np
