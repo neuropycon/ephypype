@@ -18,7 +18,7 @@ from mne import compute_raw_covariance, pick_types, write_cov
 from nipype.utils.filemanip import split_filename as split_f
 
 from .preproc import _create_reject_dict
-from .source_space import create_MNI_label_files
+from .source_space import _create_MNI_label_files
 from .import_data import _write_hdf5
 
 
@@ -365,7 +365,7 @@ def _compute_mean_ROIs(stc, sbj_id, sbj_dir, parc, inverse_operator, forward,
     print((len(labels)))
 
     labels_file, label_names_file, label_coords_file = \
-        create_MNI_label_files(forward, labels_cortex, labels_aseg,
-                               sbj_id, sbj_dir)
+        _create_MNI_label_files(forward, labels_cortex, labels_aseg,
+                                sbj_id, sbj_dir)
 
     return label_ts, labels_file, label_names_file, label_coords_file
