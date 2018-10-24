@@ -19,7 +19,7 @@ def natural_keys(text):
     http://nedbatchelder.com/blog/200712/human_sorting.html
     (See Toothy's implementation in the comments)
     """
-    return [atoi(c) for c in re.split('(\d+)', text)]
+    return [atoi(c) for c in re.split(r'(\d+)', text)]
 
 
 def return_full_mat(mat, elec_labels, all_elec_labels):
