@@ -8,7 +8,7 @@ from itertools import combinations
 from mne.viz import circular_layout, plot_connectivity_circle
 
 
-def atoi(text):
+def _atoi(text):
     """Get digit."""
     return int(text) if text.isdigit() else text
 
@@ -19,7 +19,7 @@ def natural_keys(text):
     http://nedbatchelder.com/blog/200712/human_sorting.html
     (See Toothy's implementation in the comments)
     """
-    return [atoi(c) for c in re.split('(\d+)', text)]
+    return [_atoi(c) for c in re.split(r'(\d+)', str(text))]
 
 
 def return_full_mat(mat, elec_labels, all_elec_labels):
@@ -33,12 +33,9 @@ def return_full_mat(mat, elec_labels, all_elec_labels):
         "elec_labels {}".format(mat.shape[0], mat.shape[1],
                                 len(elec_labels)))
 
-    # if undirected (values are not the same on both triangular parts
+    # if undirected (values are not the same on both triangular parts)
     if np.sum(mat[np.tril_indices(mat.shape[0], k=-1)]) != np.sum(mat[
             np.triu_indices(mat.shape[0], k=1)]):
-        # if np.sum(mat[np.tril_indices(mat.shape,k =-1)]) == 0.0 and np.sum(
-        # mat[np.triu_indices(mat.shape,k =1)]) != 0.0:
-
         mat = mat + np.transpose(mat)
 
     # building full_mat from all_elec_labels
