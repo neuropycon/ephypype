@@ -86,7 +86,8 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
 
 # ASEG coo head -> MNI
 def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
-    """Convert aseg head to MNI."""
+    """Convert the coordinates of substructures vol from head coordinate system
+        to MNI ones to MNI."""
     ROI_aseg_MNI_coords = list()
     ROI_aseg_name = list()
     ROI_aseg_color = list()
@@ -95,11 +96,8 @@ def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
     # head_mri_t = invert_transform(mri_head_t)  # head->MRI (surface RAS)
     for label in labels_aseg:
         print(('sub structure {} \n'.format(label.name)))
-        # before we go from head to MRI (surface RAS)
+        # Convert coo from head coordinate system to MNI ones.
         aseg_coo = label.pos
-        # aseg_coo_MRI_RAS = apply_trans(head_mri_t, aseg_coo)
-        # coo_MNI, _ = mne.aseg_vertex_to_mni(aseg_coo_MRI_RAS * 1000,
-        #                                  sbj, sbj_dir)
         coo_MNI = mne.head_to_mni(aseg_coo, sbj, mri_head_t, sbj_dir)
 
         ROI_aseg_MNI_coords.append(coo_MNI)
@@ -109,7 +107,7 @@ def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
     nvert_roi = [len(vn) for vn in ROI_aseg_MNI_coords]
     nvert_src = [l.pos.shape[0] for l in labels_aseg]
     if np.sum(nvert_roi) != np.sum(nvert_src):
-        raise RuntimeError('number of vol ssrc space vertices must be equal to \
+        raise RuntimeError('number of vol src space vertices must be equal to \
                             the total number of ROI vertices')
 
     roi_mni = dict(ROI_aseg_name=ROI_aseg_name,
