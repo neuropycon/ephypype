@@ -11,9 +11,9 @@ from nipype.utils.filemanip import split_filename as split_f
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
-from ...compute_fwd_problem import create_mixed_source_space
-from ...compute_fwd_problem import create_bem_sol, create_src_space
-from ...compute_fwd_problem import is_trans, compute_fwd_sol
+from ...compute_fwd_problem import _create_mixed_source_space
+from ...compute_fwd_problem import _create_bem_sol, _create_src_space
+from ...compute_fwd_problem import _is_trans, _compute_fwd_sol
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):
@@ -101,23 +101,24 @@ class LFComputation(BaseInterface):
 
         # check if we have just created the fwd matrix
         if not op.isfile(self.fwd_filename):
-            bem = create_bem_sol(sbj_dir, sbj_id)  # bem solution
+            bem = _create_bem_sol(sbj_dir, sbj_id)  # bem solution
 
-            src = create_src_space(sbj_dir, sbj_id, spacing)  # src space
+            src = _create_src_space(sbj_dir, sbj_id, spacing)  # src space
 
             if aseg:
-                src = create_mixed_source_space(sbj_dir, sbj_id, spacing,
-                                                aseg_labels, src,
-                                                save_mixed_src_space)
+                src = _create_mixed_source_space(sbj_dir, sbj_id, spacing,
+                                                 aseg_labels, src,
+                                                 save_mixed_src_space)
 
             n = sum(src[i]['nuse'] for i in range(len(src)))
             print(('il src space contiene %d spaces e %d vertici'
                    % (len(src), n)))
 
-            trans_fname = is_trans(raw_fname)
+            trans_fname = _is_trans(raw_fname)
 
             # TODO: ha senso una funzione con un solo cmd?
-            compute_fwd_sol(raw_info, trans_fname, src, bem, self.fwd_filename)
+            _compute_fwd_sol(raw_info, trans_fname, src, bem,
+                             self.fwd_filename)
         else:
             print(('\n*** FWD file %s exists!!!\n' % self.fwd_filename))
 
