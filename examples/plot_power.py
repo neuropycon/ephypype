@@ -52,7 +52,7 @@ overlap = 0.5  # if is_epoched = False
 # nipype the directory in which to store the outputs.
 
 # workflow directory within the `base_dir`
-power_analysis_name = 'power_pipeline'
+power_analysis_name = 'power_workflow'
 
 main_workflow = pe.Workflow(name=power_analysis_name)
 main_workflow.base_dir = data_path

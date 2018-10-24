@@ -51,7 +51,7 @@ reject = dict(mag=5e-12, grad=5000e-13)
 # nipype the directory in which to store the outputs.
 
 # workflow directory within the `base_dir`
-preproc_pipeline_name = 'preprocessing_pipeline'
+preproc_pipeline_name = 'preprocessing_workflow'
 
 main_workflow = pe.Workflow(name=preproc_pipeline_name)
 main_workflow.base_dir = data_path
