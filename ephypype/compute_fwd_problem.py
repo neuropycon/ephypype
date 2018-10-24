@@ -3,15 +3,17 @@
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 #
 # License: BSD (3-clause)
+import mne
+import glob
+import os.path as op
+
+from mne.bem import make_watershed_bem
+from mne.report import Report
+from nipype.utils.filemanip import split_filename as split_f
 
 
-def create_bem_sol(sbj_dir, sbj_id):
+def _create_bem_sol(sbj_dir, sbj_id):
     """Create bem solution."""
-    import os.path as op
-    import mne
-
-    from mne.bem import make_watershed_bem
-    from mne.report import Report
 
     report = Report()
 
@@ -63,11 +65,8 @@ def create_bem_sol(sbj_dir, sbj_id):
     return bem
 
 
-def create_src_space(sbj_dir, sbj_id, spacing):
+def _create_src_space(sbj_dir, sbj_id, spacing):
     """Create a source space."""
-    import os.path as op
-    import mne
-
     bem_dir = op.join(sbj_dir, sbj_id, 'bem')
 
     # check if source space exists, if not it creates using mne-python fun
@@ -89,11 +88,9 @@ def create_src_space(sbj_dir, sbj_id, spacing):
     return src
 
 
-def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
-                              save_mixed_src_space):
+def _create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
+                               save_mixed_src_space):
     """Create a miwed source space."""
-    import os.path as op
-    import mne
 
     bem_dir = op.join(sbj_dir, sbj_id, 'bem')
 
@@ -138,13 +135,8 @@ def create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
     return src
 
 
-def is_trans(raw_fname):
+def _is_trans(raw_fname):
     """Check if coregistration file."""
-    import glob
-    import os.path as op
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     data_path, raw_fname, ext = split_f(raw_fname)
 
     # check if the co-registration file was created
@@ -171,10 +163,8 @@ def is_trans(raw_fname):
     return trans_fname
 
 
-def compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
+def _compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
     """Compute leadfield matrix by BEM."""
-    import mne
-
     mindist = 5.  # ignore sources <= 0mm from inner skull
     fwd = mne.make_forward_solution(raw_info, trans_fname, src, bem,
                                     mindist=mindist, meg=True, eeg=False,
