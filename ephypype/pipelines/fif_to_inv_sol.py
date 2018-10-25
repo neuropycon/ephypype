@@ -71,7 +71,7 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
             template for the path to either the noise covariance matrix file or
             the empty room data
         all_src_space: bool
-            if True we compute the inverse for all points of the s0urce space
+            if True we compute the inverse for all points of the source space
         ROIs_mean: bool
             if True we compute the mean of estimated time series on ROIs
         save_mixed_src_space: bool (defualt False)
@@ -84,7 +84,7 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
         sbj_id : str
             subject id
 
-    Outouts:
+    Outputs:
 
         pipeline : instance of Workflow
 
