@@ -108,7 +108,7 @@ main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 # clearer in a moment when we plot the graph of the workflow.
 
 main_workflow.connect(infosource, 'subject_id',
-                      inv_sol_workflow, 'inputnode.subject_id')
+                      inv_sol_workflow, 'inputnode.sbj_id')
 main_workflow.connect(datasource, 'raw_file',
                       inv_sol_workflow, 'inputnode.raw')
 
