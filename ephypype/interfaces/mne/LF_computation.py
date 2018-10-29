@@ -20,7 +20,7 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
     subjects_dir = traits.String(exists=True, desc='Freesurfer main directory',
-                            mandatory=True)
+                                 mandatory=True)
     raw_fname = traits.String(desc='raw file name', mandatory=True)
     spacing = traits.String(desc='spacing to use to setup a source space',
                             mandatory=False)
