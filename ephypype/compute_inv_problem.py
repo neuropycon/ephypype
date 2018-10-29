@@ -4,9 +4,11 @@
 #
 # License: BSD (3-clause)
 
+import mne
+import sys
+import glob
 import os.path as op
 import numpy as np
-import mne
 
 from mne.io import read_raw_fif
 from mne import read_epochs
@@ -22,7 +24,7 @@ from .source_space import _create_MNI_label_files
 from .import_data import write_hdf5
 
 
-def _compute_noise_cov(cov_fname, raw):
+def compute_noise_cov(fname_template):
     """
     Compute noise covariance data from a continuous segment of raw data.
     Employ empty room data (collected without the subject) to calculate
@@ -31,35 +33,69 @@ def _compute_noise_cov(cov_fname, raw):
 
     Inputs
         cov_fname : str
-            noise covariance file name
-        raw : Raw
-            the raw data
+            noise covariance file name template
 
     Output
         cov_fname : str
             noise covariance file name in which is saved the noise covariance
             matrix
     """
-
-    print(('***** COMPUTE RAW COV *****' + cov_fname))
+    # Check if cov matrix exists
+    cov_fname = _get_cov_fname(fname_template)
 
     if not op.isfile(cov_fname):
+        er_raw, cov_fname = _get_er_data(fname_template)
 
-        data_path, basename, ext = split_f(raw.info['filename'])
-        fname = op.join(data_path, '%s-cov.fif' % basename)
+        if not op.isfile(cov_fname) and er_raw:
+            reject = _create_reject_dict(er_raw.info)
+            picks = pick_types(er_raw.info, meg=True,
+                               ref_meg=False, exclude='bads')
 
-        reject = _create_reject_dict(raw.info)
+            noise_cov = compute_raw_covariance(er_raw, picks=picks,
+                                               reject=reject)
 
-        picks = pick_types(raw.info, meg=True, ref_meg=False, exclude='bads')
-
-        noise_cov = compute_raw_covariance(raw, picks=picks, reject=reject)
-
-        write_cov(fname, noise_cov)
-
+            write_cov(cov_fname, noise_cov)
+        elif op.isfile(cov_fname):
+            print(('*** NOISE cov file {} exists!!!'.format(cov_fname)))
+        elif not er_raw:
+            sys.exit("No covariance matrix as input!")
+            # TODO creare una matrice diagonale?
     else:
-        print(('*** NOISE cov file %s exists!!!' % cov_fname))
+        print(('*** NOISE cov file {} exists!!!'.format(cov_fname)))
 
     return cov_fname
+
+
+def _get_cov_fname(cov_fname_template):
+    "Check if a cov matrix already exists. If it exists return the cov \
+    matrix file name otherwhise returns."
+    for cov_fname in glob.glob(cov_fname_template):
+#        print(('*** {} \n'.format(cov_fname)))  # noqa
+
+        if cov_fname.rfind('cov.fif') > -1:
+            print("*** NOISE cov file {} exists!!! \n".format(cov_fname))  # noqa
+            return cov_fname
+
+    return ''
+
+
+def _get_er_data(er_fname_template):
+    "Check if empty room data exists in order to compute noise cov matrix. If \
+    it exists returns both the raw instance and cov filename where we'll save \
+    the cov matrix."
+    for er_fname in glob.glob(er_fname_template):
+        print(('*** {} \n'.format(er_fname)))
+
+        if er_fname.rfind('.fif') > -1:
+            er_raw = read_raw_fif(er_fname)
+            cov_fname = er_fname.replace('.fif', '-raw-cov.fif')
+        elif er_fname.rfind('.ds') > -1:
+            er_raw = read_raw_ctf(er_fname)
+            cov_fname = er_fname.replace('.ds', '-raw-cov.fif')
+
+        return er_raw, cov_fname
+
+    return None, ''
 
 
 def _read_noise_cov(cov_fname, raw_info):
@@ -209,6 +245,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
     # TODO check use_cps for force_fixed=True
     if not aseg:
         print(('\n*** fixed orientation {} ***\n'.format(is_fixed)))
+        # is_fixed=True => to convert the free-orientation fwd solution to
+        # (surface-oriented) fixed orientation.
         forward = mne.convert_forward_solution(forward, surf_ori=True,
                                                force_fixed=is_fixed,
                                                use_cps=False)
