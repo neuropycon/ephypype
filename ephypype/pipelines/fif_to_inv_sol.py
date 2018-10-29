@@ -7,7 +7,7 @@ import nipype.pipeline.engine as pe
 
 from nipype.interfaces.utility import IdentityInterface
 
-from ..preproc import get_raw_info, get_epochs_info
+from ..preproc import _get_raw_info, _get_epochs_info
 from ..interfaces.mne.LF_computation import LFComputation
 from ..interfaces.mne.Inverse_solution import NoiseCovariance
 from ..interfaces.mne.Inverse_solution import InverseSolution
@@ -114,10 +114,10 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
         events_id = None
 
     if is_epoched and events_id is None:
-        pipeline.connect(inputnode, ('raw', get_epochs_info),
+        pipeline.connect(inputnode, ('raw', _get_epochs_info),
                          LF_computation, 'raw_info')
     else:
-        pipeline.connect(inputnode, ('raw', get_raw_info),
+        pipeline.connect(inputnode, ('raw', _get_raw_info),
                          LF_computation, 'raw_info')
 
     pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
