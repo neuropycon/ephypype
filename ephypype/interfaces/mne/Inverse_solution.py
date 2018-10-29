@@ -271,6 +271,7 @@ class NoiseCovariance(BaseInterface):
                 # Compute noise cov matrix from empty room data
                 self.cov_fname_out = compute_noise_cov(
                     op.join(data_path, cov_fname_in), raw_filename)
+
         else:
             print(('\n *** NOISE cov file {} exists!!! \n'.
                    format(cov_fname_in)))
