@@ -52,7 +52,8 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
             if True and events_id is not None, the raw data are epoched
             according to events_id and t_min and t_max values
         is_fixed : bool (default False)
-            if True we use fixed orientation
+            if True we use fixed orientation, otherwise the loose orientation
+            is applied
         events_id: dict (default None)
             the dict of events
         t_min, t_max: int (defualt None)
@@ -125,7 +126,6 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
-#    if noise_cov_fname is not None:
     create_noise_cov.inputs.cov_fname_in = noise_cov_fname
     create_noise_cov.inputs.is_epoched = is_epoched
     create_noise_cov.inputs.is_evoked = is_evoked

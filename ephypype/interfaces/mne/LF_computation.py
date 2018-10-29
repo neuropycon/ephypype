@@ -17,7 +17,7 @@ from ...compute_fwd_problem import _is_trans, _compute_fwd_sol
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):
-    """LF computation conn input spec."""
+    """Input specification for LFComputation."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
     sbj_dir = traits.String(exists=True, desc='Freesurfer main directory',
@@ -36,7 +36,7 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
 
 
 class LFComputationConnOutputSpec(TraitedSpec):
-    """LF computation conn output spec."""
+    """Output specification for LFComputation."""
 
     fwd_filename = File(exists=False, desc='LF matrix')
 
@@ -82,7 +82,7 @@ class LFComputation(BaseInterface):
 
         fwd_filename = op.join(data_path, fwd_filename + '-fwd.fif')
 
-        print(('\n *** fwd_filename %s ***\n' % fwd_filename))
+        print(('\n *** fwd_filename {} ***\n'.format(fwd_filename)))
         return fwd_filename
 
     def _run_interface(self, runtime):
@@ -111,16 +111,15 @@ class LFComputation(BaseInterface):
                                                  save_mixed_src_space)
 
             n = sum(src[i]['nuse'] for i in range(len(src)))
-            print(('il src space contiene %d spaces e %d vertici'
-                   % (len(src), n)))
+            print('src space contains {} spaces and {} vertices'.format(
+                    len(src), n))
 
             trans_fname = _is_trans(raw_fname)
 
-            # TODO: ha senso una funzione con un solo cmd?
             _compute_fwd_sol(raw_info, trans_fname, src, bem,
                              self.fwd_filename)
         else:
-            print(('\n*** FWD file %s exists!!!\n' % self.fwd_filename))
+            print(('\n*** FWD file {} exists!!!\n'.format(self.fwd_filename)))
 
         return runtime
 
