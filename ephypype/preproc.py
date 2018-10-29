@@ -217,14 +217,18 @@ def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
                 raw.info['sfreq'])
 
 
-def get_raw_info(raw_fname):
+def _get_raw_info(raw_fname):
     """Get info from raw."""
+    from mne.io import read_raw_fif
+
     raw = read_raw_fif(raw_fname, preload=True)
     return raw.info
 
 
-def get_epochs_info(raw_fname):
+def _get_epochs_info(raw_fname):
     """Get epoch info."""
+    from mne import read_epochs
+
     epochs = read_epochs(raw_fname)
     return epochs.info
 
