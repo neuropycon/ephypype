@@ -21,7 +21,7 @@ from mne.io import read_raw_fif, read_raw_ctf
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
-    """Inverse slution conn input spec."""
+    """Input specification for InverseSolution."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
     sbj_dir = traits.Directory(exists=True, desc='Freesurfer main directory',
@@ -63,7 +63,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
 
 
 class InverseSolutionConnOutputSpec(TraitedSpec):
-    """Inverse solution conn output spec."""
+    """Output specification for InverseSolution."""
 
     ts_file = File(exists=False, desc='source reconstruction in .npy format')
     labels = File(exists=False, desc='labels file in pickle format')
@@ -180,7 +180,7 @@ class InverseSolution(BaseInterface):
 
 
 class NoiseCovarianceConnInputSpec(BaseInterfaceInputSpec):
-    """Noise covariance conn input spec."""
+    """Input specification for NoiseCovariance."""
 
     cov_fname_in = traits.File(exists=False, desc='file name for Noise \
                                Covariance Matrix')
@@ -196,7 +196,7 @@ class NoiseCovarianceConnInputSpec(BaseInterfaceInputSpec):
 
 
 class NoiseCovarianceConnOutputSpec(TraitedSpec):
-    """Noise covariance conn output spec."""
+    """Output specification for NoiseCovariance."""
 
     cov_fname_out = File(exists=False, desc='Noise covariances matrix')
 
@@ -244,6 +244,7 @@ class NoiseCovariance(BaseInterface):
 
         self.cov_fname_out = op.join(data_path, '%s-cov.fif' % basename)
 
+        # Check if a noise cov matrix was already computed
         if not op.isfile(cov_fname_in):
             if is_epoched and is_evoked:
                 raw = read_raw_fif(raw_filename)
@@ -269,9 +270,9 @@ class NoiseCovariance(BaseInterface):
                     print(('\n *** NOISE cov file %s exists!!! \n'
                            % self.cov_fname_out))
             else:
-                '\n *** RAW DATA \n'
+                # Compute noise cov matrix from empty room data
                 for er_fname in glob.glob(op.join(data_path, cov_fname_in)):
-                    print(('\n found file name %s  \n' % er_fname))
+                    print(('\n found file name {} \n'.format(er_fname)))
 
                 try:
                     if er_fname.rfind('cov.fif') > -1:
@@ -305,7 +306,8 @@ class NoiseCovariance(BaseInterface):
                     # TODO creare una matrice diagonale?
 
         else:
-            print(('\n *** NOISE cov file %s exists!!! \n' % cov_fname_in))
+            print(('\n *** NOISE cov file {} exists!!! \n'.
+                   format(cov_fname_in)))
             self.cov_fname_out = cov_fname_in
 
         return runtime
