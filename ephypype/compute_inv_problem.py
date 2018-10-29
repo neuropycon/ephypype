@@ -36,6 +36,7 @@ def compute_noise_cov(fname_template, raw_filename):
             noise covariance file name template
         raw_filename : str
             raw filename
+
     Output
         cov_fname : str
             noise covariance file name in which is saved the noise covariance
