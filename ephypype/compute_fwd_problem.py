@@ -163,10 +163,10 @@ def _is_trans(raw_fname):
     return trans_fname
 
 
-def _compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
+def _compute_fwd_sol(raw_fname, trans_fname, src, bem, fwd_filename):
     """Compute leadfield matrix by BEM."""
     mindist = 5.  # ignore sources <= 0mm from inner skull
-    fwd = mne.make_forward_solution(raw_info, trans_fname, src, bem,
+    fwd = mne.make_forward_solution(raw_fname, trans_fname, src, bem,
                                     mindist=mindist, meg=True, eeg=False,
                                     n_jobs=2)
 
