@@ -271,41 +271,8 @@ class NoiseCovariance(BaseInterface):
                            % self.cov_fname_out))
             else:
                 # Compute noise cov matrix from empty room data
-                self.cov_fname_out = compute_noise_cov(cov_fname_in)
-#                for er_fname in glob.glob(op.join(data_path, cov_fname_in)):
-#                    print(('\n found file name {} \n'.format(er_fname)))
-#
-#                try:
-#                    if er_fname.rfind('cov.fif') > -1:
-#                        print("\n *** NOISE cov file %s exists!! "
-#                              "\n" % er_fname)
-#                        self.cov_fname_out = er_fname
-#                    else:
-#                        if er_fname.rfind('.fif') > -1:
-#                            er_raw = read_raw_fif(er_fname)
-#                            er_fname = er_fname.replace('.fif', '-raw-cov.fif')
-#                        elif er_fname.rfind('.ds') > -1:
-#                            er_raw = read_raw_ctf(er_fname)
-#                            er_fname = er_fname.replace('.ds', '-raw-cov.fif')
-#
-#                        self.cov_fname_out = op.join(data_path, er_fname)
-#
-#                        if not op.isfile(self.cov_fname_out):
-#                            reject = _create_reject_dict(er_raw.info)
-#                            picks = pick_types(er_raw.info, meg=True,
-#                                               ref_meg=False, exclude='bads')
-#
-#                            noise_cov = compute_raw_covariance(er_raw,
-#                                                               picks=picks,
-#                                                               reject=reject)
-#                            write_cov(self.cov_fname_out, noise_cov)
-#                        else:
-#                            print(('\n *** NOISE cov file %s exists!!! \n'
-#                                   % self.cov_fname_out))
-#                except NameError:
-#                    sys.exit("No covariance matrix as input!")
-#                    # TODO creare una matrice diagonale?
-
+                self.cov_fname_out = compute_noise_cov(
+                        op.join(data_path, cov_fname_in), raw_filename)
         else:
             print(('\n *** NOISE cov file {} exists!!! \n'.
                    format(cov_fname_in)))
