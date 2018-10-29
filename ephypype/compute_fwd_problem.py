@@ -23,21 +23,21 @@ def _create_bem_sol(sbj_dir, sbj_id):
     sbj_inner_skull_fname = op.join(bem_dir, sbj_id + '-' + surf_name)
     inner_skull_fname = op.join(bem_dir, surf_name)
 
-    # check if bem-sol was created, if not creates the bem sol using C MNE
-    bem_fname = op.join(bem_dir, '%s-5120-bem-sol.fif' % sbj_id)
-    model_fname = op.join(bem_dir, '%s-5120-bem.fif' % sbj_id)
+    # check if bem-sol was created, if not creates the bem sol using MNE
+    bem_fname = op.join(bem_dir, '{}-5120-bem-sol.fif'.format(sbj_id))
+    model_fname = op.join(bem_dir, '{}-5120-bem.fif'.format(sbj_id))
 
     if not op.isfile(bem_fname):
         # chek if inner_skull surf exists, if not BEM computation is
         # performed by MNE python functions mne.bem.make_watershed_bem
         if not (op.isfile(sbj_inner_skull_fname) or
                 op.isfile(inner_skull_fname)):
-            print("%s ---> FILE NOT FOUND!!!---> BEM "
-                  "computed" % inner_skull_fname)
+            print("{} ---> FILE NOT FOUND!!!---> BEM "
+                  "computed".format(inner_skull_fname))
             make_watershed_bem(sbj_id, sbj_dir, overwrite=True)
         else:
-            print(("\n*** inner skull %s surface "
-                   "exists!!!\n" % inner_skull_fname))
+            print(("\n*** inner skull {} surface "
+                   "exists!!!\n".format(inner_skull_fname)))
 
         # Create a BEM model for a subject
         surfaces = mne.make_bem_model(sbj_id, ico=4, conductivity=[0.3],
@@ -50,17 +50,17 @@ def _create_bem_sol(sbj_dir, sbj_id):
         bem = mne.make_bem_solution(surfaces)
         mne.write_bem_solution(bem_fname, bem)
 
-        print(('\n*** BEM solution file %s written ***\n' % bem_fname))
+        print(('\n*** BEM solution file {} written ***\n'.format(bem_fname)))
 
-        # add BEM figures to a Report
+        # Add BEM figures to a Report
         report.add_bem_to_section(subject=sbj_id, subjects_dir=sbj_dir)
         report_filename = op.join(bem_dir, "BEM_report.html")
-        print(('\n*** REPORT file %s written ***\n' % report_filename))
+        print(('\n*** REPORT file {} written ***\n'.format(report_filename)))
         print(report_filename)
         report.save(report_filename, open_browser=False, overwrite=True)
     else:
         bem = bem_fname
-        print(('\n*** BEM solution file %s exists!!! ***\n' % bem_fname))
+        print(('\n*** BEM solution file {} exists!!! ***\n'.format(bem_fname)))
 
     return bem
 
@@ -171,4 +171,4 @@ def _compute_fwd_sol(raw_info, trans_fname, src, bem, fwd_filename):
                                     n_jobs=2)
 
     mne.write_forward_solution(fwd_filename, fwd, overwrite=True)
-    print(('\n*** FWD file %s written!!!\n' % fwd_filename))
+    print(('\n*** FWD file {} written!!!\n'.format(fwd_filename)))
