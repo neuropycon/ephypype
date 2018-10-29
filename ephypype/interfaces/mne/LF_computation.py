@@ -50,8 +50,6 @@ class LFComputation(BaseInterface):
         subject name
     sbj_dir : str
         Freesurfer directory
-    raw_info : dict
-        information dictionary of the raw data
     raw_filename : str
         filename of the raw data
     spacing : str (default 'ico-5')
@@ -89,7 +87,6 @@ class LFComputation(BaseInterface):
 
         sbj_id = self.inputs.sbj_id
         sbj_dir = self.inputs.sbj_dir
-        raw_info = self.inputs.raw_info
         raw_fname = self.inputs.raw_fname
         aseg = self.inputs.aseg
         spacing = self.inputs.spacing
@@ -116,7 +113,7 @@ class LFComputation(BaseInterface):
 
             trans_fname = _is_trans(raw_fname)
 
-            _compute_fwd_sol(raw_info, trans_fname, src, bem,
+            _compute_fwd_sol(raw_fname, trans_fname, src, bem,
                              self.fwd_filename)
         else:
             print(('\n*** FWD file {} exists!!!\n'.format(self.fwd_filename)))
