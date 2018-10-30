@@ -5,8 +5,6 @@
 # License: BSD (3-clause)
 
 import os.path as op
-import sys
-import glob
 
 from nipype.utils.filemanip import split_filename as split_f
 
@@ -15,9 +13,9 @@ from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_inv_problem import _compute_inverse_solution, compute_noise_cov
 from ...preproc import _create_reject_dict
-from mne import find_events, compute_raw_covariance, compute_covariance
+from mne import find_events, compute_covariance
 from mne import pick_types, write_cov, Epochs
-from mne.io import read_raw_fif, read_raw_ctf
+from mne.io import read_raw_fif
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
