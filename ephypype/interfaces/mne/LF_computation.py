@@ -6,14 +6,13 @@
 
 import os.path as op
 
-from nipype.utils.filemanip import split_filename as split_f
-
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_fwd_problem import _create_mixed_source_space
 from ...compute_fwd_problem import _create_bem_sol, _create_src_space
 from ...compute_fwd_problem import _is_trans, _compute_fwd_sol
+from ...compute_fwd_problem import _get_fwd_filename
 
 
 class LFComputationConnInputSpec(BaseInterfaceInputSpec):
@@ -22,7 +21,6 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     sbj_id = traits.String(desc='subject id', mandatory=True)
     sbj_dir = traits.String(exists=True, desc='Freesurfer main directory',
                             mandatory=True)
-    raw_info = traits.Any(desc='raw info', mandatory=True)
     raw_fname = traits.String(desc='raw file name', mandatory=True)
     spacing = traits.String(desc='spacing to use to setup a source space',
                             mandatory=False)
@@ -71,18 +69,6 @@ class LFComputation(BaseInterface):
     input_spec = LFComputationConnInputSpec
     output_spec = LFComputationConnOutputSpec
 
-    def _get_fwd_filename(self, raw_info, aseg, spacing):
-
-        data_path, raw_fname, ext = split_f(raw_info)
-        fwd_filename = '%s-%s' % (raw_fname, spacing)
-        if aseg:
-            fwd_filename += '-aseg'
-
-        fwd_filename = op.join(data_path, fwd_filename + '-fwd.fif')
-
-        print(('\n *** fwd_filename {} ***\n'.format(fwd_filename)))
-        return fwd_filename
-
     def _run_interface(self, runtime):
 
         sbj_id = self.inputs.sbj_id
@@ -93,8 +79,8 @@ class LFComputation(BaseInterface):
         aseg_labels = self.inputs.aseg_labels
         save_mixed_src_space = self.inputs.save_mixed_src_space
 
-        self.fwd_filename = self._get_fwd_filename(raw_fname, aseg,
-                                                   spacing)
+        self.fwd_filename = _get_fwd_filename(raw_fname, aseg,
+                                              spacing)
 
         # check if we have just created the fwd matrix
         if not op.isfile(self.fwd_filename):
