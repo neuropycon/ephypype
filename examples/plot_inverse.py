@@ -28,7 +28,6 @@ from ephypype.datasets import fetch_omega_dataset
 data_type = 'fif'
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
-data_path = '/media/pasca/paska/meg_data/omega/sample_BIDS_omega/'
 
 ###############################################################################
 # then set the parameters for inverse solution
@@ -42,7 +41,7 @@ parc = 'aparc'       # The parcellation to use: 'aparc' vs 'aparc.a2009s'
 noise_cov_fname = '*noise*.ds'
 
 # set sbj dir path, i.e. where the FS folfers are
-sbj_dir = '/home/pasca/Science/research/MEG/work/subjects'
+sbj_dir = op.join(data_path, 'FSF')
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -68,7 +67,6 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # the values in the infosource node
 
 template_path = '*%s/%s/meg/%s*rest*ica.fif'
-template_path = '*%s/%s/meg/%s*rest*short*ica.fif'
 template_args = [['subject_id', 'session_id', 'subject_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
