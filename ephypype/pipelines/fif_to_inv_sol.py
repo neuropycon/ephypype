@@ -7,7 +7,6 @@ import nipype.pipeline.engine as pe
 
 from nipype.interfaces.utility import IdentityInterface
 
-from ..preproc import _get_raw_info, _get_epochs_info
 from ..interfaces.mne.LF_computation import LFComputation
 from ..interfaces.mne.Inverse_solution import NoiseCovariance
 from ..interfaces.mne.Inverse_solution import InverseSolution
@@ -107,22 +106,14 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
         LF_computation.inputs.save_mixed_src_space = save_mixed_src_space
 
     pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
+    pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
 
+    # Noise Covariance Matrix Node
     try:
         events_id
     except NameError:
         events_id = None
 
-    if is_epoched and events_id is None:
-        pipeline.connect(inputnode, ('raw', _get_epochs_info),
-                         LF_computation, 'raw_info')
-    else:
-        pipeline.connect(inputnode, ('raw', _get_raw_info),
-                         LF_computation, 'raw_info')
-
-    pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
-
-    # Noise Covariance Matrix Node
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
