@@ -8,7 +8,7 @@ import os
 import sys
 import numpy as np
 
-from mne import pick_types, read_epochs
+from mne import pick_types, Epochs
 from mne.io import read_raw_fif
 from mne.preprocessing import ICA, read_ica
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
@@ -407,9 +407,9 @@ def _create_epochs(fif_file, ep_length):
     else:
         raise Exception('File {} is too short!'.format(fif_file))
 
-    epochs = read_epochs(raw, events=events, tmin=0, tmax=ep_length,
-                         preload=True, picks=picks, proj=False,
-                         flat=flat, reject=reject)
+    epochs = Epochs(raw, events=events, tmin=0, tmax=ep_length,
+                    preload=True, picks=picks, proj=False,
+                    flat=flat, reject=reject)
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)
