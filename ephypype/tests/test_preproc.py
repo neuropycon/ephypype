@@ -1,6 +1,8 @@
 """Test power."""
 
 import mne
+import nipype.pipeline.engine as pe
+from ephypype.interfaces.mne.preproc import CreateEp
 from ephypype.preproc import _preprocess_fif, _compute_ica
 from ephypype.aux_tools import _change_wd
 
@@ -11,6 +13,16 @@ matplotlib.use('Agg')  # for testing don't use X server
 data_path = mne.datasets.sample.data_path()
 raw_fname = data_path + '/MEG/sample/sample_audvis_raw.fif'
 filter_raw_fname = data_path + '/MEG/sample/sample_audvis_filt-0-40_raw.fif'
+
+
+def test_epoching_node():
+    """Test epoching node"""
+    _change_wd()
+    epoch_node = pe.Node(interface=CreateEp(), name='epoching')
+    epoch_node.inputs.ep_length = 1  # split in 1 second epochs
+
+    epoch_node.inputs.fif_file = raw_fname
+    epoch_node.run()
 
 
 def test_preprocess_fif():
