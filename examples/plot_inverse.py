@@ -49,7 +49,7 @@ sbj_dir = op.join(data_path, 'FSF')
 
 # workflow directory within the `base_dir`
 src_reconstruction_pipeline_name = 'source_reconstruction' + \
-                                    inv_method + '_' + parc.replace('.', '')
+    inv_method + '_' + parc.replace('.', '')
 
 main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)
 main_workflow.base_dir = data_path
@@ -90,8 +90,8 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruction  # noqa
 inv_sol_workflow = create_pipeline_source_reconstruction(
-        data_path, sbj_dir, spacing=spacing, inv_method=inv_method, parc=parc,
-        noise_cov_fname=noise_cov_fname)
+    data_path, sbj_dir, spacing=spacing, inv_method=inv_method, parc=parc,
+    noise_cov_fname=noise_cov_fname)
 
 ###############################################################################
 # We then connect the nodes two at a time. First, we connect the two outputs
@@ -119,9 +119,9 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread # noqa
-import matplotlib.pyplot as plt # noqa
-img = plt.imread(op.join(data_path, src_reconstruction_pipeline_name, 'graph.png'))
+from scipy.misc import imread  # noqa
+import matplotlib.pyplot as plt  # noqa
+img = plt.imread(op.join(data_path, src_reconstruction_pipeline_name, 'graph.png'))  # noqa
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
