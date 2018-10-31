@@ -8,7 +8,7 @@ import os
 import sys
 import numpy as np
 
-from mne import pick_types, Epochs
+from mne import pick_types, read_epochs, Epochs
 from mne.io import read_raw_fif
 from mne.preprocessing import ICA, read_ica
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
