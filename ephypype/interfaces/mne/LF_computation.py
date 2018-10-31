@@ -95,7 +95,7 @@ class LFComputation(BaseInterface):
 
             n = sum(src[i]['nuse'] for i in range(len(src)))
             print('src space contains {} spaces and {} vertices'.format(
-                    len(src), n))
+                len(src), n))
 
             trans_fname = _is_trans(raw_fname)
 
