@@ -120,39 +120,6 @@ def compute_cov_identity(raw_filename):
     return cov_fname
 
 
-def _read_noise_cov(cov_fname, raw_info):
-    """
-    Read a noise covariance matrix from cov_fname
-
-    Inputs
-        cov_fname : str
-            noise covariance file name
-        raw_info : dict
-            dictionary containing the information about the raw data
-
-    Outputs
-        noise_cov : Covariance
-            the noise covariance matrix
-    """
-
-    print(('***** READ RAW COV *****' + cov_fname))
-
-    if not op.isfile(cov_fname):
-        # create an Identity matrix
-        picks = mne.pick_types(raw_info, meg=True, ref_meg=False,
-                               exclude='bads')
-        ch_names = [raw_info['ch_names'][i] for i in picks]
-
-        C = mne.Covariance(data=np.identity(len(picks)), names=ch_names,
-                           bads=[], projs=[], nfree=0)
-        mne.write_cov(cov_fname, C)
-    else:
-        print(('*** noise covariance file %s exists!!!' % cov_fname))
-        noise_cov = mne.read_cov(cov_fname)
-
-    return noise_cov
-
-
 '''
 +---------------------+-----------+-----------+-----------+-----------------+--------------+
 | Inverse desired                             | Forward parameters allowed                 |  # noqa
