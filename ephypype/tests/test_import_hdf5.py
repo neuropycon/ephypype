@@ -6,9 +6,9 @@ import os.path as op
 from ephypype.import_data import _write_hdf5, _read_hdf5
 from numpy.testing import assert_array_almost_equal
 
-data_path = mne.datasets.sample.data_path()
+data_path = mne.datasets.testing.data_path()
 raw_fname = op.join(data_path, 'MEG', 'sample',
-                    'sample_audvis_filt-0-40_raw.fif')
+                    'sample_audvis_trunc_raw.fif')
 
 
 def test_read_write_hdf5():

@@ -8,9 +8,9 @@ from ephypype.aux_tools import _change_wd
 from ephypype.fif2array import ep2ts
 from numpy.testing import assert_equal, assert_array_almost_equal
 
-data_path = mne.datasets.sample.data_path()
+data_path = mne.datasets.testing.data_path()
 raw_fname = os.path.join(data_path, 'MEG', 'sample',
-                         'sample_audvis_filt-0-40_raw.fif')
+                         'sample_audvis_trunc_raw.fif')
 
 
 def test_ep2ts():
