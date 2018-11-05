@@ -119,8 +119,8 @@ class ImportHdf5(BaseInterface):
         Name of the .npy file where the time series matrix is saved
     """
 
-    input_spec = ImportMatInputSpec
-    output_spec = ImportMatOutputSpec
+    input_spec = ImportHdf5InputSpec
+    output_spec = ImportHdf5OutputSpec
 
     def _run_interface(self, runtime):
 
