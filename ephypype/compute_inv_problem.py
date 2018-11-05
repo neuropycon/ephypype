@@ -354,8 +354,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     return ts_file, labels_file, label_names_file, label_coords_file
 
 
-def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator, forward,
-                       aseg, is_fixed):
+def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
+                       forward, aseg, is_fixed):
         # these coo are in MRI space and we have to convert to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=subjects_dir)
