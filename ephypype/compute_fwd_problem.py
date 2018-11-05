@@ -151,6 +151,7 @@ def _is_trans(raw_fname):
     raw_fname_4trans = raw_fname_4trans.replace('filt', '*')
     raw_fname_4trans = raw_fname_4trans.replace('dsamp', '*')
     raw_fname_4trans = raw_fname_4trans.replace('ica', '*')
+    raw_fname_4trans = raw_fname_4trans.replace('raw', '*')
 
     trans_fname = op.join(data_path, '%s*trans.fif' % raw_fname_4trans)
     for trans_fname in glob.glob(trans_fname):
