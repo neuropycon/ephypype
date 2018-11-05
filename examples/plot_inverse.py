@@ -41,7 +41,7 @@ parc = 'aparc'       # The parcellation to use: 'aparc' vs 'aparc.a2009s'
 noise_cov_fname = '*noise*.ds'
 
 # set sbj dir path, i.e. where the FS folfers are
-sbj_dir = op.join(data_path, 'FSF')
+subjects_dir = op.join(data_path, 'fsf')
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -90,7 +90,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruction  # noqa
 inv_sol_workflow = create_pipeline_source_reconstruction(
-    data_path, sbj_dir, spacing=spacing, inv_method=inv_method, parc=parc,
+    data_path, subjects_dir, spacing=spacing, inv_method=inv_method, parc=parc,
     noise_cov_fname=noise_cov_fname)
 
 ###############################################################################
