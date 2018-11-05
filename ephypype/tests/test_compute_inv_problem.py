@@ -21,8 +21,8 @@ def test_compute_noise_cov():
     raw = mne.io.read_raw_fif(raw_fname)
 
     # save short segment of raw data
-    segment_raw_fname = raw_fname.replace('raw.fif', '0_60s_raw.fif')
-    raw.save(segment_raw_fname, tmin=0, tmax=60, overwrite=True)
+    segment_raw_fname = raw_fname.replace('raw.fif', '0_10s_raw.fif')
+    raw.save(segment_raw_fname, tmin=0, tmax=10, overwrite=True)
 
     noise_cov_fpath = compute_noise_cov('', segment_raw_fname)
 
