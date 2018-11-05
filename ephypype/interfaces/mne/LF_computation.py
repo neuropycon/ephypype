@@ -19,7 +19,7 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     """Input specification for LFComputation."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
-    sbj_dir = traits.String(exists=True, desc='Freesurfer main directory',
+    subjects_dir = traits.String(exists=True, desc='Freesurfer main directory',
                             mandatory=True)
     raw_fname = traits.String(desc='raw file name', mandatory=True)
     spacing = traits.String(desc='spacing to use to setup a source space',
@@ -46,7 +46,7 @@ class LFComputation(BaseInterface):
     ------
     sbj_id : str
         subject name
-    sbj_dir : str
+    subjects_dir : str
         Freesurfer directory
     raw_filename : str
         filename of the raw data
@@ -72,7 +72,7 @@ class LFComputation(BaseInterface):
     def _run_interface(self, runtime):
 
         sbj_id = self.inputs.sbj_id
-        sbj_dir = self.inputs.sbj_dir
+        subjects_dir = self.inputs.subjects_dir
         raw_fname = self.inputs.raw_fname
         aseg = self.inputs.aseg
         spacing = self.inputs.spacing
@@ -84,12 +84,12 @@ class LFComputation(BaseInterface):
 
         # check if we have just created the fwd matrix
         if not op.isfile(self.fwd_filename):
-            bem = _create_bem_sol(sbj_dir, sbj_id)  # bem solution
+            bem = _create_bem_sol(subjects_dir, sbj_id)  # bem solution
 
-            src = _create_src_space(sbj_dir, sbj_id, spacing)  # src space
+            src = _create_src_space(subjects_dir, sbj_id, spacing)  # src space
 
             if aseg:
-                src = _create_mixed_source_space(sbj_dir, sbj_id, spacing,
+                src = _create_mixed_source_space(subjects_dir, sbj_id, spacing,
                                                  aseg_labels, src,
                                                  save_mixed_src_space)
 

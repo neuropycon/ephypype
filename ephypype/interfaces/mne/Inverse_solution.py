@@ -22,8 +22,8 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     """Input specification for InverseSolution."""
 
     sbj_id = traits.String(desc='subject id', mandatory=True)
-    sbj_dir = traits.Directory(exists=True, desc='Freesurfer main directory',
-                               mandatory=True)
+    subjects_dir = traits.Directory(exists=True, desc='Freesurfer main directory',  # noqa
+                                    mandatory=True)
     raw_filename = traits.File(exists=True, desc='raw filename',
                                mandatory=True)
     cov_filename = traits.File(exists=True, desc='Noise Covariance matrix',
@@ -79,7 +79,7 @@ class InverseSolution(BaseInterface):
     ------
         sbj_id : str
             Subject name
-        sbj_dir : str
+        subjects_dir : str
             Freesurfer directory
         raw_filename : str
             Filename of the raw data
@@ -136,7 +136,7 @@ class InverseSolution(BaseInterface):
     def _run_interface(self, runtime):
 
         sbj_id = self.inputs.sbj_id
-        sbj_dir = self.inputs.sbj_dir
+        subjects_dir = self.inputs.subjects_dir
         raw_filename = self.inputs.raw_filename
         cov_filename = self.inputs.cov_filename
         fwd_filename = self.inputs.fwd_filename
@@ -155,7 +155,7 @@ class InverseSolution(BaseInterface):
         ROIs_mean = self.inputs.ROIs_mean
 
         self.ts_file, self.labels, self.label_names, self.label_coords = \
-            _compute_inverse_solution(raw_filename, sbj_id, sbj_dir,
+            _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
                                       fwd_filename, cov_filename,
                                       is_epoched, events_id,
                                       t_min, t_max, is_evoked,

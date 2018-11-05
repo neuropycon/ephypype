@@ -12,12 +12,12 @@ from mne.report import Report
 from nipype.utils.filemanip import split_filename as split_f
 
 
-def _create_bem_sol(sbj_dir, sbj_id):
+def _create_bem_sol(subjects_dir, sbj_id):
     """Create bem solution."""
 
     report = Report()
 
-    bem_dir = op.join(sbj_dir, sbj_id, 'bem')
+    bem_dir = op.join(subjects_dir, sbj_id, 'bem')
 
     surf_name = 'inner_skull.surf'
     sbj_inner_skull_fname = op.join(bem_dir, sbj_id + '-' + surf_name)
@@ -34,14 +34,14 @@ def _create_bem_sol(sbj_dir, sbj_id):
                 op.isfile(inner_skull_fname)):
             print("{} ---> FILE NOT FOUND!!!---> BEM "
                   "computed".format(inner_skull_fname))
-            make_watershed_bem(sbj_id, sbj_dir, overwrite=True)
+            make_watershed_bem(sbj_id, subjects_dir, overwrite=True)
         else:
             print(("\n*** inner skull {} surface "
                    "exists!!!\n".format(inner_skull_fname)))
 
         # Create a BEM model for a subject
         surfaces = mne.make_bem_model(sbj_id, ico=4, conductivity=[0.3],
-                                      subjects_dir=sbj_dir)
+                                      subjects_dir=subjects_dir)
 
         # Write BEM surfaces to a fiff file
         mne.write_bem_surfaces(model_fname, surfaces)
@@ -53,7 +53,7 @@ def _create_bem_sol(sbj_dir, sbj_id):
         print(('\n*** BEM solution file {} written ***\n'.format(bem_fname)))
 
         # Add BEM figures to a Report
-        report.add_bem_to_section(subject=sbj_id, subjects_dir=sbj_dir)
+        report.add_bem_to_section(subject=sbj_id, subjects_dir=subjects_dir)
         report_filename = op.join(bem_dir, "BEM_report.html")
         print(('\n*** REPORT file {} written ***\n'.format(report_filename)))
         print(report_filename)
@@ -65,16 +65,16 @@ def _create_bem_sol(sbj_dir, sbj_id):
     return bem
 
 
-def _create_src_space(sbj_dir, sbj_id, spacing):
+def _create_src_space(subjects_dir, sbj_id, spacing):
     """Create a source space."""
-    bem_dir = op.join(sbj_dir, sbj_id, 'bem')
+    bem_dir = op.join(subjects_dir, sbj_id, 'bem')
 
     # check if source space exists, if not it creates using mne-python fun
     # we have to create the cortical surface source space even when aseg is
     # True
     src_fname = op.join(bem_dir, '%s-%s-src.fif' % (sbj_id, spacing))
     if not op.isfile(src_fname):
-        src = mne.setup_source_space(sbj_id, subjects_dir=sbj_dir,
+        src = mne.setup_source_space(sbj_id, subjects_dir=subjects_dir,
                                      spacing=spacing.replace('-', ''),
                                      add_dist=False,
                                      n_jobs=2)
@@ -88,16 +88,16 @@ def _create_src_space(sbj_dir, sbj_id, spacing):
     return src
 
 
-def _create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
+def _create_mixed_source_space(subjects_dir, sbj_id, spacing, labels, src,
                                save_mixed_src_space):
     """Create a miwed source space."""
 
-    bem_dir = op.join(sbj_dir, sbj_id, 'bem')
+    bem_dir = op.join(subjects_dir, sbj_id, 'bem')
 
     src_aseg_fname = op.join(bem_dir, '%s-%s-aseg-src.fif' % (sbj_id, spacing))
     if not op.isfile(src_aseg_fname):
 
-        aseg_fname = op.join(sbj_dir, sbj_id, 'mri/aseg.mgz')
+        aseg_fname = op.join(subjects_dir, sbj_id, 'mri/aseg.mgz')
 
         if spacing == 'oct-6':
             pos = 5.0
@@ -111,7 +111,7 @@ def _create_mixed_source_space(sbj_dir, sbj_id, spacing, labels, src,
                                                       pos=pos,
                                                       bem=model_fname,
                                                       volume_label=l,
-                                                      subjects_dir=sbj_dir)
+                                                      subjects_dir=subjects_dir)  # noqa
             src += vol_label
 
         if save_mixed_src_space:
