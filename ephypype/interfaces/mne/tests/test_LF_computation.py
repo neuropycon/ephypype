@@ -6,11 +6,11 @@ import os.path as op
 from ephypype.interfaces.mne.LF_computation import LFComputation
 
 
-data_path = mne.datasets.sample.data_path()
+data_path = mne.datasets.testing.data_path()
 sbj_id = 'sample'
 subjects_dir = op.join(data_path, 'subjects')
-raw_fname = op.join(data_path, 'MEG', sbj_id,
-                    'sample_audvis_raw.fif')
+raw_fname = op.join(data_path, 'MEG', 'sample',
+                    'sample_audvis_trunc_raw.fif')
 
 
 def test_LFComputation():
