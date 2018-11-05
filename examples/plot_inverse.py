@@ -132,7 +132,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ###############################################################################
 # The output is the source reconstruction matrix stored in the workflow
