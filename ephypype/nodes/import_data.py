@@ -9,7 +9,7 @@ from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec, isdefined
 from nipype.interfaces.base import File
 
-from ..import_data import import_tsmat_to_ts, _read_hdf5
+from ..import_data import _import_tsmat_to_ts, _read_hdf5
 from ..import_data import _split_txt, _read_brainvision_vhdr
 from ..import_data import _convert_ds_to_raw_fif
 from ..fif2array import ep2ts, _get_raw_array
@@ -67,7 +67,7 @@ class ImportMat(BaseInterface):
         if not isdefined(good_channels_field_name):
             good_channels_field_name = None
 
-        self.ts_file = import_tsmat_to_ts(
+        self.ts_file = _import_tsmat_to_ts(
             tsmat_file, data_field_name, good_channels_field_name)
 
         return runtime
