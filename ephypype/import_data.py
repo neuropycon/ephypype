@@ -66,7 +66,10 @@ def _read_hdf5(filename, dataset_name='dataset'):
     hf = h5py.File(filename, 'r')
     data = hf[dataset_name][()]
 
-    return data
+    npy_filename = filename.replace('.hdf5', '.npy')
+
+    np.save(npy_filename, data)
+    return npy_filename
 
 
 def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
