@@ -39,7 +39,7 @@ def get_roi(labels_cortex, vertno_left, vertno_right):
 
 # convert the ROI coords to MNI space
 def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
-                              sbj, sbj_dir):
+                              sbj, subjects_dir):
     """Convert the coordinates of the ROIs cortex to MNI space.
 
     Parameters
@@ -55,13 +55,15 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
     for label in labels_cortex:
         if label.hemi == 'lh':
             # from MRI (surface RAS) -> MNI
-            roi_coo_mni = mne.vertex_to_mni(label.vertices, 0, sbj, sbj_dir)
+            roi_coo_mni = mne.vertex_to_mni(label.vertices, 0, sbj,
+                                            subjects_dir)
 
             # get the vertices of the ROI used in the src space (index points
             # to dense src space of FS segmentation)
             this_vertno = np.intersect1d(vertno_left, label.vertices)
         elif label.hemi == 'rh':
-            roi_coo_mni = mne.vertex_to_mni(label.vertices, 1, sbj, sbj_dir)
+            roi_coo_mni = mne.vertex_to_mni(label.vertices, 1, sbj,
+                                            subjects_dir)
 
             this_vertno = np.intersect1d(vertno_right, label.vertices)
 
@@ -85,7 +87,7 @@ def convert_cortex_mri_to_mni(labels_cortex, vertno_left, vertno_right,
 
 
 # ASEG coo head -> MNI
-def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
+def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, subjects_dir):
     """Convert the coordinates of substructures vol from head coordinate system
         to MNI ones to MNI."""
     ROI_aseg_MNI_coords = list()
@@ -98,7 +100,7 @@ def convert_aseg_head_to_mni(labels_aseg, mri_head_t, sbj, sbj_dir):
         print(('sub structure {} \n'.format(label.name)))
         # Convert coo from head coordinate system to MNI ones.
         aseg_coo = label.pos
-        coo_MNI = mne.head_to_mni(aseg_coo, sbj, mri_head_t, sbj_dir)
+        coo_MNI = mne.head_to_mni(aseg_coo, sbj, mri_head_t, subjects_dir)
 
         ROI_aseg_MNI_coords.append(coo_MNI)
         ROI_aseg_name.append(label.name)
@@ -144,7 +146,8 @@ def create_label_files(labels):
     return labels_file, label_names_file, label_coords_file
 
 
-def _create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
+def _create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj,
+                            subjects_dir):
     """Create MNI label files."""
     print(('*** n labels cortex: {} ***'.format(len(labels_cortex))))
     if labels_aseg:
@@ -162,14 +165,14 @@ def _create_MNI_label_files(fwd, labels_cortex, labels_aseg, sbj, sbj_dir):
     vertno_right = fwd['src'][1]['vertno']
 
     roi_cortex = convert_cortex_mri_to_mni(labels_cortex, vertno_left,
-                                           vertno_right, sbj, sbj_dir)
+                                           vertno_right, sbj, subjects_dir)
     roi_cortex_name = roi_cortex['ROI_name']
     roi_cortex_mni_coords = roi_cortex['ROI_MNI_coords']
     roi_cortex_color = roi_cortex['ROI_color']
 
     if labels_aseg:
         roi_aseg = convert_aseg_head_to_mni(labels_aseg, fwd['mri_head_t'],
-                                            sbj, sbj_dir)
+                                            sbj, subjects_dir)
         roi_aseg_mni_coords = roi_aseg['ROI_aseg_MNI_coords']
         roi_aseg_name = roi_aseg['ROI_aseg_name']
         roi_aseg_color = roi_aseg['ROI_aseg_color']

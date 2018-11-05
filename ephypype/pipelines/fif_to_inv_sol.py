@@ -12,7 +12,7 @@ from ..interfaces.mne.Inverse_solution import NoiseCovariance
 from ..interfaces.mne.Inverse_solution import InverseSolution
 
 
-def create_pipeline_source_reconstruction(main_path, sbj_dir,
+def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           pipeline_name='inv_sol_pipeline',
                                           spacing='ico-5',
                                           inv_method='MNE',
@@ -37,7 +37,7 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
 
         main_path : str
             the main path of the workflow
-        sbj_dir : str
+        subjects_dir : str
             Freesurfer directory
         pipeline_name : str (default inv_sol_pipeline)
             name of the pipeline
@@ -98,7 +98,7 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
 
     # Lead Field computation Node
     LF_computation = pe.Node(interface=LFComputation(), name='LF_computation')
-    LF_computation.inputs.sbj_dir = sbj_dir
+    LF_computation.inputs.subjects_dir = subjects_dir
     LF_computation.inputs.spacing = spacing
     LF_computation.inputs.aseg = aseg
     if aseg:
@@ -130,7 +130,7 @@ def create_pipeline_source_reconstruction(main_path, sbj_dir,
     # Inverse Solution Node
     inv_solution = pe.Node(interface=InverseSolution(), name='inv_solution')
 
-    inv_solution.inputs.sbj_dir = sbj_dir
+    inv_solution.inputs.subjects_dir = subjects_dir
     inv_solution.inputs.inv_method = inv_method
     inv_solution.inputs.is_epoched = is_epoched
     inv_solution.inputs.is_fixed = is_fixed

@@ -144,7 +144,7 @@ def compute_cov_identity(raw_filename):
 '''
 
 
-def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
+def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                               cov_fname, is_epoched=False, events_id=[],
                               t_min=None, t_max=None, is_evoked=False,
                               snr=1.0, inv_method='MNE',
@@ -161,7 +161,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
             filename of the raw/epoched data
         sbj_id : str
             subject name
-        sbj_dir : str
+        subjects_dir : str
             Freesurfer directory
         fwd_filename : str
             filename of the forward operator
@@ -338,8 +338,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
 
     if ROIs_mean:
         label_ts, labels_file, label_names_file, label_coords_file = \
-            _compute_mean_ROIs(stc, sbj_id, sbj_dir, parc, inverse_operator,
-                               forward, aseg, is_fixed)
+            _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc,
+                               inverse_operator, forward, aseg, is_fixed)
 
         ts_file = op.abspath(basename + '_ROI_ts.npy')
         np.save(ts_file, label_ts)
@@ -353,11 +353,11 @@ def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
     return ts_file, labels_file, label_names_file, label_coords_file
 
 
-def _compute_mean_ROIs(stc, sbj_id, sbj_dir, parc, inverse_operator, forward,
+def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator, forward,
                        aseg, is_fixed):
         # these coo are in MRI space and we have to convert to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
-                                               subjects_dir=sbj_dir)
+                                               subjects_dir=subjects_dir)
 
     print(('\n*** %d ***\n' % len(labels_cortex)))
 
@@ -382,7 +382,7 @@ def _compute_mean_ROIs(stc, sbj_id, sbj_dir, parc, inverse_operator, forward,
 
     if aseg:
         print(sbj_id)
-        labels_aseg = get_volume_labels_from_src(src, sbj_id, sbj_dir)
+        labels_aseg = get_volume_labels_from_src(src, sbj_id, subjects_dir)
         labels = labels_cortex + labels_aseg
     else:
         labels = labels_cortex
@@ -393,6 +393,6 @@ def _compute_mean_ROIs(stc, sbj_id, sbj_dir, parc, inverse_operator, forward,
 
     labels_file, label_names_file, label_coords_file = \
         _create_MNI_label_files(forward, labels_cortex, labels_aseg,
-                                sbj_id, sbj_dir)
+                                sbj_id, subjects_dir)
 
     return label_ts, labels_file, label_names_file, label_coords_file
