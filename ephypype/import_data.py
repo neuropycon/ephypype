@@ -80,23 +80,6 @@ def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
     _write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
 
 
-def import_hdf5_file(hdf5_file, data_field_name='F'):
-
-    subj_path, basename, ext = split_f(hdf5_file)
-
-    hf = h5py.File(hdf5_file, 'r')
-    raw_data = hf[data_field_name][()]
-
-    print(raw_data)
-    print((raw_data.shape))
-    print((raw_data.__class__))
-
-    ts_file = os.path.abspath(basename + '.npy')
-    np.save(ts_file, raw_data)
-
-    return ts_file
-
-
 def import_mat_to_conmat(mat_file, data_field_name='F',
                          orig_channel_names_file=None,
                          orig_channel_coords_file=None):
@@ -137,8 +120,8 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
         return ts_file
 
 
-def import_tsmat_to_ts(tsmat_file, data_field_name='F',
-                       good_channels_field_name='ChannelFlag'):
+def _import_tsmat_to_ts(tsmat_file, data_field_name='F',
+                        good_channels_field_name='ChannelFlag'):
     """Import tsmat to ts."""
 
     print(tsmat_file)
