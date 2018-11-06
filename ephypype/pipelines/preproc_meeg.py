@@ -36,7 +36,7 @@ def get_ext_file(raw_file):
 # in Elekta data, ICA routine automatically looks for EEG61, EEG62
 
 
-def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg',  # noqa
+def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline',  # noqa
                                  data_type='fif', l_freq=1, h_freq=150,
                                  down_sfreq=300, is_ICA=True, variance=0.95,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,

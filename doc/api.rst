@@ -25,12 +25,12 @@ Nodes (:py:mod:`ephypype.nodes`):
 .. autosummary::
    :toctree: generated/
 
-Utils (:py:mod:`ephypype.utils`):
+Utils (:py:mod:`ephypype.nodes.utils`):
 
-.. currentmodule:: ephypype.utils
+.. currentmodule:: ephypype.nodes.utils
 
 .. autosummary::
    :toctree: generated/
 
    create_iterator
-   create_data_grabber
+   create_datagrabber

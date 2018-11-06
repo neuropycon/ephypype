@@ -1,11 +1,15 @@
 """
+.. _preproc_meeg:
+
 ======================================
 Using ephypype to preprocess your data
 ======================================
 The preprocessing pipeline runs the ICA algorithm for an
 automatic removal of eyes and heart related artefacts.
 A report is automatically generated and can be used to correct
-and/or fine-tune the correction in each subject
+and/or fine-tune the correction in each subject.
+
+The **input** data can be in **ds** or **fif** format.
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -47,7 +51,7 @@ reject = dict(mag=5e-12, grad=5000e-13)
 # nipype the directory in which to store the outputs.
 
 # workflow directory within the `base_dir`
-preproc_pipeline_name = 'preprocessing_pipeline'
+preproc_pipeline_name = 'preprocessing_workflow'
 
 main_workflow = pe.Workflow(name=preproc_pipeline_name)
 main_workflow.base_dir = data_path
@@ -70,10 +74,24 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. To instantiate the preprocessing node, we import it
-# and pass our parameters to it.
+# nodes we created. The preprocessing pipeline is implemented by the function
+# :func:`ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg`, thus to
+# instantiate this pipeline node, we import it and pass our
+# parameters to it.
+# The preprocessing pipeline contains two nodes that are based on the MNE
+# Python functions performing the decomposition of the MEG/EEG signal using an
+# |ICA| algorithm.
+#
+# .. |ICA| raw:: html
+#
+#    <a href="http://martinos.org/mne/stable/auto_tutorials/plot_artifacts_correction_ica.html" target="_blank">ICA</a>
+#
+# In particular, the two nodes are:
+#
+# * :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
+# * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
-from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg # noqa
+from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
 preproc_workflow = create_pipeline_preproc_meeg(
     data_path, l_freq=l_freq, h_freq=h_freq, down_sfreq=down_sfreq,
     variance=variance, ECG_ch_name=ECG_ch_name, EoG_ch_name=EoG_ch_name,
@@ -105,8 +123,8 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread # noqa
-import matplotlib.pyplot as plt # noqa
+from scipy.misc import imread  # noqa
+import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
@@ -119,3 +137,12 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
 main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+
+###############################################################################
+# The output is the preprocessed data stored in the workflow directory
+# defined by `base_dir`.
+#
+# It’s a good rule to inspect the report file saved in the same dir to look at
+# the excluded ICA components. It is also possible to include and exclude more
+# components by using either a jupyter notebook or the preprocessing pipeline
+# with different flag parameters.
