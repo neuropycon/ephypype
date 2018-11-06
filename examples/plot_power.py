@@ -77,7 +77,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # Ephypype creates for us a pipeline which can be connected to these
 # nodes we created. The power pipeline in the **sensor space** is implemented
 # by the function :func:`ephypype.pipelines.power.create_pipeline_power`, thus
-# to instantiate this power pipeline node, we import it and pass our parameters
+# to instantiate this pipeline node, we import it and pass our parameters
 # to it.
 # The power pipeline contains only one node :class:`ephypype.interfaces.mne.power.Power`
 # that wraps the MNE Python functions  |welch|, |multitaper| computing the PSD
@@ -91,7 +91,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 #
 #    <a href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" target="_blank">mne.time_frequency.psd_multitaper</a>
 
-from ephypype.pipelines.power import create_pipeline_power # noqa
+from ephypype.pipelines.power import create_pipeline_power  # noqa
 power_workflow = create_pipeline_power(data_path, freq_bands,
                                        fmin=fmin, fmax=fmax,
                                        method=power_method,
@@ -122,8 +122,8 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread # noqa
-import matplotlib.pyplot as plt # noqa
+from scipy.misc import imread  # noqa
+import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, power_analysis_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
