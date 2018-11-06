@@ -40,7 +40,7 @@ For each possible workflow the **input data** can be specified in three differen
 
 .. _lego:
 
-.. figure::  img/all_input_doors.png
+.. figure::  img/tiny_all_input_doors.png
    :width: 50%
    :align:   center
 
