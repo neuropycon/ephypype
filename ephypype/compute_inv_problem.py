@@ -289,9 +289,6 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                 print(('stc dim ' + str(stc.shape)))
                 print('***')
 
-#                if not aseg:
-#                    stc.save(stc_file)
-
         else:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
@@ -331,10 +328,6 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         for i in range(len(stc)):
             stc_data.append(stc[i].data)
 
-            # TODO -> if memory error happens...
-#            stc_file = op.abspath(basename + '_stc_' + str(i) + '.hdf5')
-#            write_hdf5(stc_file, stc[i].data, dataset_name='stc_data')
-
         write_hdf5(stc_file, stc_data, dataset_name='stc_data')
 
     if ROIs_mean:
@@ -356,7 +349,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
 def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
                        forward, aseg, is_fixed):
-        # these coo are in MRI space and we have to convert to MNI space
+    # these coo are in MRI space and we have to convert them to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
                                                subjects_dir=subjects_dir)
 
