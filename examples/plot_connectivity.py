@@ -4,8 +4,10 @@
 ======================================================
 Using ephypype to compute connectivity on sensor space
 ======================================================
-The connectivity pipeline perform connectivity analysis in
+The connectivity pipeline performs connectivity analysis in
 sensor or source space.
+
+The **input** data should be a time series matrix in **npy** or **mat** format.
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -68,8 +70,27 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. To instantiate the connectivity node, we import it
-# and pass our parameters to it.
+# nodes we created. The connectivity pipeline is implemented by the function
+# :func:`ephypype.pipelines.ts_to_conmat.create_pipeline_time_series_to_spectral_connectivity`,
+# thus to instantiate this connectivity pipeline node, we import it and pass
+# our parameters to it.
+# The connectivity pipeline contains two nodes and is based on the MNE Python
+# functions computing frequency- and time-frequency-domain connectivity
+# measures. A list of the different connectivity measures implemented by MNE
+# can be found in the description of |here| function.
+#
+# .. |here| raw:: html
+#
+#   <a href="http://martinos.org/mne/stable/generated/mne.connectivity.spectral_connectivity.html?highlight=spectral_connectivity#mne.connectivity.spectral_connectivity" target="_blank">spectral_connectivity function</a>
+#
+# In particular, the two nodes are:
+#
+# * :class:`ephypype.interfaces.mne.spectral.SpectralConn` computes spectral connectivity in a given frequency bands
+# * :class:`ephypype.interfaces.mne.spectral.PlotSpectralConn` plot connectivity matrix using the |plot_connectivity_circle| function
+#
+# .. |plot_connectivity_circle| raw:: html
+#
+#   <a href="http://martinos.org/mne/stable/generated/mne.viz.plot_connectivity_circle.html#mne.viz.plot_connectivity_circle" target="_blank">spectral_connectivity function</a>
 
 from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity # noqa
 spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
@@ -124,8 +145,8 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread # noqa
-import matplotlib.pyplot as plt # noqa
+from scipy.misc import imread  # noqa
+import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, correl_analysis_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
@@ -138,3 +159,13 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
 main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+
+###############################################################################
+# The output is the **spectral connectivty matrix in .npy format** stored
+# in the workflow directory defined by `base_dir`.
+# We can use the pipelines defined in |graphpype| package
+# to perform graph analysis on the computed connectivity matrix.
+#
+# .. |graphpype| raw:: html
+#
+#   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
