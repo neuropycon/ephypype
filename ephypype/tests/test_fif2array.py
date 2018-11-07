@@ -1,6 +1,7 @@
 """Test fif2ts."""
 
 import mne
+import pytest
 import os
 import numpy as np
 
@@ -12,11 +13,9 @@ raw_fname = os.path.join(data_path, 'MEG', 'sample',
                          'sample_audvis_trunc_raw.fif')
 
 
+@pytest.mark.usefixtures("change_wd")
 def test_ep2ts():
     """Test data conversion."""
-
-    change_wd()  # noqa
-
     # Read data from file:
     raw = mne.io.read_raw_fif(raw_fname)
 

@@ -1,5 +1,6 @@
 """Test import_data."""
 import mne
+import pytest
 import os.path as op
 import numpy as np
 import scipy.io as sio
@@ -18,11 +19,9 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
                     'sample_audvis_trunc_raw.fif')
 
 
-def test_ds2fif_node():
+@pytest.mark.usefixtures("change_wd")
+def test_ds2fif_node(change_wd):
     """Test ConvertDs2Fif Node."""
-
-    change_wd()  # noqa
-
     ds2fif_node = pe.Node(interface=ConvertDs2Fif(), name='ds2fif')
     ds2fif_node.inputs.ds_file = ds_fname
 
