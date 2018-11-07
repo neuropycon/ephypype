@@ -6,7 +6,6 @@ import scipy.io as sio
 
 import nipype.pipeline.engine as pe
 
-from ephypype.aux_tools import _change_wd
 from ephypype.nodes.import_data import ConvertDs2Fif, ImportHdf5, ImportMat
 from ephypype.import_data import _write_hdf5
 
@@ -22,7 +21,7 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
 def test_ds2fif_node():
     """Test ConvertDs2Fif Node."""
 
-    _change_wd()
+    change_wd()  # noqa
 
     ds2fif_node = pe.Node(interface=ConvertDs2Fif(), name='ds2fif')
     ds2fif_node.inputs.ds_file = ds_fname

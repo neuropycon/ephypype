@@ -5,7 +5,6 @@ import os.path as op
 import nipype.pipeline.engine as pe
 from ephypype.interfaces.mne.preproc import CreateEp
 from ephypype.preproc import _preprocess_fif, _compute_ica
-from ephypype.aux_tools import _change_wd
 
 
 import matplotlib
@@ -18,7 +17,7 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
 
 def test_epoching_node():
     """Test epoching node"""
-    _change_wd()
+    change_wd()  # noqa
     epoch_node = pe.Node(interface=CreateEp(), name='epoching')
     epoch_node.inputs.ep_length = 1  # split in 1 second epochs
 
@@ -28,7 +27,7 @@ def test_epoching_node():
 
 def test_preprocess_fif():
     """Test filter and downsample raw data."""
-    _change_wd()
+    change_wd()  # noqa
 
     l_freq = 0.1
     h_freq = 40
@@ -48,7 +47,7 @@ def test_preprocess_fif():
 
 def test_compute_ica():
     """Test compute ICA on raw data."""
-    _change_wd()
+    change_wd()  # noqa
 
     ecg_ch_name = 'ECG'
     eog_ch_name = 'HEOG, VEOG'
