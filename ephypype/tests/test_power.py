@@ -2,7 +2,6 @@
 import mne
 import os.path as op
 from ephypype.power import _compute_and_save_psd
-from ephypype.aux_tools import _change_wd
 
 
 import matplotlib
@@ -16,7 +15,7 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
 def test_power():
     """Test computing and saving PSD."""
 
-    _change_wd()
+    _change_wd()  # noqa
 
     fmin = 0.1
     fmax = 300
