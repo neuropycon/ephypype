@@ -8,7 +8,7 @@ import scipy.io as sio
 import nipype.pipeline.engine as pe
 
 from ephypype.nodes.import_data import ConvertDs2Fif, ImportHdf5, ImportMat
-from ephypype.import_data import _write_hdf5
+from ephypype.import_data import write_hdf5
 
 from numpy.testing import assert_array_almost_equal
 
@@ -41,7 +41,7 @@ def test_import_hdf5_node():
     data = raw.get_data(picks=picks, start=0, stop=600)
 
     hdf5_filename = raw_fname.replace('.fif', '.hdf5')
-    _write_hdf5(hdf5_filename, data, dataset_name='data')
+    write_hdf5(hdf5_filename, data, dataset_name='data')
 
     # test ImportHdf5 Node
     hdf5_node = pe.Node(interface=ImportHdf5(), name='import_hdf5')

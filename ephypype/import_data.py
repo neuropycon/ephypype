@@ -27,7 +27,7 @@ def _convert_ds_to_raw_fif(ds_file):
     return raw_fif_file
 
 
-def _write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
+def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
     """
     Create hdf5 file
 
@@ -77,7 +77,7 @@ def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
     data = np.load(filename)
     print('converting to hdf5')
 
-    _write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
+    write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
 
 
 def import_mat_to_conmat(mat_file, data_field_name='F',
