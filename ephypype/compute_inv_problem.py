@@ -19,7 +19,7 @@ from nipype.utils.filemanip import split_filename as split_f
 
 from .preproc import _create_reject_dict
 from .source_space import _create_MNI_label_files
-from .import_data import _write_hdf5
+from .import_data import write_hdf5
 
 
 def _compute_noise_cov(cov_fname, raw):
@@ -307,7 +307,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, sbj_dir, fwd_filename,
 #            stc_file = op.abspath(basename + '_stc_' + str(i) + '.hdf5')
 #            write_hdf5(stc_file, stc[i].data, dataset_name='stc_data')
 
-        _write_hdf5(stc_file, stc_data, dataset_name='stc_data')
+        write_hdf5(stc_file, stc_data, dataset_name='stc_data')
 
     if ROIs_mean:
         label_ts, labels_file, label_names_file, label_coords_file = \

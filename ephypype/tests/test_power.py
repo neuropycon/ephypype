@@ -16,7 +16,6 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
 @pytest.mark.usefixtures("change_wd")
 def test_power():
     """Test computing and saving PSD."""
-
     fmin = 0.1
     fmax = 300
 
