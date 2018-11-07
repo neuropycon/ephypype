@@ -7,7 +7,6 @@
 
 from contextlib import contextmanager
 import os
-import tempfile
 
 
 # Define a context manager to suppress stdout and stderr.
@@ -77,10 +76,3 @@ def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
         return freq_bands[freq_band_names.index(freq_band_name)]
     return None
-
-
-def _change_wd():
-    """Create temporary directory"""
-
-    tmp_dir = tempfile.mkdtemp()
-    os.chdir(tmp_dir)
