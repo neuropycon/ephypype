@@ -26,7 +26,6 @@ def test_epoching_node():
     epoch_node.run()
 
 
-@pytest.mark.usefixtures("change_wd")
 def test_preprocess_fif():
     """Test filter and downsample raw data."""
 
@@ -46,7 +45,6 @@ def test_preprocess_fif():
                     down_sfreq=down_sfreq)
 
 
-@pytest.mark.usefixtures("change_wd")
 def test_compute_ica():
     """Test compute ICA on raw data."""
 
