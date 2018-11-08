@@ -6,6 +6,7 @@ crash*
 *.egg-info/*
 .coverage
 .coverage.*
+.pytest*
 
 # Sphinx documentation
 doc/_build/
