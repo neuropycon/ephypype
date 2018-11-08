@@ -69,8 +69,9 @@ def compute_noise_cov(fname_template, raw_filename):
 
 
 def _get_cov_fname(cov_fname_template):
-    "Check if a cov matrix already exists. If it exists return the cov \
-    matrix file name otherwhise returns."
+    "Check if a covariance matrix already exists."
+
+    # if a cov matrix exists returns its file name
     for cov_fname in glob.glob(cov_fname_template):
         if cov_fname.rfind('cov.fif') > -1:
             return cov_fname
@@ -79,9 +80,10 @@ def _get_cov_fname(cov_fname_template):
 
 
 def _get_er_data(er_fname_template):
-    "Check if empty room data exists in order to compute noise cov matrix. If \
-    it exists returns both the raw instance and cov filename where we'll save \
-    the cov matrix."
+    "Check if empty room data exists in order to compute noise cov matrix."
+
+    # if empty room data exists returns both the raw instance of the empty room
+    # data and the cov filename where we'll save the cov matrix.
     for er_fname in glob.glob(er_fname_template):
         print(('*** {} \n'.format(er_fname)))
 
