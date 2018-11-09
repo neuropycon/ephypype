@@ -139,5 +139,5 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 # directory defined by `base_dir`. This matrix can be used as input of
 # the Connectivity pipeline.
 #
-# .. warning:: Before to use this pipeline, we need for each subject a template
-#   MRI or the individual MRI data.
+# .. warning:: To use this pipeline, we need a cortical segmentation of MRI
+#   data, that could be provided by Freesurfer
