@@ -48,7 +48,7 @@ subjects_dir = op.join(data_path, 'fsf')
 # nipype the directory in which to store the outputs.
 
 # workflow directory within the `base_dir`
-src_reconstruction_pipeline_name = 'source_reconstruction' + \
+src_reconstruction_pipeline_name = 'source_reconstruction_' + \
     inv_method + '_' + parc.replace('.', '')
 
 main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)
