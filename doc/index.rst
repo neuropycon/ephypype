@@ -67,8 +67,8 @@ The ephypype package provides the following **pipelines**:
 
 * the :ref:`preprocessing pipeline <preproc_meeg>` runs the ICA algorithm for an automatic removal of eyes and heart related artefacts
 * the :ref:`power pipeline <power>` computes the power spectral density (PSD) on sensor space
-* the :ref:`source_reconstruction` computes the inverse solution starting from raw/epoched data
-* the :ref:`spectral_connectivity <spectral_connectivity>` perform connectivity analysis in sensor or source space
+* the :ref:`inverse solution pipeline <source_reconstruction>` computes the inverse solution starting from raw/epoched data
+* the :ref:`connectivity pipeline <spectral_connectivity>` perform connectivity analysis in sensor or source space
 
 
 .. comment:
