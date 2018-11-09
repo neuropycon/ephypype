@@ -6,7 +6,6 @@
 
 import mne
 import glob
-import locale
 import os.path as op
 import numpy as np
 
