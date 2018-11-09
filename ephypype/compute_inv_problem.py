@@ -92,11 +92,7 @@ def _get_er_data(er_fname_template):
             cov_fname = er_fname.replace('.fif', '-raw-cov.fif')
         elif er_fname.rfind('.ds') > -1:
             cov_fname = er_fname.replace('.ds', '-raw-cov.fif')
-            try:
-                er_raw = read_raw_ctf(er_fname)
-            except RuntimeError:
-                locale.setlocale(locale.LC_ALL, "en_US.utf8")
-                er_raw = read_raw_ctf(er_fname)
+            er_raw = read_raw_ctf(er_fname)
 
         return er_raw, cov_fname
 
