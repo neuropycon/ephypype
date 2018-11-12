@@ -96,7 +96,7 @@ from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruct
 inv_sol_workflow = create_pipeline_source_reconstruction(
     data_path, sbj_dir, spacing=spacing, inv_method=inv_method, parc=parc,
     noise_cov_fname=noise_cov_fname, aseg=aseg, aseg_labels=aseg_labels,
-    ROIs_mean=False, all_src_space=True)
+    ROIs_mean=True)
 
 ###############################################################################
 # We then connect the nodes two at a time. First, we connect the two outputs
