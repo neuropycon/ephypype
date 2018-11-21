@@ -36,7 +36,7 @@ jobs:
                 destination: html
             - add_ssh_keys:
                 fingerprints:
-                    - "7e:45:3f:93:f7:a5:b2:15:45:ed:e2:4d:68:0d:4c:ab"    
+                    - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
             - deploy:
                 name: github pages deployment
                 command: |
