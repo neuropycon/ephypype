@@ -24,6 +24,8 @@ from ephypype.nodes import get_frequency_band
 from ephypype.datasets import fetch_omega_dataset
 from ephypype.gather.gather_figures import get_connectivity_figures
 
+from mne import Report
+
 
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
@@ -173,6 +175,12 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 # Get figures and create a Report
 
 report_filename = op.join(main_workflow.base_dir, 'all_connectivity_figs.html')
-get_connectivity_figures(main_workflow.base_dir, main_workflow.name,
-                         subject_ids, freq_band_names, session_ids,
-                         report_filename=report_filename)
+conn_figs, captions = get_connectivity_figures(main_workflow.base_dir,
+                                               main_workflow.name,
+                                               subject_ids, freq_band_names,
+                                               session_ids)
+
+report = Report()
+report.add_images_to_section(conn_figs, captions)
+
+report.save(report_filename, open_browser=False, overwrite=True)
