@@ -34,7 +34,7 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
         raise Exception('nonexistent method for psd computation')
 
     psds_fname = _save_psd(data_fname, psds, freqs)
-    # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
+    _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
     return psds_fname
 

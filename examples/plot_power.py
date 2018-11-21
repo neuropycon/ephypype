@@ -22,7 +22,7 @@ import nipype.pipeline.engine as pe
 import ephypype
 from ephypype.nodes import create_iterator, create_datagrabber
 from ephypype.datasets import fetch_omega_dataset
-
+from ephypype.gather.gather_figures import get_psd_figures
 
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
@@ -137,3 +137,17 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #   :func:`ephypype.pipelines.power.create_pipeline_power_src_space`
 #   and its Node :class:`ephypype.interfaces.mne.power.Power` compute the PSD
 #   by the welch function of the scipy package.
+
+###############################################################################
+# Get figures and create a Report
+
+from mne import Report  # noqa
+report_filename = op.join(main_workflow.base_dir, 'psds.html')
+conn_figs, captions = get_psd_figures(main_workflow.base_dir,
+                                      main_workflow.name,
+                                      subject_ids, session_ids)
+
+report = Report()
+report.add_images_to_section(conn_figs, captions)
+
+report.save(report_filename, open_browser=False, overwrite=True)
