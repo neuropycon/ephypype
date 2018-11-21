@@ -202,7 +202,7 @@ class PlotSpectralConnOutputSpec(TraitedSpec):
     """Output specification."""
 
     plot_conmat_file = File(
-        exists=True, desc="plot spectral connectivity matrix in .eps format")
+        exists=True, desc="plot spectral connectivity matrix in .png format")
 
 
 class PlotSpectralConn(BaseInterface):
@@ -226,7 +226,7 @@ class PlotSpectralConn(BaseInterface):
     Outputs
     -------
     plot_conmat_file : str
-        Name of .eps file with plot spectral connectivity matrix
+        Name of .png file with plot spectral connectivity matrix
     """
 
     input_spec = PlotSpectralConnInputSpec
