@@ -191,7 +191,8 @@ sphinx_gallery_conf = {
         'mne': 'http://mne-tools.github.io/stable/',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
-        'nipype': 'https://nipype.readthedocs.io/en/latest/api'
+        'nipype': 'https://nipype.readthedocs.io/en/latest/api',
+        'ephypype': 'http://neuropycon.github.io/ephypype/',
     }
 }
 
