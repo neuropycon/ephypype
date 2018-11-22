@@ -49,7 +49,7 @@ def create_datagrabber(data_path, template_path, template_args):
         Input filename string (relative to base directory)
         along with string formatters (only %s allowed for now) and
         wildcard characters.
-        E.g., '*%s/%s/meg/%s*rest*raw.fif'
+        E.g., '\\*%s/%s/meg/%s\\*rest\\*raw.fif'
     template_args : list of str
         The arguments for the templates. Can be either 'subject_id'
         or 'session_id'

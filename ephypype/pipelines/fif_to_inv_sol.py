@@ -28,66 +28,62 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           ROIs_mean=True,
                                           save_mixed_src_space=False,
                                           is_fixed=False):
-    """
-    Description:
+    """Source reconstruction pipeline.
 
-        Source reconstruction pipeline
+    Parameters
+    ----------
+    main_path : str
+        the main path of the workflow
+    subjects_dir : str
+        Freesurfer directory
+    pipeline_name : str (default inv_sol_pipeline)
+        name of the pipeline
+    spacing : str (default 'ico-5')
+        spacing to use to setup a source space
+    inv_method : str (default MNE)
+        the inverse method to use; possible choices: MNE, dSPM, sLORETA
+    is_epoched : bool (default False)
+        if True and events_id = None the input data are epoch data
+        in the format -epo.fif
+        if True and events_id is not None, the raw data are epoched
+        according to events_id and t_min and t_max values
+    is_fixed : bool (default False)
+        if True we use fixed orientation, otherwise the loose orientation
+        is applied
+    events_id: dict (default None)
+        the dict of events
+    t_min, t_max: int (defualt None)
+        define the time interval in which to epoch the raw data
+    is_evoked: bool (default False)
+        if True the raw data will be averaged according to the events
+        contained in the dict events_id
+    parc: str (default 'aparc')
+        the parcellation defining the ROIs atlas in the source space
+    aseg: bool (defualt False)
+        if True a mixed source space will be created and the sub cortical
+        regions defined in aseg_labels will be added to the source space
+    aseg_labels: list (default [])
+        list of substructures we want to include in the mixed source space
+    noise_cov_fname: str (default None)
+        template for the path to either the noise covariance matrix file or
+        the empty room data
+    all_src_space: bool
+        if True we compute the inverse for all points of the source space
+    ROIs_mean: bool
+        if True we compute the mean of estimated time series on ROIs
+    save_mixed_src_space: bool (defualt False)
+        if True the mixed src space will be saved in the FS folder
 
-    Inputs:
+    Inputs (inputnode)
+    ------------------
+    raw : str
+        path to raw data in fif format
+    sbj_id : str
+        subject id
 
-        main_path : str
-            the main path of the workflow
-        subjects_dir : str
-            Freesurfer directory
-        pipeline_name : str (default inv_sol_pipeline)
-            name of the pipeline
-        spacing : str (default 'ico-5')
-            spacing to use to setup a source space
-        inv_method : str (default MNE)
-            the inverse method to use; possible choices: MNE, dSPM, sLORETA
-        is_epoched : bool (default False)
-            if True and events_id = None the input data are epoch data
-            in the format -epo.fif
-            if True and events_id is not None, the raw data are epoched
-            according to events_id and t_min and t_max values
-        is_fixed : bool (default False)
-            if True we use fixed orientation, otherwise the loose orientation
-            is applied
-        events_id: dict (default None)
-            the dict of events
-        t_min, t_max: int (defualt None)
-            define the time interval in which to epoch the raw data
-        is_evoked: bool (default False)
-            if True the raw data will be averaged according to the events
-            contained in the dict events_id
-        parc: str (default 'aparc')
-            the parcellation defining the ROIs atlas in the source space
-        aseg: bool (defualt False)
-            if True a mixed source space will be created and the sub cortical
-            regions defined in aseg_labels will be added to the source space
-        aseg_labels: list (default [])
-            list of substructures we want to include in the mixed source space
-        noise_cov_fname: str (default None)
-            template for the path to either the noise covariance matrix file or
-            the empty room data
-        all_src_space: bool
-            if True we compute the inverse for all points of the source space
-        ROIs_mean: bool
-            if True we compute the mean of estimated time series on ROIs
-        save_mixed_src_space: bool (defualt False)
-            if True the mixed src space will be saved in the FS folder
-
-    Inputs (inputnode):
-
-        raw : str
-            path to raw data in fif format
-        sbj_id : str
-            subject id
-
-    Outputs:
-
-        pipeline : instance of Workflow
-
+    Returns
+    -------
+    pipeline : instance of Workflow
     """
 
     pipeline = pe.Workflow(name=pipeline_name)
