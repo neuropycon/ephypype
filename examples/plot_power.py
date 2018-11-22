@@ -1,9 +1,9 @@
 """
 .. _power:
 
-=============================================
-Using ephypype to compute PSD on sensor space
-=============================================
+===========================
+Compute PSD on sensor space
+===========================
 The power pipeline computes the power spectral density (PSD)
 on epochs or raw data on **sensor space** or **source space**.
 The **mean PSD** for each selected frequency band is also
@@ -80,16 +80,9 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # to instantiate this pipeline node, we import it and pass our parameters
 # to it.
 # The power pipeline contains only one node :class:`ephypype.interfaces.mne.power.Power`
-# that wraps the MNE Python functions  |welch|, |multitaper| computing the PSD
-# using Welch's method and multitapers respectively.
-#
-# .. |welch| raw:: html
-#
-#    <a href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_welch.html#mne.time_frequency.psd_welch" target="_blank">mne.time_frequency.psd_welch</a>
-#
-# .. |multitaper| raw:: html
-#
-#    <a href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" target="_blank">mne.time_frequency.psd_multitaper</a>
+# that wraps the MNE-Python functions :func:`mne.time_frequency.psd_welch` and
+# :func:`mne.time_frequency.psd_multitaper` for computing the PSD using 
+# Welch's method and multitapers respectively.
 
 from ephypype.pipelines.power import create_pipeline_power  # noqa
 power_workflow = create_pipeline_power(data_path, freq_bands,

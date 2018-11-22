@@ -1,9 +1,9 @@
 """
 .. _source_reconstruction:
 
-==========================================
-Using ephypype to compute inverse solution
-==========================================
+========================
+Compute inverse solution
+========================
 The inverse solution pipeline performs source reconstruction starting either
 from raw/epoched data (*.fif* format) specified by the user or from the output
 of the Preprocessing pipeline (cleaned raw data).

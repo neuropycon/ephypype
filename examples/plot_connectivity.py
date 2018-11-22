@@ -1,9 +1,9 @@
 """
 .. _spectral_connectivity:
 
-======================================================
-Using ephypype to compute connectivity on sensor space
-======================================================
+====================================
+Compute connectivity on sensor space
+====================================
 The connectivity pipeline performs connectivity analysis in
 sensor or source space.
 
@@ -77,11 +77,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # The connectivity pipeline contains two nodes and is based on the MNE Python
 # functions computing frequency- and time-frequency-domain connectivity
 # measures. A list of the different connectivity measures implemented by MNE
-# can be found in the description of |here| function.
-#
-# .. |here| raw:: html
-#
-#   <a href="http://martinos.org/mne/stable/generated/mne.connectivity.spectral_connectivity.html?highlight=spectral_connectivity#mne.connectivity.spectral_connectivity" target="_blank">spectral_connectivity function</a>
+# can be found in the description of :func:`mne.viz.plot_connectivity_circle`
 #
 # In particular, the two nodes are:
 #
@@ -168,4 +164,5 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 #
 # .. |graphpype| raw:: html
 #
+
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>

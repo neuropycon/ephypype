@@ -1,9 +1,9 @@
 """
 .. _preproc_meeg:
 
-======================================
-Using ephypype to preprocess your data
-======================================
+===================
+Preprocess MEG data
+===================
 The preprocessing pipeline runs the ICA algorithm for an
 automatic removal of eyes and heart related artefacts.
 A report is automatically generated and can be used to correct

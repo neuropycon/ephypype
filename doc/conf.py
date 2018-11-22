@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
@@ -180,6 +181,10 @@ texinfo_documents = [
      author, 'ephypype', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+intersphinx_mapping = {'python': ('https://docs.python.org/', None),
+                       'mne': ('http://martinos.org/mne/stable/', None)
+                       }
 
 sphinx_gallery_conf = {
     'examples_dirs': '../examples',
