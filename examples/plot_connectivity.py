@@ -22,7 +22,6 @@ import ephypype
 from ephypype.nodes import create_iterator, create_datagrabber
 from ephypype.nodes import get_frequency_band
 from ephypype.datasets import fetch_omega_dataset
-from ephypype.gather.gather_figures import get_connectivity_figures
 
 
 ###############################################################################
@@ -172,6 +171,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 ###############################################################################
 # Get figures and create a Report
 
+from ephypype.gather.gather_figures import get_connectivity_figures  # noqa
 from mne import Report  # noqa
 report_filename = op.join(main_workflow.base_dir, 'all_connectivity_figs.html')
 conn_figs, captions = get_connectivity_figures(main_workflow.base_dir,
