@@ -84,10 +84,50 @@ The ephypype package provides the following **pipelines**:
        spectral_connectivity
 
 
+.. _ephy_install:
+
 Installation
-============
+=============
 
-.. toctree::
-   :maxdepth: 1
+Requirements
+^^^^^^^^^^^^
 
-   includeme
+ephypype works with **python3**
+
+* mne>0.14
+* nipype
+* h5py
+
+These dependencies are automatically installed during ephypype installation.
+
+We also recommend to install MNE python by following the |installation instructions|.
+
+.. |installation instructions| raw:: html
+
+   <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python installation instructions</a>
+
+
+Install ephypype
+^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   pip install https://api.github.com/repos/neuropycon/ephypype/zipball/master
+    
+
+Freesurfer
+^^^^^^^^^^
+
+1. Download Freesurfer software:
+
+https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall
+
+2. Follow the Installation instructions
+
+https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall
+
+.. comment:
+    .. toctree::
+        :maxdepth: 1
+
+        includeme

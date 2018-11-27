@@ -31,6 +31,7 @@ jobs:
                 command: |
                     cd doc
                     make html
+                no_output_timeout: 15m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
