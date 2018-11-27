@@ -96,7 +96,6 @@ ephypype works with **python3**
 
 * mne>0.14
 * nipype
-* configparser
 * h5py
 
 These dependencies are automatically installed during ephypype installation.
@@ -105,7 +104,7 @@ We also recommend to install MNE python by following the |installation instructi
 
 .. |installation instructions| raw:: html
 
-   <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python</a>
+   <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python installation instructions</a>
 
 
 Install ephypype
@@ -113,10 +112,7 @@ Install ephypype
 
 .. code-block:: bash
 
-    git clone https://github.com/neuropycon/ephypype.git
-    cd ephypype
-    pip install .
-    cd ..
+   pip install https://api.github.com/repos/neuropycon/ephypype/zipball/master
     
 
 Freesurfer
