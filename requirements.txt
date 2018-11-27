@@ -1,0 +1,3 @@
+mne>=0.14
+nipype
+h5py

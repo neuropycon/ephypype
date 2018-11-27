@@ -15,7 +15,7 @@ with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
 if VERSION is None:
     raise RuntimeError('Could not determine version')
 
-descr = """Python package providing pipelines for electrophy (EEG/MEG) data within nipype framework."""
+descr = """Python package providing pipelines for electrophysiological (EEG/MEG) data within nipype framework."""
 
 DISTNAME = 'ephypype'
 DESCRIPTION = descr
