@@ -15,22 +15,33 @@ with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
 if VERSION is None:
     raise RuntimeError('Could not determine version')
 
+descr = """Python package providing pipelines for electrophy (EEG/MEG) data within nipype framework."""
+
+DISTNAME = 'ephypype'
+DESCRIPTION = descr
+MAINTAINER = 'Annalisa Pascarella'
+MAINTAINER_EMAIL = 'a.pascarella@iac.cnr.it'
+URL = 'https://neuropycon.github.io/ephypype/'
+LICENSE = 'BSD (3-clause)'
+DOWNLOAD_URL = 'https://github.com/neuropycon/ephypype'
+
+
 if __name__ == "__main__":
     setup(
-        name='ephypype',
+        name=DISTNAME,
+        maintainer=MAINTAINER,
+        maintainer_email=MAINTAINER_EMAIL,
         version=VERSION,
         packages=find_packages(),
         author=['David Meunier',
                 'Annalisa Pascarella',
                 'Dmitrii Altukhov'],
-        description='Definition of functions used\
-                     as Node for electrophy (EEG/MEG)\
-                     pipelines within nipype framework',
-        lisence='BSD 3',
-        install_requires=['mne>=0.14',
-                          'nipype',
-                          'configparser',
-                          'h5py'],
+        description=
+        license=LICENSE,
+        url=URL,
+        download_url=DOWNLOAD_URL,
+        long_description=open('README.rst').read(),
+
     entry_points='''
         [console_scripts]
         neuropycon=ephypype.commands.neuropycon:cli
