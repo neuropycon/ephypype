@@ -18,6 +18,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           inv_method='MNE',
                                           is_epoched=False,
                                           events_id=None,
+                                          events_file=None,
                                           t_min=None, t_max=None,
                                           is_evoked=False,
                                           parc='aparc',
@@ -133,6 +134,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
 
     if is_epoched and events_id is not None:
         inv_solution.inputs.events_id = events_id
+        inv_solution.inputs.events_file = events_file
         inv_solution.inputs.t_min = t_min
         inv_solution.inputs.t_max = t_max
 

@@ -143,7 +143,8 @@ def compute_cov_identity(raw_filename):
 
 
 def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
-                              cov_fname, is_epoched=False, events_id=[],
+                              cov_fname, is_epoched=False, events_id=None,
+                              events_file=None,
                               t_min=None, t_max=None, is_evoked=False,
                               snr=1.0, inv_method='MNE',
                               parc='aparc', aseg=False, aseg_labels=[],
@@ -208,10 +209,10 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     """
 
-    try:
-        traits.undefined(events_id)
-    except NameError:
-        events_id = None
+#    try:
+#        traits.undefined(events_id)
+#    except NameError:
+#        events_id = None
 
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
     if is_epoched and events_id is None:
@@ -263,13 +264,17 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
     if is_epoched and events_id is not None:
-        events = mne.find_events(raw)
+        
+        if events_file:
+            events = mne.read_events(events_file)
+        else:
+            events = mne.find_events(raw)
         picks = mne.pick_types(info, meg=True, eog=True, exclude='bads')
         reject = _create_reject_dict(info)
 
         if is_evoked:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
-                                picks=picks, baseline=(None, 0), reject=reject)
+                                picks=picks, baseline=(t_min, 0), reject=reject)
             evoked = [epochs[k].average() for k in events_id]
             snr = 3.0
             lambda2 = 1.0 / snr ** 2
@@ -289,6 +294,9 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         else:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
+            epochs.drop_bad()
+            np.write('good_events.npy', epochs.events)  # TODO
+            
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
 
