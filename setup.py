@@ -36,7 +36,7 @@ if __name__ == "__main__":
         author=['David Meunier',
                 'Annalisa Pascarella',
                 'Dmitrii Altukhov'],
-        description=
+        description=DESCRIPTION,
         license=LICENSE,
         url=URL,
         download_url=DOWNLOAD_URL,

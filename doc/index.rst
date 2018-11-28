@@ -112,7 +112,7 @@ Install ephypype
 
 .. code-block:: bash
 
-   $ pip install -r https://api.github.com/repos/neuropycon/ephypype/zipball/master
+   $ pip install -r requirements.txt https://api.github.com/repos/neuropycon/ephypype/zipball/master
     
 
 Freesurfer
