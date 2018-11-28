@@ -111,6 +111,11 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     except NameError:
         events_id = None
 
+    try:
+        events_file
+    except NameError:
+        events_file = None
+
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
