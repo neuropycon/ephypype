@@ -89,9 +89,6 @@ The ephypype package provides the following **pipelines**:
 Installation
 =============
 
-Requirements
-^^^^^^^^^^^^
-
 ephypype works with **python3**
 
 * mne>0.14
@@ -112,7 +109,7 @@ Install ephypype
 
 .. code-block:: bash
 
-   pip install https://api.github.com/repos/neuropycon/ephypype/zipball/master
+   $ pip install -r requirements.txt https://api.github.com/repos/neuropycon/ephypype/zipball/master
     
 
 Freesurfer

@@ -24,6 +24,7 @@ jobs:
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
+                  pip install h5py
                   conda install graphviz pydot
                   python setup.py develop
             - run:
