@@ -89,9 +89,6 @@ The ephypype package provides the following **pipelines**:
 Installation
 =============
 
-Requirements
-^^^^^^^^^^^^
-
 ephypype works with **python3**
 
 * mne>0.14
