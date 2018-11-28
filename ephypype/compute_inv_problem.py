@@ -264,7 +264,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
     if is_epoched and events_id is not None:
-        
+
         if events_file:
             events = mne.read_events(events_file)
         else:
@@ -274,7 +274,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
         if is_evoked:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
-                                picks=picks, baseline=(t_min, 0), reject=reject)
+                                picks=picks, baseline=(t_min, 0),
+                                reject=reject)
             evoked = [epochs[k].average() for k in events_id]
             snr = 3.0
             lambda2 = 1.0 / snr ** 2
@@ -296,7 +297,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                                 picks=picks, baseline=(None, 0), reject=reject)
             epochs.drop_bad()
             np.write('good_events.npy', epochs.events)  # TODO
-            
+
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
 

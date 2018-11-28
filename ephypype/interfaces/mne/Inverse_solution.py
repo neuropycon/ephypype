@@ -38,7 +38,7 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     events_id = traits.Dict(None, desc='the id of all events to consider.',
                             mandatory=False)
     events_file = traits.File(exists=True, desc='events filename',
-                               mandatory=True)
+                              mandatory=True)
     t_min = traits.Float(None, desc='start time before event', mandatory=False)
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
     is_evoked = traits.Bool(desc='if true if we want to analyze evoked data',
