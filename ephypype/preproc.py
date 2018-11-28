@@ -12,18 +12,16 @@ import os.path as op
 
 from mne import pick_types, read_epochs, Epochs, read_events, find_events
 from mne.io import read_raw_fif
-from mne.preprocessing import ICA, read_ica
+from mne.preprocessing import ICA
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
 from mne.time_frequency import psd_multitaper
-from nipype.utils.filemanip import split_filename as split_f
-
-from .fif2array import _get_raw_array
+from nipype.utils.filemanip import split_filename
 
 
 def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     """Filter and downsample data."""
-    _, basename, ext = split_f(fif_file)
+    _, basename, ext = split_filename(fif_file)
 
     raw = read_raw_fif(fif_file, preload=True)
     filt_str, down_str = '', ''
@@ -45,7 +43,7 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
 
 def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution."""
-    subj_path, basename, ext = split_f(fif_file)
+    subj_path, basename, ext = split_filename(fif_file)
     raw = read_raw_fif(fif_file, preload=True)
 
     # select sensors
@@ -133,13 +131,20 @@ def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
 def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
                                        is_sensor_space):
     """Preprocess ICA fif to ts."""
+    import os
+    from nipype.utils.filemanip import split_filename as split_f
+    from mne.io import read_raw_fif
+    from mne.preprocessing import read_ica
+    from ephypype.fif2array import _get_raw_array
+
     subj_path, basename, ext = split_f(fif_file)
     (data_path, sbj_name) = os.path.split(subj_path)
 
-    print(('*** SBJ %s' % subject_id + '***'))
+    print('*** SBJ {} ***'.format(subject_id))
 
     # Read raw
     current_dir = os.getcwd()
+    print('*************************** {}'.format(current_dir))
     if os.path.exists(os.path.join(current_dir, '../ica',
                                    basename + '_ica' + ext)):
         raw_ica_file = os.path.join(
@@ -152,8 +157,12 @@ def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
                                      basename + '_filt_dsamp_ica' + ext)):
         raw_ica_file = os.path.join(
             current_dir, '../ica', basename + '_filt_dsamp_ica' + ext)
+    else:
+        # it will work only for pytest
+        current_dir = subj_path
+        raw_ica_file = fif_file
 
-    print(('*** raw_ica_file %s' % raw_ica_file + '***'))
+    print('*** raw_ica_file {} ***'.format(raw_ica_file))
     raw = read_raw_fif(raw_ica_file, preload=True)
 
     # load ICA
@@ -170,17 +179,20 @@ def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
                                      "fif")):
         ica_sol_file = os.path.join(
             current_dir, '../ica', basename + '_filt_dsamp_ica_solution.fif')
+    else:
+        # it will work only for pytest
+        ica_sol_file = os.path.join(current_dir, basename + '_solution.fif')
 
     if os.path.exists(ica_sol_file) is False:
-        print(('$$$ Warning, no %s found' % ica_sol_file))
+        print('$$$ Warning, no {} found'.format(ica_sol_file))
         sys.exit()
     else:
         ica = read_ica(ica_sol_file)
 
-    print(('\n *** ica.exclude before set components= ', ica.exclude))
+    print('\n *** ica.exclude before set components= {}'.format(ica.exclude))
     if subject_id in n_comp_exclude:
-        print(('*** ICA to be excluded for sbj %s ' % subject_id))
-        print((' ' + str(n_comp_exclude[subject_id]) + '***'))
+        print('*** ICA to be excluded for sbj {}'.format(subject_id))
+        print(' {} ***'.format(n_comp_exclude[subject_id]))
         session_dict = n_comp_exclude[subject_id]
         session_names = list(session_dict.keys())
 
@@ -189,17 +201,17 @@ def _preprocess_set_ica_comp_fif_to_ts(fif_file, subject_id, n_comp_exclude,
             componentes = session_dict[s]
 
         if len(componentes) == 0:
-            print('\n no ICA to be excluded \n')
+            print('!!! no ICA to be excluded !!! \n')
         else:
-            print(('\n *** ICA to be excluded for session %s ' % s +
-                   ' ' + str(componentes) + ' *** \n'))
+            print('\n *** ICA to be excluded for session {}'.format(s))
+            print(' {} ***'.format(componentes))
 
     ica.exclude = componentes
 
-    print(('\n *** ica.exclude after set components = ', ica.exclude))
+    print(('*** ica.exclude after set components = {}'.format(ica.exclude)))
 
     # apply ICA to raw data
-    new_raw_ica_file = os.path.join(subj_path, basename + '_ica-raw.fif')
+    new_raw_ica_file = os.path.abspath(basename + '_ica' + ext)
     raw_ica = ica.apply(raw)
 
     raw_ica.save(new_raw_ica_file, overwrite=True)
@@ -417,7 +429,7 @@ def _create_epochs(fif_file, ep_length):
                     preload=True, picks=picks, proj=False,
                     flat=flat, reject=reject, baseline=None)
 
-    _, base, ext = split_f(fif_file)
+    _, base, ext = split_filename(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)
     epochs.save(savename)
     return savename
@@ -433,7 +445,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
                        stim=True, exclude='bads')
 
-    data_path, base, ext = split_f(fif_file)
+    data_path, base, ext = split_filename(fif_file)
 
     if events_file:
         events_fpath = glob.glob(op.join(data_path, events_file))

@@ -5,6 +5,8 @@
 
 import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface, Function
+from nipype.utils.filemanip import split_filename
+
 from ..interfaces.mne.preproc import PreprocFif
 from ..interfaces.mne.preproc import CompIca
 from ..nodes.import_data import ConvertDs2Fif
@@ -13,9 +15,7 @@ from ..preproc import _preprocess_set_ica_comp_fif_to_ts
 
 def get_ext_file(raw_file):
     """Get file extension."""
-    from nipype.utils.filemanip import split_filename as split_f
-
-    subj_path, basename, ext = split_f(raw_file)
+    subj_path, basename, ext = split_filename(raw_file)
 
     print(raw_file)
     is_ds = False
