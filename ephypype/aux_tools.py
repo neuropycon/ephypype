@@ -83,6 +83,6 @@ def parse_string(string, token):
     for t in token:
         if string.find(t) > -1:
             ind = string.find(t)
-            return_string = string[ind:ind+len(t)]
+            return_string = string[ind:ind + len(t)]
 
     return return_string
