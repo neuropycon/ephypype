@@ -16,7 +16,10 @@ The input data shoud be in **fif** or **numpy** format.
 #          Mainak Jas <mainakjas@gmail.com>
 # License: BSD (3-clause)
 
+# sphinx_gallery_thumbnail_number = 2
+
 import os.path as op
+import numpy as np
 import nipype.pipeline.engine as pe
 
 import ephypype
@@ -113,7 +116,6 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread  # noqa
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, power_analysis_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
@@ -133,22 +135,45 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 # **mean PSD in .npy format** stored in the workflow directory defined by
 # `base_dir`
 #
-# .. note:: The power pipeline in the **source space** is implemented by the function
-#   :func:`ephypype.pipelines.power.create_pipeline_power_src_space`
+# .. note:: The power pipeline in the **source space** is implemented by the
+#   function :func:`ephypype.pipelines.power.create_pipeline_power_src_space`
 #   and its Node :class:`ephypype.interfaces.mne.power.Power` compute the PSD
 #   by the welch function of the scipy package.
 
-###############################################################################
-# Get figures and create a Report
+##############################################################################
+from ephypype.gather.gather_results import get_psd_files  # noqa
+from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
+from visbrain.utils import normalize  # noqa
+from nipype.utils.filemanip import split_filename  # noqa
 
-from ephypype.gather.gather_figures import get_psd_figures  # noqa
-from mne import Report  # noqa
-report_filename = op.join(main_workflow.base_dir, 'psds.html')
-conn_figs, captions = get_psd_figures(main_workflow.base_dir,
-                                      main_workflow.name,
-                                      subject_ids, session_ids)
+psd_files, channel_coo_files = get_psd_files(main_workflow.base_dir,
+                                             main_workflow.name,
+                                             subject_ids, session_ids)
 
-report = Report()
-report.add_images_to_section(conn_figs, captions)
+sc = SceneObj(size=(1800, 500), bgcolor=(.1, .1, .1))
+for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
+    path_xyz, basename, ext = split_filename(psd_file)
 
-report.save(report_filename, open_browser=False, overwrite=True)
+    arch = np.load(psd_file)
+    psds, freqs = arch['psds'], arch['freqs']
+    xyz = np.genfromtxt(channel_coo_file, dtype=float)
+    freq_bands = np.asarray(freq_bands)
+    clim = (psds.min(), psds.max())
+
+    # Find indices of frequencies :
+    idx_fplt = np.abs((freqs.reshape(1, 1, -1) -
+                       freq_bands[..., np.newaxis])).argmin(2)
+    psdf = np.array([psds[:, k[0]:k[1]].mean(1) for k in idx_fplt])
+    radius = normalize(np.c_[psdf.min(1), psdf.max(1)], 5, 25).astype(float)
+
+    for num, (f, n, d, r) in enumerate(zip(freq_bands, freq_band_names,
+                                           psdf, radius)):
+        s_obj = SourceObj('s', xyz, data=d, radius_min=r[0], radius_max=r[1])
+        s_obj.color_sources(data=d, cmap='cool', clim=clim)
+        sc.add_to_subplot(s_obj, col=num, title=str(f) + ' - ' + n,
+                          title_color='white', rotate='top', zoom=.6)
+    cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=10,
+                       cbtxtsz=15)
+    sc.add_to_subplot(cbar, col=len(freq_bands), width_max=200)
+
+sc.preview()

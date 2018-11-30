@@ -10,11 +10,12 @@ of the Preprocessing pipeline (cleaned raw data).
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
-
 # License: BSD (3-clause)
 
-import os.path as op
+# sphinx_gallery_thumbnail_number = 2
 
+import os.path as op
+import numpy as np
 import nipype.pipeline.engine as pe
 
 import ephypype
@@ -145,3 +146,57 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #
 # .. warning:: To use this pipeline, we need a cortical segmentation of MRI
 #   data, that could be provided by Freesurfer
+
+##############################################################################
+import pickle  # noqa
+from ephypype.gather.gather_results import get_inverse_files  # noqa
+from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa
+
+time_series_files, label_files = get_inverse_files(main_workflow.base_dir,
+                                                   main_workflow.name,
+                                                   subject_ids, session_ids)
+
+time_pts = 30
+
+sc = SceneObj(size=(800, 500))
+lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
+rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
+for inverse_file, label_file in zip(time_series_files, label_files):
+    # Load files :
+    with open(label_file, 'rb') as f:
+        ar = pickle.load(f)
+        names, xyz, colors = ar['ROI_names'], ar['ROI_coords'], ar['ROI_colors']  # noqa
+    ts = np.squeeze(np.load(inverse_file))
+    cen = np.array([k.mean(0) for k in xyz])
+
+    # Get the data of the left / right hemisphere :
+    lh_data, rh_data = ts[::2, time_pts], ts[1::2, time_pts]
+    clim = (ts[:, time_pts].min(), ts[:, time_pts].max())
+    roi_names = [k[0:-3] for k in np.array(names)[::2]]
+
+    # Left hemisphere outside :
+    b_obj_li = BrainObj('white', translucent=False, hemisphere='left')
+    b_obj_li.parcellize(lh_file, select=roi_names, data=lh_data, cmap='viridis')  # noqa
+    sc.add_to_subplot(b_obj_li, rotate='left')
+
+    # Left hemisphere inside :
+    b_obj_lo = BrainObj('white',  translucent=False, hemisphere='left')
+    b_obj_lo.parcellize(lh_file, select=roi_names, data=lh_data, cmap='viridis')  # noqa
+    sc.add_to_subplot(b_obj_lo, col=1, rotate='right')
+
+    # Right hemisphere outside :
+    b_obj_ro = BrainObj('white',  translucent=False, hemisphere='right')
+    b_obj_ro.parcellize(rh_file, select=roi_names, data=rh_data, cmap='viridis')  # noqa
+    sc.add_to_subplot(b_obj_ro, row=1, rotate='right')
+
+    # Right hemisphere inside :
+    b_obj_ri = BrainObj('white',  translucent=False, hemisphere='right')
+    b_obj_ri.parcellize(rh_file, select=roi_names, data=rh_data, cmap='viridis')  # noqa
+    sc.add_to_subplot(b_obj_ri, row=1, col=1, rotate='left')
+
+    # Add the colorbar :
+    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20,
+                       cblabel='Intensity')
+    sc.add_to_subplot(cbar, col=2, row_span=2)
+
+sc.preview()
