@@ -176,10 +176,6 @@ from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noq
 th = .8
 with_text = False
 
-path = '/home/pasca/Tools/python/packages/neuropycon/ephypype/examples/' + \
-       'sample_BIDS_omega/spectral_connectivity_coh/ts_to_conmat/' + \
-       '_freq_band_name_beta_session_id_ses-0001_subject_id_sub-0003/spectral'
-
 connectivity_matrices, channel_coo_files, channel_name_files = \
     get_connectivity_matrices(main_workflow.base_dir, main_workflow.name,
                               subject_ids, session_ids, freq_band_names,
