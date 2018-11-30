@@ -69,6 +69,7 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
     labels = File(exists=False, desc='labels file in pickle format')
     label_names = File(exists=False, desc='labels name file in txt format')
     label_coords = File(exists=False, desc='labels coords file in txt format')
+    good_events_file = File(exists=False, desc='good events filename')
 
 
 class InverseSolution(BaseInterface):
@@ -157,7 +158,8 @@ class InverseSolution(BaseInterface):
         all_src_space = self.inputs.all_src_space
         ROIs_mean = self.inputs.ROIs_mean
 
-        self.ts_file, self.labels, self.label_names, self.label_coords = \
+        self.ts_file, self.labels, self.label_names, \
+            self.label_coords, self.good_events_file = \
             _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
                                       fwd_filename, cov_filename,
                                       is_epoched, events_id, events_file,
@@ -176,6 +178,7 @@ class InverseSolution(BaseInterface):
         outputs['labels'] = self.labels
         outputs['label_names'] = self.label_names
         outputs['label_coords'] = self.label_coords
+        outputs['good_events_file'] = self.good_events_file
 
         return outputs
 

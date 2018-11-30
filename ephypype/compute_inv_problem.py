@@ -208,12 +208,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-
-#    try:
-#        traits.undefined(events_id)
-#    except NameError:
-#        events_id = None
-
+    good_events_file = None
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
     if is_epoched and events_id is None:
         epochs = read_epochs(raw_filename)
@@ -296,7 +291,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
             epochs.drop_bad()
-            np.write('good_events.npy', epochs.events)  # TODO
+            good_events_file = op.abspath('good_events.txt')
+            np.savetxt(good_events_file, epochs.events)
 
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
@@ -350,7 +346,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         label_names_file = ''
         label_coords_file = ''
 
-    return ts_file, labels_file, label_names_file, label_coords_file
+    return ts_file, labels_file, label_names_file, \
+        label_coords_file, good_events_file
 
 
 def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
