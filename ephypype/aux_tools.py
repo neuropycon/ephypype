@@ -86,5 +86,3 @@ def parse_string(string, token):
             return_string = string[ind:ind+len(t)]
 
     return return_string
-
-    
