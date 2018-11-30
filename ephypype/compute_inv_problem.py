@@ -208,7 +208,6 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-    good_events_file = None
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
     if is_epoched and events_id is None:
         epochs = read_epochs(raw_filename)
@@ -258,6 +257,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
+    good_events_file = ''
     if is_epoched and events_id is not None:
 
         if events_file:
