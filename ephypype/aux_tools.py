@@ -76,3 +76,15 @@ def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
         return freq_bands[freq_band_names.index(freq_band_name)]
     return None
+
+
+def parse_string(string, token):
+    """ """
+    for t in token:
+        if string.find(t) > -1:
+            ind = string.find(t)
+            return_string = string[ind:ind+len(t)]
+
+    return return_string
+
+    
