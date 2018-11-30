@@ -26,7 +26,11 @@ jobs:
                   pip install nipype
                   pip install h5py
                   conda install graphviz pydot
+                  git clone https://github.com/EtienneCmb/visbrain.git visbrain/
+                  cd visbrain/
                   python setup.py develop
+                  git fetch origin feature/mpl_preview
+                  git checkout feature/mpl_preview
             - run:
                 name: Build the documentation
                 command: |
