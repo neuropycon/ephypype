@@ -5,10 +5,12 @@
 import os
 import numpy as np
 
-from nipype.utils.filemanip import split_filename as split_f
+from nipype.utils.filemanip import split_filename
 from mne import read_epochs
 from mne.io import read_raw_fif
 from scipy.signal import welch
+
+from .fif2array import _get_raw_array
 
 
 def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
@@ -32,6 +34,8 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
         psds, freqs = psd_multitaper(epochs_meg, fmin=fmin, fmax=fmax)
     else:
         raise Exception('nonexistent method for psd computation')
+
+    _get_raw_array(data_fname, save_data=False)
 
     psds_fname = _save_psd(data_fname, psds, freqs)
     _save_psd_img(data_fname, psds, freqs, is_epoched, method)
@@ -99,7 +103,7 @@ def _compute_mean_band_psd(psds_file, freq_bands):
 
 
 def _save_m_px(psds_file, m_px):
-    data_path, basename, ext = split_f(psds_file)
+    data_path, basename, ext = split_filename(psds_file)
 
     psds_mean_fname = basename + '-mean_band.npy'
     psds_mean_fname = os.path.abspath(psds_mean_fname)
@@ -110,7 +114,7 @@ def _save_m_px(psds_file, m_px):
 
 
 def _save_psd(data_fname, psds, freqs):
-    data_path, basename, ext = split_f(data_fname)
+    data_path, basename, ext = split_filename(data_fname)
 
     psds_fname = basename + '-psds.npz'
     psds_fname = os.path.abspath(psds_fname)
@@ -124,7 +128,7 @@ def _save_psd(data_fname, psds, freqs):
 def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
     import matplotlib.pyplot as plt
 
-    data_path, basename, ext = split_f(data_fname)
+    data_path, basename, ext = split_filename(data_fname)
     psds_img_fname = basename + '-psds.png'
     psds_img_fname = os.path.abspath(psds_img_fname)
 
