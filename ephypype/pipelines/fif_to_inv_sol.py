@@ -106,16 +106,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
 
     # Noise Covariance Matrix Node
-    try:
-        events_id
-    except NameError:
-        events_id = None
-
-    try:
-        events_file
-    except NameError:
-        events_file = None
-
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
