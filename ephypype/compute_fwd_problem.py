@@ -101,6 +101,8 @@ def _create_mixed_source_space(subjects_dir, sbj_id, spacing, labels, src,
 
         if spacing == 'oct-6':
             pos = 5.0
+        elif spacing == 'oct-5':
+            pos = 7.0
         elif spacing == 'ico-5':
             pos = 3.0
 
