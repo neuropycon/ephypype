@@ -36,28 +36,6 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
     psds_fname = _save_psd(data_fname, psds, freqs)
     # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
-    '''
-    # save PSD as img
-    f, ax = plt.subplots()
-    psds = 10 * np.log10(psds)
-    if is_epoched:
-        psds_mean = psds.mean(0).mean(0)
-        psds_std = psds.mean(0).std(0)
-    else:
-        psds_mean = psds.mean(0)
-        psds_std = psds.std(0)
-
-    ax.plot(freqs, psds_mean, color='g')
-    ax.fill_between(freqs, psds_mean - psds_std, psds_mean + psds_std,
-                    color='g', alpha=.5)
-    ax.set(title='{} PSD'.format(method), xlabel='Frequency',
-           ylabel='Power Spectral Density (dB)')
-
-    psds_img_fname = base + '-psds.png'
-    psds_img_fname = os.path.abspath(psds_img_fname)
-    plt.savefig(psds_img_fname)
-    '''
-
     return psds_fname
 
 
@@ -72,11 +50,16 @@ def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
         src_data = np.squeeze(src_data)
     print(('src data dim: {}'.format(src_data.shape)))
 
-    n_freqs = n_fft // 2 + 1
+    if n_fft > src_data.shape[1]:
+        nperseg = src_data.shape[1]
+    else:
+        nperseg = n_fft
+
+    n_freqs = nperseg // 2 + 1
     psds = np.empty([src_data.shape[0], n_freqs])
     for i in range(src_data.shape[0]):
         freqs, Pxx = welch(src_data[i, :], fs=sfreq, window='hamming',
-                           nperseg=n_fft, noverlap=n_overlap, nfft=None)
+                           nperseg=nperseg, noverlap=n_overlap, nfft=None)
         psds[i, :] = Pxx
 
     psds_fname = _save_psd(data_fname, psds, freqs)
