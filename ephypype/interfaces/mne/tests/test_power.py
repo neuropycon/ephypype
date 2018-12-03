@@ -12,8 +12,9 @@ import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
 
 data_path = mne.datasets.testing.data_path()
-raw_fname = op.join(data_path, 'MEG', 'sample',
-                    'sample_audvis_trunc_raw.fif')
+sbj = 'sample'
+raw_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc_raw.fif')
+stc_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc-meg-lh.stc')
 
 
 @pytest.mark.usefixtures("change_wd")
@@ -92,3 +93,24 @@ def test_power_band():
 
     assert len(picks) == mean_psd.shape[0]
     assert len(band) == mean_psd.shape[1]
+
+
+def test_power_src_space():
+    """Test computing mean PSD on specified band."""
+    fmin = 0.1
+    fmax = 40
+
+    # read source estimate and save in .npy
+    stc = mne.read_source_estimate(stc_fname)
+    data_fname = op.abspath('test_data.npy')
+    np.save(data_fname, stc.data)
+
+    power_node = pe.Node(interface=Power(), name='psd_src_space')
+
+    power_node.inputs.data_file = data_fname
+    power_node.inputs.fmin = fmin
+    power_node.inputs.fmax = fmax
+    power_node.inputs.sfreq = 300.
+    power_node.inputs.is_sensor_space = False
+
+    power_node.run()
