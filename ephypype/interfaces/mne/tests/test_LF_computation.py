@@ -20,6 +20,8 @@ def test_LFComputation():
     lf_node.inputs.sbj_id = 'sample'
     lf_node.inputs.subjects_dir = subjects_dir
     lf_node.inputs.raw_fname = raw_fname
-    lf_node.inputs.spacing = 'oct-6'
+    lf_node.inputs.spacing = 'oct-5'
 
     lf_node.run()
+
+    assert lf_node.result.outputs.fwd_filename
