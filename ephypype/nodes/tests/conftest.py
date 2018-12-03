@@ -3,7 +3,7 @@ import tempfile
 import os
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def change_wd():
     """Create temporary directory"""
 
