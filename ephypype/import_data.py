@@ -87,7 +87,11 @@ def _import_mat_to_conmat(mat_file, data_field_name='F',
     subj_path, basename, ext = split_f(mat_file)
 
     mat = loadmat(mat_file)
-    print((mat[data_field_name].shape))
+
+    if data_field_name not in mat.keys():
+        data_field_name = basename.split('_')[0]
+        assert data_field_name in mat.keys(), \
+            ("error, could not find {}".format(data_field_name))
 
     raw_data = np.array(mat[data_field_name], dtype='f')
     print(raw_data)
@@ -97,20 +101,20 @@ def _import_mat_to_conmat(mat_file, data_field_name='F',
     np.save(ts_file, raw_data)
 
     if orig_channel_names_file is not None:
+        correct_channel_names = np.loadtxt(orig_channel_names_file)
+        print(correct_channel_names)
+
+        # save channel names
+        channel_names_file = os.path.abspath('correct_channel_names.txt')
+        np.savetxt(channel_names_file, correct_channel_names, fmt='%s')
+
+    if orig_channel_coords_file is not None:
         correct_channel_coords = np.loadtxt(orig_channel_coords_file)
         print(correct_channel_coords)
 
         # save channel coords
         channel_coords_file = os.path.abspath('correct_channel_coords.txt')
         np.savetxt(channel_coords_file, correct_channel_coords, fmt='%s')
-
-    if orig_channel_coords_file is not None:
-        correct_channel_names = np.loadtxt(orig_channel_coords_file)
-        print(correct_channel_names)
-
-        # save channel names
-        channel_names_file = os.path.abspath('correct_channel_names.txt')
-        np.savetxt(channel_names_file, correct_channel_names, fmt='%s')
 
     return ts_file
 
