@@ -101,12 +101,13 @@ def _import_mat_to_conmat(mat_file, data_field_name='F',
     np.save(ts_file, raw_data)
 
     if orig_channel_names_file is not None:
-        correct_channel_names = np.loadtxt(orig_channel_names_file)
-        print(correct_channel_names)
+
+        elec_names = [line.strip() for line in open(orig_channel_names_file)]
+        print(elec_names)
 
         # save channel names
         channel_names_file = os.path.abspath('correct_channel_names.txt')
-        np.savetxt(channel_names_file, correct_channel_names, fmt='%s')
+        np.savetxt(channel_names_file, elec_names, fmt='%s')
 
     if orig_channel_coords_file is not None:
         correct_channel_coords = np.loadtxt(orig_channel_coords_file)
