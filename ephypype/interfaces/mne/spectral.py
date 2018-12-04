@@ -276,12 +276,8 @@ class PlotSpectralConn(BaseInterface):
                 print('\n ********************** \n')
                 print((len(label_names)))
                 print('\n ********************** \n')
-                # 0/0
-                # read colors
-                # node_colors = [label.color for label in labels]
 
                 # reorder the labels based on their location in the left hemi
-                # label_names = [label.name for label in labels]
                 lh_labels = [
                     name for name in label_names if name.endswith('lh')]
                 rh_labels = [
@@ -291,13 +287,11 @@ class PlotSpectralConn(BaseInterface):
                 label_ypos_lh = list()
                 for name in lh_labels:
                     idx = label_names.index(name)
-                    # ypos = np.mean(labels[idx].pos[:, 1])
                     ypos = np.mean(label_coords[idx][:, 1])
                     label_ypos_lh.append(ypos)
 
                 try:
                     idx = label_names.index('Brain-Stem')
-                    # ypos = np.mean(labels[idx].pos[:, 1])
                     ypos = np.mean(label_coords[idx][:, 1])
                     lh_labels.append('Brain-Stem')
                     label_ypos_lh.append(ypos)
