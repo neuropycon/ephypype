@@ -1,11 +1,13 @@
-"""Get pipeline figures."""
+"""Get pipeline results and figures."""
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 #
 # License: BSD (3-clause)
 
 import glob
+import re
 import os.path as op
+from nipype.utils.filemanip import split_filename
 
 
 def get_connectivity_matrices(workflow_path, workflow_name, subject_id,
@@ -72,6 +74,61 @@ def get_connectivity_matrices(workflow_path, workflow_name, subject_id,
                     channel_name_files.append(channel_file)
 
     return conn_matrices, channel_coo_files, channel_name_files
+
+
+def get_connectivity_figures(workflow_path, workflow_name, subject_id,
+                             session_id, freq_band_names):
+    """
+    Get circular graphs of connectivity matrices.
+
+    Inputs
+       workflow_path : str
+           Path of connectivity workflow
+       workflow_name : str
+           Name of the connectivity workflow
+       subject_id : list of str
+           List of subjects id
+       session_id : list of str
+           List of sessions
+       freq_band_names : list of str
+           The frequency band names
+
+    Outputs
+        conn_figures : list of str
+            List of path of circularity graphs
+        captions : list of str
+            List of captions
+
+    """
+    connectivity_pipeline = 'ts_to_conmat'
+    plot_spectral_node = 'plot_spectral'
+
+    conn_figures = list()
+    captions = list()
+
+    subjects_folder = \
+        '_freq_band_name_{band}_session_id_{ses}_subject_id_{sbj}'
+    node_path = op.join(workflow_path, workflow_name, connectivity_pipeline,
+                        subjects_folder, plot_spectral_node)
+
+    for sbj in subject_id:
+        for ses in session_id:
+            for band in freq_band_names:
+                fig_path = node_path.format(band=band, ses=ses,
+                                            sbj=sbj)
+
+                figures = glob.glob(op.join(fig_path, '*.png'))
+                if figures:
+                    for fig in figures:
+                        conn_figures.append(fig)
+
+                        data_path, basename, ext = split_filename(fig)
+
+                        caption = 'Subject: {} Session: {} Frequency band: {}'.format(sbj, ses, band)  # noqa
+                        captions.append(caption + ' epoch:' +
+                                        re.findall('\\d+', basename)[0])
+
+    return conn_figures, captions
 
 
 def get_psd_files(workflow_path, workflow_name, subject_id, session_id):
@@ -162,3 +219,48 @@ def get_inverse_files(workflow_path, workflow_name, subject_id, session_id):
                 label_files.append(label_file[0])
 
     return time_series_files, label_files
+
+
+def get_ica_solution(workflow_path, workflow_name, subject_id, session_id):
+    """
+    Get ica solution.
+
+    Parameters
+    ----------
+       workflow_path : str
+           Path of connectivity workflow
+       workflow_name : str
+           Name of the connectivity workflow
+       subject_id : list of str
+           List of subjects id
+       session_id : list of str
+           List of sessions
+
+    Returns
+    -------
+        ica_solution_file : list of str
+            List of path of source reconstruction files
+        label_files : list of str
+            List of path of labels pickle file
+    """
+    ica_pipeline = 'preproc_meeg_pipeline'
+    ica_node = 'ica'
+
+    ica_files = list()
+    raw_files = list()
+
+    subjects_folder = '_session_id_{ses}_subject_id_{sbj}'
+    node_path = op.join(workflow_path, workflow_name, ica_pipeline,
+                        subjects_folder, ica_node)
+
+    for sbj in subject_id:
+        for ses in session_id:
+            file_path = node_path.format(ses=ses, sbj=sbj)
+            ica_file = glob.glob(op.join(file_path, '*ica_solution.fif'))
+            raw_file = glob.glob(op.join(file_path, '*ica.fif'))
+            if ica_file:
+                ica_files.append(ica_file[0])
+            if raw_file:
+                raw_files.append(raw_file[0])
+
+    return ica_files, raw_files
