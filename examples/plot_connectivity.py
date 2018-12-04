@@ -155,8 +155,8 @@ plt.axis('off')
 
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
-# Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+# Run workflow locally on 1 CPU
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ###############################################################################
 # The output is the **spectral connectivty matrix in .npy format** stored
