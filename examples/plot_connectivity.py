@@ -204,8 +204,8 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
                       text=names, text_size=10, text_color='white',
                       text_translate=(0., 0., 0.))
     s_obj.color_sources(data=radius, cmap='cool')
-    cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=12,
-                       cblabel='Connectivity', cbtxtsz=17)
+    cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=15,
+                       cblabel='Connectivity', cbtxtsz=20)
     band = parse_string(connect_file, freq_band_names)
     title = 'Connectivity on {} band'.format(band)
     sc.add_to_subplot(c_obj, title=title, title_size=14, title_bold=True,

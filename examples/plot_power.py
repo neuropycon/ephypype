@@ -172,8 +172,8 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
         s_obj.color_sources(data=d, cmap='cool', clim=clim)
         sc.add_to_subplot(s_obj, col=num, title=str(f) + ' - ' + n,
                           title_color='white', rotate='top', zoom=.6)
-    cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=10,
-                       cbtxtsz=15)
+    cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=15,
+                       cbtxtsz=20)
     sc.add_to_subplot(cbar, col=len(freq_bands), width_max=200)
 
 sc.preview()

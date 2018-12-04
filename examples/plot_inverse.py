@@ -158,7 +158,7 @@ time_series_files, label_files = get_inverse_files(main_workflow.base_dir,
 
 time_pts = 30
 
-sc = SceneObj(size=(800, 500))
+sc = SceneObj(size=(800, 500), bgcolor=(.1, .1, .1))
 lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
 rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
 for inverse_file, label_file in zip(time_series_files, label_files):
@@ -195,7 +195,7 @@ for inverse_file, label_file in zip(time_series_files, label_files):
     sc.add_to_subplot(b_obj_ri, row=1, col=1, rotate='left')
 
     # Add the colorbar :
-    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20,
+    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20, txtcolor='white',
                        cblabel='Intensity')
     sc.add_to_subplot(cbar, col=2, row_span=2)
 
