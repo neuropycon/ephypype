@@ -1,16 +1,21 @@
-"""Power functions.
+"""Power functions."""
 
-Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
-"""
+# Author: Dmitrii Altukhov <dm-altukhov@ya.ru>
+#         Annalisa Pascarella <a.pascarella@iac.cnr.it>
+import os
+import numpy as np
+
+from nipype.utils.filemanip import split_filename as split_f
+from mne import read_epochs
+from mne.io import read_raw_fif
+from scipy.signal import welch
 
 
-def compute_and_save_psd(data_fname, fmin=0, fmax=120,
-                         method='welch', is_epoched=False,
-                         n_fft=256, n_overlap=0,
-                         picks=None, proj=False, n_jobs=1, verbose=None):
+def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
+                          method='welch', is_epoched=False,
+                          n_fft=256, n_overlap=0,
+                          picks=None, proj=False, n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
-    from mne import read_epochs
-    from mne.io import read_raw_fif
 
     if is_epoched:
         epochs = read_epochs(data_fname)
@@ -28,16 +33,6 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     else:
         raise Exception('nonexistent method for psd computation')
 
-    '''
-    path, name = os.path.split(data_fname)
-    base, ext = os.path.splitext(name)
-    psds_fname = base + '-psds.npz'
-    # freqs_fname = base + '-freqs.npy'
-    psds_fname = os.path.abspath(psds_fname)
-    # print(psds.shape)
-    np.savez(psds_fname, psds=psds, freqs=freqs)
-    # np.save(freqs_file, freqs)
-    '''
     psds_fname = _save_psd(data_fname, psds, freqs)
     # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
@@ -66,27 +61,17 @@ def compute_and_save_psd(data_fname, fmin=0, fmax=120,
     return psds_fname
 
 
-def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
-                             is_epoched=False,
-                             n_fft=256, n_overlap=0,
-                             n_jobs=1, verbose=None):
+def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
+                              is_epoched=False,
+                              n_fft=256, n_overlap=0,
+                              n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
-    import numpy as np
-
-    # from mne.time_frequency import psd_array_welch
-    from scipy.signal import welch
-
     src_data = np.load(data_fname)
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
     print(('src data dim: {}'.format(src_data.shape)))
-    '''
-    psds, freqs = psd_array_welch(src_data, sfreq, fmin=fmin, fmax=fmax,
-                                  n_fft=n_fft, n_overlap=n_overlap,
-                                  n_per_seg=None, n_jobs=1, verbose=None)
-    print('psds data dim: {}'.format(psds.shape))
-    '''
+
     n_freqs = n_fft // 2 + 1
     psds = np.empty([src_data.shape[0], n_freqs])
     for i in range(src_data.shape[0]):
@@ -100,10 +85,8 @@ def compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
     return psds_fname
 
 
-def compute_mean_band_psd(psds_file, freq_bands):
+def _compute_mean_band_psd(psds_file, freq_bands):
     """Compute mean band psd."""
-    import numpy as np
-
     npzfile = np.load(psds_file)
     print(('the .npz file contain {} \n'.format(npzfile.files)))
 
@@ -133,11 +116,6 @@ def compute_mean_band_psd(psds_file, freq_bands):
 
 
 def _save_m_px(psds_file, m_px):
-    import os
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     data_path, basename, ext = split_f(psds_file)
 
     psds_mean_fname = basename + '-mean_band.npy'
@@ -149,11 +127,6 @@ def _save_m_px(psds_file, m_px):
 
 
 def _save_psd(data_fname, psds, freqs):
-    import os
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
-
     data_path, basename, ext = split_f(data_fname)
 
     psds_fname = basename + '-psds.npz'
@@ -166,11 +139,7 @@ def _save_psd(data_fname, psds, freqs):
 
 
 def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
-    import os
     import matplotlib.pyplot as plt
-    import numpy as np
-
-    from nipype.utils.filemanip import split_filename as split_f
 
     data_path, basename, ext = split_f(data_fname)
     psds_img_fname = basename + '-psds.png'

@@ -1,23 +1,21 @@
 """Test fif2ts."""
 
 import mne
+import pytest
 import os
 import numpy as np
 
-from ephypype.aux_tools import _change_wd
-from ephypype.fif2ts import ep2ts
+from ephypype.fif2array import ep2ts
 from numpy.testing import assert_equal, assert_array_almost_equal
 
-data_path = mne.datasets.sample.data_path()
+data_path = mne.datasets.testing.data_path()
 raw_fname = os.path.join(data_path, 'MEG', 'sample',
-                         'sample_audvis_filt-0-40_raw.fif')
+                         'sample_audvis_trunc_raw.fif')
 
 
+@pytest.mark.usefixtures("change_wd")
 def test_ep2ts():
     """Test data conversion."""
-
-    _change_wd()
-
     # Read data from file:
     raw = mne.io.read_raw_fif(raw_fname)
 

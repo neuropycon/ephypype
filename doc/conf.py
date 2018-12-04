@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
@@ -181,6 +182,10 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+intersphinx_mapping = {'python': ('https://docs.python.org/', None),
+                       'mne': ('http://martinos.org/mne/stable/', None)
+                       }
+
 sphinx_gallery_conf = {
     'examples_dirs': '../examples',
     'gallery_dirs': 'auto_examples',
@@ -191,7 +196,8 @@ sphinx_gallery_conf = {
         'mne': 'http://mne-tools.github.io/stable/',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
-        'nipype': 'https://nipype.readthedocs.io/en/latest/api'
+        'nipype': 'https://nipype.readthedocs.io/en/latest/api',
+        'ephypype': 'http://neuropycon.github.io/ephypype/',
     }
 }
 

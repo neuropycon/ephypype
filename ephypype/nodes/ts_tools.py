@@ -6,14 +6,6 @@ import os
 from nipype.interfaces.base import (BaseInterface, BaseInterfaceInputSpec,
                                     traits, TraitedSpec)
 
-# from nipype.interfaces.base import File
-
-# from nipype.utils.filemanip import split_filename as split_f
-
-# ####################### SplitWindows #######################
-
-# from ephypype.import_mat import import_tsmat_to_ts
-
 
 class SplitWindowsInputSpec(BaseInterfaceInputSpec):
     """Split window input spec."""

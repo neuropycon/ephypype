@@ -1,15 +1,16 @@
-"""Interfaces for preprocessing nodes.
+"""Interfaces for preprocessing nodes."""
 
-Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
-"""
+# Authors: Dmitrii Altukhov <daltuhov@hse>
+#
+# License: BSD (3-clause)
 
 
 from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec
 
-from ephypype.preproc import compute_ica,\
-    preprocess_fif,\
-    create_epochs
+from ...preproc import _compute_ica,\
+    _preprocess_fif,\
+    _create_epochs
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
@@ -44,7 +45,32 @@ class CompIcaOutputSpec(TraitedSpec):
 
 
 class CompIca(BaseInterface):
-    """Compute ICA solution on raw fif data."""
+    """Compute ICA solution on raw fif data.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    ecg_ch_name : str
+        Name of ecg channel
+    eog_ch_name : str
+        Name of eog channel
+    n_components : float
+        Number of ica components
+    reject : dict
+        Rejection parameters
+
+    Outputs
+    -------
+    ica_file : str
+        Name of .fif file with raw data
+    ica_sol_file : str
+        Name of .fif file with ica solution
+    ica_ts_file : str
+        Name of .fif file with ica components
+    report_file : str
+        Name of html file with ica report
+    """
 
     input_spec = CompIcaInputSpec
     output_spec = CompIcaOutputSpec
@@ -59,8 +85,8 @@ class CompIca(BaseInterface):
         if reject == traits.Undefined:
             reject = dict(mag=4e-12, grad=4000e-13)
 
-        ica_output = compute_ica(fif_file, ecg_ch_name,
-                                 eog_ch_name, n_components, reject)
+        ica_output = _compute_ica(fif_file, ecg_ch_name,
+                                  eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
         self.ica_ts_file = ica_output[2]
@@ -97,7 +123,24 @@ class PreprocFifOutputSpec(TraitedSpec):
 
 
 class PreprocFif(BaseInterface):
-    """Interface for preproc.preprocess_fif."""
+    """Interface for preproc.preprocess_fif.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    l_freq : float
+        Llower bound for filtering
+    h_freq : float
+        Upper bound for filtering
+    down_sfreq : int
+        Downsampling frequency
+
+    Outputs
+    -------
+    fif_file : str
+        Name of .fif file with preprocessed raw data
+    """
 
     input_spec = PreprocFifInputSpec
     output_spec = PreprocFifOutputSpec
@@ -108,7 +151,7 @@ class PreprocFif(BaseInterface):
         h_freq = self.inputs.h_freq
         down_sfreq = self.inputs.down_sfreq
 
-        result_fif = preprocess_fif(fif_file, l_freq, h_freq, down_sfreq)
+        result_fif = _preprocess_fif(fif_file, l_freq, h_freq, down_sfreq)
 
         self.fif_file = result_fif
         return runtime
@@ -137,7 +180,20 @@ class CreateEpOutputSpec(TraitedSpec):
 
 
 class CreateEp(BaseInterface):
-    """Interface for preproc.create_epochs."""
+    """Interface for preproc.create_epochs.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    ep_length : str
+        Epoch length in seconds
+
+    Outputs
+    -------
+    epo_fif_file : str
+        Name of .fif file with epoched data
+    """
 
     input_spec = CreateEpInputSpec
     output_spec = CreateEpOutputSpec
@@ -146,7 +202,7 @@ class CreateEp(BaseInterface):
         fif_file = self.inputs.fif_file
         ep_length = self.inputs.ep_length
 
-        result_fif = create_epochs(fif_file, ep_length)
+        result_fif = _create_epochs(fif_file, ep_length)
 
         self.epo_fif_file = result_fif
         return runtime

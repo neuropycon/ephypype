@@ -1,7 +1,9 @@
-"""Spectral functions.
+"""Spectral functions."""
 
-Author: David Meunier <david_meunier_79@hotmail.fr>
-"""
+# Author: David Meunier <david_meunier_79@hotmail.fr>
+#
+# License: BSD (3-clause)
+
 import os
 import numpy as np
 
@@ -11,8 +13,8 @@ from mne.connectivity import spectral_connectivity
 from mne.viz import circular_layout, plot_connectivity_circle
 
 
-def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
-                                  mode='cwt_morlet', gathering_method="mean"):
+def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
+                                   mode='cwt_morlet', gathering_method="mean"):
     """compute spectral connectivity"""
     print('MODE is {}'.format(mode))
 
@@ -74,14 +76,14 @@ def compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
     return con_matrix
 
 
-def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
-                                           index=0, mode='cwt_morlet',
-                                           export_to_matlab=False,
-                                           gathering_method="mean",
-                                           save_dir=None):
+def _compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,  # noqa
+                                            index=0, mode='cwt_morlet',
+                                            export_to_matlab=False,
+                                            gathering_method="mean",
+                                            save_dir=None):
     """Compute and save spectral connectivity."""
-    con_matrix = compute_spectral_connectivity(data, con_method, sfreq, fmin,
-                                               fmax, mode, gathering_method)
+    con_matrix = _compute_spectral_connectivity(data, con_method, sfreq, fmin,
+                                                fmax, mode, gathering_method)
 
     if save_dir is not None:
         conmat_file = os.path.join(save_dir, "conmat_{}_{}.npy".format(
@@ -107,11 +109,11 @@ def compute_and_save_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
     return conmat_file
 
 
-def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
-                                                 fmin, fmax, mode='cwt_morlet',
-                                                 export_to_matlab=False,
-                                                 gathering_method="mean",
-                                                 save_dir=None):
+def _compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
+                                                  fmin, fmax, mode='cwt_morlet',  # noqa
+                                                  export_to_matlab=False,
+                                                  gathering_method="mean",
+                                                  save_dir=None):
     """Compute and save multi-spectral connectivity."""
     assert len(all_data.shape) == 3, ("Error, \
         all_data should have several samples")
@@ -128,7 +130,7 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
 
         print((data.shape))
 
-        conmat_file = compute_and_save_spectral_connectivity(
+        conmat_file = _compute_and_save_spectral_connectivity(
             data, con_method, sfreq, fmin, fmax, index=i,
             mode=mode, export_to_matlab=export_to_matlab,
             gathering_method=gathering_method, save_dir=save_dir)
@@ -138,9 +140,9 @@ def compute_and_save_multi_spectral_connectivity(all_data, con_method, sfreq,
     return conmat_files
 
 
-def plot_circular_connectivity(conmat, label_names, node_colors=None,
-                               node_order=[], vmin=0.3, vmax=1.0,
-                               nb_lines=200, fname="_def", save_dir=None):
+def _plot_circular_connectivity(conmat, label_names, node_colors=None,
+                                node_order=[], vmin=0.3, vmax=1.0,
+                                nb_lines=200, fname="_def", save_dir=None):
     """Plot circular connectivity."""
     import matplotlib.pyplot as plt
 

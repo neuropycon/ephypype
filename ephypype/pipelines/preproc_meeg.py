@@ -1,8 +1,14 @@
-"""Preprocessing Pipeline.
+"""Preprocessing Pipeline."""
 
-Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
-         Annalisa Pascarella <a.pascarella@iac.cnr.it>
-"""
+# Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
+#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+
+import nipype.pipeline.engine as pe
+from nipype.interfaces.utility import IdentityInterface, Function
+from ..interfaces.mne.preproc import PreprocFif
+from ..interfaces.mne.preproc import CompIca
+from ..nodes.import_data import ConvertDs2Fif
+from ..preproc import _preprocess_set_ica_comp_fif_to_ts
 
 
 def get_ext_file(raw_file):
@@ -30,7 +36,7 @@ def get_ext_file(raw_file):
 # in Elekta data, ICA routine automatically looks for EEG61, EEG62
 
 
-def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg',  # noqa
+def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline',  # noqa
                                  data_type='fif', l_freq=1, h_freq=150,
                                  down_sfreq=300, is_ICA=True, variance=0.95,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,
@@ -88,16 +94,6 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg',  # noq
     -------
     pipeline : instance of Workflow
     """
-    from ephypype.interfaces.mne.preproc import PreprocFif
-    from ephypype.interfaces.mne.preproc import CompIca
-    from ephypype.nodes.import_data import ConvertDs2Fif
-    from ephypype.preproc import preprocess_set_ica_comp_fif_to_ts
-    from nipype.interfaces.utility import IdentityInterface, Function
-
-    import nipype
-    print((nipype.__version__))
-
-    import nipype.pipeline.engine as pe
 
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
@@ -131,7 +127,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg',  # noq
                    'is_sensor_space']
             out = ['out_file', 'channel_coords_file', 'channel_names_file',
                    'sfreq']
-            fcn = preprocess_set_ica_comp_fif_to_ts
+            fcn = _preprocess_set_ica_comp_fif_to_ts
             ica_node = pe.Node(interface=Function(input_names=inp,
                                                   output_names=out,
                                                   function=fcn),

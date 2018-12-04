@@ -19,6 +19,7 @@ def natural_keys(text):
     http://nedbatchelder.com/blog/200712/human_sorting.html
     (See Toothy's implementation in the comments)
     """
+
     return [_atoi(c) for c in re.split(r'(\d+)', str(text))]
 
 

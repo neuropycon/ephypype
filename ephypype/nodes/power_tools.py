@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Power tools.
 
 Created on Tue Jun 13 15:10:04 2017
@@ -8,6 +7,7 @@ Created on Tue Jun 13 15:10:04 2017
 
 from nipype.interfaces.base import BaseInterface,\
     BaseInterfaceInputSpec, traits, TraitedSpec
+from ..power import _compute_mean_band_psd
 
 
 class PowerBandInputSpec(BaseInterfaceInputSpec):
@@ -51,13 +51,11 @@ class PowerBand(BaseInterface):
 
     def _run_interface(self, runtime):
 
-        from ephypype.power import compute_mean_band_psd
-
         psds_file = self.inputs.psds_file
         freq_bands = self.inputs.freq_bands
 
-        self.mean_power_band_file = compute_mean_band_psd(psds_file,
-                                                          freq_bands)
+        self.mean_power_band_file = _compute_mean_band_psd(psds_file,
+                                                           freq_bands)
 
         return runtime
 

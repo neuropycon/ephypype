@@ -31,47 +31,37 @@ Requirements
 
 ephypype works with **python3**
 
-* numpy
-* scikit-learn
-* matplotlib
-* pandas
-* mne
+* mne>0.14
 * nipype
+* h5py
 
-Some of these dependencies you should install manually (see :ref:`conda_install`), others are installed automatically
-during ephypype installation (see :ref:`ephy_install`). 
+These dependencies are automatically installed during ephypype installation (see :ref:`ephy_install`). 
 
-We also recommend to install the  development master version of |MNE install| (see :ref:`mne_install`).
+We also recommend to install MNE python by following the `installation instructions <http://martinos.org/mne/dev/install_mne_python.html#check-your-installation>`_
 
-.. |MNE install| raw:: html
-
-   <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python</a>
-
-Install package
----------------
 
 .. _ephy_install:
 
 Install ephypype
-++++++++++++++++++++++
+---------------
+
+To install ephypype, use the following command:
 
 .. code-block:: bash
 
-    git clone https://github.com/neuropycon/ephypype.git
-    cd ephypype
-    pip install .
-    cd ..
+    $ pip install -r requirements.txt https://api.github.com/repos/neuropycon/ephypype/zipball/master
 
 
-.. _conda_install:
+.. comment: 
+    .. _conda_install:
    
-Install dependencies with conda
-+++++++++++++++++++++++++++++++
+    Install dependencies with conda
+    +++++++++++++++++++++++++++++++
 
-.. code-block:: bash 
+    .. code-block:: bash 
 
-    conda install pandas
-    conda install matplotlib
+        conda install pandas
+        conda install matplotlib
 
 
 Software
@@ -88,9 +78,10 @@ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall
 https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall
 
 
-MNE
-+++
+.. comment:
+    MNE
+    +++
 
-1. Download MNE software:
+    1. Download MNE software:
 
-http://martinos.org/mne/dev/install_mne_c.html
+    http://martinos.org/mne/dev/install_mne_c.html

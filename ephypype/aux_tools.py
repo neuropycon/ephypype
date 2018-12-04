@@ -1,12 +1,12 @@
 """Aux functions"""
 
 # Authors: Dmitrii Altukhov <daltuhov@hse>
+#          Annalisa Pascarella <a.pascarella@iac.cnr.it>
 #
 # License: BSD (3-clause)
 
 from contextlib import contextmanager
 import os
-import tempfile
 
 
 # Define a context manager to suppress stdout and stderr.
@@ -68,7 +68,7 @@ def nostdout():
     sys.stdout = save_stdout
 
 
-def get_freq_band(freq_band_name, freq_band_names, freq_bands):
+def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
     """Get frequency band."""
     if freq_band_name in freq_band_names:
         print(freq_band_name)
@@ -76,10 +76,3 @@ def get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
         return freq_bands[freq_band_names.index(freq_band_name)]
     return None
-
-
-def _change_wd():
-    """Create temporary directory"""
-
-    tmp_dir = tempfile.mkdtemp()
-    os.chdir(tmp_dir)

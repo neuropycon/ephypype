@@ -1,19 +1,15 @@
 """
-.. _preproc_meeg:
+.. _source_reconstruction:
 
-===================
-Preprocess MEG data
-===================
-The preprocessing pipeline runs the ICA algorithm for an
-automatic removal of eyes and heart related artefacts.
-A report is automatically generated and can be used to correct
-and/or fine-tune the correction in each subject.
-
-The **input** data can be in **ds** or **fif** format.
+========================
+Compute inverse solution
+========================
+The inverse solution pipeline performs source reconstruction starting either
+from raw/epoched data (*.fif* format) specified by the user or from the output
+of the Preprocessing pipeline (cleaned raw data).
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
-#          Mainak Jas <mainakjas@gmail.com>
 
 # License: BSD (3-clause)
 
@@ -34,26 +30,28 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then set the parameters for preprocessing
+# then set the parameters for inverse solution
 
-# filtering
-down_sfreq = 800
-l_freq = 0.1
-h_freq = 150
-is_ICA = True  # if True we apply ICA to remove ECG and EoG artifacts
-ECG_ch_name = 'ECG'
-EoG_ch_name = 'HEOG, VEOG'
-variance = 0.95
-reject = dict(mag=5e-12, grad=5000e-13)
+spacing = 'oct-6'    # ico-5 vs oct-6
+snr = 1.0            # use smaller SNR for raw data
+inv_method = 'MNE'   # sLORETA, MNE, dSPM
+parc = 'aparc'       # The parcellation to use: 'aparc' vs 'aparc.a2009s'
+
+# noise covariance matrix filename template
+noise_cov_fname = '*noise*.ds'
+
+# set sbj dir path, i.e. where the FS folfers are
+subjects_dir = op.join(data_path, 'fsf')
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
 # nipype the directory in which to store the outputs.
 
 # workflow directory within the `base_dir`
-preproc_pipeline_name = 'preprocessing_workflow'
+src_reconstruction_pipeline_name = 'source_reconstruction_' + \
+    inv_method + '_' + parc.replace('.', '')
 
-main_workflow = pe.Workflow(name=preproc_pipeline_name)
+main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)
 main_workflow.base_dir = data_path
 
 ###############################################################################
@@ -68,34 +66,32 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # and a node to grab data. The template_args in this node iterate upon
 # the values in the infosource node
 
-template_path = '*%s/%s/meg/%s*rest*raw.fif'
+template_path = '*%s/%s/meg/%s*rest*ica.fif'
 template_args = [['subject_id', 'session_id', 'subject_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
-# nodes we created. The preprocessing pipeline is implemented by the function
-# :func:`ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg`, thus to
-# instantiate this pipeline node, we import it and pass our
+# nodes we created. The inverse solution pipeline is implemented by the
+# function :func:`ephypype.pipelines.preproc_meeg.create_pipeline_source_reconstruction`,  # noqa
+# thus to instantiate the inverse pipeline node, we import it and pass our
 # parameters to it.
-# The preprocessing pipeline contains two nodes that are based on the MNE
-# Python functions performing the decomposition of the MEG/EEG signal using an
-# |ICA| algorithm.
+# The inverse pipeline contains three nodes that wrap the MNE Python functions
+# that perform the source reconstruction steps.
 #
-# .. |ICA| raw:: html
+# In particular, the three nodes are:
 #
-#    <a href="http://martinos.org/mne/stable/auto_tutorials/plot_artifacts_correction_ica.html" target="_blank">ICA</a>
-#
-# In particular, the two nodes are:
-#
-# * :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
-# * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
+# * :class:`ephypype.interfaces.mne.LF_computation.LFComputation` compute the
+#   Lead Field matrix
+# * :class:`ephypype.interfaces.mne.Inverse_solution.NoiseCovariance` computes
+#   the noise covariance matrix
+# * :class:`ephypype.interfaces.mne.Inverse_solution.InverseSolution` estimates
+#   the time series of the neural sources on a set of dipoles grid
 
-from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
-preproc_workflow = create_pipeline_preproc_meeg(
-    data_path, l_freq=l_freq, h_freq=h_freq, down_sfreq=down_sfreq,
-    variance=variance, ECG_ch_name=ECG_ch_name, EoG_ch_name=EoG_ch_name,
-    data_type=data_type)
+from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruction  # noqa
+inv_sol_workflow = create_pipeline_source_reconstruction(
+    data_path, subjects_dir, spacing=spacing, inv_method=inv_method, parc=parc,
+    noise_cov_fname=noise_cov_fname)
 
 ###############################################################################
 # We then connect the nodes two at a time. First, we connect the two outputs
@@ -110,9 +106,9 @@ main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 # clearer in a moment when we plot the graph of the workflow.
 
 main_workflow.connect(infosource, 'subject_id',
-                      preproc_workflow, 'inputnode.subject_id')
+                      inv_sol_workflow, 'inputnode.sbj_id')
 main_workflow.connect(datasource, 'raw_file',
-                      preproc_workflow, 'inputnode.raw_file')
+                      inv_sol_workflow, 'inputnode.raw')
 
 ###############################################################################
 # To do so, we first write the workflow graph (optional)
@@ -125,7 +121,7 @@ main_workflow.write_graph(graph2use='colored')  # colored
 
 from scipy.misc import imread  # noqa
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
+img = plt.imread(op.join(data_path, src_reconstruction_pipeline_name, 'graph.png'))  # noqa
 plt.figure(figsize=(8, 8))
 plt.imshow(img)
 plt.axis('off')
@@ -136,13 +132,12 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ###############################################################################
-# The output is the preprocessed data stored in the workflow directory
-# defined by `base_dir`.
+# The output is the source reconstruction matrix stored in the workflow
+# directory defined by `base_dir`. This matrix can be used as input of
+# the Connectivity pipeline.
 #
-# It’s a good rule to inspect the report file saved in the same dir to look at
-# the excluded ICA components. It is also possible to include and exclude more
-# components by using either a jupyter notebook or the preprocessing pipeline
-# with different flag parameters.
+# .. warning:: To use this pipeline, we need a cortical segmentation of MRI
+#   data, that could be provided by Freesurfer
