@@ -80,11 +80,10 @@ def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
     write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
 
 
-def import_mat_to_conmat(mat_file, data_field_name='F',
-                         orig_channel_names_file=None,
-                         orig_channel_coords_file=None):
-    """Import mat to conmat."""
-
+def _import_mat_to_conmat(mat_file, data_field_name='F',
+                          orig_channel_names_file=None,
+                          orig_channel_coords_file=None):
+    """Import Matlab mat to npy conmat."""
     subj_path, basename, ext = split_f(mat_file)
 
     mat = loadmat(mat_file)
@@ -113,22 +112,26 @@ def import_mat_to_conmat(mat_file, data_field_name='F',
         channel_names_file = os.path.abspath('correct_channel_names.txt')
         np.savetxt(channel_names_file, correct_channel_names, fmt='%s')
 
-    if all([k is not None for k in (orig_channel_names_file,
-                                    orig_channel_coords_file)]):
-        return ts_file, channel_coords_file, channel_names_file
-    else:
-        return ts_file
+    return ts_file
 
 
 def _import_tsmat_to_ts(tsmat_file, data_field_name='F',
-                        good_channels_field_name='ChannelFlag'):
+                        good_channels_field_name=None,
+                        orig_channel_names_file=None,
+                        orig_channel_coords_file=None):
     """Import tsmat to ts."""
 
     print(tsmat_file)
 
     subj_path, basename, ext = split_f(tsmat_file)
-
     mat = loadmat(tsmat_file)
+
+    if data_field_name not in mat.keys():
+
+        data_field_name = basename.split('_')[0]
+
+        assert data_field_name in mat.keys(), \
+            ("error, could not find {}".format(data_field_name))
 
     raw_data = np.array(mat[data_field_name], dtype="f")
     print((raw_data.shape))
@@ -136,7 +139,11 @@ def _import_tsmat_to_ts(tsmat_file, data_field_name='F',
     print([key for key in list(mat.keys())])
 
     if good_channels_field_name is not None:
+
+        assert good_channels_field_name in mat.keys(), \
+            ("error, could not find {}".format(good_channels_field_name))
         print("Using good channels to sort channels")
+
         good_channels = np.array(mat[good_channels_field_name])
         print((good_channels.shape))
 
@@ -145,7 +152,44 @@ def _import_tsmat_to_ts(tsmat_file, data_field_name='F',
 
         good_data = raw_data[good_channels == 1, :]
 
-        print((good_data.shape))
+    elif orig_channel_names_file is not None:
+
+        # load electrode names
+        assert os.path.exists(orig_channel_names_file), \
+            ("Error, {} do not exists".format(orig_channel_names_file))
+        print("Using orig_channel_names_file to sort channels")
+        elec_names = [line.strip() for line in open(orig_channel_names_file)]
+        print(elec_names)
+
+        cond = [elec.startswith('EMG') or elec.startswith(
+            'EOG') for elec in elec_names]
+        select_sensors, = np.where(np.array(cond, dtype='bool') is False)
+        print(select_sensors)
+
+        # save electrode names
+        correct_elec_names = np.array(
+            [elec_names[pos] for pos in select_sensors],
+            dtype="str")
+
+        channel_names_file = os.path.abspath("correct_channel_names.txt")
+        np.savetxt(channel_names_file, correct_elec_names, fmt='%s')
+
+        if orig_channel_coords_file is not None:
+            assert os.path.exists(orig_channel_coords_file), \
+                ("Error, %s do not exists".format(orig_channel_coords_file))
+
+            # save electrode locations
+            elec_loc = np.loadtxt(orig_channel_coords_file)
+            print(elec_loc)
+
+            correct_elec_loc = np.roll(
+                elec_loc[select_sensors, :], shift=2, axis=1)
+
+            channel_coords_file = os.path.abspath("correct_channel_coords.txt")
+            np.savetxt(channel_coords_file, correct_elec_loc, fmt='%s')
+
+        # save data (reorganise dimensions)
+        good_data = raw_data[select_sensors, :].swapaxes(0, 2).swapaxes(1, 2)
 
     else:
         print("No channel sorting")
@@ -154,108 +198,14 @@ def _import_tsmat_to_ts(tsmat_file, data_field_name='F',
     # save data
     print((good_data.shape))
 
-    ts_file = os.path.abspath("tsmat.npy")
+    ts_file = os.path.abspath(basename + "_tsmat.npy")
     np.save(ts_file, good_data)
-    return ts_file
-
-
-def import_amplmat_to_ts(tsmat_file):
-    """Import amplmat to ts."""
-
-    print(tsmat_file)
-
-    subj_path, basename, ext = split_f(tsmat_file)
-
-    mat = loadmat(tsmat_file)
-
-    # field_name = basename.split('_')[0]
-    # field_name = basename.split('_')[1]
-    # print field_name
-
-    raw_data = np.array(mat['F'], dtype="f")
-    print((raw_data.shape))
-
-    good_channels = np.array(mat['ChannelFlag'])
-
-    good_channels = good_channels.reshape(good_channels.shape[0])
-
-    print("Good channels:")
-    print((good_channels.shape))
-
-    good_data = raw_data[good_channels == 1, :]
-
-    print((good_data.shape))
-
-    # save data
-    ts_file = os.path.abspath("amplmat.npy")
-
-    np.save(ts_file, good_data)
-    # np.save(ts_file,raw_data)
 
     return ts_file
-
-
-def import_mat_to_ts(mat_file, orig_channel_names_file,
-                     orig_channel_coords_file):
-    """Import mat to ts."""
-
-    subj_path, basename, ext = split_f(mat_file)
-
-    mat = loadmat(mat_file)
-
-    field_name = basename.split('_')[0]
-    print('************************************ \n')
-    print(field_name)
-    print((mat[field_name].shape))
-
-    raw_data = np.array(mat[field_name], dtype="f")
-    print((raw_data.shape))
-
-    # load electrode names
-    elec_names = [line.strip() for line in open(orig_channel_names_file)]
-
-    print(elec_names)
-
-    cond = [elec.startswith('EMG') or elec.startswith(
-        'EOG') for elec in elec_names]
-    select_sensors, = np.where(np.array(cond, dtype='bool') is False)
-    print(select_sensors)
-
-    # save electrode locations
-    elec_loc = np.loadtxt(orig_channel_coords_file)
-    print(elec_loc)
-
-    correct_elec_loc = np.roll(elec_loc[select_sensors, :], shift=2, axis=1)
-
-    print((correct_elec_loc[0, :]))
-    print((correct_elec_loc[7, :]))
-
-    channel_coords_file = os.path.abspath("correct_channel_coords.txt")
-    np.savetxt(channel_coords_file, correct_elec_loc, fmt='%s')
-
-    # save electrode names
-    correct_elec_names = np.array([elec_names[pos]
-                                   for pos in select_sensors], dtype="str")
-
-    channel_names_file = os.path.abspath("correct_channel_names.txt")
-    np.savetxt(channel_names_file, correct_elec_names, fmt='%s')
-
-    # save data (reorganise dimensions)
-    new_data = raw_data[select_sensors, :].swapaxes(0, 2).swapaxes(1, 2)
-    print((new_data.shape))
-
-    ts_file = os.path.abspath(basename + ".npy")
-
-    np.save(ts_file, new_data)
-
-    return ts_file, channel_coords_file, channel_names_file
 
 
 def concat_ts(all_ts_files):
     """Concat ts."""
-
-    print(all_ts_files)
-
     for i, ts_file in enumerate(all_ts_files):
 
         # loading ROI coordinates
