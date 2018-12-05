@@ -1,17 +1,20 @@
 """Test import_data."""
 import mne
 import pytest
+import locale
 import os.path as op
 import numpy as np
 import scipy.io as sio
 
 import nipype.pipeline.engine as pe
 
+
 from ephypype.nodes.import_data import ConvertDs2Fif, ImportHdf5, ImportMat
 from ephypype.import_data import write_hdf5
 
 from numpy.testing import assert_array_almost_equal
 
+locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 data_path = mne.datasets.testing.data_path()
 
 ds_fname = op.join(data_path, 'CTF', 'testdata_ctf.ds')

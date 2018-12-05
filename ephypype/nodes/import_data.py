@@ -371,7 +371,7 @@ class Ep2ts(BaseInterface):
 
 # ------------------- ds2fif --------------------------- #
 class ConvertDs2FifInputSpec(BaseInterfaceInputSpec):
-    """Input specification for ImportMat."""
+    """Input specification for ConvertDs2Fif."""
 
     ds_file = traits.Directory(exists=True,
                                desc='raw .ds file',
