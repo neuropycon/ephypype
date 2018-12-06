@@ -143,7 +143,8 @@ def compute_cov_identity(raw_filename):
 
 
 def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
-                              cov_fname, is_epoched=False, events_id=[],
+                              cov_fname, is_epoched=False, events_id=None,
+                              events_file=None,
                               t_min=None, t_max=None, is_evoked=False,
                               snr=1.0, inv_method='MNE',
                               parc='aparc', aseg=False, aseg_labels=[],
@@ -207,12 +208,6 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             centroid of the ROIs of the parcellation
 
     """
-
-    try:
-        traits.undefined(events_id)
-    except NameError:
-        events_id = None
-
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
     if is_epoched and events_id is None:
         epochs = read_epochs(raw_filename)
@@ -262,14 +257,20 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
+    good_events_file = ''
     if is_epoched and events_id is not None:
-        events = mne.find_events(raw)
+
+        if events_file:
+            events = mne.read_events(events_file)
+        else:
+            events = mne.find_events(raw)
         picks = mne.pick_types(info, meg=True, eog=True, exclude='bads')
         reject = _create_reject_dict(info)
 
         if is_evoked:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
-                                picks=picks, baseline=(None, 0), reject=reject)
+                                picks=picks, baseline=(t_min, 0),
+                                reject=reject)
             evoked = [epochs[k].average() for k in events_id]
             snr = 3.0
             lambda2 = 1.0 / snr ** 2
@@ -289,6 +290,10 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         else:
             epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
                                 picks=picks, baseline=(None, 0), reject=reject)
+            epochs.drop_bad()
+            good_events_file = op.abspath('good_events.txt')
+            np.savetxt(good_events_file, epochs.events)
+
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
 
@@ -341,7 +346,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         label_names_file = ''
         label_coords_file = ''
 
-    return ts_file, labels_file, label_names_file, label_coords_file
+    return ts_file, labels_file, label_names_file, \
+        label_coords_file, good_events_file
 
 
 def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,

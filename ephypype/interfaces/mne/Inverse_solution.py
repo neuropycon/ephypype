@@ -37,6 +37,8 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
                            mandatory=False)
     events_id = traits.Dict(None, desc='the id of all events to consider.',
                             mandatory=False)
+    events_file = traits.File(None, exists=True, desc='events filename',
+                              mandatory=False)
     t_min = traits.Float(None, desc='start time before event', mandatory=False)
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
     is_evoked = traits.Bool(desc='if true if we want to analyze evoked data',
@@ -67,6 +69,7 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
     labels = File(exists=False, desc='labels file in pickle format')
     label_names = File(exists=False, desc='labels name file in txt format')
     label_coords = File(exists=False, desc='labels coords file in txt format')
+    good_events_file = File(exists=False, desc='good events filename')
 
 
 class InverseSolution(BaseInterface):
@@ -143,6 +146,7 @@ class InverseSolution(BaseInterface):
         is_epoched = self.inputs.is_epoched
         is_fixed = self.inputs.is_fixed
         events_id = self.inputs.events_id
+        events_file = self.inputs.events_file
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
         is_evoked = self.inputs.is_evoked
@@ -154,10 +158,11 @@ class InverseSolution(BaseInterface):
         all_src_space = self.inputs.all_src_space
         ROIs_mean = self.inputs.ROIs_mean
 
-        self.ts_file, self.labels, self.label_names, self.label_coords = \
+        self.ts_file, self.labels, self.label_names, \
+            self.label_coords, self.good_events_file = \
             _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
                                       fwd_filename, cov_filename,
-                                      is_epoched, events_id,
+                                      is_epoched, events_id, events_file,
                                       t_min, t_max, is_evoked,
                                       snr, inv_method, parc,
                                       aseg, aseg_labels, all_src_space,
@@ -173,6 +178,7 @@ class InverseSolution(BaseInterface):
         outputs['labels'] = self.labels
         outputs['label_names'] = self.label_names
         outputs['label_coords'] = self.label_coords
+        outputs['good_events_file'] = self.good_events_file
 
         return outputs
 
