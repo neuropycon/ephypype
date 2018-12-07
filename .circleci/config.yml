@@ -27,12 +27,7 @@ jobs:
                   pip install h5py
                   pip install PyQt5
                   conda install graphviz pydot
-                  git clone https://github.com/EtienneCmb/visbrain.git
-                  cd visbrain
-                  python setup.py develop
-                  git fetch origin feature/mpl_preview
-                  git checkout feature/mpl_preview
-                  cd ..
+                  pip install visbrain
                   python setup.py develop
             - run:
                 name: Build the documentation
