@@ -79,10 +79,24 @@ def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
 
 
 def parse_string(string, token):
-    """ """
+    """Find a token in a string.
+
+    Inputs
+        string : str
+            String to parse
+        token : list of str
+            List of token
+
+    Outputs
+        return_string : str
+            The token if contained in the string
+    """
+    if not isinstance(token, list):
+        raise ValueError('{} has to be a list of string'.format(token))
     for t in token:
         if string.find(t) > -1:
-            ind = string.find(t)
-            return_string = string[ind:ind + len(t)]
+            return t
+        else:
+            return_string = ''
 
     return return_string
