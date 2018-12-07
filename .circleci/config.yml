@@ -27,7 +27,12 @@ jobs:
                   pip install h5py
                   pip install PyQt5
                   conda install graphviz pydot
-                  pip install visbrain
+                  git clone https://github.com/EtienneCmb/visbrain.git
+                  cd visbrain
+                  python setup.py develop
+                  git fetch origin feature/mpl_preview
+                  git checkout feature/mpl_preview
+                  cd ..
                   python setup.py develop
             - run:
                 name: Build the documentation
@@ -35,7 +40,7 @@ jobs:
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 20m
+                no_output_timeout: 15m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
