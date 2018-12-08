@@ -27,7 +27,10 @@ jobs:
                   pip install h5py
                   pip install PyQt5
                   conda install graphviz pydot
-                  pip install visbrain
+                  git clone https://github.com/EtienneCmb/visbrain.git
+                  cd visbrain
+                  python setup.py develop
+                  cd ..
                   python setup.py develop
             - run:
                 name: Build the documentation
