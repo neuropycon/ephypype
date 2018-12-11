@@ -141,14 +141,14 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #   by the welch function of the scipy package.
 
 ##############################################################################
-from ephypype.gather.gather_results import get_psd_files  # noqa
+from ephypype.gather.gather_results import get_results  # noqa
 from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
 from visbrain.utils import normalize  # noqa
 from nipype.utils.filemanip import split_filename  # noqa
 
-psd_files, channel_coo_files = get_psd_files(main_workflow.base_dir,
-                                             main_workflow.name,
-                                             subject_ids, session_ids)
+psd_files, channel_coo_files = get_results(main_workflow.base_dir,
+                                           main_workflow.name,
+                                           pipeline='power')
 
 sc = SceneObj(size=(1800, 500), bgcolor=(.1, .1, .1))
 for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):

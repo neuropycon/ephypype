@@ -154,11 +154,10 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 ###############################################################################
 #
 import mne  # noqa
-from ephypype.gather.gather_results import get_ica_solution  # noqa
+from ephypype.gather.gather_results import get_results  # noqa
 
-ica_files, raw_files = get_ica_solution(main_workflow.base_dir,
-                                        main_workflow.name, subject_ids,
-                                        session_ids)
+ica_files, raw_files = get_results(main_workflow.base_dir,
+                                   main_workflow.name, pipeline='ica')
 
 for ica_file, raw_file in zip(ica_files, raw_files):
     raw = mne.io.read_raw_fif(raw_file)

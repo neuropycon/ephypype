@@ -149,12 +149,12 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ##############################################################################
 import pickle  # noqa
-from ephypype.gather.gather_results import get_inverse_files  # noqa
+from ephypype.gather.gather_results import get_results  # noqa
 from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa
 
-time_series_files, label_files = get_inverse_files(main_workflow.base_dir,
-                                                   main_workflow.name,
-                                                   subject_ids, session_ids)
+time_series_files, label_files = get_results(main_workflow.base_dir,
+                                             main_workflow.name,
+                                             pipeline='inverse')
 
 time_pts = 30
 

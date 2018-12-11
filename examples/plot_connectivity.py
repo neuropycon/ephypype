@@ -169,17 +169,19 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
 
 ##############################################################################
-from ephypype.gather.gather_results import get_connectivity_matrices  # noqa
+from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather.gather_results import get_channel_files  # noqa
 from ephypype.aux_tools import parse_string  # noqa
 from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 
 th = .8
 with_text = False
 
-connectivity_matrices, channel_coo_files, channel_name_files = \
-    get_connectivity_matrices(main_workflow.base_dir, main_workflow.name,
-                              subject_ids, session_ids, freq_band_names,
-                              is_channel=True)
+channel_coo_files, channel_name_files = get_channel_files(
+        main_workflow.base_dir, main_workflow.name)
+
+connectivity_matrices, _ = get_results(
+        main_workflow.base_dir, main_workflow.name, pipeline='connectivity')
 
 sc = SceneObj(size=(1000, 1000), bgcolor=(.1, .1, .1))
 for nf, (connect_file, channel_coo_file, channel_name_file) in \
