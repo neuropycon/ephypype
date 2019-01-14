@@ -81,13 +81,15 @@ def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
 def parse_string(string, token):
     """Find a token in a string.
 
-    Inputs
+    Parameters
+    ----------
         string : str
             String to parse
         token : list of str
             List of token
 
-    Outputs
+    Returns
+    -------
         return_string : str
             The token if contained in the string
     """

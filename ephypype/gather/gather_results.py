@@ -12,12 +12,14 @@ def get_channel_files(workflow_path, workflow_name):
     """Get channel files.
 
     Parameters
+    ----------
        workflow_path : str
            Path of connectivity workflow
        workflow_name : str
            Name of the connectivity workflows
 
     Returns
+    -------
         channels_files : list of str
             List of path of channel coordinates files
         channels_name_files : list of str
@@ -38,6 +40,7 @@ def get_results(workflow_path, workflow_name, pipeline=None):
     """Get results files.
 
     Parameters
+    ----------
        workflow_path : str
            Path of connectivity workflow
        workflow_name : str
@@ -45,7 +48,9 @@ def get_results(workflow_path, workflow_name, pipeline=None):
        pipeline : str
            name of the pipeline (possible values: 'connectivity', 'inverse',
            'psd', 'ica')
+
     Returns
+    -------
         matrices : list of str
             List of path of results
     """

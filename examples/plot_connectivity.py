@@ -174,7 +174,7 @@ from ephypype.gather.gather_results import get_channel_files  # noqa
 from ephypype.aux_tools import parse_string  # noqa
 from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 
-th = .8
+thresh = .8
 with_text = False
 
 channel_coo_files, channel_name_files = get_channel_files(
@@ -193,10 +193,10 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
     names = np.genfromtxt(channel_name_file, dtype=str)
     connect = np.load(connect_file)
     connect += connect.T
-    connect = np.ma.masked_array(connect, mask=connect < th)
+    connect = np.ma.masked_array(connect, mask=connect < thresh)
     names = names if with_text else None
     radius = connect.sum(1)
-    clim = (th, connect.max())
+    clim = (thresh, connect.max())
 
     # With text :
     c_obj = ConnectObj('c', xyz, connect, clim=clim, dynamic=(0., 1.),
