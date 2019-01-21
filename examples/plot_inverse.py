@@ -30,15 +30,19 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then set the parameters for inverse solution
+# then read the parameters for inverse solution from a json file
 
-spacing = 'oct-6'    # ico-5 vs oct-6
-snr = 1.0            # use smaller SNR for raw data
-inv_method = 'MNE'   # sLORETA, MNE, dSPM
-parc = 'aparc'       # The parcellation to use: 'aparc' vs 'aparc.a2009s'
+import json  # noqa
+import pprint  # noqa
+data = json.load(open("params_inverse.json"))
+pprint.pprint({'inverse parameters': data})
 
+spacing = data['spacing']  # ico-5 vs oct-6
+snr = data['snr']  # use smaller SNR for raw data
+inv_method = data['method']  # sLORETA, MNE, dSPM
+parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
 # noise covariance matrix filename template
-noise_cov_fname = '*noise*.ds'
+noise_cov_fname = data['noise_cov_fname']
 
 # set sbj dir path, i.e. where the FS folfers are
 subjects_dir = op.join(data_path, 'fsf')

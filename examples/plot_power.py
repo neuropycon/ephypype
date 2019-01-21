@@ -31,21 +31,19 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then set the parameters for PSD computation
+# then read the parameters for PSD computation from a json file
 
-# filtering
-freq_bands = [[2, 4], [5, 7], [8, 12], [13, 29], [30, 59], [60, 90]]
-freq_band_names = ['delta', 'theta', 'alpha', 'beta', 'gamma1', 'gamma2']
+import json  # noqa
+import pprint  # noqa
+data = json.load(open("params_power.json"))
+pprint.pprint({'power parameters': data})
 
-is_epoched = False
-
-fmin = 0.1
-fmax = 150
-sfreq = 600
-power_method = 'welch'  # for sensor PSD
-n_fft = 2048  # the FFT size (n_fft). Ideally a power of 2
-
-overlap = 0.5  # if is_epoched = False
+freq_band_names = data['freq_band_names']
+freq_bands = data['freq_bands']
+is_epoched = data['is_epoched']
+fmin = data['fmin']
+fmax = data['fmax']
+power_method = data['method']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells

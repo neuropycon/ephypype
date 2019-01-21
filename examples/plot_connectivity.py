@@ -36,12 +36,12 @@ data_path = fetch_omega_dataset(base_path)
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_conn.json"))
+data = json.load(open("params_connectivity.json"))
 pprint.pprint({'connectivity parameters': data})
 
 freq_band_names = data['freq_band_names']
 freq_bands = data['freq_bands']
-con_method = data['con_method']
+con_method = data['method']
 epoch_window_length = data['epoch_window_length']
 
 ###############################################################################
