@@ -32,15 +32,17 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then set the parameters for connectivity
+# then read the parameters for connectivity from a json file and print it
 
-freq_bands = [[8, 12], [13, 29]]
-freq_band_names = ['alpha', 'beta']
+import json  # noqa
+import pprint  # noqa
+data = json.load(open("params_connectivity.json"))
+pprint.pprint({'connectivity parameters': data})
 
-# Connectivity measures: 'pli', 'plv', 'pli2_unbiased', 'coh', 'cohy', 'ppc',
-#  'wpli', 'imcoh', 'wpli2_debiased', 'correl'
-con_method = 'coh'
-epoch_window_length = 3.0
+freq_band_names = data['freq_band_names']
+freq_bands = data['freq_bands']
+con_method = data['method']
+epoch_window_length = data['epoch_window_length']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -164,5 +166,4 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 #
 # .. |graphpype| raw:: html
 #
-
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
