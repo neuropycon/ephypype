@@ -80,9 +80,10 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # by the function :func:`ephypype.pipelines.power.create_pipeline_power`, thus
 # to instantiate this pipeline node, we import it and pass our parameters
 # to it.
-# The power pipeline contains only one node :class:`ephypype.interfaces.mne.power.Power`
+# The power pipeline contains only one node
+# :class:`ephypype.interfaces.mne.power.Power`
 # that wraps the MNE-Python functions :func:`mne.time_frequency.psd_welch` and
-# :func:`mne.time_frequency.psd_multitaper` for computing the PSD using 
+# :func:`mne.time_frequency.psd_multitaper` for computing the PSD using
 # Welch's method and multitapers respectively.
 
 from ephypype.pipelines.power import create_pipeline_power  # noqa
