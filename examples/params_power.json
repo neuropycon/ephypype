@@ -1,6 +1,6 @@
 {
-    "freq_band_names": ["delta", "theta", "alpha", "beta", "gamma1", "gamma2"],
-    "freq_bands": [[2, 4], [5, 7], [8, 12], [13, 29], [30, 59], [60, 90]],
+    "freq_band_names": ["theta", "alpha", "beta", "low-gamma", "high-gamma"],
+    "freq_bands": [[3, 6], [8, 13], [13, 30], [30, 60], [60, 150]],
     "method": "welch",
     "is_epoched": false,
     "fmin": 0.1,
