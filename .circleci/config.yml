@@ -2,14 +2,20 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7.0-stretch-node-browsers
+            - image: circleci/python:3.6-jessie
         steps:
             - checkout
+            - run:
+                name: Clean CircleCI
+                command: |
+                rm -rf ~/.pyenv;
+                rm -rf ~/virtualenvs;
             - run:
                 name: Spin up Xvfb
                 command: |
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
+            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
             - run:
                 name: Install miniconda
                 command: |
