@@ -8,8 +8,8 @@ jobs:
             - run:
                 name: Clean CircleCI
                 command: |
-                rm -rf ~/.pyenv;
-                rm -rf ~/virtualenvs;
+                    rm -rf ~/.pyenv;
+                    rm -rf ~/virtualenvs;
             - run:
                 name: Spin up Xvfb
                 command: |
