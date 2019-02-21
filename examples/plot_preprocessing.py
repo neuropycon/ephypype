@@ -34,17 +34,20 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then set the parameters for preprocessing
+# then read the parameters for preprocessing from a json file
 
-# filtering
-down_sfreq = 800
-l_freq = 0.1
-h_freq = 150
-is_ICA = True  # if True we apply ICA to remove ECG and EoG artifacts
-ECG_ch_name = 'ECG'
-EoG_ch_name = 'HEOG, VEOG'
-variance = 0.95
-reject = dict(mag=5e-12, grad=5000e-13)
+import json  # noqa
+import pprint  # noqa
+data = json.load(open("params_preprocessing.json"))
+pprint.pprint({'preprocessing parameters': data})
+
+down_sfreq = data['down_sfreq']
+l_freq = data['l_freq']
+h_freq = data['h_freq']
+ECG_ch_name = data['ECG_ch_name']
+EoG_ch_name = data['EoG_ch_name']
+variance = data['variance']
+reject = data['reject']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
