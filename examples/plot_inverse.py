@@ -31,7 +31,9 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for inverse solution from a json file
+# then read the parameters for inverse solution from a
+# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_inverse.json>`
+# file and print it
 
 import json  # noqa
 import pprint  # noqa
