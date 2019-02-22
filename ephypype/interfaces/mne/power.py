@@ -23,16 +23,14 @@ class PowerInputSpec(BaseInterfaceInputSpec):
 
     sfreq = traits.Float(desc='sampling frequency', mandatory=False)
 
-    nfft = traits.Int(desc='the length of FFT used', mandatory=False)
-    overlap = traits.Float(desc='Number of points of overlap between segments',
-                           mandatory=False)
-
+    nfft = traits.Int(256, desc='the length of FFT used', usedefault=True,
+                      mandatory=False)
+    overlap = traits.Float(0, desc='Number of points of overlap btw segments',
+                           usedefault=True, mandatory=False)
     method = traits.Enum('welch', 'multitaper',
                          desc='power spectral density computation method')
-
     is_epoched = traits.Bool(desc='if true input data are mne.Epochs',
                              mandatory=False)
-
     is_sensor_space = traits.Bool(True, usedefault=True,
                                   dedesc='True for PSD on sensor space \
                                   False for PSD on source',
@@ -81,7 +79,6 @@ class Power(BaseInterface):
     output_spec = PowerOutputSpec
 
     def _run_interface(self, runtime):
-        print('in Power')
         data_file = self.inputs.data_file
         sfreq = self.inputs.sfreq
         fmin = self.inputs.fmin
@@ -91,7 +88,6 @@ class Power(BaseInterface):
         method = self.inputs.method
         is_epoched = self.inputs.is_epoched
         is_sensor_space = self.inputs.is_sensor_space
-
         if is_sensor_space:
             self.psds_file = _compute_and_save_psd(data_file, fmin, fmax,
                                                    method, is_epoched)

@@ -72,18 +72,11 @@ def _read_hdf5(filename, dataset_name='dataset'):
     return npy_filename
 
 
-def npy2hdf5(filename, dataset_name='dataset', dtype='f'):
+def import_mat_to_conmat(mat_file, data_field_name='F',
+                         orig_channel_names_file=None,
+                         orig_channel_coords_file=None):
+    """Import mat to conmat."""
 
-    data = np.load(filename)
-    print('converting to hdf5')
-
-    write_hdf5(filename, data, dataset_name=dataset_name, dtype=dtype)
-
-
-def _import_mat_to_conmat(mat_file, data_field_name='F',
-                          orig_channel_names_file=None,
-                          orig_channel_coords_file=None):
-    """Import Matlab mat to npy conmat."""
     subj_path, basename, ext = split_f(mat_file)
 
     mat = loadmat(mat_file)

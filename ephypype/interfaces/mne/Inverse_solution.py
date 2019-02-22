@@ -35,8 +35,8 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
     is_fixed = traits.Bool(False, usedefault=True,
                            desc='if true we use fixed orientation',
                            mandatory=False)
-    events_id = traits.Dict(None, desc='the id of all events to consider.',
-                            mandatory=False)
+    events_id = traits.Dict({}, desc='the id of all events to consider.',
+                            usedefault=True, mandatory=False)
     events_file = traits.File(None, exists=True, desc='events filename',
                               mandatory=False)
     t_min = traits.Float(None, desc='start time before event', mandatory=False)

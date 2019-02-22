@@ -12,7 +12,7 @@ from nipype.interfaces.base import File
 from ..import_data import _import_tsmat_to_ts, _read_hdf5
 from ..import_data import _split_txt, _read_brainvision_vhdr
 from ..import_data import _convert_ds_to_raw_fif
-from ..fif2array import ep2ts, _get_raw_array
+from ..fif2array import _ep2ts, _get_raw_array
 
 
 # ----------------- ImportMat ----------------------------- #
@@ -357,7 +357,7 @@ class Ep2ts(BaseInterface):
     def _run_interface(self, runtime):
 
         fif_file = self.inputs.fif_file
-        self.ts_file = ep2ts(fif_file=fif_file)
+        self.ts_file = _ep2ts(fif_file=fif_file)
 
         return runtime
 

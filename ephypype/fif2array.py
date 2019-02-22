@@ -8,7 +8,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from .aux_tools import nostdout
 
 
-def ep2ts(fif_file):
+def _ep2ts(fif_file):
     """Read fif file with epoched data and save timeseries to .npy."""
     from mne import read_epochs
 
@@ -58,7 +58,6 @@ def _get_raw_array(raw_fname):
 
     channel_coords_file = os.path.abspath('correct_channel_coords.txt')
     np.savetxt(channel_coords_file, sens_loc, fmt=str("%s"))
-    # np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = "%d")
 
     # save electrode names
     ch_names = np.array([raw.ch_names[pos] for pos in select_sensors],
