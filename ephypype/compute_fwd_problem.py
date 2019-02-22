@@ -168,15 +168,15 @@ def _is_trans(raw_fname):
 
 def _get_fwd_filename(raw_fpath, aseg, spacing):
 
-        data_path, raw_fname, ext = split_f(raw_fpath)
-        fwd_filename = raw_fname + '-' + spacing
-        if aseg:
-            fwd_filename += '-aseg'
+    data_path, raw_fname, ext = split_f(raw_fpath)
+    fwd_filename = raw_fname + '-' + spacing
+    if aseg:
+        fwd_filename += '-aseg'
 
-        fwd_filename = op.join(data_path, fwd_filename + '-fwd.fif')
+    fwd_filename = op.join(data_path, fwd_filename + '-fwd.fif')
 
-        print(('\n *** fwd_filename {} ***\n'.format(fwd_filename)))
-        return fwd_filename
+    print(('\n *** fwd_filename {} ***\n'.format(fwd_filename)))
+    return fwd_filename
 
 
 def _compute_fwd_sol(raw_fname, trans_fname, src, bem, fwd_filename):
