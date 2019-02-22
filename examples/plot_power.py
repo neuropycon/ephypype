@@ -169,11 +169,11 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
     psdf = np.array([psds[:, k[0]:k[1]].mean(1) for k in idx_fplt])
     radius = normalize(np.c_[psdf.min(1), psdf.max(1)], 5, 25).astype(float)
 
-    for num, (f, n, d, r) in enumerate(zip(freq_bands, freq_band_names,
-                                           psdf, radius)):
-        s_obj = SourceObj('s', xyz, data=d, radius_min=r[0], radius_max=r[1])
-        s_obj.color_sources(data=d, cmap='cool', clim=clim)
-        sc.add_to_subplot(s_obj, col=num, title=str(f) + ' - ' + n,
+    for num, (fb, fbn, psd, rx) in enumerate(zip(freq_bands, freq_band_names,
+                                                 psdf, radius)):
+        s_obj = SourceObj('s', xyz, data=psd, radius_min=rx[0], radius_max=rx[1])  # noqa
+        s_obj.color_sources(data=psd, cmap='cool', clim=clim)
+        sc.add_to_subplot(s_obj, col=num, title=str(fb) + ' - ' + fbn,
                           title_color='white', rotate='top', zoom=.6)
     cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=15,
                        cbtxtsz=20)
