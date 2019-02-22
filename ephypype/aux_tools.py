@@ -78,7 +78,7 @@ def _get_freq_band(freq_band_name, freq_band_names, freq_bands):
     return None
 
 
-def parse_string(string, token):
+def _parse_string(string, token):
     """Find a token in a string.
 
     Parameters

@@ -173,7 +173,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 ##############################################################################
 from ephypype.gather.gather_results import get_results  # noqa
 from ephypype.gather.gather_results import get_channel_files  # noqa
-from ephypype.aux_tools import parse_string  # noqa
+from ephypype.aux_tools import _parse_string  # noqa
 from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 
 thresh = .8
@@ -210,7 +210,7 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
     s_obj.color_sources(data=radius, cmap='cool')
     cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=15,
                        cblabel='Connectivity', cbtxtsz=20)
-    band = parse_string(connect_file, freq_band_names)
+    band = _parse_string(connect_file, freq_band_names)
     title = 'Connectivity on {} band'.format(band)
     sc.add_to_subplot(c_obj, title=title, title_size=14, title_bold=True,
                       title_color='white', row=nf)
