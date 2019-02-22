@@ -14,7 +14,6 @@ data_path = mne.datasets.testing.data_path()
 sbj = 'sample'
 subjects_dir = op.join(data_path, 'subjects')
 raw_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc_raw.fif')
-epo_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc_raw-epo.fif')
 fwd_fname = op.join(data_path, 'MEG', sbj,
                     'sample_audvis_trunc_raw-oct-6-fwd.fif')
 cov_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc-cov.fif')
@@ -88,6 +87,22 @@ def test_fixed_mne_inverse_solution():
 
 def test_mne_inverse_solution_epoched_data():
     """Test compute MNE inverse solution."""
+
+    # create epoched data
+    raw = mne.io.read_raw_fif(raw_fname)
+    picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
+                           stim=False, exclude='bads')
+    # Define and read epochs:
+    events = mne.find_events(raw, stim_channel='STI 014')
+    # Define epochs parameters:
+    event_id = dict(aud_l=1, aud_r=2)  # event trigger and conditions
+    tmin = -0.2  # start of each epoch (200ms before the trigger)
+    tmax = 0.5  # end of each epoch (500ms after the trigger)
+    epochs = mne.Epochs(raw, events, event_id, tmin, tmax, proj=True,
+                        picks=picks, baseline=(None, 0), preload=False)
+    # Save all epochs in a fif file:
+    epo_fname = raw_fname.replace('.fif', '-epo.fif')
+    epochs.save(epo_fname)
 
     inverse_node = pe.Node(interface=InverseSolution(), name='inverse')
     inverse_node.inputs.sbj_id = 'sample'
