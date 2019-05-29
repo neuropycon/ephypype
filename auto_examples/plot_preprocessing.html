@@ -116,8 +116,9 @@ and/or fine-tune the correction in each subject.</p>
 <p>The <strong>input</strong> data can be in <strong>ds</strong> or <strong>fif</strong> format.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
 <span class="c1">#          Mainak Jas &lt;mainakjas@gmail.com&gt;</span>
-
 <span class="c1"># License: BSD (3-clause)</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
 
@@ -134,7 +135,9 @@ and/or fine-tune the correction in each subject.</p>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>then read the parameters for preprocessing from a json file</p>
+<p>then read the parameters for preprocessing from a
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_preprocessing.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
+file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_preprocessing.json&quot;</span><span class="p">))</span>
@@ -239,8 +242,8 @@ here correspond to how we connected the nodes.</p>
 <p>Finally, we are now ready to execute our workflow.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
-<span class="c1"># Run workflow locally on 3 CPUs</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+<span class="c1"># Run workflow locally on 1 CPU</span>
+<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The output is the preprocessed data stored in the workflow directory
@@ -249,7 +252,43 @@ defined by <cite>base_dir</cite>.</p>
 the excluded ICA components. It is also possible to include and exclude more
 components by using either a jupyter notebook or the preprocessing pipeline
 with different flag parameters.</p>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  6.136 seconds)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+
+<span class="n">ica_files</span><span class="p">,</span> <span class="n">raw_files</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
+                                   <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ica_file</span><span class="p">,</span> <span class="n">raw_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ica_files</span><span class="p">,</span> <span class="n">raw_files</span><span class="p">):</span>
+    <span class="n">raw</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="View documentation for mne.io.read_raw_fif"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
+    <span class="n">ica</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.preprocessing.read_ica.html#mne.preprocessing.read_ica" title="View documentation for mne.preprocessing.read_ica"><span class="n">mne</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">read_ica</span></a><span class="p">(</span><span class="n">ica_file</span><span class="p">)</span>
+    <span class="n">ica</span><span class="o">.</span><span class="n">plot_properties</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">ica</span><span class="o">.</span><span class="n">exclude</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">])</span>
+</pre></div>
+</div>
+<ul class="sphx-glr-horizontal">
+<li><img alt="../_images/sphx_glr_plot_preprocessing_002.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_002.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_preprocessing_003.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_003.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_preprocessing_004.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_004.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_preprocessing_005.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_005.png" />
+</li>
+<li><img alt="../_images/sphx_glr_plot_preprocessing_006.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_006.png" />
+</li>
+</ul>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Opening raw data file /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif...
+    Read 5 compensation matrices
+    Range : 0 ... 47999 =      0.000 ...    59.999 secs
+Ready.
+Current compensation grade : 3
+Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif ...
+Now restoring ICA solution ...
+Ready.
+    Using multitaper spectrum estimation with 7 DPSS windows
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  11.353 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-preprocessing-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/91dca2d1dfdbf3375710b8e8e401941e/plot_preprocessing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_preprocessing.py</span></code></a></div>

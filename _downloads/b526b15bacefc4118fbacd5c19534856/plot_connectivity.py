@@ -11,11 +11,12 @@ The **input** data should be a time series matrix in **npy** or **mat** format.
 """
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
-
 # License: BSD (3-clause)
 
-import os.path as op
+# sphinx_gallery_thumbnail_number = 2
 
+import os.path as op
+import numpy as np
 import nipype.pipeline.engine as pe
 
 import ephypype
@@ -32,7 +33,9 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for connectivity from a json file and print it
+# then read the parameters for connectivity from a
+# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_connectivity.json>`
+#  file and print it
 
 import json  # noqa
 import pprint  # noqa
@@ -96,7 +99,7 @@ spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
     epoch_window_length=epoch_window_length)
 
 ###############################################################################
-# The connectivity node need two auxiliary nodes: one node reads the raw data
+# The connectivity node needs two auxiliary nodes: one node reads the raw data
 # file in .fif format and extract the data and the channel information; the
 # other node get information on the frequency band we are interested on.
 
@@ -143,7 +146,6 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread  # noqa
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, correl_analysis_name, 'graph.png'))
 plt.figure(figsize=(8, 8))
@@ -155,8 +157,8 @@ plt.axis('off')
 
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
-# Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
+# Run workflow locally on 1 CPU
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ###############################################################################
 # The output is the **spectral connectivty matrix in .npy format** stored
@@ -167,3 +169,52 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 2})
 # .. |graphpype| raw:: html
 #
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
+
+##############################################################################
+from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather.gather_results import get_channel_files  # noqa
+from ephypype.aux_tools import _parse_string  # noqa
+from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
+
+thresh = .8
+with_text = False
+
+channel_coo_files, channel_name_files = get_channel_files(
+        main_workflow.base_dir, main_workflow.name)
+
+connectivity_matrices, _ = get_results(
+        main_workflow.base_dir, main_workflow.name, pipeline='connectivity')
+
+sc = SceneObj(size=(1000, 1000), bgcolor=(.1, .1, .1))
+for nf, (connect_file, channel_coo_file, channel_name_file) in \
+        enumerate(zip(connectivity_matrices, channel_coo_files,
+                      channel_name_files)):
+
+    # Load files :
+    xyz = np.genfromtxt(channel_coo_file, dtype=float)
+    names = np.genfromtxt(channel_name_file, dtype=str)
+    connect = np.load(connect_file)
+    connect += connect.T
+    connect = np.ma.masked_array(connect, mask=connect < thresh)
+    names = names if with_text else None
+    radius = connect.sum(1)
+    clim = (thresh, connect.max())
+
+    # With text :
+    c_obj = ConnectObj('c', xyz, connect, clim=clim, dynamic=(0., 1.),
+                       dynamic_order=3, antialias=True, cmap='cool',
+                       line_width=4.)
+    s_obj = SourceObj('s', xyz, data=radius, radius_min=5, radius_max=15,
+                      text=names, text_size=10, text_color='white',
+                      text_translate=(0., 0., 0.))
+    s_obj.color_sources(data=radius, cmap='cool')
+    cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=15,
+                       cblabel='Connectivity', cbtxtsz=20)
+    band = _parse_string(connect_file, freq_band_names)
+    title = 'Connectivity on {} band'.format(band)
+    sc.add_to_subplot(c_obj, title=title, title_size=14, title_bold=True,
+                      title_color='white', row=nf)
+    sc.add_to_subplot(s_obj, rotate='top', zoom=.5, use_this_cam=True, row=nf)
+    sc.add_to_subplot(cbar, col=1, width_max=200, row=nf)
+
+sc.preview()

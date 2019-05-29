@@ -118,7 +118,10 @@ computed and saved in a numpy file.</p>
 <span class="c1">#          Mainak Jas &lt;mainakjas@gmail.com&gt;</span>
 <span class="c1"># License: BSD (3-clause)</span>
 
+<span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="kn">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
@@ -131,7 +134,9 @@ computed and saved in a numpy file.</p>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>then read the parameters for PSD computation from a json file</p>
+<p>then read the parameters for PSD computation from a
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
+file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_power.json&quot;</span><span class="p">))</span>
@@ -148,18 +153,8 @@ computed and saved in a numpy file.</p>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;power parameters&#39;: {&#39;fmax&#39;: 150,
                       &#39;fmin&#39;: 0.1,
-                      &#39;freq_band_names&#39;: [&#39;delta&#39;,
-                                          &#39;theta&#39;,
-                                          &#39;alpha&#39;,
-                                          &#39;beta&#39;,
-                                          &#39;gamma1&#39;,
-                                          &#39;gamma2&#39;],
-                      &#39;freq_bands&#39;: [[2, 4],
-                                     [5, 7],
-                                     [8, 12],
-                                     [13, 29],
-                                     [30, 59],
-                                     [60, 90]],
+                      &#39;freq_band_names&#39;: [&#39;theta&#39;, &#39;alpha&#39;, &#39;beta&#39;],
+                      &#39;freq_bands&#39;: [[3, 6], [8, 13], [13, 30]],
                       &#39;is_epoched&#39;: False,
                       &#39;method&#39;: &#39;welch&#39;}}
 </pre></div>
@@ -192,7 +187,8 @@ nodes we created. The power pipeline in the <strong>sensor space</strong> is imp
 by the function <code class="xref py py-func docutils literal notranslate"><span class="pre">ephypype.pipelines.power.create_pipeline_power()</span></code>, thus
 to instantiate this pipeline node, we import it and pass our parameters
 to it.
-The power pipeline contains only one node <code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.power.Power</span></code>
+The power pipeline contains only one node
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.power.Power</span></code>
 that wraps the MNE-Python functions <a class="reference external" href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_welch.html#mne.time_frequency.psd_welch" title="(in MNE v0.18.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_welch()</span></code></a> and
 <a class="reference external" href="http://martinos.org/mne/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" title="(in MNE v0.18.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_multitaper()</span></code></a> for computing the PSD using
 Welch’s method and multitapers respectively.</p>
@@ -226,8 +222,7 @@ clearer in a moment when we plot the graph of the workflow.</p>
 </div>
 <p>and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">imread</span>  <span class="c1"># noqa</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">power_analysis_name</span><span class="p">,</span> <span class="s1">&#39;graph.png&#39;</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
@@ -238,7 +233,7 @@ here correspond to how we connected the nodes.</p>
 <p>Finally, we are now ready to execute our workflow.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
-<span class="c1"># Run workflow locally on 3 CPUs</span>
+<span class="c1"># Run workflow locally on 1 CPU</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
@@ -247,12 +242,51 @@ here correspond to how we connected the nodes.</p>
 <cite>base_dir</cite></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The power pipeline in the <strong>source space</strong> is implemented by the function
-<code class="xref py py-func docutils literal notranslate"><span class="pre">ephypype.pipelines.power.create_pipeline_power_src_space()</span></code>
+<p class="last">The power pipeline in the <strong>source space</strong> is implemented by the
+function <code class="xref py py-func docutils literal notranslate"><span class="pre">ephypype.pipelines.power.create_pipeline_power_src_space()</span></code>
 and its Node <code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.power.Power</span></code> compute the PSD
 by the welch function of the scipy package.</p>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  6.140 seconds)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="kn">import</span> <span class="n">SourceObj</span><span class="p">,</span> <span class="n">SceneObj</span><span class="p">,</span> <span class="n">ColorbarObj</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">visbrain.utils</span> <span class="kn">import</span> <span class="n">normalize</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span>  <span class="c1"># noqa</span>
+
+<span class="n">psd_files</span><span class="p">,</span> <span class="n">channel_coo_files</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
+                                           <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                           <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;power&#39;</span><span class="p">)</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SceneObj</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">psd_file</span><span class="p">,</span> <span class="n">channel_coo_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">psd_files</span><span class="p">,</span> <span class="n">channel_coo_files</span><span class="p">):</span>
+    <span class="n">path_xyz</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_filename</span><span class="p">(</span><span class="n">psd_file</span><span class="p">)</span>
+
+    <span class="n">arch</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="n">psd_file</span><span class="p">)</span>
+    <span class="n">psds</span><span class="p">,</span> <span class="n">freqs</span> <span class="o">=</span> <span class="n">arch</span><span class="p">[</span><span class="s1">&#39;psds&#39;</span><span class="p">],</span> <span class="n">arch</span><span class="p">[</span><span class="s1">&#39;freqs&#39;</span><span class="p">]</span>
+    <span class="n">xyz</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.genfromtxt" title="View documentation for numpy.genfromtxt"><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span></a><span class="p">(</span><span class="n">channel_coo_file</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">freq_bands</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.asarray" title="View documentation for numpy.asarray"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">freq_bands</span><span class="p">)</span>
+    <span class="n">clim</span> <span class="o">=</span> <span class="p">(</span><span class="n">psds</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">psds</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+    <span class="c1"># Find indices of frequencies :</span>
+    <span class="n">idx_fplt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">freqs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span>
+                       <span class="n">freq_bands</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/arrays.html#numpy.newaxis" title="View documentation for numpy.newaxis"><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span></a><span class="p">]))</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">psdf</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.array" title="View documentation for numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="n">psds</span><span class="p">[:,</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">k</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">idx_fplt</span><span class="p">])</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.c_" title="View documentation for numpy.c_"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><span class="n">psdf</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">psdf</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)],</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">fb</span><span class="p">,</span> <span class="n">fbn</span><span class="p">,</span> <span class="n">psd</span><span class="p">,</span> <span class="n">rx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">freq_bands</span><span class="p">,</span> <span class="n">freq_band_names</span><span class="p">,</span>
+                                                 <span class="n">psdf</span><span class="p">,</span> <span class="n">radius</span><span class="p">)):</span>
+        <span class="n">s_obj</span> <span class="o">=</span> <span class="n">SourceObj</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">psd</span><span class="p">,</span> <span class="n">radius_min</span><span class="o">=</span><span class="n">rx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">radius_max</span><span class="o">=</span><span class="n">rx</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># noqa</span>
+        <span class="n">s_obj</span><span class="o">.</span><span class="n">color_sources</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">psd</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cool&#39;</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="n">clim</span><span class="p">)</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">s_obj</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">num</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">fb</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">fbn</span><span class="p">,</span>
+                          <span class="n">title_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=.</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">ColorbarObj</span><span class="p">(</span><span class="n">s_obj</span><span class="p">,</span> <span class="n">txtcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">cblabel</span><span class="o">=</span><span class="s1">&#39;PSD&#39;</span><span class="p">,</span> <span class="n">txtsz</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                       <span class="n">cbtxtsz</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">freq_bands</span><span class="p">),</span> <span class="n">width_max</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_power_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_power_002.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  9.835 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-power-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/6ec947a41b7bdde51b1c89781ff05693/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_power.py</span></code></a></div>

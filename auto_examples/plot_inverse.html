@@ -113,11 +113,12 @@
 from raw/epoched data (<em>.fif</em> format) specified by the user or from the output
 of the Preprocessing pipeline (cleaned raw data).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
-
 <span class="c1"># License: BSD (3-clause)</span>
 
-<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="kn">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
@@ -131,7 +132,9 @@ of the Preprocessing pipeline (cleaned raw data).</p>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>then read the parameters for inverse solution from a json file</p>
+<p>then read the parameters for inverse solution from a
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_inverse.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
+file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_inverse.json&quot;</span><span class="p">))</span>
@@ -235,7 +238,7 @@ here correspond to how we connected the nodes.</p>
 <p>Finally, we are now ready to execute our workflow.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
-<span class="c1"># Run workflow locally on 3 CPUs</span>
+<span class="c1"># Run workflow locally on 1 CPU</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
@@ -247,7 +250,62 @@ the Connectivity pipeline.</p>
 <p class="last">To use this pipeline, we need a cortical segmentation of MRI
 data, that could be provided by Freesurfer</p>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  8.168 seconds)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="kn">import</span> <span class="n">BrainObj</span><span class="p">,</span> <span class="n">ColorbarObj</span><span class="p">,</span> <span class="n">SceneObj</span>  <span class="c1"># noqa</span>
+
+<span class="n">time_series_files</span><span class="p">,</span> <span class="n">label_files</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
+                                             <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                             <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;inverse&#39;</span><span class="p">)</span>
+
+<span class="n">time_pts</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">sc</span> <span class="o">=</span> <span class="n">SceneObj</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="o">.</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">lh_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="s1">&#39;label/lh.aparc.annot&#39;</span><span class="p">)</span>
+<span class="n">rh_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span> <span class="s1">&#39;label/rh.aparc.annot&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">inverse_file</span><span class="p">,</span> <span class="n">label_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">time_series_files</span><span class="p">,</span> <span class="n">label_files</span><span class="p">):</span>
+    <span class="c1"># Load files :</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">label_file</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ar</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">names</span><span class="p">,</span> <span class="n">xyz</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">ar</span><span class="p">[</span><span class="s1">&#39;ROI_names&#39;</span><span class="p">],</span> <span class="n">ar</span><span class="p">[</span><span class="s1">&#39;ROI_coords&#39;</span><span class="p">],</span> <span class="n">ar</span><span class="p">[</span><span class="s1">&#39;ROI_colors&#39;</span><span class="p">]</span>  <span class="c1"># noqa</span>
+    <span class="n">ts</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.squeeze" title="View documentation for numpy.squeeze"><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span></a><span class="p">(</span><a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.load" title="View documentation for numpy.load"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="n">inverse_file</span><span class="p">))</span>
+    <span class="n">cen</span> <span class="o">=</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.array" title="View documentation for numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="n">k</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">xyz</span><span class="p">])</span>
+
+    <span class="c1"># Get the data of the left / right hemisphere :</span>
+    <span class="n">lh_data</span><span class="p">,</span> <span class="n">rh_data</span> <span class="o">=</span> <span class="n">ts</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_pts</span><span class="p">],</span> <span class="n">ts</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_pts</span><span class="p">]</span>
+    <span class="n">clim</span> <span class="o">=</span> <span class="p">(</span><span class="n">ts</span><span class="p">[:,</span> <span class="n">time_pts</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">ts</span><span class="p">[:,</span> <span class="n">time_pts</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">roi_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <a href="http://docs.scipy.org/doc/numpy-1.9.1/reference/generated/numpy.html#numpy.array" title="View documentation for numpy.array"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span><span class="n">names</span><span class="p">)[::</span><span class="mi">2</span><span class="p">]]</span>
+
+    <span class="c1"># Left hemisphere outside :</span>
+    <span class="n">b_obj_li</span> <span class="o">=</span> <span class="n">BrainObj</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">translucent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="n">b_obj_li</span><span class="o">.</span><span class="n">parcellize</span><span class="p">(</span><span class="n">lh_file</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="n">roi_names</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lh_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">b_obj_li</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Left hemisphere inside :</span>
+    <span class="n">b_obj_lo</span> <span class="o">=</span> <span class="n">BrainObj</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>  <span class="n">translucent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="n">b_obj_lo</span><span class="o">.</span><span class="n">parcellize</span><span class="p">(</span><span class="n">lh_file</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="n">roi_names</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">lh_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">b_obj_lo</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Right hemisphere outside :</span>
+    <span class="n">b_obj_ro</span> <span class="o">=</span> <span class="n">BrainObj</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>  <span class="n">translucent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">b_obj_ro</span><span class="o">.</span><span class="n">parcellize</span><span class="p">(</span><span class="n">rh_file</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="n">roi_names</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">rh_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">b_obj_ro</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Right hemisphere inside :</span>
+    <span class="n">b_obj_ri</span> <span class="o">=</span> <span class="n">BrainObj</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>  <span class="n">translucent</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+    <span class="n">b_obj_ri</span><span class="o">.</span><span class="n">parcellize</span><span class="p">(</span><span class="n">rh_file</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="n">roi_names</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">rh_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">b_obj_ri</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rotate</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Add the colorbar :</span>
+    <span class="n">cbar</span> <span class="o">=</span> <span class="n">ColorbarObj</span><span class="p">(</span><span class="n">b_obj_li</span><span class="p">,</span> <span class="n">txtsz</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">cbtxtsz</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">txtcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+                       <span class="n">cblabel</span><span class="o">=</span><span class="s1">&#39;Intensity&#39;</span><span class="p">)</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">add_to_subplot</span><span class="p">(</span><span class="n">cbar</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">row_span</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../_images/sphx_glr_plot_inverse_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_inverse_002.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  10.058 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-inverse-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/b4833c6e0e2f107adaf6f554ac59fbd3/plot_inverse.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_inverse.py</span></code></a></div>
