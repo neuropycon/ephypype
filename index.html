@@ -1,35 +1,20 @@
 <!DOCTYPE html>
 
-
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>ephypype &#8212; ephypype 0.1dev0 documentation</title>
-    
-    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootswatch-3.3.4/flatly/bootstrap.min.css" type="text/css" />
+    <title>Neuropycon &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.1dev0',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -38,8 +23,7 @@
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-  </head>
-  <body role="document">
+  </head><body>
 
   <div id="navbar" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
@@ -83,21 +67,11 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">ephypype</a><ul>
-<li><a class="reference internal" href="#pipelines">Pipelines</a></li>
+<li><a class="reference internal" href="#">Neuropycon</a></li>
+<li><a class="reference internal" href="#ephypype">ephypype</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#modules">Modules</a></li>
-<li><a class="reference internal" href="#module-ephypype.aux_tools">ephypype.aux_tools</a></li>
-<li><a class="reference internal" href="#module-ephypype.compute_fwd_problem">ephypype.compute_fwd_problem</a></li>
-<li><a class="reference internal" href="#module-ephypype.compute_inv_problem">ephypype.compute_inv_problem</a></li>
-<li><a class="reference internal" href="#module-ephypype.fif2ts">ephypype.fif2ts</a></li>
-<li><a class="reference internal" href="#module-ephypype.import_ctf">ephypype.import_ctf</a></li>
-<li><a class="reference internal" href="#module-ephypype.import_mat">ephypype.import_mat</a></li>
-<li><a class="reference internal" href="#module-ephypype.import_txt">ephypype.import_txt</a></li>
-<li><a class="reference internal" href="#module-ephypype.power">ephypype.power</a></li>
-<li><a class="reference internal" href="#module-ephypype.preproc">ephypype.preproc</a></li>
-<li><a class="reference internal" href="#module-ephypype.spectral">ephypype.spectral</a></li>
+<li><a class="reference internal" href="#install-ephypype">Install ephypype</a></li>
+<li><a class="reference internal" href="#freesurfer">Freesurfer</a></li>
 </ul>
 </li>
 </ul>
@@ -137,536 +111,78 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="ephypype">
-<span id="id1"></span><h1>ephypype<a class="headerlink" href="#ephypype" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="neuropycon">
+<span id="id1"></span><h1>Neuropycon<a class="headerlink" href="#neuropycon" title="Permalink to this headline">¶</a></h1>
+<p>Neuropycon is an open-source multi-modal brain data analysis kit which provides <strong>Python-based
+pipelines</strong> for advanced multi-thread processing of fMRI, MEG and EEG data, with a focus on connectivity
+and graph analyses. Neuropycon is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>,
+a tool developed in fMRI field, which facilitates data analyses by wrapping many commonly-used neuro-imaging software into a common
+python framework.</p>
+<p>Neuropycon project includes two different packages:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#ephypype"><span class="std std-ref">ephypype</span></a> based on <a href="http://martinos.org/mne/stable/index.html" target="_blank">MNE python</a> includes pipelines for electrophysiology analysis</li>
+<li><a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a> based on <a href="http://deim.urv.cat/~sergio.gomez/radatools.php" target="_blank">radatools</a> includes pipelines for graph theoretical analysis of neuroimaging data</li>
+</ul>
+<p>Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular
+defines a set of different <strong>pipelines</strong> that can be used stand-alone or as <strong>lego</strong> of a bigger workflow:
+the input of a pipeline will be the output of another pipeline.</p>
+<p>For each possible workflow the <strong>input data</strong> can be specified in three different ways:</p>
+<ul class="simple">
+<li>raw MEG data in <strong>.fif</strong> and <strong>.ds</strong> format</li>
+<li>time series of connectivity matrices in <strong>.mat</strong> (Matlab) or <strong>.npy</strong> (Numpy) format</li>
+<li>connectivity matrices in <strong>.mat</strong> (Matlab) or <strong>.npy</strong> (Numpy) format</li>
+</ul>
+<div class="figure align-center" id="id3">
+<span id="lego"></span><a class="reference internal image-reference" href="_images/tiny_all_input_doors.png"><img alt="_images/tiny_all_input_doors.png" src="_images/tiny_all_input_doors.png" style="width: 50%;" /></a>
+<p class="caption"><span class="caption-text">Main inputs and subsequent pipeline steps</span></p>
+</div>
+<p>Each pipeline based on nipype engine is defined by <strong>nodes</strong> connected together,
+where each node maybe wrapping of existing software (as MNE-python modules or radatools functions)
+as well as providing easy ways to implement function defined by the user.</p>
+</div>
+<div class="section" id="ephypype">
+<span id="id2"></span><h1>ephypype<a class="headerlink" href="#ephypype" title="Permalink to this headline">¶</a></h1>
 <p>The ephypype package includes pipelines for electrophysiology analysis.
-It&#8217;s based mainly on MNE-Python package, as well as more standard python libraries such as Numpy and Scipy.
+It’s based mainly on MNE-Python package, as well as more standard python libraries such as Numpy and Scipy.
 Current implementations allow for</p>
 <ul class="simple">
 <li>MEG/EEG data import</li>
 <li>MEG/EEG data pre-processing and cleaning by an automatic removal of eyes and heart related artifacts</li>
 <li>sensor or source-level connectivity analyses</li>
 </ul>
-<p>The ephypype package provides the main pipelines in the <span class="xref std std-ref">pipelines</span>:</p>
+<p>The ephypype package provides the following <strong>pipelines</strong>:</p>
 <ul class="simple">
-<li>the <span class="xref std std-ref">preproc_meeg</span> runs the ICA algorithm for an automatic removal of eyes and heart related artefacts</li>
-<li>the <span class="xref std std-ref">power</span> computes the power spectral density (PSD) on sensor space</li>
-<li>the <span class="xref std std-ref">source_reconstruction</span> computes the inverse solution starting from raw/epoched data</li>
-<li>the <span class="xref std std-ref">spectral_connectivity</span> perform connectivity analysis in sensor or source space</li>
+<li>the <a class="reference internal" href="auto_examples/plot_preprocessing.html#preproc-meeg"><span class="std std-ref">preprocessing pipeline</span></a> runs the ICA algorithm for an automatic removal of eyes and heart related artefacts</li>
+<li>the <a class="reference internal" href="auto_examples/plot_power.html#power"><span class="std std-ref">power pipeline</span></a> computes the power spectral density (PSD) on sensor space</li>
+<li>the <a class="reference internal" href="auto_examples/plot_inverse.html#source-reconstruction"><span class="std std-ref">inverse solution pipeline</span></a> computes the inverse solution starting from raw/epoched data</li>
+<li>the <a class="reference internal" href="auto_examples/plot_connectivity.html#spectral-connectivity"><span class="std std-ref">connectivity pipeline</span></a> perform connectivity analysis in sensor or source space</li>
 </ul>
-<div class="section" id="pipelines">
-<h2>Pipelines<a class="headerlink" href="#pipelines" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-</div>
-</div>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
+<span id="ephy-install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>ephypype works with <strong>python3</strong></p>
+<ul class="simple">
+<li>mne&gt;0.14</li>
+<li>nipype</li>
+<li>h5py</li>
+</ul>
+<p>These dependencies are automatically installed during ephypype installation.</p>
+<p>We also recommend to install MNE python by following the <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python installation instructions</a>.</p>
+<div class="section" id="install-ephypype">
+<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt https://api.github.com/repos/neuropycon/ephypype/zipball/master
+</pre></div>
 </div>
-<div class="section" id="subpackages">
-<h3>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h3>
-<div class="toctree-wrapper compound">
 </div>
-</div>
-<div class="section" id="modules">
-<h3>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="module-ephypype.aux_tools">
-<span id="ephypype-aux-tools"></span><h3>ephypype.aux_tools<a class="headerlink" href="#module-ephypype.aux_tools" title="Permalink to this headline">¶</a></h3>
-<p>Aux functions.</p>
-<p>AUTOR: dmalt</p>
-<dl class="function">
-<dt id="ephypype.aux_tools.get_freq_band">
-<code class="descclassname">ephypype.aux_tools.</code><code class="descname">get_freq_band</code><span class="sig-paren">(</span><em>freq_band_name</em>, <em>freq_band_names</em>, <em>freq_bands</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/aux_tools.html#get_freq_band"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.aux_tools.get_freq_band" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get frequency band.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.aux_tools.nostdout">
-<code class="descclassname">ephypype.aux_tools.</code><code class="descname">nostdout</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/aux_tools.html#nostdout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.aux_tools.nostdout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Kill standart output.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="ephypype.aux_tools.suppress_stdout_stderr">
-<em class="property">class </em><code class="descclassname">ephypype.aux_tools.</code><code class="descname">suppress_stdout_stderr</code><a class="reference internal" href="_modules/ephypype/aux_tools.html#suppress_stdout_stderr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.aux_tools.suppress_stdout_stderr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Context manager.</p>
-<p>A context manager for doing a &#8220;deep suppression&#8221; of stdout and stderr in
-Python, i.e. will suppress all print, even if the print originates in a
-compiled C/Fortran sub-function.
-This will not suppress raised exceptions, since exceptions are printed
-to stderr just before a script exits, and after the context manager has
-exited (at least, I think that is why it lets exceptions through).</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.compute_fwd_problem">
-<span id="ephypype-compute-fwd-problem"></span><h3>ephypype.compute_fwd_problem<a class="headerlink" href="#module-ephypype.compute_fwd_problem" title="Permalink to this headline">¶</a></h3>
-<p>Lead Field computation functions.</p>
-<dl class="docutils">
-<dt>Author:</dt>
-<dd>Annalisa Pascarella &lt;<a class="reference external" href="mailto:a&#46;pascarella&#37;&#52;&#48;iac&#46;cnr&#46;it">a<span>&#46;</span>pascarella<span>&#64;</span>iac<span>&#46;</span>cnr<span>&#46;</span>it</a>&gt;</dd>
-</dl>
-<dl class="function">
-<dt id="ephypype.compute_fwd_problem.compute_fwd_sol">
-<code class="descclassname">ephypype.compute_fwd_problem.</code><code class="descname">compute_fwd_sol</code><span class="sig-paren">(</span><em>raw_info</em>, <em>trans_fname</em>, <em>src</em>, <em>bem</em>, <em>fwd_filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_fwd_problem.html#compute_fwd_sol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_fwd_problem.compute_fwd_sol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute leadfield matrix by BEM.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_fwd_problem.create_bem_sol">
-<code class="descclassname">ephypype.compute_fwd_problem.</code><code class="descname">create_bem_sol</code><span class="sig-paren">(</span><em>sbj_dir</em>, <em>sbj_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_fwd_problem.html#create_bem_sol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_fwd_problem.create_bem_sol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create bem solution.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_fwd_problem.create_mixed_source_space">
-<code class="descclassname">ephypype.compute_fwd_problem.</code><code class="descname">create_mixed_source_space</code><span class="sig-paren">(</span><em>sbj_dir</em>, <em>sbj_id</em>, <em>spacing</em>, <em>labels</em>, <em>src</em>, <em>save_mixed_src_space</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_fwd_problem.html#create_mixed_source_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_fwd_problem.create_mixed_source_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a miwed source space.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_fwd_problem.create_src_space">
-<code class="descclassname">ephypype.compute_fwd_problem.</code><code class="descname">create_src_space</code><span class="sig-paren">(</span><em>sbj_dir</em>, <em>sbj_id</em>, <em>spacing</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_fwd_problem.html#create_src_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_fwd_problem.create_src_space" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a source space.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_fwd_problem.is_trans">
-<code class="descclassname">ephypype.compute_fwd_problem.</code><code class="descname">is_trans</code><span class="sig-paren">(</span><em>raw_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_fwd_problem.html#is_trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_fwd_problem.is_trans" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if coregistration file.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.compute_inv_problem">
-<span id="ephypype-compute-inv-problem"></span><h3>ephypype.compute_inv_problem<a class="headerlink" href="#module-ephypype.compute_inv_problem" title="Permalink to this headline">¶</a></h3>
-<dl class="function">
-<dt id="ephypype.compute_inv_problem.compute_ROIs_inv_sol">
-<code class="descclassname">ephypype.compute_inv_problem.</code><code class="descname">compute_ROIs_inv_sol</code><span class="sig-paren">(</span><em>raw_filename</em>, <em>sbj_id</em>, <em>sbj_dir</em>, <em>fwd_filename</em>, <em>cov_fname</em>, <em>is_epoched=False</em>, <em>events_id=[]</em>, <em>t_min=None</em>, <em>t_max=None</em>, <em>is_evoked=False</em>, <em>snr=1.0</em>, <em>inv_method='MNE'</em>, <em>parc='aparc'</em>, <em>aseg=False</em>, <em>aseg_labels=[]</em>, <em>save_stc=False</em>, <em>is_fixed=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_inv_problem.html#compute_ROIs_inv_sol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_inv_problem.compute_ROIs_inv_sol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the inverse solution on raw/epoched data and return the average
-time series computed in the N_r regions of the source space defined by
-the specified cortical parcellation</p>
-<dl class="docutils">
-<dt>Inputs</dt>
-<dd><dl class="first last docutils">
-<dt>raw_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the raw/epoched data</dd>
-<dt>sbj_id <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>subject name</dd>
-<dt>sbj_dir <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Freesurfer directory</dd>
-<dt>fwd_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the forward operator</dd>
-<dt>cov_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the noise covariance matrix</dd>
-<dt>is_epoched <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>if True and events_id = None the input data are epoch data
-in the format -epo.fif
-if True and events_id is not None, the raw data are epoched
-according to events_id and t_min and t_max values</dd>
-<dt>events_id: dict</dt>
-<dd>the dict of events</dd>
-<dt>t_min, t_max: int</dt>
-<dd>define the time interval in which to epoch the raw data</dd>
-<dt>is_evoked: bool</dt>
-<dd>if True the raw data will be averaged according to the events
-contained in the dict events_id</dd>
-<dt>inv_method <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>the inverse method to use; possible choices: MNE, dSPM, sLORETA</dd>
-<dt>snr <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>the SNR value used to define the regularization parameter</dd>
-<dt>parc: str</dt>
-<dd>the parcellation defining the ROIs atlas in the source space</dd>
-<dt>aseg: bool</dt>
-<dd>if True a mixed source space will be created and the sub cortical
-regions defined in aseg_labels will be added to the source space</dd>
-<dt>aseg_labels: list</dt>
-<dd>list of substructures we want to include in the mixed source space</dd>
-<dt>save_stc: bool</dt>
-<dd>if True the stc will be saved</dd>
-</dl>
-</dd>
-<dt>Outputs</dt>
-<dd><dl class="first last docutils">
-<dt>ts_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the ROIs time series</dd>
-<dt>labels_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the ROIs of the parcellation</dd>
-<dt>label_names_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the name of the ROIs of the
-parcellation</dd>
-<dt>label_coords_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the coordinates of the
-centroid of the ROIs of the parcellation</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_inv_problem.compute_inverse_solution">
-<code class="descclassname">ephypype.compute_inv_problem.</code><code class="descname">compute_inverse_solution</code><span class="sig-paren">(</span><em>raw_filename</em>, <em>sbj_id</em>, <em>sbj_dir</em>, <em>fwd_filename</em>, <em>cov_fname</em>, <em>is_epoched=False</em>, <em>events_id=[]</em>, <em>t_min=None</em>, <em>t_max=None</em>, <em>is_evoked=False</em>, <em>snr=1.0</em>, <em>inv_method='MNE'</em>, <em>parc='aparc'</em>, <em>aseg=False</em>, <em>aseg_labels=[]</em>, <em>all_src_space=False</em>, <em>ROIs_mean=True</em>, <em>is_fixed=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_inv_problem.html#compute_inverse_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_inv_problem.compute_inverse_solution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the inverse solution on raw/epoched data and return the average
-time series computed in the N_r regions of the source space defined by
-the specified cortical parcellation</p>
-<dl class="docutils">
-<dt>Inputs</dt>
-<dd><dl class="first last docutils">
-<dt>raw_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the raw/epoched data</dd>
-<dt>sbj_id <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>subject name</dd>
-<dt>sbj_dir <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>Freesurfer directory</dd>
-<dt>fwd_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the forward operator</dd>
-<dt>cov_filename <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the noise covariance matrix</dd>
-<dt>is_epoched <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd>if True and events_id = None the input data are epoch data
-in the format -epo.fif
-if True and events_id is not None, the raw data are epoched
-according to events_id and t_min and t_max values</dd>
-<dt>events_id: dict</dt>
-<dd>the dict of events</dd>
-<dt>t_min, t_max: int</dt>
-<dd>define the time interval in which to epoch the raw data</dd>
-<dt>is_evoked: bool</dt>
-<dd>if True the raw data will be averaged according to the events
-contained in the dict events_id</dd>
-<dt>inv_method <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>the inverse method to use; possible choices: MNE, dSPM, sLORETA</dd>
-<dt>snr <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd>the SNR value used to define the regularization parameter</dd>
-<dt>parc: str</dt>
-<dd>the parcellation defining the ROIs atlas in the source space</dd>
-<dt>aseg: bool</dt>
-<dd>if True a mixed source space will be created and the sub cortical
-regions defined in aseg_labels will be added to the source space</dd>
-<dt>aseg_labels: list</dt>
-<dd>list of substructures we want to include in the mixed source space</dd>
-<dt>all_src_space: bool</dt>
-<dd>if True we compute the inverse for all points of the s0urce space</dd>
-<dt>ROIs_mean: bool</dt>
-<dd>if True we compute the mean of estimated time series on ROIs</dd>
-</dl>
-</dd>
-<dt>Outputs</dt>
-<dd><dl class="first last docutils">
-<dt>ts_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the estimated time series</dd>
-<dt>labels_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the ROIs of the parcellation</dd>
-<dt>label_names_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the name of the ROIs of the
-parcellation</dd>
-<dt>label_coords_file <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>filename of the file where are saved the coordinates of the
-centroid of the ROIs of the parcellation</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_inv_problem.compute_noise_cov">
-<code class="descclassname">ephypype.compute_inv_problem.</code><code class="descname">compute_noise_cov</code><span class="sig-paren">(</span><em>cov_fname</em>, <em>raw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_inv_problem.html#compute_noise_cov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_inv_problem.compute_noise_cov" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute noise covariance data from a continuous segment of raw data.
-Employ empty room data (collected without the subject) to calculate
-the full noise covariance matrix.
-This is recommended for analyzing ongoing spontaneous activity.</p>
-<dl class="docutils">
-<dt>Inputs</dt>
-<dd><dl class="first last docutils">
-<dt>cov_fname <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>noise covariance file name</dd>
-<dt>raw <span class="classifier-delimiter">:</span> <span class="classifier">Raw</span></dt>
-<dd>the raw data</dd>
-</dl>
-</dd>
-<dt>Output</dt>
-<dd><dl class="first last docutils">
-<dt>cov_fname <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>noise covariance file name in which is saved the noise covariance
-matrix</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.compute_inv_problem.read_noise_cov">
-<code class="descclassname">ephypype.compute_inv_problem.</code><code class="descname">read_noise_cov</code><span class="sig-paren">(</span><em>cov_fname</em>, <em>raw_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/compute_inv_problem.html#read_noise_cov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.compute_inv_problem.read_noise_cov" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a noise covariance matrix from cov_fname</p>
-<dl class="docutils">
-<dt>Inputs</dt>
-<dd><dl class="first last docutils">
-<dt>cov_fname <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd>noise covariance file name</dd>
-<dt>raw_info <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd>dictionary containing the information about the raw data</dd>
-</dl>
-</dd>
-<dt>Outputs</dt>
-<dd><dl class="first last docutils">
-<dt>noise_cov <span class="classifier-delimiter">:</span> <span class="classifier">Covariance</span></dt>
-<dd>the noise covariance matrix</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.fif2ts">
-<span id="ephypype-fif2ts"></span><h3>ephypype.fif2ts<a class="headerlink" href="#module-ephypype.fif2ts" title="Permalink to this headline">¶</a></h3>
-<p>fif convertors.</p>
-<dl class="function">
-<dt id="ephypype.fif2ts.ep2ts">
-<code class="descclassname">ephypype.fif2ts.</code><code class="descname">ep2ts</code><span class="sig-paren">(</span><em>fif_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/fif2ts.html#ep2ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.fif2ts.ep2ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read fif file with raw data or epochs and save timeseries to .npy.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.import_ctf">
-<span id="ephypype-import-ctf"></span><h3>ephypype.import_ctf<a class="headerlink" href="#module-ephypype.import_ctf" title="Permalink to this headline">¶</a></h3>
-<p>Import ctf.</p>
-<dl class="function">
-<dt id="ephypype.import_ctf.compute_roi_coordinates">
-<code class="descclassname">ephypype.import_ctf.</code><code class="descname">compute_roi_coordinates</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_ctf.html#compute_roi_coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_ctf.compute_roi_coordinates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute ROI coordinates.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_ctf.convert_ds_to_raw_fif">
-<code class="descclassname">ephypype.import_ctf.</code><code class="descname">convert_ds_to_raw_fif</code><span class="sig-paren">(</span><em>ds_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_ctf.html#convert_ds_to_raw_fif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_ctf.convert_ds_to_raw_fif" title="Permalink to this definition">¶</a></dt>
-<dd><p>CTF .ds to .fif and save result in pipeline folder structure.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_ctf.test_convert_data">
-<code class="descclassname">ephypype.import_ctf.</code><code class="descname">test_convert_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_ctf.html#test_convert_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_ctf.test_convert_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test data conversion.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_ctf.test_import_data">
-<code class="descclassname">ephypype.import_ctf.</code><code class="descname">test_import_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_ctf.html#test_import_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_ctf.test_import_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test import data.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.import_mat">
-<span id="ephypype-import-mat"></span><h3>ephypype.import_mat<a class="headerlink" href="#module-ephypype.import_mat" title="Permalink to this headline">¶</a></h3>
-<p>Import mat.</p>
-<dl class="function">
-<dt id="ephypype.import_mat.concat_ts">
-<code class="descclassname">ephypype.import_mat.</code><code class="descname">concat_ts</code><span class="sig-paren">(</span><em>all_ts_files</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_mat.html#concat_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_mat.concat_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Concat ts.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_mat.import_amplmat_to_ts">
-<code class="descclassname">ephypype.import_mat.</code><code class="descname">import_amplmat_to_ts</code><span class="sig-paren">(</span><em>tsmat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_mat.html#import_amplmat_to_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_mat.import_amplmat_to_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import amplmat to ts.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_mat.import_mat_to_conmat">
-<code class="descclassname">ephypype.import_mat.</code><code class="descname">import_mat_to_conmat</code><span class="sig-paren">(</span><em>mat_file</em>, <em>data_field_name='F'</em>, <em>orig_channel_names_file=None</em>, <em>orig_channel_coords_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_mat.html#import_mat_to_conmat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_mat.import_mat_to_conmat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import mat to conmat.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_mat.import_mat_to_ts">
-<code class="descclassname">ephypype.import_mat.</code><code class="descname">import_mat_to_ts</code><span class="sig-paren">(</span><em>mat_file</em>, <em>orig_channel_names_file</em>, <em>orig_channel_coords_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_mat.html#import_mat_to_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_mat.import_mat_to_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import mat to ts.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_mat.import_tsmat_to_ts">
-<code class="descclassname">ephypype.import_mat.</code><code class="descname">import_tsmat_to_ts</code><span class="sig-paren">(</span><em>tsmat_file</em>, <em>data_field_name='F'</em>, <em>good_channels_field_name='ChannelFlag'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_mat.html#import_tsmat_to_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_mat.import_tsmat_to_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Import tsmat to ts.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.import_txt">
-<span id="ephypype-import-txt"></span><h3>ephypype.import_txt<a class="headerlink" href="#module-ephypype.import_txt" title="Permalink to this headline">¶</a></h3>
-<p>Import txt.</p>
-<dl class="function">
-<dt id="ephypype.import_txt.read_brainvision_vhdr">
-<code class="descclassname">ephypype.import_txt.</code><code class="descname">read_brainvision_vhdr</code><span class="sig-paren">(</span><em>vhdr_file</em>, <em>sample_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_txt.html#read_brainvision_vhdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_txt.read_brainvision_vhdr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read brainvision vhdr files.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.import_txt.split_txt">
-<code class="descclassname">ephypype.import_txt.</code><code class="descname">split_txt</code><span class="sig-paren">(</span><em>sample_size</em>, <em>txt_file</em>, <em>sep_label_name</em>, <em>repair=True</em>, <em>sep=';'</em>, <em>keep_electrodes=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/import_txt.html#split_txt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.import_txt.split_txt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split txt.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.power">
-<span id="ephypype-power"></span><h3>ephypype.power<a class="headerlink" href="#module-ephypype.power" title="Permalink to this headline">¶</a></h3>
-<p>Power functions.</p>
-<p>Author: Dmitrii Altukhov &lt;<a class="reference external" href="mailto:dm-altukhov&#37;&#52;&#48;ya&#46;ru">dm-altukhov<span>&#64;</span>ya<span>&#46;</span>ru</a>&gt;</p>
-<dl class="function">
-<dt id="ephypype.power.compute_and_save_psd">
-<code class="descclassname">ephypype.power.</code><code class="descname">compute_and_save_psd</code><span class="sig-paren">(</span><em>data_fname</em>, <em>fmin=0</em>, <em>fmax=120</em>, <em>method='welch'</em>, <em>is_epoched=False</em>, <em>n_fft=256</em>, <em>n_overlap=0</em>, <em>picks=None</em>, <em>proj=False</em>, <em>n_jobs=1</em>, <em>verbose=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/power.html#compute_and_save_psd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.power.compute_and_save_psd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load epochs/raw from file, compute psd and save the result.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.power.compute_and_save_src_psd">
-<code class="descclassname">ephypype.power.</code><code class="descname">compute_and_save_src_psd</code><span class="sig-paren">(</span><em>data_fname</em>, <em>sfreq</em>, <em>fmin=0</em>, <em>fmax=120</em>, <em>is_epoched=False</em>, <em>n_fft=256</em>, <em>n_overlap=0</em>, <em>n_jobs=1</em>, <em>verbose=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/power.html#compute_and_save_src_psd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.power.compute_and_save_src_psd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load epochs/raw from file, compute psd and save the result.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.power.compute_mean_band_psd">
-<code class="descclassname">ephypype.power.</code><code class="descname">compute_mean_band_psd</code><span class="sig-paren">(</span><em>psds_file</em>, <em>freq_bands</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/power.html#compute_mean_band_psd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.power.compute_mean_band_psd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute mean band psd.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.preproc">
-<span id="ephypype-preproc"></span><h3>ephypype.preproc<a class="headerlink" href="#module-ephypype.preproc" title="Permalink to this headline">¶</a></h3>
-<p>Preprocessing functions.</p>
-<dl class="docutils">
-<dt>Authors: Dmitrii Altukhov &lt;<a class="reference external" href="mailto:dm-altukhov&#37;&#52;&#48;ya&#46;ru">dm-altukhov<span>&#64;</span>ya<span>&#46;</span>ru</a>&gt;</dt>
-<dd>Annalisa Pascarella &lt;<a class="reference external" href="mailto:a&#46;pascarella&#37;&#52;&#48;iac&#46;cnr&#46;it">a<span>&#46;</span>pascarella<span>&#64;</span>iac<span>&#46;</span>cnr<span>&#46;</span>it</a>&gt;</dd>
-</dl>
-<dl class="function">
-<dt id="ephypype.preproc.compute_ica">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">compute_ica</code><span class="sig-paren">(</span><em>fif_file</em>, <em>ecg_ch_name</em>, <em>eog_ch_name</em>, <em>n_components</em>, <em>reject</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#compute_ica"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.compute_ica" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute ica solution.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.create_epochs">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">create_epochs</code><span class="sig-paren">(</span><em>fif_file</em>, <em>ep_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#create_epochs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.create_epochs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Split raw .fif file into epochs.</p>
-<p>Splitted epochs have a length ep_length with rejection criteria.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.create_events">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">create_events</code><span class="sig-paren">(</span><em>raw</em>, <em>epoch_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#create_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.create_events" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create events to split raw into epochs.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.create_reject_dict">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">create_reject_dict</code><span class="sig-paren">(</span><em>raw_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#create_reject_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.create_reject_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create reject dir.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.create_ts">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">create_ts</code><span class="sig-paren">(</span><em>raw_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#create_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.create_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a raw data in <strong>.fif</strong> format.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>raw_fname</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">pathname of the raw data to read</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ts_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">pathname of the numpy file (.npy) containing the data read from
-raw_fname</p>
-</dd>
-<dt><strong>channel_coords_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">pathname of .txt file containing the channels coordinates</p>
-</dd>
-<dt><strong>channel_names_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">pathname of .txt file containing the channels labels</p>
-</dd>
-<dt><strong>sfreq</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">sampling frequency</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.generate_report">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">generate_report</code><span class="sig-paren">(</span><em>raw</em>, <em>ica</em>, <em>subj_name</em>, <em>basename</em>, <em>ecg_evoked</em>, <em>ecg_scores</em>, <em>ecg_inds</em>, <em>ecg_ch_name</em>, <em>eog_evoked</em>, <em>eog_scores</em>, <em>eog_inds</em>, <em>eog_ch_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#generate_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.generate_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate report for ica solution.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.get_epochs_info">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">get_epochs_info</code><span class="sig-paren">(</span><em>raw_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#get_epochs_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.get_epochs_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get epoch info.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.get_raw_info">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">get_raw_info</code><span class="sig-paren">(</span><em>raw_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#get_raw_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.get_raw_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get info from raw.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.get_raw_sfreq">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">get_raw_sfreq</code><span class="sig-paren">(</span><em>raw_fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#get_raw_sfreq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.get_raw_sfreq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get raw sfreq.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.preprocess_fif">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">preprocess_fif</code><span class="sig-paren">(</span><em>fif_file</em>, <em>l_freq=None</em>, <em>h_freq=None</em>, <em>down_sfreq=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#preprocess_fif"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.preprocess_fif" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter and downsample data.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.preproc.preprocess_set_ica_comp_fif_to_ts">
-<code class="descclassname">ephypype.preproc.</code><code class="descname">preprocess_set_ica_comp_fif_to_ts</code><span class="sig-paren">(</span><em>fif_file</em>, <em>subject_id</em>, <em>n_comp_exclude</em>, <em>is_sensor_space</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/preproc.html#preprocess_set_ica_comp_fif_to_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.preproc.preprocess_set_ica_comp_fif_to_ts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Preprocess ICA fif to ts.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ephypype.spectral">
-<span id="ephypype-spectral"></span><h3>ephypype.spectral<a class="headerlink" href="#module-ephypype.spectral" title="Permalink to this headline">¶</a></h3>
-<p>Spectral functions.</p>
-<p>Author: David Meunier &lt;<a class="reference external" href="mailto:david_meunier_79&#37;&#52;&#48;hotmail&#46;fr">david_meunier_79<span>&#64;</span>hotmail<span>&#46;</span>fr</a>&gt;</p>
-<dl class="function">
-<dt id="ephypype.spectral.compute_and_save_multi_spectral_connectivity">
-<code class="descclassname">ephypype.spectral.</code><code class="descname">compute_and_save_multi_spectral_connectivity</code><span class="sig-paren">(</span><em>all_data</em>, <em>con_method</em>, <em>sfreq</em>, <em>fmin</em>, <em>fmax</em>, <em>mode='cwt_morlet'</em>, <em>export_to_matlab=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/spectral.html#compute_and_save_multi_spectral_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.spectral.compute_and_save_multi_spectral_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute and save multi-spectral connectivity.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.spectral.compute_and_save_spectral_connectivity">
-<code class="descclassname">ephypype.spectral.</code><code class="descname">compute_and_save_spectral_connectivity</code><span class="sig-paren">(</span><em>data</em>, <em>con_method</em>, <em>sfreq</em>, <em>fmin</em>, <em>fmax</em>, <em>index=0</em>, <em>mode='cwt_morlet'</em>, <em>export_to_matlab=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/spectral.html#compute_and_save_spectral_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.spectral.compute_and_save_spectral_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute and save spectral connectivity.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.spectral.compute_spectral_connectivity">
-<code class="descclassname">ephypype.spectral.</code><code class="descname">compute_spectral_connectivity</code><span class="sig-paren">(</span><em>data</em>, <em>con_method</em>, <em>sfreq</em>, <em>fmin</em>, <em>fmax</em>, <em>mode='cwt_morlet'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/spectral.html#compute_spectral_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.spectral.compute_spectral_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute spectral connectivity.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.spectral.filter_adj_plot_mat">
-<code class="descclassname">ephypype.spectral.</code><code class="descname">filter_adj_plot_mat</code><span class="sig-paren">(</span><em>conmat_file</em>, <em>labels_file</em>, <em>sep_label_name</em>, <em>k_neigh</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/spectral.html#filter_adj_plot_mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.spectral.filter_adj_plot_mat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter adjacency matrix.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="ephypype.spectral.plot_circular_connectivity">
-<code class="descclassname">ephypype.spectral.</code><code class="descname">plot_circular_connectivity</code><span class="sig-paren">(</span><em>conmat</em>, <em>label_names</em>, <em>node_colors</em>, <em>node_order</em>, <em>vmin=0.3</em>, <em>vmax=1.0</em>, <em>nb_lines=200</em>, <em>fname='_def'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ephypype/spectral.html#plot_circular_connectivity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.spectral.plot_circular_connectivity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot circular connectivity.</p>
-</dd></dl>
-
+<div class="section" id="freesurfer">
+<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>Download Freesurfer software:</li>
+</ol>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall</a></p>
+<ol class="arabic simple" start="2">
+<li>Follow the Installation instructions</li>
+</ol>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall</a></p>
 </div>
 </div>
 </div>
@@ -683,8 +199,8 @@ raw_fname</p>
       
     </p>
     <p>
-        &copy; Copyright 2018, Neuropycon Developers. Last updated on 2018-09-16.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-05-29.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>
