@@ -1,0 +1,6 @@
+ephypype.pipelines.create\_pipeline\_power
+==========================================
+
+.. currentmodule:: ephypype.pipelines
+
+.. autofunction:: create_pipeline_power

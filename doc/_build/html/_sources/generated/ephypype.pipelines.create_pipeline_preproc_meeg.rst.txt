@@ -1,0 +1,6 @@
+ephypype.pipelines.create\_pipeline\_preproc\_meeg
+==================================================
+
+.. currentmodule:: ephypype.pipelines
+
+.. autofunction:: create_pipeline_preproc_meeg

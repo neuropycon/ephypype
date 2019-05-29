@@ -1,0 +1,6 @@
+ephypype.pipelines.create\_pipeline\_source\_reconstruction
+===========================================================
+
+.. currentmodule:: ephypype.pipelines
+
+.. autofunction:: create_pipeline_source_reconstruction

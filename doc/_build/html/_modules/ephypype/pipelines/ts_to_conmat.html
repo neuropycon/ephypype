@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ephypype.pipelines.ts_to_conmat &#8212; ephypype 0.1dev0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for ephypype.pipelines.ts_to_conmat</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Wraps spectral connectivity function of MNE, as plot_circular_connectivity.</span>
+
+<span class="sd">Author: David Meunier &lt;david_meunier_79@hotmail.fr&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">import</span> <span class="n">IdentityInterface</span>
+
+<span class="kn">from</span> <span class="nn">ephypype.interfaces.mne.spectral</span> <span class="k">import</span> <span class="n">SpectralConn</span><span class="p">,</span> <span class="n">PlotSpectralConn</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes.ts_tools</span> <span class="k">import</span> <span class="n">SplitWindows</span>
+
+
+<div class="viewcode-block" id="create_pipeline_time_series_to_spectral_connectivity"><a class="viewcode-back" href="../../../generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity">[docs]</a><span class="k">def</span> <span class="nf">create_pipeline_time_series_to_spectral_connectivity</span><span class="p">(</span>
+        <span class="n">main_path</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s1">&#39;ts_to_conmat&#39;</span><span class="p">,</span> <span class="n">con_method</span><span class="o">=</span><span class="s1">&#39;coh&#39;</span><span class="p">,</span>
+        <span class="n">multi_con</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">export_to_matlab</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">n_windows</span><span class="o">=</span><span class="p">[],</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;multitaper&#39;</span><span class="p">,</span> <span class="n">is_sensor_space</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">epoch_window_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">gathering_method</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Connectivity pipeline.</span>
+
+<span class="sd">    Compute spectral connectivity in a given frequency bands.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    main_path : str</span>
+<span class="sd">        the main path of the pipeline</span>
+<span class="sd">    pipeline_name: str (default &#39;ts_to_conmat&#39;)</span>
+<span class="sd">        name of the pipeline</span>
+<span class="sd">    con_method : str</span>
+<span class="sd">        metric computed on time series for connectivity; possible choice:</span>
+<span class="sd">        &quot;coh&quot;,&quot;imcoh&quot;,&quot;plv&quot;,&quot;pli&quot;,&quot;wpli&quot;,&quot;pli2_unbiased&quot;,&quot;ppc&quot;,&quot;cohy&quot;,</span>
+<span class="sd">        &quot;wpli2_debiased&quot;</span>
+<span class="sd">    multi_con : bool (default False)</span>
+<span class="sd">        True if multiple connectivity matrices are exported</span>
+<span class="sd">    export_to_matlab : bool (default False)</span>
+<span class="sd">        True if conmat is exported to .mat format as well</span>
+<span class="sd">    n_windows : list</span>
+<span class="sd">        list of start and stop points (tuple of two integers) of temporal</span>
+<span class="sd">        windows</span>
+<span class="sd">    mode : str (default &#39;multipaper&#39;)</span>
+<span class="sd">         mode for computing frequency bands; possible choice: &quot;multitaper&quot;,</span>
+<span class="sd">         &quot;cwt_morlet&quot;</span>
+<span class="sd">    epoch_window_length : float</span>
+<span class="sd">         epoched data</span>
+<span class="sd">    is_sensor_space : bool (default True)</span>
+<span class="sd">         True if we compute connectivity on sensor space</span>
+
+<span class="sd">    gather_method : str (default &quot;mean&quot;)</span>
+<span class="sd">         how to handle the values over the frequency bands:</span>
+<span class="sd">         possible choices: &quot;mean&quot;,&quot;max&quot;, &quot;none&quot;</span>
+
+<span class="sd">    Inputs (inputnode)</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    ts_file : str</span>
+<span class="sd">        path to the time series file in .npy format</span>
+<span class="sd">    freq_band : float</span>
+<span class="sd">        frequency bands</span>
+<span class="sd">    sfreq : float</span>
+<span class="sd">        sampling frequency</span>
+<span class="sd">    labels_file : str</span>
+<span class="sd">        path to the file containing a list of labels associated with nodes</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pipeline : instance of Workflow</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">multi_con</span><span class="p">:</span>
+        <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span> <span class="o">+</span> <span class="s1">&#39;_multicon&#39;</span>
+
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">pipeline_name</span><span class="p">)</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">main_path</span>
+
+    <span class="c1"># inputnode = pe.Node(IdentityInterface(fields=[&#39;ts_file&#39;,&#39;freq_band&#39;,</span>
+    <span class="c1"># &#39;sfreq&#39;,&#39;labels_file&#39;,&#39;epoch_window_length&#39;,&#39;is_sensor_space&#39;,&#39;index&#39;]),</span>
+    <span class="c1"># name=&#39;inputnode&#39;)</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="s1">&#39;sfreq&#39;</span><span class="p">,</span> <span class="s1">&#39;freq_band&#39;</span><span class="p">,</span> <span class="s1">&#39;labels_file&#39;</span><span class="p">]</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_windows</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$$$$$$$$$$$$$$$$$ Multiple trials $$$$$$$$$$$$$$$$$$$$$&quot;</span><span class="p">)</span>
+
+        <span class="c1"># spectral</span>
+        <span class="n">spectral</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">SpectralConn</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;spectral&quot;</span><span class="p">)</span>
+
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">con_method</span> <span class="o">=</span> <span class="n">con_method</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">export_to_matlab</span> <span class="o">=</span> <span class="n">export_to_matlab</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gathering_method</span> <span class="o">=</span> <span class="n">gathering_method</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">multi_con</span> <span class="o">=</span> <span class="n">multi_con</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">if</span> <span class="n">epoch_window_length</span><span class="p">:</span>
+            <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">epoch_window_length</span> <span class="o">=</span> <span class="n">epoch_window_length</span>
+
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;sfreq&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;sfreq&#39;</span><span class="p">)</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">)</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;freq_band&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;freq_band&#39;</span><span class="p">)</span>
+
+        <span class="c1"># plot spectral</span>
+        <span class="k">if</span> <span class="n">multi_con</span><span class="p">:</span>
+            <span class="n">plot_spectral</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">PlotSpectralConn</span><span class="p">(</span>
+            <span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plot_spectral&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;conmat_file&#39;</span><span class="p">])</span>
+
+            <span class="n">plot_spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_sensor_space</span> <span class="o">=</span> <span class="n">is_sensor_space</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;labels_file&#39;</span><span class="p">,</span>
+                             <span class="n">plot_spectral</span><span class="p">,</span> <span class="s1">&#39;labels_file&#39;</span><span class="p">)</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">spectral</span><span class="p">,</span> <span class="s2">&quot;conmat_files&quot;</span><span class="p">,</span>
+                             <span class="n">plot_spectral</span><span class="p">,</span> <span class="s1">&#39;conmat_file&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">plot_spectral</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+                <span class="n">interface</span><span class="o">=</span><span class="n">PlotSpectralConn</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;plot_spectral&quot;</span><span class="p">)</span>
+
+            <span class="n">plot_spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_sensor_space</span> <span class="o">=</span> <span class="n">is_sensor_space</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;labels_file&#39;</span><span class="p">,</span>
+                             <span class="n">plot_spectral</span><span class="p">,</span> <span class="s1">&#39;labels_file&#39;</span><span class="p">)</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">spectral</span><span class="p">,</span> <span class="s2">&quot;conmat_file&quot;</span><span class="p">,</span>
+                             <span class="n">plot_spectral</span><span class="p">,</span> <span class="s1">&#39;conmat_file&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;$$$$$$$$$$$$ Multiple windows, multiple trials  $$$$$$$$$$$$$&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">n_windows</span><span class="p">)</span>
+
+        <span class="c1"># win_ts</span>
+        <span class="c1">#####</span>
+        <span class="n">win_ts</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">SplitWindows</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;win_ts&quot;</span><span class="p">)</span>
+        <span class="n">win_ts</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_windows</span> <span class="o">=</span> <span class="n">n_windows</span>
+
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="n">win_ts</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">)</span>
+
+        <span class="c1"># spectral</span>
+        <span class="n">spectral</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">SpectralConn</span><span class="p">(),</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;spectral&quot;</span><span class="p">,</span> <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ts_file&#39;</span><span class="p">])</span>
+
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">con_method</span> <span class="o">=</span> <span class="n">con_method</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">export_to_matlab</span> <span class="o">=</span> <span class="n">export_to_matlab</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">gathering_method</span> <span class="o">=</span> <span class="n">gathering_method</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">multi_con</span> <span class="o">=</span> <span class="n">multi_con</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="n">spectral</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">epoch_window_length</span> <span class="o">=</span> <span class="n">epoch_window_length</span>
+
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;sfreq&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;sfreq&#39;</span><span class="p">)</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">win_ts</span><span class="p">,</span> <span class="s1">&#39;win_ts_files&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">)</span>
+        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;freq_band&#39;</span><span class="p">,</span> <span class="n">spectral</span><span class="p">,</span> <span class="s1">&#39;freq_band&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pipeline</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-05-29.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
