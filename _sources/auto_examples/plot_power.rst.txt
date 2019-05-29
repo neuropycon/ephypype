@@ -298,7 +298,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
   by the welch function of the scipy package.
 
 
-**Total running time of the script:** ( 0 minutes  8.137 seconds)
+**Total running time of the script:** ( 0 minutes  6.140 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:

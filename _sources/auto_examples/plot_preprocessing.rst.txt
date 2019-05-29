@@ -301,7 +301,7 @@ components by using either a jupyter notebook or the preprocessing pipeline
 with different flag parameters.
 
 
-**Total running time of the script:** ( 0 minutes  6.135 seconds)
+**Total running time of the script:** ( 0 minutes  6.136 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:
