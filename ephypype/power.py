@@ -5,10 +5,12 @@
 import os
 import numpy as np
 
-from nipype.utils.filemanip import split_filename as split_f
+from nipype.utils.filemanip import split_filename
 from mne import read_epochs
 from mne.io import read_raw_fif
 from scipy.signal import welch
+
+from .fif2array import _get_raw_array
 
 
 def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
@@ -33,30 +35,10 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
     else:
         raise Exception('nonexistent method for psd computation')
 
+    _get_raw_array(data_fname, save_data=False)
+
     psds_fname = _save_psd(data_fname, psds, freqs)
-    # _save_psd_img(data_fname, psds, freqs, is_epoched, method)
-
-    '''
-    # save PSD as img
-    f, ax = plt.subplots()
-    psds = 10 * np.log10(psds)
-    if is_epoched:
-        psds_mean = psds.mean(0).mean(0)
-        psds_std = psds.mean(0).std(0)
-    else:
-        psds_mean = psds.mean(0)
-        psds_std = psds.std(0)
-
-    ax.plot(freqs, psds_mean, color='g')
-    ax.fill_between(freqs, psds_mean - psds_std, psds_mean + psds_std,
-                    color='g', alpha=.5)
-    ax.set(title='{} PSD'.format(method), xlabel='Frequency',
-           ylabel='Power Spectral Density (dB)')
-
-    psds_img_fname = base + '-psds.png'
-    psds_img_fname = os.path.abspath(psds_img_fname)
-    plt.savefig(psds_img_fname)
-    '''
+    _save_psd_img(data_fname, psds, freqs, is_epoched, method)
 
     return psds_fname
 
@@ -72,11 +54,16 @@ def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
         src_data = np.squeeze(src_data)
     print(('src data dim: {}'.format(src_data.shape)))
 
-    n_freqs = n_fft // 2 + 1
+    if n_fft > src_data.shape[1]:
+        nperseg = src_data.shape[1]
+    else:
+        nperseg = n_fft
+
+    n_freqs = nperseg // 2 + 1
     psds = np.empty([src_data.shape[0], n_freqs])
     for i in range(src_data.shape[0]):
         freqs, Pxx = welch(src_data[i, :], fs=sfreq, window='hamming',
-                           nperseg=n_fft, noverlap=n_overlap, nfft=None)
+                           nperseg=nperseg, noverlap=n_overlap, nfft=None)
         psds[i, :] = Pxx
 
     psds_fname = _save_psd(data_fname, psds, freqs)
@@ -116,7 +103,7 @@ def _compute_mean_band_psd(psds_file, freq_bands):
 
 
 def _save_m_px(psds_file, m_px):
-    data_path, basename, ext = split_f(psds_file)
+    data_path, basename, ext = split_filename(psds_file)
 
     psds_mean_fname = basename + '-mean_band.npy'
     psds_mean_fname = os.path.abspath(psds_mean_fname)
@@ -127,7 +114,7 @@ def _save_m_px(psds_file, m_px):
 
 
 def _save_psd(data_fname, psds, freqs):
-    data_path, basename, ext = split_f(data_fname)
+    data_path, basename, ext = split_filename(data_fname)
 
     psds_fname = basename + '-psds.npz'
     psds_fname = os.path.abspath(psds_fname)
@@ -141,7 +128,7 @@ def _save_psd(data_fname, psds, freqs):
 def _save_psd_img(data_fname, psds, freqs, is_epoched=False, method=''):
     import matplotlib.pyplot as plt
 
-    data_path, basename, ext = split_f(data_fname)
+    data_path, basename, ext = split_filename(data_fname)
     psds_img_fname = basename + '-psds.png'
     psds_img_fname = os.path.abspath(psds_img_fname)
 

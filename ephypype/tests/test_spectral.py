@@ -96,4 +96,4 @@ def test_plot_circular_connectivity():
     """test _plot_circular_connectivity"""
     _plot_circular_connectivity(conmat, label_names=labels, save_dir=tmp_dir)
 
-    assert os.path.exists(os.path.join(tmp_dir, "circle__def.eps")), "Error"
+    assert os.path.exists(os.path.join(tmp_dir, "circle__def.png")), "Error"

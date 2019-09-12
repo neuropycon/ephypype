@@ -14,8 +14,9 @@ The **input** data can be in **ds** or **fif** format.
 
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 #          Mainak Jas <mainakjas@gmail.com>
-
 # License: BSD (3-clause)
+
+# sphinx_gallery_thumbnail_number = 2
 
 import os.path as op
 
@@ -34,7 +35,9 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for preprocessing from a json file
+# then read the parameters for preprocessing from a
+# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_preprocessing.json>`
+# file and print it
 
 import json  # noqa
 import pprint  # noqa
@@ -138,8 +141,8 @@ plt.axis('off')
 
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
-# Run workflow locally on 3 CPUs
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
+# Run workflow locally on 1 CPU
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ###############################################################################
 # The output is the preprocessed data stored in the workflow directory
@@ -149,3 +152,16 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 3})
 # the excluded ICA components. It is also possible to include and exclude more
 # components by using either a jupyter notebook or the preprocessing pipeline
 # with different flag parameters.
+
+###############################################################################
+#
+import mne  # noqa
+from ephypype.gather.gather_results import get_results  # noqa
+
+ica_files, raw_files = get_results(main_workflow.base_dir,
+                                   main_workflow.name, pipeline='ica')
+
+for ica_file, raw_file in zip(ica_files, raw_files):
+    raw = mne.io.read_raw_fif(raw_file)
+    ica = mne.preprocessing.read_ica(ica_file)
+    ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])

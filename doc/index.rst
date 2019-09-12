@@ -25,7 +25,7 @@ Neuropycon project includes two different packages:
 
 .. |graphpype| raw:: html
 
-   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
+   <a href="https://neuropycon.github.io/graphpype/" target="_blank">graphpype</a>
 
 
 Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular

@@ -8,7 +8,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from .aux_tools import nostdout
 
 
-def ep2ts(fif_file):
+def _ep2ts(fif_file):
     """Read fif file with epoched data and save timeseries to .npy."""
     from mne import read_epochs
 
@@ -26,7 +26,7 @@ def ep2ts(fif_file):
     return save_path
 
 
-def _get_raw_array(raw_fname):
+def _get_raw_array(raw_fname, save_data=True):
     """Read a raw data from **.fif** file and save the data time series, the
     sensors coordinates and labels in .npy and .txt files.
 
@@ -58,7 +58,6 @@ def _get_raw_array(raw_fname):
 
     channel_coords_file = os.path.abspath('correct_channel_coords.txt')
     np.savetxt(channel_coords_file, sens_loc, fmt=str("%s"))
-    # np.savetxt(ROI_coords_file,np.array(ROI_coords,dtype = int),fmt = "%d")
 
     # save electrode names
     ch_names = np.array([raw.ch_names[pos] for pos in select_sensors],
@@ -67,13 +66,15 @@ def _get_raw_array(raw_fname):
     channel_names_file = os.path.abspath('correct_channel_names.txt')
     np.savetxt(channel_names_file, ch_names, fmt=str('%s'))
 
-    data, times = raw[select_sensors, :]
+    if save_data:
+        data, times = raw[select_sensors, :]
+        print((data.shape))
 
-    print((data.shape))
-
-    array_file = os.path.abspath(basename + '.npy')
-    np.save(array_file, data)
-    print('\n *** TS FILE {} *** \n'.format(array_file))
+        array_file = os.path.abspath(basename + '.npy')
+        np.save(array_file, data)
+        print('\n *** TS FILE {} *** \n'.format(array_file))
+    else:
+        array_file = None
     print('*** raw.info[sfreq] = {}'.format(raw.info['sfreq']))
 
     return array_file, channel_coords_file, channel_names_file, raw.info['sfreq']  # noqa

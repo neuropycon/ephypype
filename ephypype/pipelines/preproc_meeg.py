@@ -19,10 +19,10 @@ def get_ext_file(raw_file):
 
     print(raw_file)
     is_ds = False
-    if ext is 'ds':
+    if ext == 'ds':
         is_ds = True
         return is_ds
-    elif ext is 'fif':
+    elif ext == 'fif':
         return is_ds
     else:
         raise RuntimeError('only fif and ds file format!!!')
@@ -104,7 +104,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     inputnode = pe.Node(IdentityInterface(fields=['raw_file', 'subject_id']),
                         name='inputnode')
 
-    if data_type is 'ds':
+    if data_type == 'ds':
         ds2fif_node = pe.Node(interface=ConvertDs2Fif(), name='ds2fif')
         pipeline.connect(inputnode, 'raw_file', ds2fif_node, 'ds_file')
 
@@ -116,9 +116,9 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
         preproc_node.inputs.h_freq = h_freq
         preproc_node.inputs.down_sfreq = down_sfreq
 
-        if data_type is 'ds':
+        if data_type == 'ds':
             pipeline.connect(ds2fif_node, 'fif_file', preproc_node, 'fif_file')
-        elif data_type is 'fif':
+        elif data_type == 'fif':
             pipeline.connect(inputnode, 'raw_file', preproc_node, 'fif_file')
 
     if is_ICA:

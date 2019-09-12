@@ -174,9 +174,9 @@ def _plot_circular_connectivity(conmat, label_names, node_colors=None,
     if save_dir is not None:
         assert os.path.exists(save_dir), ("Error, do not use save_dir if it \
             does not exists before")
-        plot_conmat_file = os.path.join(save_dir, 'circle_' + fname + '.eps')
+        plot_conmat_file = os.path.join(save_dir, 'circle_' + fname + '.png')
     else:
-        plot_conmat_file = os.path.abspath('circle_' + fname + '.eps')
+        plot_conmat_file = os.path.abspath('circle_' + fname + '.png')
 
     fig.savefig(plot_conmat_file, facecolor='black')
     plt.close(fig)

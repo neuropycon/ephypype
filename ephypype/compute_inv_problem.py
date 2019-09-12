@@ -209,7 +209,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     """
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
-    if is_epoched and events_id is None:
+    if is_epoched and events_id == {}:
         epochs = read_epochs(raw_filename)
         info = epochs.info
     else:
@@ -258,8 +258,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
     good_events_file = ''
-    if is_epoched and events_id is not None:
-
+    print(events_id)
+    if is_epoched and events_id != {}:
         if events_file:
             events = mne.read_events(events_file)
         else:
@@ -297,7 +297,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
 
-    elif is_epoched and events_id is None:
+    elif is_epoched and events_id == {}:
         stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                    inv_method, pick_ori=pick_ori)
 
