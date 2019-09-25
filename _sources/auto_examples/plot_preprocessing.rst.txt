@@ -264,7 +264,7 @@ here correspond to how we connected the nodes.
     from scipy.misc import imread  # noqa
     import matplotlib.pyplot as plt  # noqa
     img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(6, 6))
     plt.imshow(img)
     plt.axis('off')
 
@@ -356,7 +356,7 @@ with different flag parameters.
         Using multitaper spectrum estimation with 7 DPSS windows
 
 
-**Total running time of the script:** ( 0 minutes  9.857 seconds)
+**Total running time of the script:** ( 0 minutes  10.010 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:
