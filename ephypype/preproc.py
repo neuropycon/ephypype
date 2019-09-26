@@ -413,7 +413,7 @@ def _create_epochs(fif_file, ep_length):
 
     epochs = Epochs(raw, events=events, tmin=0, tmax=ep_length,
                     preload=True, picks=picks, proj=False,
-                    flat=flat, reject=reject)
+                    flat=flat, reject=reject, baseline=None)
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)

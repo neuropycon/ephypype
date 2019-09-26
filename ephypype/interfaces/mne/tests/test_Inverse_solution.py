@@ -15,7 +15,7 @@ sbj = 'sample'
 subjects_dir = op.join(data_path, 'subjects')
 raw_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc_raw.fif')
 fwd_fname = op.join(data_path, 'MEG', sbj,
-                    'sample_audvis_trunc_raw-oct-6-fwd.fif')
+                    'sample_audvis_trunc-meg-eeg-oct-6-fwd.fif')
 cov_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc-cov.fif')
 
 
