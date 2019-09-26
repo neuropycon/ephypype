@@ -176,7 +176,7 @@ from ephypype.gather.gather_results import get_channel_files  # noqa
 from ephypype.aux_tools import _parse_string  # noqa
 from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 
-thresh = .8
+thresh = .75
 with_text = False
 
 channel_coo_files, channel_name_files = get_channel_files(
@@ -201,13 +201,15 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
     clim = (thresh, connect.max())
 
     # With text :
-    c_obj = ConnectObj('c', xyz, connect, clim=clim, dynamic=(0., 1.),
-                       dynamic_order=3, antialias=True, cmap='cool',
+    c_obj = ConnectObj('c', xyz, connect,
+                       color_by='count',
+                       clim=clim, dynamic=(0., 1.),
+                       dynamic_order=3, antialias=True, cmap='bwr',
                        line_width=4.)
     s_obj = SourceObj('s', xyz, data=radius, radius_min=5, radius_max=15,
                       text=names, text_size=10, text_color='white',
                       text_translate=(0., 0., 0.))
-    s_obj.color_sources(data=radius, cmap='cool')
+    s_obj.color_sources(data=radius, cmap='inferno')
     cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=15,
                        cblabel='Connectivity', cbtxtsz=20)
     band = _parse_string(connect_file, freq_band_names)
