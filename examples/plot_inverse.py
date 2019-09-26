@@ -48,7 +48,7 @@ parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
 noise_cov_fname = data['noise_cov_fname']
 
 # set sbj dir path, i.e. where the FS folfers are
-subjects_dir = op.join(data_path, 'fsf')
+subjects_dir = op.join(data_path, 'FSF')
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
