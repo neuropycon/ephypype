@@ -129,10 +129,9 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread  # noqa
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(6, 6))
 plt.imshow(img)
 plt.axis('off')
 

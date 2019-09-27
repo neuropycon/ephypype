@@ -42,7 +42,7 @@ os.makedirs(tmp_dir)
 
 def test_compute_spectral_connectivity_one_trial():
     """Test _compute_spectral_connectivity plv with one trial."""
-    with pytest.raises(ValueError, message="Expecting ValueError"):
+    with pytest.raises(ValueError):
         _compute_spectral_connectivity(data=ts_mat, con_method="plv",
                                        mode="multitaper", fmin=fmin, fmax=fmax,
                                        sfreq=sfreq, gathering_method='mean')
@@ -78,7 +78,7 @@ def test_compute_spectral_connectivity_mean_max():
 
 def test_compute_and_save_multi_spectral_connectivity():
     """ testing _compute_and_save_multi_spectral_connectivity"""
-    with pytest.raises(AssertionError, message="Expecting AssertionError"):
+    with pytest.raises(AssertionError):
         _compute_and_save_multi_spectral_connectivity(
             all_data=ts_mat, con_method="coh", mode="multitaper", fmin=fmin,
             fmax=fmax, sfreq=sfreq, gathering_method='mean', save_dir=tmp_dir)
