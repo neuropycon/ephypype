@@ -20,7 +20,8 @@ and/or fine-tune the correction in each subject.
 The **input** data can be in **ds** or **fif** format.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -47,7 +48,8 @@ The **input** data can be in **ds** or **fif** format.
 Let us fetch the data first. It is around 675 MB download.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     data_type = 'fif'
@@ -65,7 +67,8 @@ then read the parameters for preprocessing from a
 file and print it
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     import json  # noqa
@@ -100,12 +103,12 @@ file and print it
                                   'variance': 0.95}}
 
 
-
 Then, we create our workflow and specify the `base_dir` which tells
 nipype the directory in which to store the outputs.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     # workflow directory within the `base_dir`
@@ -123,7 +126,8 @@ nipype the directory in which to store the outputs.
 Then we create a node to pass input filenames to DataGrabber from nipype
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
@@ -141,7 +145,8 @@ and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     template_path = '*%s/%s/meg/%s*rest*raw.fif'
@@ -173,7 +178,8 @@ In particular, the two nodes are:
 * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
@@ -192,8 +198,7 @@ In particular, the two nodes are:
 
  .. code-block:: none
 
-    *** main_path -> /home/circleci/project/examples/sample_BIDS_omega ***
-
+    *** main_path -> /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
 
 
 We then connect the nodes two at a time. First, we connect the two outputs
@@ -201,7 +206,8 @@ We then connect the nodes two at a time. First, we connect the two outputs
 So, these two nodes taken together can grab data.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -217,7 +223,8 @@ Similarly, for the inputnode of the preproc_workflow. Things will become
 clearer in a moment when we plot the graph of the workflow.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.connect(infosource, 'subject_id',
@@ -234,7 +241,8 @@ clearer in a moment when we plot the graph of the workflow.
 To do so, we first write the workflow graph (optional)
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.write_graph(graph2use='colored')  # colored
@@ -249,7 +257,8 @@ and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     import matplotlib.pyplot as plt  # noqa
@@ -270,7 +279,8 @@ here correspond to how we connected the nodes.
 Finally, we are now ready to execute our workflow.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -293,7 +303,8 @@ components by using either a jupyter notebook or the preprocessing pipeline
 with different flag parameters.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
     import mne  # noqa
     from ephypype.gather.gather_results import get_results  # noqa
@@ -326,16 +337,6 @@ with different flag parameters.
       .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
             :class: sphx-glr-multi-img
 
-    *
-
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
-            :class: sphx-glr-multi-img
-
-    *
-
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
-            :class: sphx-glr-multi-img
-
 
 .. rst-class:: sphx-glr-script-out
 
@@ -343,16 +344,12 @@ with different flag parameters.
 
  .. code-block:: none
 
-    Opening raw data file /home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif...
-    /home/circleci/project/examples/plot_preprocessing.py:164: RuntimeWarning: This filename (/home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz or _meg.fif
-      raw = mne.io.read_raw_fif(raw_file)
+    Opening raw data file /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif...
         Read 5 compensation matrices
         Range : 0 ... 47999 =      0.000 ...    59.999 secs
     Ready.
     Current compensation grade : 3
-    /home/circleci/project/examples/plot_preprocessing.py:165: RuntimeWarning: This filename (/home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
-      ica = mne.preprocessing.read_ica(ica_file)
-    Reading /home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif ...
+    Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif ...
     Now restoring ICA solution ...
     Ready.
         Using multitaper spectrum estimation with 7 DPSS windows
@@ -371,23 +368,9 @@ with different flag parameters.
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
-    29 matching events found
-    No baseline correction applied
-    Not setting metadata
-    0 projection items activated
-    0 bad epochs dropped
-    29 matching events found
-    No baseline correction applied
-    Not setting metadata
-    0 projection items activated
-    0 bad epochs dropped
 
 
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** ( 2 minutes  31.994 seconds)
+**Total running time of the script:** ( 0 minutes  8.827 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:
@@ -415,4 +398,4 @@ with different flag parameters.
 
  .. rst-class:: sphx-glr-signature
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_

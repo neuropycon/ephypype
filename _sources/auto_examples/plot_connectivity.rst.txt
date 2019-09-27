@@ -18,7 +18,8 @@ sensor or source space.
 The **input** data should be a time series matrix in **npy** or **mat** format.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -45,7 +46,8 @@ The **input** data should be a time series matrix in **npy** or **mat** format.
 Let us fetch the data first. It is around 675 MB download.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     data_type = 'fif'
@@ -56,18 +58,6 @@ Let us fetch the data first. It is around 675 MB download.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Downloading https://ucd16a86952e244adad54bd6089c.dl.dropboxusercontent.com/zip_by_token_key?dl=1&key=ApVEBul3v3HUF2lWDcLnfjZcgxztNB7Ngq1F_CVKDAcXncw3HxdtjMymVfKB97ElFWClqaNdYnP2uWz1w72269YbykI_i8R0IMMTlOYW2eOuNOs7SFBNiLdXJbysyAN0CDxLONmglB9BQpQDtqKCA7rnvv9EqLcWDCyyDk4L_kQOE9JS8ucT8vI7cE5h2Y1xU5LZeA-aDOVdhn5KRSx9cEiG (1 byte)
-
-    File saved as /home/circleci/project/ephypype/../examples/sample_BIDS_omega.zip.
-
-    Extracting files. This may take a while ...
-
 
 
 then read the parameters for connectivity from a
@@ -75,7 +65,8 @@ then read the parameters for connectivity from a
  file and print it
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     import json  # noqa
@@ -104,12 +95,12 @@ then read the parameters for connectivity from a
                                  'method': 'coh'}}
 
 
-
 Then, we create our workflow and specify the `base_dir` which tells
 nipype the directory in which to store the outputs.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     # workflow directory within the `base_dir`
@@ -127,7 +118,8 @@ nipype the directory in which to store the outputs.
 Then we create a node to pass input filenames to DataGrabber from nipype
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
@@ -145,7 +137,8 @@ and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     template_path = '*%s/%s/meg/%s*rest*ica.fif'
@@ -178,7 +171,8 @@ In particular, the two nodes are:
   <a href="http://martinos.org/mne/stable/generated/mne.viz.plot_connectivity_circle.html#mne.viz.plot_connectivity_circle" target="_blank">spectral_connectivity function</a>
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity # noqa
@@ -199,13 +193,13 @@ In particular, the two nodes are:
     $$$$$$$$$$$$$$$$$$$$$$$$ Multiple trials $$$$$$$$$$$$$$$$$$$$$
 
 
-
 The connectivity node needs two auxiliary nodes: one node reads the raw data
 file in .fif format and extract the data and the channel information; the
 other node get information on the frequency band we are interested on.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     from ephypype.nodes.import_data import Fif2Array  # noqa
@@ -227,7 +221,8 @@ The third output of infosource (freq_band_name) is connected to the
 frequency node
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -246,7 +241,8 @@ Similarly, for the inputnode of create_array_node and spectral_workflow.
 Things will become clearer in a moment when we plot the graph of the workflow
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.connect(datasource, 'raw_file',
@@ -269,7 +265,8 @@ Things will become clearer in a moment when we plot the graph of the workflow
 To do so, we first write the workflow graph (optional)
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.write_graph(graph2use='colored')  # colored
@@ -284,7 +281,8 @@ and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     import matplotlib.pyplot as plt  # noqa
@@ -305,7 +303,8 @@ here correspond to how we connected the nodes.
 Finally, we are now ready to execute our workflow.
 
 
-.. code-block:: default
+
+.. code-block:: python
 
 
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -329,7 +328,8 @@ to perform graph analysis on the computed connectivity matrix.
   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
 
 
-.. code-block:: default
+
+.. code-block:: python
 
     from ephypype.gather.gather_results import get_results  # noqa
     from ephypype.gather.gather_results import get_channel_files  # noqa
@@ -387,25 +387,9 @@ to perform graph analysis on the computed connectivity matrix.
     :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/visuals/markers.py:564: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
-      ('a_edgewidth', np.float32, 1)])
-    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/gloo/buffer.py:454: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
-      data = data.view(dtype=[('f0', data.dtype.base, c)])
-    /home/circleci/miniconda/lib/python3.7/site-packages/visbrain/io/write_image.py:463: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
-      plt.show()
 
 
-
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** ( 2 minutes  2.277 seconds)
+**Total running time of the script:** ( 0 minutes  22.519 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:
@@ -433,4 +417,4 @@ to perform graph analysis on the computed connectivity matrix.
 
  .. rst-class:: sphx-glr-signature
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_
