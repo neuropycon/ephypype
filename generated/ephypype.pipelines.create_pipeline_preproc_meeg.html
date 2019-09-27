@@ -2,8 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>ephypype.pipelines.create_pipeline_preproc_meeg &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -12,16 +11,17 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -101,74 +101,56 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="ephypype-pipelines-create-pipeline-preproc-meeg">
 <h1>ephypype.pipelines.create_pipeline_preproc_meeg<a class="headerlink" href="#ephypype-pipelines-create-pipeline-preproc-meeg" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ephypype.pipelines.create_pipeline_preproc_meeg">
-<code class="descclassname">ephypype.pipelines.</code><code class="descname">create_pipeline_preproc_meeg</code><span class="sig-paren">(</span><em>main_path</em>, <em>pipeline_name='preproc_meeg_pipeline'</em>, <em>data_type='fif'</em>, <em>l_freq=1</em>, <em>h_freq=150</em>, <em>down_sfreq=300</em>, <em>is_ICA=True</em>, <em>variance=0.95</em>, <em>ECG_ch_name=''</em>, <em>EoG_ch_name=''</em>, <em>reject=None</em>, <em>is_set_ICA_components=False</em>, <em>n_comp_exclude=[]</em>, <em>is_sensor_space=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/preproc_meeg.html#create_pipeline_preproc_meeg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_preproc_meeg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ephypype.pipelines.</code><code class="sig-name descname">create_pipeline_preproc_meeg</code><span class="sig-paren">(</span><em class="sig-param">main_path</em>, <em class="sig-param">pipeline_name='preproc_meeg_pipeline'</em>, <em class="sig-param">data_type='fif'</em>, <em class="sig-param">l_freq=1</em>, <em class="sig-param">h_freq=150</em>, <em class="sig-param">down_sfreq=300</em>, <em class="sig-param">is_ICA=True</em>, <em class="sig-param">variance=0.95</em>, <em class="sig-param">ECG_ch_name=''</em>, <em class="sig-param">EoG_ch_name=''</em>, <em class="sig-param">reject=None</em>, <em class="sig-param">is_set_ICA_components=False</em>, <em class="sig-param">n_comp_exclude=[]</em>, <em class="sig-param">is_sensor_space=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/preproc_meeg.html#create_pipeline_preproc_meeg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_preproc_meeg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Preprocessing pipeline.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>main_path</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">main path to of the pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>main_path</strong><span class="classifier">str</span></dt><dd><p>main path to of the pipeline</p>
 </dd>
-<dt><strong>pipeline_name: str (default ‘preproc_meeg’)</strong></dt>
-<dd><p class="first last">name of the pipeline</p>
+<dt><strong>pipeline_name: str (default ‘preproc_meeg’)</strong></dt><dd><p>name of the pipeline</p>
 </dd>
-<dt><strong>data_type: str (default ‘fif’)</strong></dt>
-<dd><p class="first last">data type: ‘fif’ or ‘ds’</p>
+<dt><strong>data_type: str (default ‘fif’)</strong></dt><dd><p>data type: ‘fif’ or ‘ds’</p>
 </dd>
-<dt><strong>l_freq: float (default 1)</strong></dt>
-<dd><p class="first last">low cut-off frequency in Hz</p>
+<dt><strong>l_freq: float (default 1)</strong></dt><dd><p>low cut-off frequency in Hz</p>
 </dd>
-<dt><strong>h_freq: float (default 150)</strong></dt>
-<dd><p class="first last">high cut-off frequency in Hz</p>
+<dt><strong>h_freq: float (default 150)</strong></dt><dd><p>high cut-off frequency in Hz</p>
 </dd>
-<dt><strong>down_sfreq: float (default 300)</strong></dt>
-<dd><p class="first last">sampling frequency at which the data are downsampled</p>
+<dt><strong>down_sfreq: float (default 300)</strong></dt><dd><p>sampling frequency at which the data are downsampled</p>
 </dd>
-<dt><strong>is_ICA</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (default True)</span></dt>
-<dd><p class="first last">if True apply ICA to automatically remove ECG and EoG artifacts</p>
+<dt><strong>is_ICA</strong><span class="classifier">boolean (default True)</span></dt><dd><p>if True apply ICA to automatically remove ECG and EoG artifacts</p>
 </dd>
-<dt><strong>variance: float (default 0.95)</strong></dt>
-<dd><p class="first last">float between 0 and 1: the ICA components will be selected by the
+<dt><strong>variance: float (default 0.95)</strong></dt><dd><p>float between 0 and 1: the ICA components will be selected by the
 cumulative percentage of explained variance</p>
 </dd>
-<dt><strong>ECG_ch_name: str (default ‘’)</strong></dt>
-<dd><p class="first last">the name of ECG channels</p>
+<dt><strong>ECG_ch_name: str (default ‘’)</strong></dt><dd><p>the name of ECG channels</p>
 </dd>
-<dt><strong>EoG_ch_name: str (default ‘’)</strong></dt>
-<dd><p class="first last">the name of EoG channels</p>
+<dt><strong>EoG_ch_name: str (default ‘’)</strong></dt><dd><p>the name of EoG channels</p>
 </dd>
-<dt><strong>reject: dict | None</strong></dt>
-<dd><p class="first last">rejection parameters based on peak-to-peak amplitude. Valid keys
+<dt><strong>reject: dict | None</strong></dt><dd><p>rejection parameters based on peak-to-peak amplitude. Valid keys
 are ‘grad’ | ‘mag’ | ‘eeg’ | ‘eog’ | ‘ecg’. If reject is None then
 no rejection is done</p>
 </dd>
-<dt><strong>is_set_ICA_components: boolean (default False)</strong></dt>
-<dd><p class="first last">set to True if we had the ICA of the raw data, checked the Report
+<dt><strong>is_set_ICA_components: boolean (default False)</strong></dt><dd><p>set to True if we had the ICA of the raw data, checked the Report
 and want to exclude some ICA components based on their topographies
 and time series
 if True, we have to fill the dictionary variable n_comp_exclude</p>
 </dd>
-<dt><strong>n_comp_exclude: dict</strong></dt>
-<dd><p class="first last">if is_set_ICA_components=True, it has to be a dict containing for
+<dt><strong>n_comp_exclude: dict</strong></dt><dd><p>if is_set_ICA_components=True, it has to be a dict containing for
 each subject and for each session the components to be excluded</p>
 </dd>
-<dt><strong>is_sensor_space: boolean (default True)</strong></dt>
-<dd><p class="first last">True if we perform the analysis in sensor space and we use the
+<dt><strong>is_sensor_space: boolean (default True)</strong></dt><dd><p>True if we perform the analysis in sensor space and we use the
 pipeline as lego with the connectivity or inverse pipeline</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -185,8 +167,8 @@ pipeline as lego with the connectivity or inverse pipeline</p>
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-09-25.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-09-27.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

@@ -48,7 +48,7 @@ parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
 noise_cov_fname = data['noise_cov_fname']
 
 # set sbj dir path, i.e. where the FS folfers are
-subjects_dir = op.join(data_path, 'fsf')
+subjects_dir = op.join(data_path, 'FSF')
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -126,7 +126,6 @@ main_workflow.write_graph(graph2use='colored')  # colored
 # and visualize it. Take a moment to pause and notice how the connections
 # here correspond to how we connected the nodes.
 
-from scipy.misc import imread  # noqa
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, src_reconstruction_pipeline_name, 'graph.png'))  # noqa
 plt.figure(figsize=(8, 8))
