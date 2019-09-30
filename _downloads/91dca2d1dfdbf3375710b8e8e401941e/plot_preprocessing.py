@@ -90,7 +90,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 #
 # .. |ICA| raw:: html
 #
-#    <a href="http://martinos.org/mne/stable/auto_tutorials/plot_artifacts_correction_ica.html" target="_blank">ICA</a>
+#    <a href="https://mne.tools/stable/auto_tutorials/preprocessing/plot_40_artifact_correction_ica.html" target="_blank">ICA</a>
 #
 # In particular, the two nodes are:
 #

@@ -170,7 +170,7 @@ Python functions performing the decomposition of the MEG/EEG signal using an
 
 .. |ICA| raw:: html
 
-   <a href="http://martinos.org/mne/stable/auto_tutorials/plot_artifacts_correction_ica.html" target="_blank">ICA</a>
+   <a href="https://mne.tools/stable/auto_tutorials/preprocessing/plot_40_artifact_correction_ica.html" target="_blank">ICA</a>
 
 In particular, the two nodes are:
 
@@ -370,7 +370,7 @@ with different flag parameters.
     0 bad epochs dropped
 
 
-**Total running time of the script:** ( 0 minutes  8.827 seconds)
+**Total running time of the script:** ( 0 minutes  9.082 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:
