@@ -27,7 +27,6 @@ Neuropycon project includes two different packages:
 
    <a href="https://neuropycon.github.io/graphpype/" target="_blank">graphpype</a>
 
-
 Neuropycon provides a very common and fast framework to develop workflows for advanced analyses, in particular
 defines a set of different **pipelines** that can be used stand-alone or as **lego** of a bigger workflow:
 the input of a pipeline will be the output of another pipeline.
@@ -49,6 +48,12 @@ For each possible workflow the **input data** can be specified in three differen
 Each pipeline based on nipype engine is defined by **nodes** connected together,
 where each node maybe wrapping of existing software (as MNE-python modules or radatools functions)
 as well as providing easy ways to implement function defined by the user.
+
+We also provide neuropycon with a command line interface which is organized into a separate **Neuropycon_cli** package 
+(`neuropycon_cli <https://github.com/neuropycon/neuropycon_cli#>`_). At the moment the command line interface wraps some of 
+the functionality of the ephypype package only but will be expanded in the future. 
+A detailed explanation of the command line interface operation principles and examples can be found on the documentation webpage
+`neuropycon_cli <https://neuropycon.github.io/neuropycon_cli/#>`_
 
 .. _ephypype:
 
