@@ -2,7 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ephypype.pipelines.create_pipeline_source_reconstruction &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -11,17 +12,16 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -101,66 +101,88 @@
 
 <div class="container">
   <div class="row">
-    <div class="body col-md-12 content" role="main">
+    <div class="col-md-12 content">
       
   <div class="section" id="ephypype-pipelines-create-pipeline-source-reconstruction">
 <h1>ephypype.pipelines.create_pipeline_source_reconstruction<a class="headerlink" href="#ephypype-pipelines-create-pipeline-source-reconstruction" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ephypype.pipelines.create_pipeline_source_reconstruction">
-<code class="sig-prename descclassname">ephypype.pipelines.</code><code class="sig-name descname">create_pipeline_source_reconstruction</code><span class="sig-paren">(</span><em class="sig-param">main_path</em>, <em class="sig-param">subjects_dir</em>, <em class="sig-param">pipeline_name='inv_sol_pipeline'</em>, <em class="sig-param">spacing='ico-5'</em>, <em class="sig-param">inv_method='MNE'</em>, <em class="sig-param">is_epoched=False</em>, <em class="sig-param">events_id=None</em>, <em class="sig-param">events_file=None</em>, <em class="sig-param">t_min=None</em>, <em class="sig-param">t_max=None</em>, <em class="sig-param">is_evoked=False</em>, <em class="sig-param">parc='aparc'</em>, <em class="sig-param">aseg=False</em>, <em class="sig-param">aseg_labels=[]</em>, <em class="sig-param">noise_cov_fname=None</em>, <em class="sig-param">all_src_space=False</em>, <em class="sig-param">ROIs_mean=True</em>, <em class="sig-param">save_mixed_src_space=False</em>, <em class="sig-param">is_fixed=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/fif_to_inv_sol.html#create_pipeline_source_reconstruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_source_reconstruction" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ephypype.pipelines.</code><code class="descname">create_pipeline_source_reconstruction</code><span class="sig-paren">(</span><em>main_path</em>, <em>subjects_dir</em>, <em>pipeline_name='inv_sol_pipeline'</em>, <em>spacing='ico-5'</em>, <em>inv_method='MNE'</em>, <em>is_epoched=False</em>, <em>events_id=None</em>, <em>events_file=None</em>, <em>t_min=None</em>, <em>t_max=None</em>, <em>is_evoked=False</em>, <em>parc='aparc'</em>, <em>aseg=False</em>, <em>aseg_labels=[]</em>, <em>noise_cov_fname=None</em>, <em>all_src_space=False</em>, <em>ROIs_mean=True</em>, <em>save_mixed_src_space=False</em>, <em>is_fixed=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/fif_to_inv_sol.html#create_pipeline_source_reconstruction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_source_reconstruction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Source reconstruction pipeline.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>main_path</strong><span class="classifier">str</span></dt><dd><p>the main path of the workflow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>main_path</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the main path of the workflow</p>
 </dd>
-<dt><strong>subjects_dir</strong><span class="classifier">str</span></dt><dd><p>Freesurfer directory</p>
+<dt><strong>subjects_dir</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Freesurfer directory</p>
 </dd>
-<dt><strong>pipeline_name</strong><span class="classifier">str (default inv_sol_pipeline)</span></dt><dd><p>name of the pipeline</p>
+<dt><strong>pipeline_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (default inv_sol_pipeline)</span></dt>
+<dd><p class="first last">name of the pipeline</p>
 </dd>
-<dt><strong>spacing</strong><span class="classifier">str (default ‘ico-5’)</span></dt><dd><p>spacing to use to setup a source space</p>
+<dt><strong>spacing</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (default ‘ico-5’)</span></dt>
+<dd><p class="first last">spacing to use to setup a source space</p>
 </dd>
-<dt><strong>inv_method</strong><span class="classifier">str (default MNE)</span></dt><dd><p>the inverse method to use; possible choices: MNE, dSPM, sLORETA</p>
+<dt><strong>inv_method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (default MNE)</span></dt>
+<dd><p class="first last">the inverse method to use; possible choices: MNE, dSPM, sLORETA</p>
 </dd>
-<dt><strong>is_epoched</strong><span class="classifier">bool (default False)</span></dt><dd><p>if True and events_id = None the input data are epoch data
+<dt><strong>is_epoched</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool (default False)</span></dt>
+<dd><p class="first last">if True and events_id = None the input data are epoch data
 in the format -epo.fif
 if True and events_id is not None, the raw data are epoched
 according to events_id and t_min and t_max values</p>
 </dd>
-<dt><strong>is_fixed</strong><span class="classifier">bool (default False)</span></dt><dd><p>if True we use fixed orientation, otherwise the loose orientation
+<dt><strong>is_fixed</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool (default False)</span></dt>
+<dd><p class="first last">if True we use fixed orientation, otherwise the loose orientation
 is applied</p>
 </dd>
-<dt><strong>events_id: dict (default None)</strong></dt><dd><p>the dict of events</p>
+<dt><strong>events_id: dict (default None)</strong></dt>
+<dd><p class="first last">the dict of events</p>
 </dd>
-<dt><strong>t_min, t_max: int (defualt None)</strong></dt><dd><p>define the time interval in which to epoch the raw data</p>
+<dt><strong>t_min, t_max: int (defualt None)</strong></dt>
+<dd><p class="first last">define the time interval in which to epoch the raw data</p>
 </dd>
-<dt><strong>is_evoked: bool (default False)</strong></dt><dd><p>if True the raw data will be averaged according to the events
+<dt><strong>is_evoked: bool (default False)</strong></dt>
+<dd><p class="first last">if True the raw data will be averaged according to the events
 contained in the dict events_id</p>
 </dd>
-<dt><strong>parc: str (default ‘aparc’)</strong></dt><dd><p>the parcellation defining the ROIs atlas in the source space</p>
+<dt><strong>parc: str (default ‘aparc’)</strong></dt>
+<dd><p class="first last">the parcellation defining the ROIs atlas in the source space</p>
 </dd>
-<dt><strong>aseg: bool (defualt False)</strong></dt><dd><p>if True a mixed source space will be created and the sub cortical
+<dt><strong>aseg: bool (defualt False)</strong></dt>
+<dd><p class="first last">if True a mixed source space will be created and the sub cortical
 regions defined in aseg_labels will be added to the source space</p>
 </dd>
-<dt><strong>aseg_labels: list (default [])</strong></dt><dd><p>list of substructures we want to include in the mixed source space</p>
+<dt><strong>aseg_labels: list (default [])</strong></dt>
+<dd><p class="first last">list of substructures we want to include in the mixed source space</p>
 </dd>
-<dt><strong>noise_cov_fname: str (default None)</strong></dt><dd><p>template for the path to either the noise covariance matrix file or
+<dt><strong>noise_cov_fname: str (default None)</strong></dt>
+<dd><p class="first last">template for the path to either the noise covariance matrix file or
 the empty room data</p>
 </dd>
-<dt><strong>all_src_space: bool</strong></dt><dd><p>if True we compute the inverse for all points of the source space</p>
+<dt><strong>all_src_space: bool</strong></dt>
+<dd><p class="first last">if True we compute the inverse for all points of the source space</p>
 </dd>
-<dt><strong>ROIs_mean: bool</strong></dt><dd><p>if True we compute the mean of estimated time series on ROIs</p>
+<dt><strong>ROIs_mean: bool</strong></dt>
+<dd><p class="first last">if True we compute the mean of estimated time series on ROIs</p>
 </dd>
-<dt><strong>save_mixed_src_space: bool (defualt False)</strong></dt><dd><p>if True the mixed src space will be saved in the FS folder</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>pipeline</strong><span class="classifier">instance of Workflow</span></dt><dd></dd>
-</dl>
+<dt><strong>save_mixed_src_space: bool (defualt False)</strong></dt>
+<dd><p class="first last">if True the mixed src space will be saved in the FS folder</p>
 </dd>
 </dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>pipeline</strong> <span class="classifier-delimiter">:</span> <span class="classifier">instance of Workflow</span></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -177,8 +199,8 @@ the empty room data</p>
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-09-30.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-10-08.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>

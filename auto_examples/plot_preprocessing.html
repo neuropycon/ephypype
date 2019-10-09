@@ -2,7 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Preprocess MEG data &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -11,17 +12,16 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -101,11 +101,11 @@
 
 <div class="container">
   <div class="row">
-    <div class="body col-md-12 content" role="main">
+    <div class="col-md-12 content">
       
   <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-preprocessing-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-preprocessing-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="preprocess-meg-data">
 <span id="preproc-meeg"></span><span id="sphx-glr-auto-examples-plot-preprocessing-py"></span><h1>Preprocess MEG data<a class="headerlink" href="#preprocess-meg-data" title="Permalink to this headline">¶</a></h1>
@@ -114,23 +114,23 @@ automatic removal of eyes and heart related artefacts.
 A report is automatically generated and can be used to correct
 and/or fine-tune the correction in each subject.</p>
 <p>The <strong>input</strong> data can be in <strong>ds</strong> or <strong>fif</strong> format.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
 <span class="c1">#          Mainak Jas &lt;mainakjas@gmail.com&gt;</span>
 <span class="c1"># License: BSD (3-clause)</span>
 
 <span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 
-<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
 
-<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="kn">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="k">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
-<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="k">import</span> <span class="n">fetch_omega_dataset</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
+<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="kn">import</span> <span class="n">fetch_omega_dataset</span>
 </pre></div>
 </div>
 <p>Let us fetch the data first. It is around 675 MB download.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;fif&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;fif&#39;</span>
 <span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
@@ -138,7 +138,7 @@ and/or fine-tune the correction in each subject.</p>
 <p>then read the parameters for preprocessing from a
 <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_preprocessing.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
 file and print it</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_preprocessing.json&quot;</span><span class="p">))</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;preprocessing parameters&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
@@ -164,7 +164,7 @@ file and print it</p>
 </div>
 <p>Then, we create our workflow and specify the <cite>base_dir</cite> which tells
 nipype the directory in which to store the outputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
 <span class="n">preproc_pipeline_name</span> <span class="o">=</span> <span class="s1">&#39;preprocessing_workflow&#39;</span>
 
 <span class="n">main_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">preproc_pipeline_name</span><span class="p">)</span>
@@ -172,7 +172,7 @@ nipype the directory in which to store the outputs.</p>
 </pre></div>
 </div>
 <p>Then we create a node to pass input filenames to DataGrabber from nipype</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
 <span class="n">session_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ses-0001&#39;</span><span class="p">]</span>
 <span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
                              <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">])</span>
@@ -180,7 +180,7 @@ nipype the directory in which to store the outputs.</p>
 </div>
 <p>and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*raw.fif&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*raw.fif&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">)</span>
 </pre></div>
@@ -195,10 +195,10 @@ Python functions performing the decomposition of the MEG/EEG signal using an
 <a href="https://mne.tools/stable/auto_tutorials/preprocessing/plot_40_artifact_correction_ica.html" target="_blank">ICA</a> algorithm.</p>
 <p>In particular, the two nodes are:</p>
 <ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.preproc.PreprocFif</span></code> performs filtering on the raw data</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.preproc.CompIca</span></code> computes ICA solution on raw fif data</p></li>
+<li><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.preproc.PreprocFif</span></code> performs filtering on the raw data</li>
+<li><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.preproc.CompIca</span></code> computes ICA solution on raw fif data</li>
 </ul>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.preproc_meeg</span> <span class="k">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="View documentation for ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg"><span class="n">create_pipeline_preproc_meeg</span></a>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.preproc_meeg</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="View documentation for ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg"><span class="n">create_pipeline_preproc_meeg</span></a>  <span class="c1"># noqa</span>
 <span class="n">preproc_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="View documentation for ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg"><span class="n">create_pipeline_preproc_meeg</span></a><span class="p">(</span>
     <span class="n">data_path</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="n">l_freq</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="n">h_freq</span><span class="p">,</span> <span class="n">down_sfreq</span><span class="o">=</span><span class="n">down_sfreq</span><span class="p">,</span>
     <span class="n">variance</span><span class="o">=</span><span class="n">variance</span><span class="p">,</span> <span class="n">ECG_ch_name</span><span class="o">=</span><span class="n">ECG_ch_name</span><span class="p">,</span> <span class="n">EoG_ch_name</span><span class="o">=</span><span class="n">EoG_ch_name</span><span class="p">,</span>
@@ -206,31 +206,31 @@ Python functions performing the decomposition of the MEG/EEG signal using an
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** main_path -&gt; /home/circleci/project/examples/sample_BIDS_omega ***
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** main_path -&gt; /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
 </pre></div>
 </div>
 <p>We then connect the nodes two at a time. First, we connect the two outputs
 (subject_id and session_id) of the infosource node to the datasource node.
 So, these two nodes taken together can grab data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Similarly, for the inputnode of the preproc_workflow. Things will become
 clearer in a moment when we plot the graph of the workflow.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
                       <span class="n">preproc_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.subject_id&#39;</span><span class="p">)</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
                       <span class="n">preproc_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.raw_file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To do so, we first write the workflow graph (optional)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
 </pre></div>
 </div>
 <p>and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">preproc_pipeline_name</span><span class="p">,</span> <span class="s1">&#39;graph.png&#39;</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
@@ -239,7 +239,7 @@ here correspond to how we connected the nodes.</p>
 </div>
 <img alt="../_images/sphx_glr_plot_preprocessing_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_preprocessing_001.png" />
 <p>Finally, we are now ready to execute our workflow.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
 <span class="c1"># Run workflow locally on 1 CPU</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
@@ -251,8 +251,8 @@ defined by <cite>base_dir</cite>.</p>
 the excluded ICA components. It is also possible to include and exclude more
 components by using either a jupyter notebook or the preprocessing pipeline
 with different flag parameters.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="k">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
 
 <span class="n">ica_files</span><span class="p">,</span> <span class="n">raw_files</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
                                    <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
@@ -264,28 +264,20 @@ with different flag parameters.</p>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
-<li><img alt="../_images/sphx_glr_plot_preprocessing_002.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_preprocessing_002.png" />
+<li><img alt="../_images/sphx_glr_plot_preprocessing_002.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_002.png" />
 </li>
-<li><img alt="../_images/sphx_glr_plot_preprocessing_003.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_preprocessing_003.png" />
+<li><img alt="../_images/sphx_glr_plot_preprocessing_003.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_003.png" />
 </li>
-<li><img alt="../_images/sphx_glr_plot_preprocessing_004.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_preprocessing_004.png" />
-</li>
-<li><img alt="../_images/sphx_glr_plot_preprocessing_005.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_preprocessing_005.png" />
-</li>
-<li><img alt="../_images/sphx_glr_plot_preprocessing_006.png" class="sphx-glr-multi-img" src="../_images/sphx_glr_plot_preprocessing_006.png" />
+<li><img alt="../_images/sphx_glr_plot_preprocessing_004.png" class="sphx-glr-multi-img first" src="../_images/sphx_glr_plot_preprocessing_004.png" />
 </li>
 </ul>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Opening raw data file /home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif...
-/home/circleci/project/examples/plot_preprocessing.py:164: RuntimeWarning: This filename (/home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz or _meg.fif
-  raw = mne.io.read_raw_fif(raw_file)
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Opening raw data file /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica.fif...
     Read 5 compensation matrices
     Range : 0 ... 47999 =      0.000 ...    59.999 secs
 Ready.
 Current compensation grade : 3
-/home/circleci/project/examples/plot_preprocessing.py:165: RuntimeWarning: This filename (/home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
-  ica = mne.preprocessing.read_ica(ica_file)
-Reading /home/circleci/project/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif ...
+Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega/preprocessing_workflow/preproc_meeg_pipeline/_session_id_ses-0001_subject_id_sub-0003/ica/sub-0003_task-rest_run-01_meg_0_60_raw_filt_dsamp_ica_solution.fif ...
 Now restoring ICA solution ...
 Ready.
     Using multitaper spectrum estimation with 7 DPSS windows
@@ -304,28 +296,16 @@ No baseline correction applied
 Not setting metadata
 0 projection items activated
 0 bad epochs dropped
-29 matching events found
-No baseline correction applied
-Not setting metadata
-0 projection items activated
-0 bad epochs dropped
-29 matching events found
-No baseline correction applied
-Not setting metadata
-0 projection items activated
-0 bad epochs dropped
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  17.511 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  9.097 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-preprocessing-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/254b8d44f8d87fc3e0b57790b65d8c5e/plot_preprocessing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_preprocessing.py</span></code></a></p>
-</div>
+<a class="reference download internal" download="" href="../_downloads/91dca2d1dfdbf3375710b8e8e401941e/plot_preprocessing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_preprocessing.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/156d56be1bfcb6a41fb0295d29f57e92/plot_preprocessing.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_preprocessing.ipynb</span></code></a></p>
+<a class="reference download internal" download="" href="../_downloads/e63513801c9b89e928a3b19cd96e104d/plot_preprocessing.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_preprocessing.ipynb</span></code></a></div>
 </div>
-</div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 
 
@@ -340,8 +320,8 @@ Not setting metadata
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-09-30.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-10-08.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>
