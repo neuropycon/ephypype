@@ -15,3 +15,8 @@ doc/generated/
 
 # Examples data files
 examples/sample_BIDS_omega
+
+# pypi build
+build/
+dist/
+
