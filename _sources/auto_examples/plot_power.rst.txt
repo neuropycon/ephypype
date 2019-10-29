@@ -20,8 +20,7 @@ computed and saved in a numpy file.
 The input data shoud be in **fif** or **numpy** format.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
@@ -48,8 +47,7 @@ The input data shoud be in **fif** or **numpy** format.
 Let us fetch the data first. It is around 675 MB download.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
@@ -66,8 +64,7 @@ then read the parameters for PSD computation from a
 file and print it
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     import json  # noqa
@@ -100,12 +97,12 @@ file and print it
                           'method': 'welch'}}
 
 
+
 Then, we create our workflow and specify the `base_dir` which tells
 nipype the directory in which to store the outputs.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     # workflow directory within the `base_dir`
@@ -123,8 +120,7 @@ nipype the directory in which to store the outputs.
 Then we create a node to pass input filenames to DataGrabber from nipype
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
@@ -142,8 +138,7 @@ and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     template_path = '*%s/%s/meg/%s*rest*ica.fif'
@@ -168,8 +163,7 @@ that wraps the MNE-Python functions :func:`mne.time_frequency.psd_welch` and
 Welch's method and multitapers respectively.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     from ephypype.pipelines.power import create_pipeline_power  # noqa
@@ -188,7 +182,8 @@ Welch's method and multitapers respectively.
 
  .. code-block:: none
 
-    *** main_path -> /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
+    *** main_path -> /home/circleci/project/examples/sample_BIDS_omega ***
+
 
 
 We then connect the nodes two at a time. First, we connect the two outputs
@@ -196,8 +191,7 @@ We then connect the nodes two at a time. First, we connect the two outputs
 So, these two nodes taken together can grab data.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -213,8 +207,7 @@ Similarly, for the inputnode of the power_workflow. Things will become
 clearer in a moment when we plot the graph of the workflow.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     main_workflow.connect(datasource, 'raw_file',
@@ -230,8 +223,7 @@ clearer in a moment when we plot the graph of the workflow.
 To do so, we first write the workflow graph (optional)
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     main_workflow.write_graph(graph2use='colored')  # colored
@@ -246,8 +238,7 @@ and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     import matplotlib.pyplot as plt  # noqa
@@ -268,8 +259,7 @@ here correspond to how we connected the nodes.
 Finally, we are now ready to execute our workflow.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
@@ -293,8 +283,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
   by the welch function of the scipy package.
 
 
-
-.. code-block:: python
+.. code-block:: default
 
     from ephypype.gather.gather_results import get_results  # noqa
     from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
@@ -339,9 +328,25 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
     :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/visuals/markers.py:564: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+      ('a_edgewidth', np.float32, 1)])
+    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/gloo/buffer.py:454: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+      data = data.view(dtype=[('f0', data.dtype.base, c)])
+    /home/circleci/miniconda/lib/python3.7/site-packages/visbrain/io/write_image.py:463: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+      plt.show()
 
 
-**Total running time of the script:** ( 0 minutes  7.895 seconds)
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  22.076 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:
@@ -369,4 +374,4 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
  .. rst-class:: sphx-glr-signature
 
-    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.readthedocs.io>`_
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

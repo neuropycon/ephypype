@@ -2,8 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Compute PSD on sensor space &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -12,16 +11,17 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -101,11 +101,11 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="sphx-glr-download-link-note admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-power-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-power-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="compute-psd-on-sensor-space">
 <span id="power"></span><span id="sphx-glr-auto-examples-plot-power-py"></span><h1>Compute PSD on sensor space<a class="headerlink" href="#compute-psd-on-sensor-space" title="Permalink to this headline">¶</a></h1>
@@ -114,30 +114,30 @@ on epochs or raw data on <strong>sensor space</strong> or <strong>source space</
 The <strong>mean PSD</strong> for each selected frequency band is also
 computed and saved in a numpy file.</p>
 <p>The input data shoud be in <strong>fif</strong> or <strong>numpy</strong> format.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
 <span class="c1">#          Mainak Jas &lt;mainakjas@gmail.com&gt;</span>
 <span class="c1"># License: BSD (3-clause)</span>
 
 <span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
 
-<span class="kn">import</span> <span class="nn">os.path</span> <span class="kn">as</span> <span class="nn">op</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="kn">as</span> <span class="nn">pe</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
-<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="kn">import</span> <span class="n">fetch_omega_dataset</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="k">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
+<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="k">import</span> <span class="n">fetch_omega_dataset</span>
 </pre></div>
 </div>
 <p>Let us fetch the data first. It is around 675 MB download.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>then read the parameters for PSD computation from a
 <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
 file and print it</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_power.json&quot;</span><span class="p">))</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;power parameters&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
@@ -161,7 +161,7 @@ file and print it</p>
 </div>
 <p>Then, we create our workflow and specify the <cite>base_dir</cite> which tells
 nipype the directory in which to store the outputs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
 <span class="n">power_analysis_name</span> <span class="o">=</span> <span class="s1">&#39;power_workflow&#39;</span>
 
 <span class="n">main_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">power_analysis_name</span><span class="p">)</span>
@@ -169,7 +169,7 @@ nipype the directory in which to store the outputs.</p>
 </pre></div>
 </div>
 <p>Then we create a node to pass input filenames to DataGrabber from nipype</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
 <span class="n">session_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ses-0001&#39;</span><span class="p">]</span>
 <span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
                              <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">])</span>
@@ -177,7 +177,7 @@ nipype the directory in which to store the outputs.</p>
 </div>
 <p>and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*ica.fif&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*ica.fif&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">)</span>
 </pre></div>
@@ -192,7 +192,7 @@ The power pipeline contains only one node
 that wraps the MNE-Python functions <a class="reference external" href="https://mne.tools/stable/generated/mne.time_frequency.psd_welch.html#mne.time_frequency.psd_welch" title="(in MNE v0.19.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_welch()</span></code></a> and
 <a class="reference external" href="https://mne.tools/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" title="(in MNE v0.19.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_multitaper()</span></code></a> for computing the PSD using
 Welch’s method and multitapers respectively.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.power</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.power.create_pipeline_power"><span class="n">create_pipeline_power</span></a>  <span class="c1"># noqa</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.power</span> <span class="k">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.power.create_pipeline_power"><span class="n">create_pipeline_power</span></a>  <span class="c1"># noqa</span>
 <span class="n">power_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.power.create_pipeline_power"><span class="n">create_pipeline_power</span></a><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">,</span>
                                        <span class="n">fmin</span><span class="o">=</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="n">fmax</span><span class="p">,</span>
                                        <span class="n">method</span><span class="o">=</span><span class="n">power_method</span><span class="p">,</span>
@@ -200,29 +200,29 @@ Welch’s method and multitapers respectively.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** main_path -&gt; /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** main_path -&gt; /home/circleci/project/examples/sample_BIDS_omega ***
 </pre></div>
 </div>
 <p>We then connect the nodes two at a time. First, we connect the two outputs
 (subject_id and session_id) of the infosource node to the datasource node.
 So, these two nodes taken together can grab data.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Similarly, for the inputnode of the power_workflow. Things will become
 clearer in a moment when we plot the graph of the workflow.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
                       <span class="n">power_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.fif_file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>To do so, we first write the workflow graph (optional)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
 </pre></div>
 </div>
 <p>and visualize it. Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">power_analysis_name</span><span class="p">,</span> <span class="s1">&#39;graph.png&#39;</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
@@ -231,7 +231,7 @@ here correspond to how we connected the nodes.</p>
 </div>
 <img alt="../_images/sphx_glr_plot_power_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_power_001.png" />
 <p>Finally, we are now ready to execute our workflow.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
 <span class="c1"># Run workflow locally on 1 CPU</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
@@ -241,16 +241,16 @@ here correspond to how we connected the nodes.</p>
 <strong>mean PSD in .npy format</strong> stored in the workflow directory defined by
 <cite>base_dir</cite></p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The power pipeline in the <strong>source space</strong> is implemented by the
+<p class="admonition-title">Note</p>
+<p>The power pipeline in the <strong>source space</strong> is implemented by the
 function <code class="xref py py-func docutils literal notranslate"><span class="pre">ephypype.pipelines.power.create_pipeline_power_src_space()</span></code>
 and its Node <code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.power.Power</span></code> compute the PSD
 by the welch function of the scipy package.</p>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="kn">import</span> <span class="n">SourceObj</span><span class="p">,</span> <span class="n">SceneObj</span><span class="p">,</span> <span class="n">ColorbarObj</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">visbrain.utils</span> <span class="kn">import</span> <span class="n">normalize</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span>  <span class="c1"># noqa</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="k">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="k">import</span> <span class="n">SourceObj</span><span class="p">,</span> <span class="n">SceneObj</span><span class="p">,</span> <span class="n">ColorbarObj</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">visbrain.utils</span> <span class="k">import</span> <span class="n">normalize</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span>  <span class="c1"># noqa</span>
 
 <span class="n">psd_files</span><span class="p">,</span> <span class="n">channel_coo_files</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
                                            <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -286,14 +286,25 @@ by the welch function of the scipy package.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_power_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_power_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  7.895 seconds)</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/circleci/miniconda/lib/python3.7/site-packages/vispy/visuals/markers.py:564: FutureWarning: Passing (type, 1) or &#39;1type&#39; as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / &#39;(1,)type&#39;.
+  (&#39;a_edgewidth&#39;, np.float32, 1)])
+/home/circleci/miniconda/lib/python3.7/site-packages/vispy/gloo/buffer.py:454: FutureWarning: Passing (type, 1) or &#39;1type&#39; as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / &#39;(1,)type&#39;.
+  data = data.view(dtype=[(&#39;f0&#39;, data.dtype.base, c)])
+/home/circleci/miniconda/lib/python3.7/site-packages/visbrain/io/write_image.py:463: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  plt.show()
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  22.076 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-power-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/6ec947a41b7bdde51b1c89781ff05693/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_power.py</span></code></a></div>
-<div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/6c817c9099a8b2f63f6693744c72e172/plot_power.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_power.ipynb</span></code></a></div>
+<p><a class="reference download internal" download="" href="../_downloads/047667f6e98ec4cbe7814b4db7c4294c/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_power.py</span></code></a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/28c69b982ff953f562e5d4eae4bc3c68/plot_power.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_power.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 
 
@@ -308,8 +319,8 @@ by the welch function of the scipy package.</p>
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-10-08.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-10-29.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>
 </footer>
