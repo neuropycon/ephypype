@@ -204,7 +204,7 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
     c_obj = ConnectObj('c', xyz, connect,
                        color_by='count',
                        clim=clim, dynamic=(0., 1.),
-                       dynamic_order=3, antialias=True, cmap='bwr',
+                       dynamic_order=3, antialias=True, cmap='inferno',
                        line_width=4.)
     s_obj = SourceObj('s', xyz, data=radius, radius_min=5, radius_max=15,
                       text=names, text_size=10, text_color='white',
