@@ -49,11 +49,9 @@ Each pipeline based on nipype engine is defined by **nodes** connected together,
 where each node maybe wrapping of existing software (as MNE-python modules or radatools functions)
 as well as providing easy ways to implement function defined by the user.
 
-We also provide neuropycon with a command line interface which is organized into a separate **Neuropycon_cli** package 
-(`neuropycon_cli <https://github.com/neuropycon/neuropycon_cli#>`_). At the moment the command line interface wraps some of 
-the functionality of the ephypype package only but will be expanded in the future. 
-A detailed explanation of the command line interface operation principles and examples can be found on the documentation webpage
-`neuropycon_cli <https://neuropycon.github.io/neuropycon_cli/#>`_
+We also provide neuropycon with a Command Line Interface (**CLI**) that up to now wraps only some of 
+the functionality of the ephypype package  but will be expanded in the future. 
+A detailed explanation of the command line interface operation principles and examples can be found :ref:`here <neuropycon_cli>`.
 
 .. _ephypype:
 
