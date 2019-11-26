@@ -171,7 +171,7 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
 
     for num, (fb, fbn, psd, rx) in enumerate(zip(freq_bands, freq_band_names,
                                                  psdf, radius)):
-        s_obj = SourceObj('s', xyz, data=psd)  # noqa
+        s_obj = SourceObj('s', xyz, data=psd, radius_min=rx[0], radius_max=rx[1])  # noqa
         s_obj.color_sources(data=psd, cmap='cool', clim=clim)
         sc.add_to_subplot(s_obj, col=num, title=str(fb) + ' - ' + fbn,
                           title_color='white', rotate='top', zoom=.6)
