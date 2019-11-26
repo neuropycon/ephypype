@@ -123,9 +123,9 @@ class SpectralConn(BaseInterface):
         if epoch_window_length == traits.Undefined:
             print('*** NO epoch_window_length ***')
 
-            data = np.load(self.inputs.ts_file)
+            data = np.load(self.inputs.ts_file, allow_pickle=True)
         else:
-            raw_data = np.load(self.inputs.ts_file)
+            raw_data = np.load(self.inputs.ts_file, allow_pickle=True)
 
             print(raw_data.shape)
             print(int(epoch_window_length * sfreq))
@@ -244,7 +244,7 @@ class PlotSpectralConn(BaseInterface):
         _, fname, _ = split_f(self.inputs.conmat_file)
         print(fname)
 
-        conmat = np.load(self.inputs.conmat_file)
+        conmat = np.load(self.inputs.conmat_file, allow_pickle=True)
         print(conmat.shape)
 
         assert conmat.ndim == 2, \
