@@ -49,6 +49,7 @@ def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
 
 
 def _read_hdf5(filename, dataset_name='dataset'):
+
     """
     Read hdf5 file
 
@@ -66,9 +67,10 @@ def _read_hdf5(filename, dataset_name='dataset'):
     hf = h5py.File(filename, 'r')
     data = hf[dataset_name][()]
 
-    npy_filename = filename.replace('.hdf5', '.npy')
-
-    np.save(npy_filename, data)
+    old_path, basename, ext = split_f(filename)
+    npy_filename = os.path.abspath(basename + '.npy')
+    print(npy_filename)
+    np.save(npy_filename, data, allow_pickle=True)
     return npy_filename
 
 
@@ -207,7 +209,7 @@ def concat_ts(all_ts_files):
     for i, ts_file in enumerate(all_ts_files):
 
         # loading ROI coordinates
-        ts = np.load(ts_file)
+        ts = np.load(ts_file, allow_pickle=True)
 
         # print "all_ts: "
         print((ts.shape))
