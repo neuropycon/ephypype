@@ -1,0 +1,6 @@
+ephypype.commands.epoch
+=======================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: epoch

@@ -1,0 +1,6 @@
+ephypype.commands.fif\_ep\_2\_ts
+================================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: fif_ep_2_ts

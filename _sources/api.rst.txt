@@ -25,6 +25,23 @@ Nodes (:py:mod:`ephypype.nodes`):
 .. autosummary::
    :toctree: generated/
 
+CLI commands (:py:mod:`ephypype.commands.neuropycon`):
+
+.. currentmodule:: ephypype.commands
+
+.. autosummary::
+   :toctree: generated/
+   
+   connectivity
+   ds2fif
+   epoch
+   fif_ep_2_ts
+   ica
+   multiscale
+   preproc
+   process_pipeline
+   psd
+
 Utils (:py:mod:`ephypype.nodes.utils`):
 
 .. currentmodule:: ephypype.nodes.utils

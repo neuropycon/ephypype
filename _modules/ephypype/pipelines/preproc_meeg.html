@@ -103,16 +103,16 @@
 <span class="c1">#          Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
 
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">import</span> <span class="n">IdentityInterface</span><span class="p">,</span> <span class="n">Function</span>
-<span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="k">import</span> <span class="n">PreprocFif</span>
-<span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="k">import</span> <span class="n">CompIca</span>
-<span class="kn">from</span> <span class="nn">..nodes.import_data</span> <span class="k">import</span> <span class="n">ConvertDs2Fif</span>
-<span class="kn">from</span> <span class="nn">..preproc</span> <span class="k">import</span> <span class="n">_preprocess_set_ica_comp_fif_to_ts</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">IdentityInterface</span><span class="p">,</span> <span class="n">Function</span>
+<span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="kn">import</span> <span class="n">PreprocFif</span>
+<span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="kn">import</span> <span class="n">CompIca</span>
+<span class="kn">from</span> <span class="nn">..nodes.import_data</span> <span class="kn">import</span> <span class="n">ConvertDs2Fif</span>
+<span class="kn">from</span> <span class="nn">..preproc</span> <span class="kn">import</span> <span class="n">_preprocess_set_ica_comp_fif_to_ts</span>
 
 
 <span class="k">def</span> <span class="nf">get_ext_file</span><span class="p">(</span><span class="n">raw_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get file extension.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
 
     <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
 
@@ -264,7 +264,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-10-29.<br/>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-11-27.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
     </p>
   </div>

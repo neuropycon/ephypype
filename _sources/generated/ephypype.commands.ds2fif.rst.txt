@@ -1,0 +1,6 @@
+ephypype.commands.ds2fif
+========================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: ds2fif

@@ -22,9 +22,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_connectivity_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_connectivity_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_connectivity.py`
+     :ref:`sphx_glr_auto_examples_plot_connectivity.py`
 
 .. raw:: html
 
@@ -42,9 +42,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_inverse_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_inverse_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_inverse.py`
+     :ref:`sphx_glr_auto_examples_plot_inverse.py`
 
 .. raw:: html
 
@@ -62,9 +62,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_power_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_power_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_power.py`
+     :ref:`sphx_glr_auto_examples_plot_power.py`
 
 .. raw:: html
 
@@ -82,9 +82,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_preprocessing_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_preprocessing_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_preprocessing.py`
+     :ref:`sphx_glr_auto_examples_plot_preprocessing.py`
 
 .. raw:: html
 
@@ -97,7 +97,7 @@ Examples Gallery
    /auto_examples/plot_preprocessing
 .. raw:: html
 
-    <div style='clear:both'></div>
+    <div class="sphx-glr-clear"></div>
 
 
 

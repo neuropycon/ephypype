@@ -1,0 +1,6 @@
+ephypype.commands.connectivity
+==============================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: connectivity

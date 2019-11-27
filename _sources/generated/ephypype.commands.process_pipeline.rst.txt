@@ -1,0 +1,6 @@
+ephypype.commands.process\_pipeline
+===================================
+
+.. currentmodule:: ephypype.commands
+
+.. autofunction:: process_pipeline

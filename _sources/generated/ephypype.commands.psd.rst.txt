@@ -1,0 +1,6 @@
+ephypype.commands.psd
+=====================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: psd

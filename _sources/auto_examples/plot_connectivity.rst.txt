@@ -42,6 +42,7 @@ The **input** data should be a time series matrix in **npy** or **mat** format.
 
 
 
+
 Let us fetch the data first. It is around 675 MB download.
 
 
@@ -62,11 +63,12 @@ Let us fetch the data first. It is around 675 MB download.
 
  .. code-block:: none
 
-    Downloading https://uc41602468b851d4fdef816e6477.dl.dropboxusercontent.com/zip_by_token_key?dl=1&key=ArVlC7wBRKgCXT0ttjbSh1upeb4Ve789D_7cmZAO7NkyvQ5gRFISsVk7ZUWdINbFkHNZUk2IJagJWSSb9mhHgNir9rLHFcU4iPEkiesSAZ2NSdKHxmANvRk9px3qHwaFfsNcm2IE9qHjpl_lNmjio0-96xkrDesfKZXHHnSg1mVVodSJ5qR9qDcqZnFln3fmfkCA31W5O57DPEaIVSttHyTl (1 byte)
+    Downloading https://ucdac7f71dedf06b64f328a3d00e.dl.dropboxusercontent.com/zip_by_token_key?dl=1&key=AtKCI_nHNZW5dJGVkimtiUewaD9k2F9rnjrHzV7w0806UVxaI26CWAcA9sflYz_IRmNnD3_BRroA2EnZ4yIFdblWEfahNy3ctLbmdPQdFNJztSQyv-N-Ehn7ECGE2FCASYTh2o3yebflLKMOjAm8hK4AVO10ke-53xEicXe65usYfCOyST-h7tNzupyhBT4jI0WY9sBbKdGMo7kPHk5ZjvDT (1 byte)
 
     File saved as /home/circleci/project/ephypype/../examples/sample_BIDS_omega.zip.
 
     Extracting files. This may take a while ...
+
 
 
 
@@ -105,6 +107,7 @@ then read the parameters for connectivity from a
 
 
 
+
 Then, we create our workflow and specify the `base_dir` which tells
 nipype the directory in which to store the outputs.
 
@@ -117,6 +120,7 @@ nipype the directory in which to store the outputs.
 
     main_workflow = pe.Workflow(name=correl_analysis_name)
     main_workflow.base_dir = data_path
+
 
 
 
@@ -141,6 +145,7 @@ Then we create a node to pass input filenames to DataGrabber from nipype
 
 
 
+
 and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node
 
@@ -151,6 +156,7 @@ the values in the infosource node
     template_path = '*%s/%s/meg/%s*rest*ica.fif'
     template_args = [['subject_id', 'session_id', 'subject_id']]
     datasource = create_datagrabber(data_path, template_path, template_args)
+
 
 
 
@@ -200,6 +206,7 @@ In particular, the two nodes are:
 
 
 
+
 The connectivity node needs two auxiliary nodes: one node reads the raw data
 file in .fif format and extract the data and the channel information; the
 other node get information on the frequency band we are interested on.
@@ -212,6 +219,7 @@ other node get information on the frequency band we are interested on.
     create_array_node = pe.Node(interface=Fif2Array(), name='Fif2Array')
 
     frequency_node = get_frequency_band(freq_band_names, freq_bands)
+
 
 
 
@@ -235,6 +243,7 @@ frequency node
 
     main_workflow.connect(infosource, 'freq_band_name',
                           frequency_node, 'freq_band_name')
+
 
 
 
@@ -266,6 +275,7 @@ Things will become clearer in a moment when we plot the graph of the workflow
 
 
 
+
 To do so, we first write the workflow graph (optional)
 
 
@@ -277,6 +287,15 @@ To do so, we first write the workflow graph (optional)
 
 
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    '/home/circleci/project/examples/sample_BIDS_omega/spectral_connectivity_coh/graph.png'
 
 
 
@@ -300,6 +319,15 @@ here correspond to how we connected the nodes.
     :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (-0.5, 740.5, 594.5, -0.5)
+
 
 
 Finally, we are now ready to execute our workflow.
@@ -316,6 +344,15 @@ Finally, we are now ready to execute our workflow.
 
 
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <networkx.classes.digraph.DiGraph object at 0x7f8ad8c5a9d0>
 
 
 
@@ -393,19 +430,16 @@ to perform graph analysis on the computed connectivity matrix.
 
  .. code-block:: none
 
-    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/visuals/markers.py:564: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
-      ('a_edgewidth', np.float32, 1)])
-    /home/circleci/miniconda/lib/python3.7/site-packages/vispy/gloo/buffer.py:454: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
-      data = data.view(dtype=[('f0', data.dtype.base, c)])
     /home/circleci/miniconda/lib/python3.7/site-packages/visbrain/io/write_image.py:463: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
       plt.show()
 
 
 
 
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  56.033 seconds)
+   **Total running time of the script:** ( 1 minutes  58.963 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:

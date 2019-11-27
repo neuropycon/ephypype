@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial &#8212; ephypype 0.1dev0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Gallery</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#commands-options-and-arguments">Commands, options and arguments</a></li>
+<li><a class="reference internal" href="#commands-order">Commands order</a></li>
+<li><a class="reference internal" href="#input-specification">Input specification</a></li>
+<li><a class="reference internal" href="#generated-output">Generated output</a></li>
+<li><a class="reference internal" href="#hotstart">Hotstart</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/tutorial.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>Core idea behind neuropycon_cli is to make use of wildcards provided
+by UNIX shell to handle datasets with nested folders organization so the target
+files can be processed in parallel and so the results can be stored in
+a folder structure identical to the original one.</p>
+<p>In this section I will explain, how to combine neuropycon_cli
+commands to join data processing nodes into pipelines and how
+to select input files from dataset folders in the most efficient way using wildcards.</p>
+<div class="section" id="commands-options-and-arguments">
+<h2>Commands, options and arguments<a class="headerlink" href="#commands-options-and-arguments" title="Permalink to this headline">¶</a></h2>
+<p>In each call to <em>neuropycon command line</em> interface we aim to
+build a processing pipeline or a <strong>workflow</strong>. Namely, we specify which processing nodes
+we want to run on the data, how we want to connect them and how we want the
+resulting pipeline to be run.</p>
+<p>For each processing node there’s a corresponding <strong>command</strong> in the command line interface.
+To specify how a particular node should be invoked, we use <strong>options</strong> to these commands.</p>
+<p>To illustrate this let’s start with the command that is always
+going to appear first — <code class="code docutils literal notranslate"><span class="pre">neuropycon</span></code>.
+This command has several options defining the general behaviour of the pipeline.
+For instance, <code class="code docutils literal notranslate"><span class="pre">-p</span></code> or <code class="code docutils literal notranslate"><span class="pre">--plugin</span></code> option defines weither the workflow should
+be run in parallel or serial fashion. Another option, <code class="code docutils literal notranslate"><span class="pre">-n</span></code> or <code class="code docutils literal notranslate"><span class="pre">--ncpu</span></code> defines
+how many parallel threads should be used.
+Thus, if we want our workflow to run in parallel on 4 cores, we should start with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon -p MultiProc -n <span class="m">4</span> &lt;...&gt;
+</pre></div>
+</div>
+<p>Probably the most useful option for the start is <code class="code docutils literal notranslate"><span class="pre">--help</span></code>
+which shows a help message with a full list of
+available commands and options and exits.
+This option can be used on any command to see what it does and what options can/must be set.
+Try for instance</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon --help
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon ica --help
+</pre></div>
+</div>
+<p>Options to neuropycon commands always start with single or double hyphen depending on
+weither the short or long option name is used (i.e. <code class="code docutils literal notranslate"><span class="pre">-n</span></code> and <code class="code docutils literal notranslate"><span class="pre">--ncpu</span></code> options for
+neuropycon command). Most of the time options are not required to be set explicitly since
+most of them have default values. If no default value is set for an option and user does not set
+such option explicitly the prompt with a demand to set an option will appear.</p>
+<p>In contrast to options, <strong>arguments</strong> specification in neuropycon_cli is mandatory and
+is used only for <code class="code docutils literal notranslate"><span class="pre">input</span></code> command which (don’t look surprized) specifies paths to the input files.
+The number of arguments to <strong>input</strong> command is unlimited
+and each argument should go as is (without hyphens). Arguments should be separated by whitespaces.</p>
+<p>For example, imagine we had two files named <code class="code docutils literal notranslate"><span class="pre">sample1.fif</span></code> and <code class="code docutils literal notranslate"><span class="pre">sample2.fif</span></code> in the current working directory.
+You can create two empty files for testing purposes by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ touch sample1.fif sample2.fif
+</pre></div>
+</div>
+<p>The most simple looking pipeline would look like</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon input sample1.fif sample2.fif
+
+  _   _                      _____        _____                 _.-<span class="s1">&#39;-&#39;</span>--._
+ <span class="p">|</span> <span class="se">\ </span><span class="p">|</span> <span class="p">|</span>                    <span class="p">|</span>  __ <span class="se">\ </span>     / ____<span class="p">|</span>               ,<span class="s1">&#39;, ~&#39;</span><span class="sb">`</span> <span class="o">(</span> .<span class="s1">&#39;`.</span>
+<span class="s1"> |  \| | ___ _   _ _ __ ___ | |__) |   _| |     ___  _ __     ( ~&#39;</span>_ , .<span class="s1">&#39;(  &gt;-)</span>
+<span class="s1"> | . ` |/ _ \ | | | &#39;</span>__/ _ <span class="se">\|</span>  ___/ <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>    / _ <span class="se">\|</span> <span class="s1">&#39;_ \   ( .-&#39;</span> <span class="o">(</span>  <span class="sb">`</span>__.-&lt;  <span class="o">)</span>
+ <span class="p">|</span> <span class="p">|</span><span class="se">\ </span> <span class="p">|</span>  __/ <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="o">(</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>___<span class="p">|</span> <span class="o">(</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="o">(</span> <span class="sb">`</span>-..--<span class="s1">&#39;_   .-&#39;</span><span class="o">)</span>
+ <span class="p">|</span>_<span class="p">|</span> <span class="se">\_</span><span class="p">|</span><span class="se">\_</span>__<span class="p">|</span><span class="se">\_</span>_,_<span class="p">|</span>_<span class="p">|</span>  <span class="se">\_</span>__/<span class="p">|</span>_<span class="p">|</span>    <span class="se">\_</span>_, <span class="p">|</span><span class="se">\_</span>____<span class="se">\_</span>__/<span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span>    <span class="sb">`</span><span class="o">(</span>_<span class="o">(</span> <span class="o">(</span>-<span class="s1">&#39; `-&#39;</span>.-<span class="o">)</span>
+                                    __/ <span class="p">|</span>                          <span class="sb">`</span>-.__.-<span class="s1">&#39;=/</span>
+<span class="s1">                                   |___/                              `._`=&#39;</span>
+                                                                        <span class="se">\\</span>
+ <span class="m">180108</span>-16:24:35,776 workflow INFO:
+          Workflow my_workflow settings: <span class="o">[</span><span class="s1">&#39;check&#39;</span>, <span class="s1">&#39;execution&#39;</span>, <span class="s1">&#39;logging&#39;</span><span class="o">]</span>
+ <span class="m">180108</span>-16:24:35,780 workflow INFO:
+          Running in parallel.
+ <span class="m">180108</span>-16:24:35,781 workflow INFO:
+          Executing: path_node.a1 ID: <span class="m">0</span>
+ <span class="m">180108</span>-16:24:35,783 workflow INFO:
+          Executing node path_node.a1 in dir: /home/dmalt/my_workflow/_keys_sample2-fif/path_node
+ <span class="m">180108</span>-16:24:35,790 workflow INFO:
+          <span class="o">[</span>Job finished<span class="o">]</span> jobname: path_node.a1 jobid: <span class="m">0</span>
+ <span class="m">180108</span>-16:24:35,791 workflow INFO:
+          Executing: path_node.a0 ID: <span class="m">1</span>
+ <span class="m">180108</span>-16:24:35,793 workflow INFO:
+          Executing node path_node.a0 in dir: /home/dmalt/my_workflow/_keys_sample1-fif/path_node
+ <span class="m">180108</span>-16:24:35,796 workflow INFO:
+          <span class="o">[</span>Job finished<span class="o">]</span> jobname: path_node.a0 jobid: <span class="m">1</span>
+</pre></div>
+</div>
+<p>This pipeline does pretty much nothing since we didn’t
+specify commands including any processing nodes.
+The only result would be appearance in the current working directory of
+a folder named <code class="code docutils literal notranslate"><span class="pre">my_workflow</span></code> with some logging information
+and subfolder <code class="code docutils literal notranslate"><span class="pre">_keys_sample-fif</span></code> named so to uniquely correspond to the file
+being processed.
+If we were actually doing some useful job all the result would appear inside the
+<code class="code docutils literal notranslate"><span class="pre">_keys_sample-fif</span></code> folder.</p>
+</div>
+<div class="section" id="commands-order">
+<h2>Commands order<a class="headerlink" href="#commands-order" title="Permalink to this headline">¶</a></h2>
+<p>Now let’s add more nodes to the pipeline.</p>
+<p>To do so two rules must be followed concerning the order of invoked commands.</p>
+<ol class="arabic simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">input</span></code> command must always appear <strong>last</strong>.
+This limitation allows specifying input without knowing in advance the exact
+number of files to be processed,
+i.e. when we take all files matching  a <cite>wildcard</cite> (see below).</p></li>
+<li><p>All nodes corresponding to the commands other than <code class="code docutils literal notranslate"><span class="pre">input</span></code> are linked in
+order of appearance. Output from the previous node becomes an input of the next.</p></li>
+</ol>
+<p>In practice this means that  i) order of commands matters, ii) input and output of adjacent nodes
+must be coherent and iii) no matter what, input specification must always be the last thing in the
+chain of commands.</p>
+<p>For example, suppose we had <code class="code docutils literal notranslate"><span class="pre">resting_state.fif</span></code> file with resting state MEG data
+and we want to cut it into 1-second epochs and save these epochs in numpy format <code class="code docutils literal notranslate"><span class="pre">.npy</span></code>.
+Sequence of nodes for this task should look as following:</p>
+<div class="figure align-center">
+<img alt="_images/nodes_order.png" src="_images/nodes_order.png" />
+</div>
+<p>Having in mind rules outlined above we can write the corresponding sequence of commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon epoch -l <span class="m">1</span> ep2npy input resting_state.fif
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">-l</span> <span class="pre">1</span></code> option defines the resulting epochs to be of 1 second length.</p>
+</div>
+<div class="section" id="input-specification">
+<h2>Input specification<a class="headerlink" href="#input-specification" title="Permalink to this headline">¶</a></h2>
+<p>A common scenario for MEEG datasets organization would be when
+the recorded data for a number of subjects are stored in subfolders
+with each subfolder’s name depicting information about subject’s number,
+recording condition, applied preprocessing steps etc.</p>
+<p>Sample folders layout might look as following:</p>
+<p>Here we have 5 subjects with subject IDs K0015, K0025, K0034, R0008, R0023.
+For each of them there are two <code class="code docutils literal notranslate"><span class="pre">.fif</span></code> files with MEG recordings for eyes closed
+and eyes open conditions.</p>
+<p>One way to go about the processing of these data would be to manually deal
+with each file we want to process which isn’t very handy for big datasets.</p>
+<p>A better idea would be to make use of a regular organization of subfolders.
+Normally dataset processing requires applying a set of operations to similar files
+inside the folders tree and it would be nice if we could address these subgroups of
+similar files using some kind of matching patterns to apply a certain pipeline
+of processing operations to them. A perfect tool for that is provided by
+UNIX shell.</p>
+<p>Consider the following example:</p>
+<p>If we were to list all the fif files in the subdirectories
+we could use a shell command like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls ./NeuroPyConData/*/*.fif
+</pre></div>
+</div>
+<p>Where * symbol is a <a class="reference external" href="https://ryanstutorials.net/linuxtutorial/wildcards.php">wildcard</a> mapping one or more string literals.</p>
+<p>Now if we wanted to list only those files that contain recordings for
+the ‘eyes closed’ conditiion we would go like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls ./NeuroPyConData/*/*ec.fif
+</pre></div>
+</div>
+<p>Note ‘ec’ suffix et the end of our matching pattern.</p>
+<p>Similar syntax can be applied if we want to process matching files instead of just listing them.</p>
+<p>Let’s proceed with the example from the previous section where we epoched a single file
+and converted it to <code class="code docutils literal notranslate"><span class="pre">.npy</span></code> format. To apply processing steps to all eyes-closed
+files in our dataset all we have to do is use the wildcard we’ve already created:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon epoch -l <span class="m">1</span> ep2npy input ./NeuroPyConData/*/*ec.fif
+
+  _   _                      _____        _____                 _.-<span class="s1">&#39;-&#39;</span>--._
+ <span class="p">|</span> <span class="se">\ </span><span class="p">|</span> <span class="p">|</span>                    <span class="p">|</span>  __ <span class="se">\ </span>     / ____<span class="p">|</span>               ,<span class="s1">&#39;, ~&#39;</span><span class="sb">`</span> <span class="o">(</span> .<span class="s1">&#39;`.</span>
+<span class="s1"> |  \| | ___ _   _ _ __ ___ | |__) |   _| |     ___  _ __     ( ~&#39;</span>_ , .<span class="s1">&#39;(  &gt;-)</span>
+<span class="s1"> | . ` |/ _ \ | | | &#39;</span>__/ _ <span class="se">\|</span>  ___/ <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>    / _ <span class="se">\|</span> <span class="s1">&#39;_ \   ( .-&#39;</span> <span class="o">(</span>  <span class="sb">`</span>__.-&lt;  <span class="o">)</span>
+ <span class="p">|</span> <span class="p">|</span><span class="se">\ </span> <span class="p">|</span>  __/ <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="o">(</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span>   <span class="p">|</span> <span class="p">|</span>_<span class="p">|</span> <span class="p">|</span> <span class="p">|</span>___<span class="p">|</span> <span class="o">(</span>_<span class="o">)</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span> <span class="p">|</span>   <span class="o">(</span> <span class="sb">`</span>-..--<span class="s1">&#39;_   .-&#39;</span><span class="o">)</span>
+ <span class="p">|</span>_<span class="p">|</span> <span class="se">\_</span><span class="p">|</span><span class="se">\_</span>__<span class="p">|</span><span class="se">\_</span>_,_<span class="p">|</span>_<span class="p">|</span>  <span class="se">\_</span>__/<span class="p">|</span>_<span class="p">|</span>    <span class="se">\_</span>_, <span class="p">|</span><span class="se">\_</span>____<span class="se">\_</span>__/<span class="p">|</span>_<span class="p">|</span> <span class="p">|</span>_<span class="p">|</span>    <span class="sb">`</span><span class="o">(</span>_<span class="o">(</span> <span class="o">(</span>-<span class="s1">&#39; `-&#39;</span>.-<span class="o">)</span>
+                                    __/ <span class="p">|</span>                          <span class="sb">`</span>-.__.-<span class="s1">&#39;=/</span>
+<span class="s1">                                   |___/                              `._`=&#39;</span>
+                                                                        <span class="se">\\</span>
+INPUT ---&gt; EPOCHING ---&gt; EP2NPY
+<span class="m">180109</span>-18:28:11,91 workflow INFO:
+         Workflow my_workflow settings: <span class="o">[</span><span class="s1">&#39;check&#39;</span>, <span class="s1">&#39;execution&#39;</span>, <span class="s1">&#39;logging&#39;</span><span class="o">]</span>
+<span class="m">180109</span>-18:28:11,99 workflow INFO:
+         Running in parallel.
+<span class="m">180109</span>-18:28:11,101 workflow INFO:
+         Executing: path_node.a4 ID: <span class="m">0</span>
+<span class="m">180109</span>-18:28:11,103 workflow INFO:
+...
+...
+...
+</pre></div>
+</div>
+<p>As we can see from the output just below the NeuroPyCon logo,
+the created pipeline is indeed input —&gt; epoching —&gt; ep2npy.</p>
+</div>
+<div class="section" id="generated-output">
+<h2>Generated output<a class="headerlink" href="#generated-output" title="Permalink to this headline">¶</a></h2>
+<p>After running the line above a newly created folder named <code class="code docutils literal notranslate"><span class="pre">my_workflow</span></code> will appear
+in the current working directory.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>We can change the default name and location of the output
+folder from <code class="code docutils literal notranslate"><span class="pre">./my_workflow</span></code> by specifying options <code class="code docutils literal notranslate"><span class="pre">--save-path</span></code> or <code class="code docutils literal notranslate"><span class="pre">-s</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">--workflow-name</span></code> or <code class="code docutils literal notranslate"><span class="pre">-w</span></code>
+to <code class="code docutils literal notranslate"><span class="pre">neuropycon</span></code> command like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon -s ~/ -w npy_convert_workflow epoch -l <span class="m">1</span> ep2npy input ./NeuroPyConData/*/*ec.fif
+</pre></div>
+</div>
+</div>
+<p>Let’s explore the contents of this directory</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ls my_workflow
+d3.js
+graph1.json
+graph.json
+index.html
+_keys_K0015__K0015_rest_raw_tsss_mc_trans_ec-fif
+_keys_K0025__K0025_rest_raw_tsss_mc_trans_ec-fif
+_keys_K0034__K0034_rest_raw_tsss_mc_trans_ec-fif
+_keys_R0008__R0008_rest_raw_tsss_mc_trans_ec-fif
+_keys_R0023__R0023_rest_raw_tsss_mc_trans_ec-fif
+</pre></div>
+</div>
+<p>We see that there are 4 folders starting with <code class="code docutils literal notranslate"><span class="pre">_keys_&lt;SubjID&gt;__</span></code> — one  for each of the files
+processed. Let’s look inside one of them:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>_keys_K0015__K0015_rest_raw_tsss_mc_trans_ec-fif
+├── ep2npy
+│   ├── _0x3ea00ae5c1c4233082317a7027820486.json
+│   ├── _inputs.pklz
+│   ├── _node.pklz
+│   ├── _report
+│   │   └── report.rst
+│   ├── result_ep2npy.pklz
+│   └── ts_epochs.npy
+├── epoching
+│   ├── _0x78142f3fd848accc85737102606876da.json
+│   ├── _inputs.pklz
+│   ├── K0015_rest_raw_tsss_mc_trans_ec-epo.fif
+│   ├── _node.pklz
+│   ├── _report
+│   │   └── report.rst
+│   └── result_epoching.pklz
+└── path_node
+    ├── _0x32a93e6b5a92f59c1ebfc1e1347577b4.json
+    ├── _inputs.pklz
+    ├── _node.pklz
+    ├── _report
+    │   └── report.rst
+    └── result_path_node.pklz
+</pre></div>
+</div>
+<p>Thus, each of the processing nodes created a folder in the outuput directory except for
+the <code class="code docutils literal notranslate"><span class="pre">input</span></code> node (instead there’s path_node folder which is required for inner machinery of the
+CLI to work)
+Inside the <code class="code docutils literal notranslate"><span class="pre">ep2npy</span></code> folder we can find <code class="code docutils literal notranslate"><span class="pre">ts_epochs.npy</span></code> file with numpy-converted epoched
+data.
+<code class="code docutils literal notranslate"><span class="pre">epoching</span></code> folder has <code class="code docutils literal notranslate"><span class="pre">K0015_rest_raw_tsss_mc_trans_ec-epo.fif</span></code> — file with <a class="reference external" href="https://martinos.org/mne/stable/generated/mne.Epochs.html#mne.Epochs">MNE-python
+Epochs</a> data structure.</p>
+<p>These are the main outputs of the pipeline we just applied to our data.
+These files can be used for further and analyses
+(i.e. used as input for another <code class="code docutils literal notranslate"><span class="pre">neuropycon</span></code> chain of commands).</p>
+<p>The rest of files in these folders contains <strong>caching</strong> files  and logging information for the executed
+nodes. You can read about them in <a class="reference external" href="http://nipype.readthedocs.io/en/latest/">nipype documentation</a>.
+Some hint about caching and how it can be useful though will be given in the next section.</p>
+</div>
+<div class="section" id="hotstart">
+<h2>Hotstart<a class="headerlink" href="#hotstart" title="Permalink to this headline">¶</a></h2>
+<p>Nipype framework around which neuropycon_cli is built is smart about re-running computations.
+As I’ve already pointed out some caching information is stored inside the output directory.
+It means that if we were to rerun the pipeline with the same input again <cite>nipype</cite>  would
+use this information together with the output files and it would understand that
+certain nodes have already been executed and it would not run them again.</p>
+<p>Now imagine that after converting the data to numpy we realized that it would also be useful
+to look at some connectivity measure (i.e. imaginary part of coherency) on these data.
+We could just use good and ready <code class="code docutils literal notranslate"><span class="pre">.npy</span></code> files from the
+<code class="code docutils literal notranslate"><span class="pre">ep2npy</span></code> subfolders
+and supply them as an input to another <code class="code docutils literal notranslate"><span class="pre">neruopycon</span> <span class="pre">...</span></code> chain which will create yet another
+(or overwrite existing) output folder with the connectivity matrices inside.</p>
+<p>This is a bit messy though.
+A cleaner way would be to make use of the caching capabilities of <cite>nipype</cite>.
+We can simply augment our previous command-chain with
+a new <code class="code docutils literal notranslate"><span class="pre">conn</span></code> command and it will automatically pick up outputs from the precomputed nodes
+and use them for connectivity computation. The result will look as following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ neuropycon  epoch -l <span class="m">1</span> ep2npy conn -b <span class="m">8</span> <span class="m">12</span> -s <span class="m">1000</span> input NeuroPyConData/*/*ec.fif
+</pre></div>
+</div>
+<p>And if we looked again inside the <code class="code docutils literal notranslate"><span class="pre">_keys_K0015__K0015_rest_raw_tsss_mc_trans_ec</span></code> folder
+we would see that a new folder with connectivity matrix in <code class="code docutils literal notranslate"><span class="pre">.npy</span></code> indeed appeared inside :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>_keys_K0015__K0015_rest_raw_tsss_mc_trans_ec-fif
+├── _con_method_imcoh_freq_band_8.0.12.0
+│   └── sp_conn
+│       ├── _0x289b2f9a3344b8cc2f8cb32978d83319.json
+│       ├── conmat_0_imcoh.npy
+│       ├── _inputs.pklz
+│       ├── _node.pklz
+│       ├── _report
+│       │   └── report.rst
+│       └── result_sp_conn.pklz
+├── ep2npy
+│   ├── _0xc93cf8c735df05d156d881d7026c399c.json
+│   ├── _inputs.pklz
+│   ├── _node.pklz
+│   ├── _report
+│   │   └── report.rst
+│   ├── result_ep2npy.pklz
+│   └── ts_epochs.npy
+├── epoching
+│   ├── _0x78142f3fd848accc85737102606876da.json
+│   ├── _inputs.pklz
+│   ├── K0015_rest_raw_tsss_mc_trans_ec-epo.fif
+│   ├── _node.pklz
+│   ├── _report
+│   │   └── report.rst
+│   └── result_epoching.pklz
+└── path_node
+    ├── _0x32a93e6b5a92f59c1ebfc1e1347577b4.json
+    ├── _inputs.pklz
+    ├── _node.pklz
+    ├── _report
+    │   └── report.rst
+    └── result_path_node.pklz
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-11-27.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

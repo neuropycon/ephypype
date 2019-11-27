@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ephypype.commands.neuropycon &#8212; ephypype 0.1dev0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../api.html">API</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for ephypype.commands.neuropycon</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Command line interface for ephypype package&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Dmitrii Altukhov &lt;daltuhov@hse.ru&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># License: BSD (3-clause)</span>
+
+<span class="kn">from</span> <span class="nn">..externals</span> <span class="kn">import</span> <span class="n">click</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">chain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ncpu&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of CPUs to use</span><span class="se">\</span>
+<span class="s1"> takes effect only for MultiProc and PBS plugins&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--plugin&#39;</span><span class="p">,</span> <span class="s1">&#39;-p&#39;</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="s1">&#39;PBS&#39;</span><span class="p">]),</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;plugin to use; use Linear for single-thread</span><span class="se">\</span>
+<span class="s1"> computation, MultiProc for parallel computation on local</span><span class="se">\</span>
+<span class="s1"> machine and PBS to compute on cluster&#39;</span><span class="p">,</span>
+              <span class="n">default</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--save-path&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path to store results&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--workflow-name&#39;</span><span class="p">,</span> <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;my_workflow&#39;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;name of destination directory&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--verbose/--no-verbose&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;verbosity level&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">cli</span><span class="p">(</span><span class="n">ncpu</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">workflow_name</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parallel processing of MEG/EEG data&quot;&quot;&quot;</span>
+    <span class="n">output_greeting</span><span class="p">()</span>
+
+
+<span class="c1">#  ----------------- Connect all the nodes into a workflow ----------------- #</span>
+<div class="viewcode-block" id="process_pipeline"><a class="viewcode-back" href="../../../generated/ephypype.commands.process_pipeline.html#ephypype.commands.process_pipeline">[docs]</a><span class="nd">@cli</span><span class="o">.</span><span class="n">resultcallback</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">process_pipeline</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">ncpu</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">workflow_name</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create main workflow&quot;&quot;&quot;</span>
+
+    <span class="n">input_node</span><span class="p">,</span> <span class="n">path_node</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">workflow_name</span><span class="p">)</span>
+    <span class="n">workflow</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+
+    <span class="n">in_out</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;path_node&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;ep2npy&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;ts_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;pwr&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;epochs_file&#39;</span><span class="p">,</span> <span class="s1">&#39;pwr_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;sp_conn&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="s1">&#39;conmat_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;mse&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="s1">&#39;mse_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;ica&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;ica_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;preproc&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;ds2fif&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;ds_file&#39;</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;epoching&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;epo_fif_file&#39;</span><span class="p">)}</span>
+
+    <span class="n">workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">input_node</span><span class="p">,</span> <span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="n">path_node</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">)</span>
+    <span class="n">prev_node</span> <span class="o">=</span> <span class="n">path_node</span>
+
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="n">input_node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">),</span> <span class="n">nl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">secho</span><span class="p">(</span><span class="s1">&#39; ---&gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()),</span>
+                    <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;cyan&#39;</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">prev_node</span><span class="p">,</span> <span class="n">in_out</span><span class="p">[</span><span class="n">prev_node</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                         <span class="n">node</span><span class="p">,</span> <span class="n">in_out</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">prev_node</span> <span class="o">=</span> <span class="n">node</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;MultiProc&#39;</span><span class="p">:</span>
+            <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="n">ncpu</span><span class="p">})</span>
+        <span class="k">elif</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;Linear&#39;</span><span class="p">:</span>
+            <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;Linear&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;PBS&#39;</span><span class="p">:</span>
+            <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;PBS&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">..aux_tools</span> <span class="kn">import</span> <span class="n">suppress_stdout_stderr</span>
+        <span class="k">with</span> <span class="n">suppress_stdout_stderr</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;MultiProc&#39;</span><span class="p">:</span>
+                <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="n">ncpu</span><span class="p">})</span>
+            <span class="k">elif</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;Linear&#39;</span><span class="p">:</span>
+                <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;Linear&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">plugin</span> <span class="o">==</span> <span class="s1">&#39;PBS&#39;</span><span class="p">:</span>
+                <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;PBS&#39;</span><span class="p">)</span></div>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># ------------------------------- input node ------------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">argument</span><span class="p">(</span><span class="s1">&#39;fif_files&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">infosrc</span><span class="p">(</span><span class="n">fif_files</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Specify input.</span>
+
+<span class="sd">    Use wildcards to run computations on multiple files;</span>
+<span class="sd">    To check yourself it&#39;s a good idea to run ls command first like this:</span>
+
+
+<span class="sd">    $ ls ./\*/\*.fif</span>
+
+<span class="sd">    $ neuropycon &lt;...&gt; input ./\*/\*.fif</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">split</span>
+    <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">commonprefix</span> <span class="k">as</span> <span class="n">cprfx</span>
+    <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">IdentityInterface</span><span class="p">,</span> <span class="n">Function</span>
+
+    <span class="n">fif_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">abspath</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fif_files</span><span class="p">]</span>
+
+    <span class="n">common_prefix</span> <span class="o">=</span> <span class="n">split</span><span class="p">(</span><span class="n">cprfx</span><span class="p">(</span><span class="n">fif_files</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">iter_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">fif_file</span> <span class="ow">in</span> <span class="n">fif_files</span><span class="p">:</span>
+        <span class="n">new_base</span> <span class="o">=</span> <span class="n">fif_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">common_prefix</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">new_base</span> <span class="o">=</span> <span class="n">new_base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;__&#39;</span><span class="p">)</span>
+        <span class="n">new_base</span> <span class="o">=</span> <span class="n">new_base</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">iter_mapping</span><span class="p">[</span><span class="n">new_base</span><span class="p">]</span> <span class="o">=</span> <span class="n">fif_file</span>
+
+    <span class="n">infosource</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;keys&#39;</span><span class="p">]),</span>
+                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;input&#39;</span><span class="p">)</span>
+
+    <span class="n">path_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;iter_mapping&#39;</span><span class="p">],</span>
+                                           <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span>
+                                           <span class="n">function</span><span class="o">=</span><span class="n">map_path</span><span class="p">),</span>
+                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;path_node&#39;</span><span class="p">)</span>
+
+    <span class="n">infosource</span><span class="o">.</span><span class="n">iterables</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;keys&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()))]</span>
+    <span class="n">path_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">iter_mapping</span> <span class="o">=</span> <span class="n">iter_mapping</span>
+    <span class="k">return</span> <span class="n">infosource</span><span class="p">,</span> <span class="n">path_node</span>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># ---------------------- power spectral density node ---------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;psd&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--fmin&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;lower frequency bound; default=0&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--fmax&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">300.</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;higher frequency bound; default=300&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">psd</span><span class="p">(</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute power spectral density.</span>
+
+<span class="sd">    Lower and higher frequency bounds for computation</span>
+<span class="sd">    can be changed</span>
+
+<span class="sd">    Takes as input epochs in .fif format</span>
+
+<span class="sd">    EXAMPLE:</span>
+
+<span class="sd">    $ neuropycon pwr input ~/fif_epochs/*/*-epo.fif</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..interfaces.mne.power</span> <span class="kn">import</span> <span class="n">Power</span>
+    <span class="c1"># click.echo(list(fif_files))</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Power</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;pwr&#39;</span><span class="p">)</span>
+    <span class="n">power</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">fmin</span> <span class="o">=</span> <span class="n">fmin</span>
+    <span class="n">power</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">fmax</span> <span class="o">=</span> <span class="n">fmax</span>
+    <span class="n">power</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;welch&#39;</span>
+    <span class="k">return</span> <span class="n">power</span>
+<span class="c1"># ------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># --------------------------- connectivity node --------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;conn&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--band&#39;</span><span class="p">,</span> <span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Tuple</span><span class="p">([</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]),</span>
+              <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;frequency band&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--method&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s2">&quot;coh&quot;</span><span class="p">,</span> <span class="s2">&quot;imcoh&quot;</span><span class="p">,</span> <span class="s2">&quot;plv&quot;</span><span class="p">,</span> <span class="s2">&quot;pli&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;wpli&quot;</span><span class="p">,</span> <span class="s2">&quot;pli2_unbiased&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;ppc&quot;</span><span class="p">,</span> <span class="s2">&quot;cohy&quot;</span><span class="p">,</span> <span class="s2">&quot;wpli2_debiased&quot;</span><span class="p">]),</span>
+              <span class="n">default</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;imcoh&#39;</span><span class="p">,),</span> <span class="n">multiple</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;connectivity measure&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--sfreq&#39;</span><span class="p">,</span> <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+              <span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;Input sampling frequency&#39;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;data sampling frequency&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--tf-mode&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+              <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Choice</span><span class="p">([</span><span class="s1">&#39;multitaper&#39;</span><span class="p">,</span> <span class="s1">&#39;cwt_morlet&#39;</span><span class="p">]),</span>
+              <span class="n">default</span><span class="o">=</span><span class="s1">&#39;multitaper&#39;</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;mode of time-frequency transformation&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">connectivity</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">sfreq</span><span class="p">,</span> <span class="n">tf_mode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute spectral connectivity&quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">..interfaces.mne.spectral</span> <span class="kn">import</span> <span class="n">SpectralConn</span>
+    <span class="c1"># if not method:</span>
+    <span class="c1">#     method = (&#39;imcoh&#39;,)</span>
+    <span class="n">freq_bands</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">band</span><span class="p">]</span>
+
+    <span class="n">sp_conn</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">SpectralConn</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sp_conn&#39;</span><span class="p">)</span>
+    <span class="c1"># sp_conn.inputs.con_method = con_method</span>
+    <span class="n">sp_conn</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">sfreq</span>
+    <span class="n">sp_conn</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">tf_mode</span>
+    <span class="n">sp_conn</span><span class="o">.</span><span class="n">iterables</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;freq_band&#39;</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;con_method&#39;</span><span class="p">,</span> <span class="n">method</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">sp_conn</span>
+<span class="c1"># ------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># -------------------------- epochs to numpy node -------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;ep2npy&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fif_ep_2_ts</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Convert .fif epochs to npy timeseries&quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">..nodes.import_data</span> <span class="kn">import</span> <span class="n">Ep2ts</span>
+    <span class="n">ep2ts</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Ep2ts</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ep2npy&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ep2ts</span>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># ------------------------ Multiscale entropy node  ------------------------ #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">multiscale</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute multiscale entropy node</span>
+
+<span class="sd">    Experimental functionality.</span>
+<span class="sd">    Available only in mse branch of ephypype</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..mse</span> <span class="kn">import</span> <span class="n">get_mse_multiple_sensors</span>
+    <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">Function</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ts_file&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">],</span>
+                                     <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mse_file&#39;</span><span class="p">],</span>
+                                     <span class="n">function</span><span class="o">=</span><span class="n">get_mse_multiple_sensors</span><span class="p">),</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>
+
+    <span class="n">mse</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span>
+    <span class="n">mse</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="k">return</span> <span class="n">mse</span>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># -------------------------------- ica node -------------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--n-components&#39;</span><span class="p">,</span> <span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ecg-ch-name&#39;</span><span class="p">,</span> <span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--eog-ch-name&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">STRING</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ica</span><span class="p">(</span><span class="n">n_components</span><span class="p">,</span> <span class="n">ecg_ch_name</span><span class="p">,</span> <span class="n">eog_ch_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute ica solution for raw fif file&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="kn">import</span> <span class="n">CompIca</span>
+    <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">CompIca</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+    <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">n_components</span>
+    <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ecg_ch_name</span> <span class="o">=</span> <span class="n">ecg_ch_name</span>
+    <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">eog_ch_name</span> <span class="o">=</span> <span class="n">eog_ch_name</span>
+    <span class="k">return</span> <span class="n">ica_node</span>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># ------------------------------ Preproc node  ------------------------------ #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--l-freq&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--h-freq&#39;</span><span class="p">,</span> <span class="s1">&#39;-h&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--ds_freq&#39;</span><span class="p">,</span> <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">INT</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;downsampling frequency&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">preproc</span><span class="p">(</span><span class="n">l_freq</span><span class="p">,</span> <span class="n">h_freq</span><span class="p">,</span> <span class="n">ds_freq</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Filter and downsample data.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="kn">import</span> <span class="n">PreprocFif</span>
+
+    <span class="n">preproc_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">PreprocFif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">l_freq</span><span class="p">:</span>
+        <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">l_freq</span> <span class="o">=</span> <span class="n">l_freq</span>
+    <span class="k">if</span> <span class="n">h_freq</span><span class="p">:</span>
+        <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">h_freq</span> <span class="o">=</span> <span class="n">h_freq</span>
+
+    <span class="k">if</span> <span class="n">ds_freq</span><span class="p">:</span>
+        <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">down_sfreq</span> <span class="o">=</span> <span class="n">ds_freq</span>
+
+    <span class="k">return</span> <span class="n">preproc_node</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># ------------------------------- ds2fif node ------------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;ds2fif&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ds2fif</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Convert CTF .ds raw data to .fif format&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..nodes.import_data</span> <span class="kn">import</span> <span class="n">ConvertDs2Fif</span>
+
+    <span class="n">ds2fif_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">ConvertDs2Fif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ds2fif&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds2fif_node</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+
+<span class="c1"># --------------------------- create epochs node --------------------------- #</span>
+<span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s1">&#39;epoch&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--length&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">,</span>
+              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;epoch length&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">epoch</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Epoch raw .fif resting state data&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="kn">import</span> <span class="n">CreateEp</span>
+
+    <span class="n">epoch_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">CreateEp</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;epoching&#39;</span><span class="p">)</span>
+
+    <span class="n">epoch_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ep_length</span> <span class="o">=</span> <span class="n">length</span>
+
+    <span class="k">return</span> <span class="n">epoch_node</span>
+<span class="c1"># -------------------------------------------------------------------------- #</span>
+
+
+<span class="k">def</span> <span class="nf">map_path</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">iter_mapping</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Map paths&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">iter_mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+
+<span class="c1"># ------------------------------- Greeting --------------------------------- #</span>
+<span class="k">def</span> <span class="nf">output_greeting</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Output greeting&quot;&quot;&quot;</span>
+
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">  _   _                      _____        _____                 _.-&#39;-&#39;--._</span>
+<span class="s1"> | \ | |                    |  __ \      / ____|               ,&#39;, ~&#39;` ( .&#39;`.</span>
+<span class="s1"> |  \| | ___ _   _ _ __ ___ | |__) |   _| |     ___  _ __     ( ~&#39;_ , .&#39;(  &gt;-)</span>
+<span class="s1"> | . ` |/ _ \ | | | &#39;__/ _ \|  ___/ | | | |    / _ \| &#39;_ \   ( .-&#39; (  `__.-&lt;  )</span>
+<span class="s1"> | |\  |  __/ |_| | | | (_) | |   | |_| | |___| (_) | | | |   ( `-..--&#39;_   .-&#39;)</span>
+<span class="s1"> |_| \_|\___|\__,_|_|  \___/|_|    \__, |\_____\___/|_| |_|    `(_( (-&#39; `-&#39;.-)</span>
+<span class="s1">                                    __/ |                          `-.__.-&#39;=/</span>
+<span class="s1">                                   |___/                              `._`=&#39;</span>
+<span class="s1">                                                                        \\</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;magenta&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-11-27.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

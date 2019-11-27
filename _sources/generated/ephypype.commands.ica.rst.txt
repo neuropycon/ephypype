@@ -1,0 +1,6 @@
+ephypype.commands.ica
+=====================
+
+.. currentmodule:: ephypype.commands
+
+.. autodata:: ica
