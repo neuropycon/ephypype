@@ -61,7 +61,7 @@ def get_results(workflow_path, workflow_name, pipeline=None):
 
     elif pipeline == 'power':
         result_file = '*.npz'
-        label_file = '*.txt'
+        label_file = '*coords.txt'
 
     elif pipeline == 'inverse':
         result_file = '*.npy'
