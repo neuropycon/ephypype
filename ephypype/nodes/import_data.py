@@ -90,6 +90,10 @@ class ImportHdf5InputSpec(BaseInterfaceInputSpec):
     data_field_name = traits.String('dataset', desc='Name of dataset',
                                     usedefault=True)
 
+    transpose = traits.Bool(
+        False, usedefault=True,
+        desc="If the matlab data have to be transposed once read")
+
 
 class ImportHdf5OutputSpec(TraitedSpec):
     """Output spec for ImportHdf5"""
@@ -113,6 +117,11 @@ class ImportHdf5(BaseInterface):
     data_field_name : string
         Name of the dataset
 
+    transpose:
+        type = Bool
+        default = False, usedefault = True,
+        desc = "If the matlab data have to be transposed once read")
+
     Outputs
     -------
     ts_file : str
@@ -126,7 +135,9 @@ class ImportHdf5(BaseInterface):
 
         ts_hdf5_file = self.inputs.ts_hdf5_file
         data_field_name = self.inputs.data_field_name
-        self.ts_file = _read_hdf5(ts_hdf5_file, dataset_name=data_field_name)
+
+        self.ts_file = _read_hdf5(ts_hdf5_file, dataset_name=data_field_name,
+                                  transpose=self.inputs.transpose)
 
         return runtime
 

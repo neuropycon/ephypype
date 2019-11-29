@@ -48,7 +48,7 @@ def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
     hf.close()
 
 
-def _read_hdf5(filename, dataset_name='dataset'):
+def _read_hdf5(filename, dataset_name='dataset', transpose=False):
 
     """
     Read hdf5 file
@@ -58,7 +58,8 @@ def _read_hdf5(filename, dataset_name='dataset'):
             hdf5 filename
         dataset_name : str
             name of dataset to create
-
+        transpose: bool
+            if the data needs to be transpose or not
     Outputs
         data : array, shape (n_vertices, n_times)
             raw data for whose the dataset is created
@@ -66,6 +67,9 @@ def _read_hdf5(filename, dataset_name='dataset'):
 
     hf = h5py.File(filename, 'r')
     data = hf[dataset_name][()]
+
+    if transpose:
+        data = np.transpose(data)
 
     old_path, basename, ext = split_f(filename)
     npy_filename = os.path.abspath(basename + '.npy')
