@@ -5,14 +5,14 @@
 
 Computation times
 =================
-**05:55.214** total execution time for **auto_examples** files:
+**04:53.338** total execution time for **auto_examples** files:
 
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_preprocessing.py` (``plot_preprocessing.py``) | 02:45.833 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_connectivity.py` (``plot_connectivity.py``)   | 01:52.018 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_connectivity.py` (``plot_connectivity.py``)   | 01:53.451 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_preprocessing.py` (``plot_preprocessing.py``) | 01:50.223 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_inverse.py` (``plot_inverse.py``)             | 00:53.332 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_inverse.py` (``plot_inverse.py``)             | 00:48.984 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_power.py` (``plot_power.py``)                 | 00:22.598 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_power.py` (``plot_power.py``)                 | 00:22.114 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
