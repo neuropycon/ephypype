@@ -15,8 +15,7 @@ from mne.io import read_raw_fif
 from mne.preprocessing import ICA, read_ica
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
-from mne.time_frequency import psd_multitaper
-from autoreject import get_rejection_threshold
+from mne.time_frequency import psd_multitape
 from nipype.utils.filemanip import split_filename as split_f
 
 from .fif2array import _get_raw_array
@@ -430,7 +429,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     Splitted epochs have a length ep_length with rejection criteria.
     """
     raw = read_raw_fif(fif_file)
-    # reject = _create_reject_dict(raw.info)
+    reject = _create_reject_dict(raw.info)
     picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
                        stim=True, exclude='bads')
 
@@ -442,14 +441,12 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     else:
         events = find_events(raw)
 
-    # use autoreject
-    reject_tmax = 0.8  # duration we really care about
+    # TODO -> use autoreject ?
+    # reject_tmax = 0.8  # duration we really care about
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
-                    picks=picks, baseline=(None, 0), reject=None,
-                    preload=True, reject_tmax=reject_tmax)
+                    picks=picks, baseline=(None, 0), reject=reject,
+                    preload=True)
 
-    reject = get_rejection_threshold(epochs.copy().crop(None, reject_tmax),
-                                     random_state=42)
     epochs.drop_bad(reject=reject)
 
     good_events_file = os.path.join(data_path, 'good_events.txt')
