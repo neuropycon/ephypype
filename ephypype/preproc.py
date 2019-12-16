@@ -15,7 +15,7 @@ from mne.io import read_raw_fif
 from mne.preprocessing import ICA, read_ica
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
-from mne.time_frequency import psd_multitape
+from mne.time_frequency import psd_multitaper
 from nipype.utils.filemanip import split_filename as split_f
 
 from .fif2array import _get_raw_array
