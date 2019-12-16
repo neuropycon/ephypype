@@ -298,7 +298,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         for evo in evokeds:
             print(evo.comment)
             stc_evo = apply_inverse(evo, inverse_operator, lambda2,
-                                    inv_method, pick_ori='vector')
+                                    inv_method, pick_ori=pick_ori)
             print(('\n*** STC for event %s ***\n' % evo.comment))
             print('***')
             print(('stc dim ' + str(stc_evo.shape)))
