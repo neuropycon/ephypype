@@ -11,6 +11,7 @@ import numpy as np
 
 from mne.io import read_raw_fif, read_raw_ctf
 from mne import read_epochs
+from mne.evoked import write_evokeds, read_evokeds
 from mne.minimum_norm import make_inverse_operator, apply_inverse_raw
 from mne.minimum_norm import apply_inverse_epochs, apply_inverse
 from mne import get_volume_labels_from_src
@@ -144,7 +145,7 @@ def compute_cov_identity(raw_filename):
 
 def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                               cov_fname, is_epoched=False, events_id=None,
-                              events_file=None,
+                              condition=None, is_ave=False,
                               t_min=None, t_max=None, is_evoked=False,
                               snr=1.0, inv_method='MNE',
                               parc='aparc', aseg=False, aseg_labels=[],
@@ -209,9 +210,12 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     """
     print(('\n*** READ raw filename %s ***\n' % raw_filename))
-    if is_epoched and events_id == {}:
+    if is_epoched:
         epochs = read_epochs(raw_filename)
         info = epochs.info
+    elif is_ave:
+        evokeds = read_evokeds(raw_filename)
+        info = evokeds[0].info
     else:
         raw = read_raw_fif(raw_filename, preload=True)
         info = raw.info
@@ -257,43 +261,31 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
-    good_events_file = ''
-    print(events_id)
     if is_epoched and events_id != {}:
-        if events_file:
-            events = mne.read_events(events_file)
-        else:
-            events = mne.find_events(raw)
-        picks = mne.pick_types(info, meg=True, eog=True, exclude='bads')
-        reject = _create_reject_dict(info)
-
         if is_evoked:
-            epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
-                                picks=picks, baseline=(t_min, 0),
-                                reject=reject)
-            evoked = [epochs[k].average() for k in events_id]
-            snr = 3.0
-            lambda2 = 1.0 / snr ** 2
+            stc = list()
+            if events_id != condition and condition:
+                events_name = condition
+            else:
+                events_name = events_id
+            evoked = [epochs[k].average() for k in events_name]
 
-            ev_list = list(events_id.items())
-            for k in range(len(events_id)):
-                stc = apply_inverse(evoked[k], inverse_operator, lambda2,
-                                    inv_method, pick_ori=pick_ori)
+            if 'epo' in basename:
+                basename = basename.replace('-epo', '')
+            fname_evo = op.join(subj_path, basename + '-ave.fif')
+            write_evokeds(fname_evo, evoked)
 
-                print(('\n*** STC for event %s ***\n' % ev_list[k][0]))
-                stc_file = op.abspath(basename + '_' + ev_list[k][0])
-
+            for k in range(len(events_name)):
+                print(evoked[k])
+                stc_evo = apply_inverse(evoked[k], inverse_operator, lambda2,
+                                        inv_method, pick_ori=pick_ori)
+                print(('\n*** STC for event %s ***\n' % k))
                 print('***')
-                print(('stc dim ' + str(stc.shape)))
+                print(('stc dim ' + str(stc_evo.shape)))
                 print('***')
-
+                stc_evo.save(op.join(subj_path, basename + '-%d' % k))
+                stc.append(stc_evo)
         else:
-            epochs = mne.Epochs(raw, events, events_id, t_min, t_max,
-                                picks=picks, baseline=(None, 0), reject=reject)
-            epochs.drop_bad()
-            good_events_file = op.abspath('good_events.txt')
-            np.savetxt(good_events_file, epochs.events)
-
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
 
@@ -301,6 +293,18 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                    inv_method, pick_ori=pick_ori)
 
+    elif is_ave:
+        stc = list()
+        for evo in evokeds:
+            print(evo.comment)
+            stc_evo = apply_inverse(evo, inverse_operator, lambda2,
+                                    inv_method, pick_ori='vector')
+            print(('\n*** STC for event %s ***\n' % evo.comment))
+            print('***')
+            print(('stc dim ' + str(stc_evo.shape)))
+            print('***')
+            stc_evo.save(op.join(subj_path, basename + '-%s' % evo.comment))
+            stc.append(stc_evo)
     else:
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
@@ -347,7 +351,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         label_coords_file = ''
 
     return ts_file, labels_file, label_names_file, \
-        label_coords_file, good_events_file
+        label_coords_file
 
 
 def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
