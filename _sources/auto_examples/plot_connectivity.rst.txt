@@ -63,7 +63,7 @@ Let us fetch the data first. It is around 675 MB download.
 
  .. code-block:: none
 
-    Downloading https://uc9dc9151e56272c280caf7359c7.dl.dropboxusercontent.com/zip_by_token_key?dl=1&key=AtizTfDNbsxP6ys4_5Qf7u7Ez7xMgrQH79vfUwTww59RrO9EMSxSbGZ_yOorpea-0rpSfCC1oQjKwtlddg0Hp_-6uU9Y-Kp-8Nztx-whAbFVWzhQzI5OJsum9b1ffo5DxE-hj-VYyxAPtvaMxfZJ3y7Cj8U8IQUXvGNYuUobgp2IeJPNImjQ57_qe03YSvR-BqkwP-9HYrkreCABWqRaMhQZ (1 byte)
+    Downloading https://uc8f86c42425552348977ae175b3.dl.dropboxusercontent.com/zip_by_token_key?dl=1&key=AuXn7p171LEDv-G0Vi5R6vWRecE4oklj7vchHL3FVeAQRGY0K0aDvGL-Euj3XfpQo27BsiF35Rbj764d-sIDuUUyY7breA28xwWL-V7gfEzpil2I1V4n_0B_HJpQgHLYeaygS4NWxLWVw0v3IjL20hA6QofoF2CJf3VeFGtsB3s5628Sxxa9SmZrHnvJh6N8jSyRuRkG-GyhhTZFOZ_P--qK (1 byte)
 
     File saved as /home/circleci/project/ephypype/../examples/sample_BIDS_omega.zip.
 
@@ -352,7 +352,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7ff622052dd0>
+    <networkx.classes.digraph.DiGraph object at 0x7fec7f772850>
 
 
 
@@ -439,7 +439,7 @@ to perform graph analysis on the computed connectivity matrix.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  52.018 seconds)
+   **Total running time of the script:** ( 1 minutes  57.967 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:
