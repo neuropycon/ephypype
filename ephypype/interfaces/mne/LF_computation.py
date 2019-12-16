@@ -87,7 +87,7 @@ class LFComputation(BaseInterface):
         # check if we have just created the fwd matrix
         if not op.isfile(self.fwd_filename):
             print('\n*** Computing FWD matrix {} ***\n'.format(
-                    self.fwd_filename))
+                  self.fwd_filename))
             bem = _create_bem_sol(subjects_dir, sbj_id)  # bem solution
 
             src = _create_src_space(subjects_dir, sbj_id, spacing)  # src space
@@ -101,8 +101,8 @@ class LFComputation(BaseInterface):
             print('src space contains {} spaces and {} vertices'.format(
                 len(src), n))
 
-            trans_fpath = _is_trans(
-                    raw_fname, trans_fname_template=trans_fname)
+            trans_fpath = _is_trans(raw_fname,
+                                    trans_fname_template=trans_fname)
 
             _compute_fwd_sol(raw_fname, trans_fpath, src, bem,
                              self.fwd_filename)
