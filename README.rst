@@ -8,7 +8,10 @@
 
 .. image:: https://circleci.com/gh/neuropycon/ephypype.svg?style=svg
     :target: https://circleci.com/gh/neuropycon/ephypype
-
+    
+.. image:: https://zenodo.org/badge/92522975.svg
+   :target: https://zenodo.org/badge/latestdoi/92522975
+   
 README
 ******
 
