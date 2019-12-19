@@ -14,6 +14,7 @@ data_path = mne.datasets.testing.data_path()
 sbj = 'sample'
 subjects_dir = op.join(data_path, 'subjects')
 raw_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc_raw.fif')
+ave_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc-ave.fif')
 fwd_fname = op.join(data_path, 'MEG', sbj,
                     'sample_audvis_trunc-meg-eeg-oct-6-fwd.fif')
 cov_fname = op.join(data_path, 'MEG', sbj, 'sample_audvis_trunc-cov.fif')
@@ -123,3 +124,27 @@ def test_mne_inverse_solution_epoched_data():
 
     assert data.shape[0] == epochs.events.shape[0]
     assert data.shape[2] == epochs.get_data().shape[2]
+
+
+def test_mne_inverse_solution_evoked_data():
+    """Test compute MNE inverse solution."""
+
+    inverse_node = pe.Node(interface=InverseSolution(), name='inverse')
+    inverse_node.inputs.sbj_id = 'sample'
+    inverse_node.inputs.subjects_dir = subjects_dir
+    inverse_node.inputs.raw_filename = ave_fname
+    inverse_node.inputs.fwd_filename = fwd_fname
+    inverse_node.inputs.cov_filename = cov_fname
+    inverse_node.inputs.is_ave = True
+
+    inverse_node.run()
+
+    assert inverse_node.result.outputs.ts_file
+
+    # check if data contains the same number of epochs as epo_fname
+    data = np.load(inverse_node.result.outputs.ts_file)
+
+    ave = mne.read_evokeds(ave_fname)
+
+    assert data.shape[0] == len(ave)
+    assert data.shape[2] == ave[0].data.shape[1]

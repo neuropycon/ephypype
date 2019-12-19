@@ -10,7 +10,7 @@ from nipype.interfaces.base import BaseInterface,\
 
 from ...preproc import _compute_ica,\
     _preprocess_fif,\
-    _create_epochs
+    _create_epochs, _define_epochs
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
@@ -111,7 +111,8 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
                            mandatory=True)
     l_freq = traits.Float(desc='lower bound for filtering')
     h_freq = traits.Float(desc='upper bound for filtering')
-    down_sfreq = traits.Int(desc='downsampling frequency')
+    down_sfreq = traits.Int(None, desc='downsampling frequency',
+                            mandatory=False)
 
 
 class PreprocFifOutputSpec(TraitedSpec):
@@ -203,6 +204,66 @@ class CreateEp(BaseInterface):
         ep_length = self.inputs.ep_length
 
         result_fif = _create_epochs(fif_file, ep_length)
+
+        self.epo_fif_file = result_fif
+        return runtime
+
+    def _list_outputs(self):
+        outputs = self._outputs().get()
+        outputs['epo_fif_file'] = self.epo_fif_file
+        return outputs
+
+
+class DefineEpochsInputSpec(BaseInterfaceInputSpec):
+    """Input specification for DefineEpochs."""
+
+    fif_file = traits.File(exists=True,
+                           desc='raw meg data in fif format',
+                           mandatory=True)
+    events_id = traits.Dict(None, desc='the id of all events to consider.',
+                            mandatory=False)
+    events_file = traits.String('', exists=True, desc='events filename',
+                                mandatory=False)
+    t_min = traits.Float(None, desc='start time before event', mandatory=False)
+    t_max = traits.Float(None, desc='end time after event', mandatory=False)
+
+
+class DefineEpochsOutputSpec(TraitedSpec):
+    """Output specification for DefineEpochs."""
+
+    epo_fif_file = traits.File(exists=True,
+                               desc='-epo.fif file',
+                               mandatory=True)
+
+
+class DefineEpochs(BaseInterface):
+    """Interface for preproc.create_epochs.
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of raw meg data in fif format
+    ep_length : str
+        Epoch length in seconds
+
+    Outputs
+    -------
+    epo_fif_file : str
+        Name of .fif file with epoched data
+    """
+
+    input_spec = DefineEpochsInputSpec
+    output_spec = DefineEpochsOutputSpec
+
+    def _run_interface(self, runtime):
+        fif_file = self.inputs.fif_file
+        events_id = self.inputs.events_id
+        events_file = self.inputs.events_file
+        t_min = self.inputs.t_min
+        t_max = self.inputs.t_max
+
+        result_fif = _define_epochs(fif_file, t_min, t_max, events_id,
+                                    events_file)
 
         self.epo_fif_file = result_fif
         return runtime

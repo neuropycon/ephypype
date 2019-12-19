@@ -38,7 +38,7 @@ def get_ext_file(raw_file):
 
 def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline',  # noqa
                                  data_type='fif', l_freq=1, h_freq=150,
-                                 down_sfreq=300, is_ICA=True, variance=0.95,
+                                 down_sfreq=None, is_ICA=True, variance=0.95,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,
                                  is_set_ICA_components=False,
                                  n_comp_exclude=[], is_sensor_space=True):
@@ -114,7 +114,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
         preproc_node.inputs.l_freq = l_freq
         preproc_node.inputs.h_freq = h_freq
-        preproc_node.inputs.down_sfreq = down_sfreq
+        if down_sfreq:
+            preproc_node.inputs.down_sfreq = down_sfreq
 
         if data_type == 'ds':
             pipeline.connect(ds2fif_node, 'fif_file', preproc_node, 'fif_file')

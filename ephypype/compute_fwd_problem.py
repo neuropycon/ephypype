@@ -73,11 +73,11 @@ def _create_src_space(subjects_dir, sbj_id, spacing):
     # we have to create the cortical surface source space even when aseg is
     # True
     src_fname = op.join(bem_dir, '%s-%s-src.fif' % (sbj_id, spacing))
+    print('*** subject dir {}'.format(subjects_dir))
     if not op.isfile(src_fname):
         src = mne.setup_source_space(sbj_id, subjects_dir=subjects_dir,
                                      spacing=spacing.replace('-', ''),
-                                     add_dist=False,
-                                     n_jobs=2)
+                                     add_dist=False, n_jobs=1)
 
         mne.write_source_spaces(src_fname, src, overwrite=True)
         print(('\n*** source space file %s written ***\n' % src_fname))
@@ -137,26 +137,24 @@ def _create_mixed_source_space(subjects_dir, sbj_id, spacing, labels, src,
     return src
 
 
-def _is_trans(raw_fname):
+def _is_trans(raw_fname, trans_fname_template=None):
     """Check if coregistration file."""
     data_path, raw_fname, ext = split_f(raw_fname)
 
-    # check if the co-registration file was created
-    # if not raise an runtime error
-    # i_ica = raw_fname.find('ica')
-    # if i_ica != -1:
-    #     raw_fname = raw_fname[:i_ica]
+    if not trans_fname_template:
+        raw_fname_4trans = raw_fname
+        raw_fname_4trans = raw_fname_4trans.replace('_', '*')
+        raw_fname_4trans = raw_fname_4trans.replace('-', '*')
+        raw_fname_4trans = raw_fname_4trans.replace('filt', '*')
+        raw_fname_4trans = raw_fname_4trans.replace('dsamp', '*')
+        raw_fname_4trans = raw_fname_4trans.replace('ica', '*')
+        raw_fname_4trans = raw_fname_4trans.replace('raw', '*')
 
-    raw_fname_4trans = raw_fname
-    raw_fname_4trans = raw_fname_4trans.replace('_', '*')
-    raw_fname_4trans = raw_fname_4trans.replace('-', '*')
-    raw_fname_4trans = raw_fname_4trans.replace('filt', '*')
-    raw_fname_4trans = raw_fname_4trans.replace('dsamp', '*')
-    raw_fname_4trans = raw_fname_4trans.replace('ica', '*')
-    raw_fname_4trans = raw_fname_4trans.replace('raw', '*')
+        trans_fpath = op.join(data_path, '%s*trans.fif' % raw_fname_4trans)
+    else:
+        trans_fpath = op.join(data_path, trans_fname_template)
 
-    trans_fname = op.join(data_path, '%s*trans.fif' % raw_fname_4trans)
-    for trans_fname in glob.glob(trans_fname):
+    for trans_fname in glob.glob(trans_fpath):
         print(('\n*** coregistration file %s found!!!\n' % trans_fname))
 
     if not op.isfile(trans_fname):

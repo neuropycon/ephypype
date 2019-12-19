@@ -12,10 +12,9 @@ from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_inv_problem import _compute_inverse_solution, compute_noise_cov
-from ...preproc import _create_reject_dict
-from mne import find_events, compute_covariance
-from mne import pick_types, write_cov, Epochs
-from mne.io import read_raw_fif
+from mne import compute_covariance
+from mne import write_cov, read_epochs
+from sklearn.model_selection import KFold
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
@@ -37,12 +36,13 @@ class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
                            mandatory=False)
     events_id = traits.Dict({}, desc='the id of all events to consider.',
                             usedefault=True, mandatory=False)
-    events_file = traits.File(None, exists=True, desc='events filename',
-                              mandatory=False)
+    condition = traits.List(desc='list of conditions', mandatory=False)
     t_min = traits.Float(None, desc='start time before event', mandatory=False)
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
-    is_evoked = traits.Bool(desc='if true if we want to analyze evoked data',
+    is_evoked = traits.Bool(desc='if true if we want to create evoked data',
                             mandatory=False)
+    is_ave = traits.Bool(False, desc='if true if we have already evoked data',
+                         mandatory=False)
     inv_method = traits.String('MNE', desc='possible inverse methods are \
                                sLORETA, MNE, dSPM', usedefault=True,
                                mandatory=True)
@@ -69,7 +69,6 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
     labels = File(exists=False, desc='labels file in pickle format')
     label_names = File(exists=False, desc='labels name file in txt format')
     label_coords = File(exists=False, desc='labels coords file in txt format')
-    good_events_file = File(exists=False, desc='good events filename')
 
 
 class InverseSolution(BaseInterface):
@@ -97,11 +96,15 @@ class InverseSolution(BaseInterface):
             according to events_id and t_min and t_max values
         events_id: dict
             The dict of events
+        condition: list
+            List of events
         t_min, t_max: int (defualt None)
             Define the time interval in which to epoch the raw data
         is_evoked: bool
             If True the raw data will be averaged according to the events
             contained in the dict events_id
+        is_ave: bool
+            If True the input data is an evoked dataset
         is_fixed : bool
             If True we use fixed orientation
         inv_method : str
@@ -146,10 +149,11 @@ class InverseSolution(BaseInterface):
         is_epoched = self.inputs.is_epoched
         is_fixed = self.inputs.is_fixed
         events_id = self.inputs.events_id
-        events_file = self.inputs.events_file
+        condition = self.inputs.condition
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
         is_evoked = self.inputs.is_evoked
+        is_ave = self.inputs.is_ave
         inv_method = self.inputs.inv_method
         snr = self.inputs.snr
         parc = self.inputs.parc
@@ -159,14 +163,18 @@ class InverseSolution(BaseInterface):
         ROIs_mean = self.inputs.ROIs_mean
 
         self.ts_file, self.labels, self.label_names, \
-            self.label_coords, self.good_events_file = \
+            self.label_coords = \
             _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
                                       fwd_filename, cov_filename,
-                                      is_epoched, events_id, events_file,
-                                      t_min, t_max, is_evoked,
-                                      snr, inv_method, parc,
-                                      aseg, aseg_labels, all_src_space,
-                                      ROIs_mean, is_fixed)
+                                      is_epoched=is_epoched,
+                                      events_id=events_id, condition=condition,
+                                      is_ave=is_ave,
+                                      t_min=t_min, t_max=t_max,
+                                      is_evoked=is_evoked, snr=snr,
+                                      inv_method=inv_method, parc=parc,
+                                      aseg=aseg, aseg_labels=aseg_labels,
+                                      all_src_space=all_src_space,
+                                      ROIs_mean=ROIs_mean, is_fixed=is_fixed)
 
         return runtime
 
@@ -178,7 +186,6 @@ class InverseSolution(BaseInterface):
         outputs['labels'] = self.labels
         outputs['label_names'] = self.label_names
         outputs['label_coords'] = self.label_coords
-        outputs['good_events_file'] = self.good_events_file
 
         return outputs
 
@@ -186,17 +193,14 @@ class InverseSolution(BaseInterface):
 class NoiseCovarianceConnInputSpec(BaseInterfaceInputSpec):
     """Input specification for NoiseCovariance."""
 
-    cov_fname_in = traits.File(exists=False, desc='file name for Noise \
-                               Covariance Matrix')
+    cov_fname_in = traits.File(value='', exists=False,
+                               desc='file name for Noise \
+                               Covariance Matrix', mandatory=False)
     raw_filename = traits.File(exists=True, desc='raw data filename')
     is_epoched = traits.Bool(desc='true if we want to epoch the data',
                              mandatory=False)
     is_evoked = traits.Bool(desc='true if we want to analyze evoked data',
                             mandatory=False)
-    events_id = traits.Dict(None, desc='the id of all events to consider.',
-                            mandatory=False)
-    t_min = traits.Float(None, desc='start time before event', mandatory=False)
-    t_max = traits.Float(None, desc='end time after event', mandatory=False)
 
 
 class NoiseCovarianceConnOutputSpec(TraitedSpec):
@@ -240,9 +244,6 @@ class NoiseCovariance(BaseInterface):
         cov_fname_in = self.inputs.cov_fname_in
         is_epoched = self.inputs.is_epoched
         is_evoked = self.inputs.is_evoked
-        events_id = self.inputs.events_id
-        t_min = self.inputs.t_min
-        t_max = self.inputs.t_max
 
         data_path, basename, ext = split_f(raw_filename)
 
@@ -251,24 +252,15 @@ class NoiseCovariance(BaseInterface):
         # Check if a noise cov matrix was already computed
         if not op.isfile(cov_fname_in):
             if is_epoched and is_evoked:
-                raw = read_raw_fif(raw_filename)
-                events = find_events(raw)
+                epochs = read_epochs(raw_filename, preload=True)
 
                 if not op.isfile(self.cov_fname_out):
                     print(('\n*** COMPUTE COV FROM EPOCHS ***\n' +
                            self.cov_fname_out))
-
-                    reject = _create_reject_dict(raw.info)
-                    picks = pick_types(raw.info, meg=True, ref_meg=False,
-                                       exclude='bads')
-
-                    epochs = Epochs(raw, events, events_id, t_min, t_max,
-                                    picks=picks, baseline=(None, 0),
-                                    reject=reject)
-
-                    # TODO method='auto'? too long!!!
+                    # make sure cv is deterministic
+                    cv = KFold(3, random_state=42)
                     noise_cov = compute_covariance(epochs, tmax=0,
-                                                   method='diagonal_fixed')
+                                                   method='shrunk', cv=cv)
                     write_cov(self.cov_fname_out, noise_cov)
                 else:
                     print(('\n *** NOISE cov file %s exists!!! \n'
