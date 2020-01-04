@@ -160,9 +160,10 @@ time_series_files, label_files = get_results(main_workflow.base_dir,
 
 time_pts = 30
 
-sc = SceneObj(size=(800, 500), bgcolor=(.1, .1, .1))
+sc = SceneObj(size=(800, 500), bgcolor=(0, 0, 0))
 lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
 rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
+cmap = 'Spectral_r'
 for inverse_file, label_file in zip(time_series_files, label_files):
     # Load files :
     with open(label_file, 'rb') as f:
@@ -178,26 +179,26 @@ for inverse_file, label_file in zip(time_series_files, label_files):
 
     # Left hemisphere outside :
     b_obj_li = BrainObj('white', translucent=False, hemisphere='left')
-    b_obj_li.parcellize(lh_file, select=roi_names, data=lh_data, cmap='viridis')  # noqa
+    b_obj_li.parcellize(lh_file, select=roi_names, data=lh_data, cmap=cmap)
     sc.add_to_subplot(b_obj_li, rotate='left')
 
     # Left hemisphere inside :
     b_obj_lo = BrainObj('white',  translucent=False, hemisphere='left')
-    b_obj_lo.parcellize(lh_file, select=roi_names, data=lh_data, cmap='viridis')  # noqa
+    b_obj_lo.parcellize(lh_file, select=roi_names, data=lh_data, cmap=cmap)
     sc.add_to_subplot(b_obj_lo, col=1, rotate='right')
 
     # Right hemisphere outside :
     b_obj_ro = BrainObj('white',  translucent=False, hemisphere='right')
-    b_obj_ro.parcellize(rh_file, select=roi_names, data=rh_data, cmap='viridis')  # noqa
+    b_obj_ro.parcellize(rh_file, select=roi_names, data=rh_data, cmap=cmap)
     sc.add_to_subplot(b_obj_ro, row=1, rotate='right')
 
     # Right hemisphere inside :
     b_obj_ri = BrainObj('white',  translucent=False, hemisphere='right')
-    b_obj_ri.parcellize(rh_file, select=roi_names, data=rh_data, cmap='viridis')  # noqa
+    b_obj_ri.parcellize(rh_file, select=roi_names, data=rh_data, cmap=cmap)
     sc.add_to_subplot(b_obj_ri, row=1, col=1, rotate='left')
 
     # Add the colorbar :
-    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20, txtcolor='white',
+    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20, txtcolor='black',
                        cblabel='Intensity')
     sc.add_to_subplot(cbar, col=2, row_span=2)
 
