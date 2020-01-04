@@ -33,6 +33,7 @@ jobs:
                   pip install cython scipy
                   pip install --upgrade mne
                   pip install scikit-learn
+                  python setup.py install
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
