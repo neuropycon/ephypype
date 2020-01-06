@@ -1,0 +1,33 @@
+NeuroPyConData
+├── K0015
+│   ├── ecg_eog_info.pickle
+│   ├── ec_ipynb_report.html
+│   ├── eo_ipynb_report.html
+│   ├── K0015_rest_raw_tsss_mc_trans_ec.fif
+│   └── K0015_rest_raw_tsss_mc_trans_eo.fif
+├── K0025
+│   ├── ecg_eog_info.pickle
+│   ├── ec_ipynb_report.html
+│   ├── eo_ipynb_report.html
+│   ├── K0025_rest_raw_tsss_mc_trans_ec.fif
+│   └── K0025_rest_raw_tsss_mc_trans_eo.fif
+├── K0034
+│   ├── ecg_eog_info.pickle
+│   ├── ec_ipynb_report.html
+│   ├── eo_ipynb_report.html
+│   ├── K0034_rest_raw_tsss_mc_trans_ec.fif
+│   └── K0034_rest_raw_tsss_mc_trans_eo.fif
+├── R0008
+│   ├── ecg_eog_info.pickle
+│   ├── ec_ipynb_report.html
+│   ├── eo_ipynb_report.html
+│   ├── R0008_rest_raw_tsss_mc_trans_ec.fif
+│   └── R0008_rest_raw_tsss_mc_trans_eo.fif
+└── R0023
+    ├── ecg_eog_info.pickle
+    ├── ec_ipynb_report.html
+    ├── eo_ipynb_report.html
+    ├── R0023_rest_raw_tsss_mc_trans_ec.fif
+    └── R0023_rest_raw_tsss_mc_trans_eo.fif
+
+5 directories, 25 files
