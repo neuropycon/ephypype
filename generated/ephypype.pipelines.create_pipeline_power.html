@@ -2,7 +2,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ephypype.pipelines.create_pipeline_power &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -11,17 +12,16 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -101,43 +101,55 @@
 
 <div class="container">
   <div class="row">
-    <div class="body col-md-12 content" role="main">
+    <div class="col-md-12 content">
       
   <div class="section" id="ephypype-pipelines-create-pipeline-power">
 <h1>ephypype.pipelines.create_pipeline_power<a class="headerlink" href="#ephypype-pipelines-create-pipeline-power" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="ephypype.pipelines.create_pipeline_power">
-<code class="sig-prename descclassname">ephypype.pipelines.</code><code class="sig-name descname">create_pipeline_power</code><span class="sig-paren">(</span><em class="sig-param">main_path</em>, <em class="sig-param">freq_bands</em>, <em class="sig-param">pipeline_name='power_pipeline'</em>, <em class="sig-param">fmin=0</em>, <em class="sig-param">fmax=300</em>, <em class="sig-param">method='welch'</em>, <em class="sig-param">is_epoched=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/power.html#create_pipeline_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_power" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ephypype.pipelines.</code><code class="descname">create_pipeline_power</code><span class="sig-paren">(</span><em>main_path</em>, <em>freq_bands</em>, <em>pipeline_name='power_pipeline'</em>, <em>fmin=0</em>, <em>fmax=300</em>, <em>method='welch'</em>, <em>is_epoched=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/pipelines/power.html#create_pipeline_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ephypype.pipelines.create_pipeline_power" title="Permalink to this definition">¶</a></dt>
 <dd><p>Power pipeline.</p>
 <p>Wraps functions of MNE to compute PSD of epoch or raw data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>main_path</strong><span class="classifier">str</span></dt><dd><p>the main path of the pipeline</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>main_path</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">the main path of the pipeline</p>
 </dd>
-<dt><strong>freq_bands</strong><span class="classifier">list</span></dt><dd><p>frequency bands</p>
+<dt><strong>freq_bands</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd><p class="first last">frequency bands</p>
 </dd>
-<dt><strong>pipeline_name</strong><span class="classifier">str (default ‘power’)</span></dt><dd><p>name of the pipeline</p>
+<dt><strong>pipeline_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (default ‘power’)</span></dt>
+<dd><p class="first last">name of the pipeline</p>
 </dd>
-<dt><strong>fmin</strong><span class="classifier">float (default 0)</span></dt><dd><p>min frequency of interest</p>
+<dt><strong>fmin</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float (default 0)</span></dt>
+<dd><p class="first last">min frequency of interest</p>
 </dd>
-<dt><strong>fmax</strong><span class="classifier">float (default 300)</span></dt><dd><p>max frequency of interest</p>
+<dt><strong>fmax</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float (default 300)</span></dt>
+<dd><p class="first last">max frequency of interest</p>
 </dd>
-<dt><strong>method</strong><span class="classifier">str (default ‘welch’)</span></dt><dd><p>if ‘welch’ the power spectral density (PSD) is computed by Welch’s
+<dt><strong>method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (default ‘welch’)</span></dt>
+<dd><p class="first last">if ‘welch’ the power spectral density (PSD) is computed by Welch’s
 method; otherwise, if ‘multitaper’ the PSD is computed by
 multitapers</p>
 </dd>
-<dt><strong>is_epoched</strong><span class="classifier">bool (default False)</span></dt><dd><p>True if the input data are in epoch format (-epo.fif); False
+<dt><strong>is_epoched</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool (default False)</span></dt>
+<dd><p class="first last">True if the input data are in epoch format (-epo.fif); False
 if the input data are raw data (-raw.fif)</p>
 </dd>
 </dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>pipeline</strong><span class="classifier">instance of Workflow</span></dt><dd></dd>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>pipeline</strong> <span class="classifier-delimiter">:</span> <span class="classifier">instance of Workflow</span></dt>
+<dd></dd>
 </dl>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -154,8 +166,8 @@ if the input data are raw data (-raw.fif)</p>
       
     </p>
     <p>
-        &copy; Copyright 2019, Neuropycon Developers. Last updated on 2019-12-16.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.0.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-07.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
 </footer>
