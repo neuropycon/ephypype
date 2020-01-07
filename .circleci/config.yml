@@ -29,8 +29,7 @@ jobs:
                 command: |
                   conda update --yes --quiet conda;
                   pip install matplotlib Pillow
-                  pip install sphinx==1.8.2
-                  pip install sphinx-gallery sphinx_bootstrap_theme
+                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
                   pip install scikit-learn==0.20.0
@@ -38,7 +37,7 @@ jobs:
                   pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  pip install PyQt5
+                  pip install PyQt5==5.11.3
                   conda install graphviz pydot
                   pip install visbrain
                   python setup.py develop
