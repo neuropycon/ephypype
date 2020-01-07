@@ -5,6 +5,7 @@ import pytest
 import os.path as op
 import nipype.pipeline.engine as pe
 from ephypype.interfaces.mne.preproc import CreateEp, PreprocFif, CompIca
+from ephypype.interfaces.mne.preproc import DefineEpochs
 
 import matplotlib
 matplotlib.use('Agg')  # for testing don't use X server
@@ -12,6 +13,8 @@ matplotlib.use('Agg')  # for testing don't use X server
 data_path = mne.datasets.testing.data_path()
 raw_fname = op.join(data_path, 'MEG', 'sample',
                     'sample_audvis_trunc_raw.fif')
+events_file = op.join(data_path, 'MEG', 'sample',
+                      'sample_audvis_trunc_raw-eve.fif')
 
 
 @pytest.mark.usefixtures("change_wd")
@@ -19,6 +22,18 @@ def test_epoching_node():
     """Test epoching node"""
     epoch_node = pe.Node(interface=CreateEp(), name='epoching')
     epoch_node.inputs.ep_length = 1  # split in 1 second epochs
+    epoch_node.inputs.fif_file = raw_fname
+    epoch_node.run()
+
+
+@pytest.mark.usefixtures("change_wd")
+def test_define_epochs():
+    """Test epoching node"""
+    epoch_node = pe.Node(interface=DefineEpochs(), name='epoching')
+    epoch_node.inputs.events_file = events_file
+    epoch_node.inputs.events_id = {'eve': 1}
+    epoch_node.inputs.t_min = -0.1
+    epoch_node.inputs.t_max = 1.0
     epoch_node.inputs.fif_file = raw_fname
     epoch_node.run()
 

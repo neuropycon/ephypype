@@ -38,7 +38,8 @@ def create_iterator(fields, field_values):
     return infosource
 
 
-def create_datagrabber(data_path, template_path, template_args):
+def create_datagrabber(data_path, template_path, template_args,
+                       infields=['subject_id', 'session_id']):
     """Create node to grab data using DataGrabber in Nipype.
 
     Parameters
@@ -60,8 +61,7 @@ def create_datagrabber(data_path, template_path, template_args):
         The node which grabs the filenames.
     """
 
-    datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id',
-                                                             'session_id'],
+    datasource = pe.Node(interface=nio.DataGrabber(infields=infields,
                                                    outfields=['raw_file']),
                          name='datasource')
 

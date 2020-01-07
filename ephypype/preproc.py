@@ -7,8 +7,10 @@ Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
 import os
 import sys
 import numpy as np
+import glob
+import os.path as op
 
-from mne import pick_types, read_epochs, Epochs
+from mne import pick_types, read_epochs, Epochs, read_events, find_events
 from mne.io import read_raw_fif
 from mne.preprocessing import ICA, read_ica
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
@@ -30,7 +32,7 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
 
     if l_freq or h_freq:
         raw.filter(l_freq=l_freq, h_freq=h_freq,
-                   picks=select_sensors, fir_design='firwin')
+                   picks=None, fir_design='firwin')
         filt_str = '_filt'
     if down_sfreq:
         raw.resample(sfreq=down_sfreq, npad=0, stim_picks=select_sensors)
@@ -417,5 +419,41 @@ def _create_epochs(fif_file, ep_length):
 
     _, base, ext = split_f(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)
+    epochs.save(savename)
+    return savename
+
+
+def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
+    """Split raw .fif file into epochs depending on events file.
+
+    Splitted epochs have a length ep_length with rejection criteria.
+    """
+    raw = read_raw_fif(fif_file)
+    reject = _create_reject_dict(raw.info)
+    picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
+                       stim=True, exclude='bads')
+
+    data_path, base, ext = split_f(fif_file)
+
+    if events_file:
+        events_fpath = glob.glob(op.join(data_path, events_file))
+        events = read_events(events_fpath[0])
+    else:
+        events = find_events(raw)
+
+    # TODO -> use autoreject ?
+    # reject_tmax = 0.8  # duration we really care about
+    epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
+                    picks=picks, baseline=(None, 0), reject=reject,
+                    preload=True)
+
+    epochs.drop_bad(reject=reject)
+
+    good_events_file = os.path.join(data_path, 'good_events.txt')
+    np.savetxt(good_events_file, epochs.events)
+
+    # TODO -> decide where to save...
+    # savename = os.path.abspath(base + '-epo' + ext)
+    savename = os.path.join(data_path, base + '-epo' + ext)
     epochs.save(savename)
     return savename
