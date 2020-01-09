@@ -12,6 +12,7 @@ from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec
 from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_inv_problem import _compute_inverse_solution, compute_noise_cov
+from ...compute_inv_problem import _compute_LCMV_inverse_solution
 from mne import compute_covariance
 from mne import write_cov, read_epochs
 from sklearn.model_selection import KFold
@@ -162,19 +163,31 @@ class InverseSolution(BaseInterface):
         all_src_space = self.inputs.all_src_space
         ROIs_mean = self.inputs.ROIs_mean
 
-        self.ts_file, self.labels, self.label_names, \
-            self.label_coords = \
-            _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
-                                      fwd_filename, cov_filename,
-                                      is_epoched=is_epoched,
-                                      events_id=events_id, condition=condition,
-                                      is_ave=is_ave,
-                                      t_min=t_min, t_max=t_max,
-                                      is_evoked=is_evoked, snr=snr,
-                                      inv_method=inv_method, parc=parc,
-                                      aseg=aseg, aseg_labels=aseg_labels,
-                                      all_src_space=all_src_space,
-                                      ROIs_mean=ROIs_mean, is_fixed=is_fixed)
+        if inv_method != 'LCMV':
+            self.ts_file, self.labels, self.label_names, \
+                self.label_coords = \
+                _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
+                                          fwd_filename, cov_filename,
+                                          is_epoched=is_epoched,
+                                          events_id=events_id,
+                                          condition=condition, is_ave=is_ave,
+                                          t_min=t_min, t_max=t_max,
+                                          is_evoked=is_evoked, snr=snr,
+                                          inv_method=inv_method, parc=parc,
+                                          aseg=aseg, aseg_labels=aseg_labels,
+                                          all_src_space=all_src_space,
+                                          ROIs_mean=ROIs_mean,
+                                          is_fixed=is_fixed)
+        else:
+            self.ts_file, self.labels, self.label_names, \
+                self.label_coords = \
+                _compute_LCMV_inverse_solution(raw_filename, sbj_id,
+                                               subjects_dir,
+                                               fwd_filename, cov_filename,
+                                               parc=parc,
+                                               all_src_space=all_src_space,
+                                               ROIs_mean=ROIs_mean,
+                                               is_fixed=is_fixed)
 
         return runtime
 

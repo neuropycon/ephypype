@@ -14,6 +14,7 @@ from mne import read_epochs
 from mne.evoked import write_evokeds, read_evokeds
 from mne.minimum_norm import make_inverse_operator, apply_inverse_raw
 from mne.minimum_norm import apply_inverse_epochs, apply_inverse
+from mne.beamformer import apply_lcmv_raw, make_lcmv
 from mne import get_volume_labels_from_src
 from mne import compute_raw_covariance, pick_types, write_cov
 
@@ -339,7 +340,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     if ROIs_mean:
         label_ts, labels_file, label_names_file, label_coords_file = \
             _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc,
-                               inverse_operator, forward, aseg, is_fixed)
+                               forward, aseg, is_fixed)
 
         ts_file = op.abspath(basename + '_ROI_ts.npy')
         np.save(ts_file, label_ts)
@@ -354,7 +355,103 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         label_coords_file
 
 
-def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
+def _compute_LCMV_inverse_solution(raw_filename, sbj_id, subjects_dir,
+                                   fwd_filename, cov_fname, parc='aparc',
+                                   all_src_space=False, ROIs_mean=True,
+                                   is_fixed=False):
+    """
+    Compute the inverse solution on raw data by LCMV and return the average
+    time series computed in the N_r regions of the source space defined by
+    the specified cortical parcellation
+
+    Inputs
+        raw_filename : str
+            filename of the raw data
+        sbj_id : str
+            subject name
+        subjects_dir : str
+            Freesurfer directory
+        fwd_filename : str
+            filename of the forward operator
+        cov_filename : str
+            filename of the noise covariance matrix
+        parc: str
+            the parcellation defining the ROIs atlas in the source space
+        all_src_space: bool
+            if True we compute the inverse for all points of the s0urce space
+        ROIs_mean: bool
+            if True we compute the mean of estimated time series on ROIs
+
+
+    Outputs
+        ts_file : str
+            filename of the file where are saved the estimated time series
+        labels_file : str
+            filename of the file where are saved the ROIs of the parcellation
+        label_names_file : str
+            filename of the file where are saved the name of the ROIs of the
+            parcellation
+        label_coords_file : str
+            filename of the file where are saved the coordinates of the
+            centroid of the ROIs of the parcellation
+
+    """
+    print(('\n*** READ raw filename %s ***\n' % raw_filename))
+    raw = read_raw_fif(raw_filename, preload=True)
+
+    subj_path, basename, ext = split_f(raw_filename)
+
+    print(('\n*** READ noise covariance %s ***\n' % cov_fname))
+    noise_cov = mne.read_cov(cov_fname)
+
+    print(('\n*** READ FWD SOL %s ***\n' % fwd_filename))
+    forward = mne.read_forward_solution(fwd_filename)
+    forward = mne.convert_forward_solution(forward, surf_ori=True)
+
+    # compute data covariance matrix
+#    reject = _create_reject_dict(raw.info)
+    picks = pick_types(raw.info, meg=True, ref_meg=False, exclude='bads')
+    data_cov = mne.compute_raw_covariance(raw, picks=picks)
+
+    # compute LCMV filters
+    filters = make_lcmv(raw.info, forward, data_cov, reg=0.05,
+                        noise_cov=noise_cov, pick_ori='normal',
+                        weight_norm='nai', depth=0.8)
+    # apply spatial filter
+    stc = apply_lcmv_raw(raw, filters, max_ori_out='signed')
+
+    print('**************************************************************')
+    print('all_src_space: {}'.format(all_src_space))
+    print('ROIs_mean: {}'.format(ROIs_mean))
+    print('**************************************************************')
+    if all_src_space:
+        stc_data = list()
+        stc_file = op.abspath(basename + '_stc.hdf5')
+
+        for i in range(len(stc)):
+            stc_data.append(stc[i].data)
+
+        write_hdf5(stc_file, stc_data, dataset_name='stc_data')
+
+    if ROIs_mean:
+        label_ts, labels_file, label_names_file, label_coords_file = \
+            _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc,
+                               forward, False, is_fixed)
+
+        ts_file = op.abspath(basename + '_ROI_ts.npy')
+        np.save(ts_file, label_ts)
+
+    else:
+        ts_file = stc_file
+        labels_file = ''
+        label_names_file = ''
+        label_coords_file = ''
+
+    return ts_file, labels_file, label_names_file, \
+        label_coords_file
+
+
+def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc,
                        forward, aseg, is_fixed):
     # these coo are in MRI space and we have to convert them to MNI space
     labels_cortex = mne.read_labels_from_annot(sbj_id, parc=parc,
@@ -362,7 +459,7 @@ def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc, inverse_operator,
 
     print(('\n*** %d ***\n' % len(labels_cortex)))
 
-    src = inverse_operator['src']
+    src = forward['src']
 
     # allow_empty : bool -> Instead of emitting an error, return all-zero time
     # courses for labels that do not have any vertices in the source estimate
