@@ -148,3 +148,54 @@ def test_mne_inverse_solution_evoked_data():
 
     assert data.shape[0] == len(ave)
     assert data.shape[2] == ave[0].data.shape[1]
+
+
+def test_LCMV_inverse_solution():
+    """Test compute MNE inverse solution."""
+
+    inverse_node = pe.Node(interface=InverseSolution(), name='inverse')
+    inverse_node.inputs.sbj_id = 'sample'
+    inverse_node.inputs.subjects_dir = subjects_dir
+    inverse_node.inputs.raw_filename = raw_fname
+    inverse_node.inputs.fwd_filename = fwd_fname
+    inverse_node.inputs.cov_filename = cov_fname
+    inverse_node.inputs.inv_method = 'LCMV'
+
+    inverse_node.run()
+
+    # test that the number of labels matches with 'aparc' annotation and the
+    # number of time points with the ones of raw
+    assert inverse_node.result.outputs.ts_file
+    data = np.load(inverse_node.result.outputs.ts_file)
+
+    labels = mne.read_labels_from_annot(sbj, parc='aparc',
+                                        subjects_dir=subjects_dir)
+
+    assert data.shape[1] == len(labels)
+
+    raw = mne.io.read_raw_fif(raw_fname)
+    assert data.shape[2] == len(raw.times)
+
+    # check if the labels file were created
+    assert inverse_node.result.outputs.labels
+    assert inverse_node.result.outputs.label_names
+    assert inverse_node.result.outputs.label_coords
+
+    label_names = [line.strip() for line in
+                   open(inverse_node.result.outputs.label_names)]
+    assert data.shape[1] == len(label_names)
+
+    label_coo = np.loadtxt(inverse_node.result.outputs.label_coords)
+    assert label_coo.shape[1] == 3
+
+    with open(inverse_node.result.outputs.labels, 'rb') as f:
+        roi = pickle.load(f)
+
+    assert data.shape[1] == len(roi['ROI_names'])
+    assert label_names == roi['ROI_names']
+
+    assert len(roi['ROI_coords']) == len(roi['ROI_names'])
+    assert len(roi['ROI_colors']) == len(roi['ROI_colors'])
+
+    assert np.concatenate(roi['ROI_coords']).shape[1] == 3
+    assert_array_almost_equal(np.concatenate(roi['ROI_coords']), label_coo)
