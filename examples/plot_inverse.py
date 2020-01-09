@@ -163,7 +163,8 @@ time_pts = 30
 sc = SceneObj(size=(800, 500), bgcolor=(0, 0, 0))
 lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
 rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
-cmap = 'Spectral_r'
+cmap = 'bwr'
+txtcolor = 'white'
 for inverse_file, label_file in zip(time_series_files, label_files):
     # Load files :
     with open(label_file, 'rb') as f:
@@ -198,7 +199,7 @@ for inverse_file, label_file in zip(time_series_files, label_files):
     sc.add_to_subplot(b_obj_ri, row=1, col=1, rotate='left')
 
     # Add the colorbar :
-    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20, txtcolor='black',
+    cbar = ColorbarObj(b_obj_li, txtsz=15, cbtxtsz=20, txtcolor=txtcolor,
                        cblabel='Intensity')
     sc.add_to_subplot(cbar, col=2, row_span=2)
 
