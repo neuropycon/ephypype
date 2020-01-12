@@ -1,9 +1,9 @@
 """
-.. _source_reconstruction:
+.. _LCMV_source_reconstruction:
 
-========================
-Compute inverse solution
-========================
+=============================
+Compute LCMV inverse solution
+=============================
 The inverse solution pipeline performs source reconstruction starting either
 from raw/epoched data (*.fif* format) specified by the user or from the output
 of the Preprocessing pipeline (cleaned raw data).
@@ -37,12 +37,12 @@ data_path = fetch_omega_dataset(base_path)
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_inverse.json"))
+data = json.load(open("params_LCMV_inverse.json"))
 pprint.pprint({'inverse parameters': data})
 
 spacing = data['spacing']  # ico-5 vs oct-6
 snr = data['snr']  # use smaller SNR for raw data
-inv_method = data['method']  # sLORETA, MNE, dSPM
+inv_method = data['method']  # sLORETA, MNE, dSPM, LCMV
 parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
 # noise covariance matrix filename template
 noise_cov_fname = data['noise_cov_fname']
@@ -73,7 +73,7 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # and a node to grab data. The template_args in this node iterate upon
 # the values in the infosource node
 
-template_path = '*%s/%s/meg/%s*rest*0_60*ica.fif'
+template_path = '*%s/%s/meg/%s*rest*0_30*ica.fif'
 template_args = [['subject_id', 'session_id', 'subject_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
