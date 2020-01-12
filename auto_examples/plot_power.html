@@ -177,7 +177,7 @@ nipype the directory in which to store the outputs.</p>
 </div>
 <p>and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*ica.fif&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*0_60*ica.fif&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">)</span>
 </pre></div>
@@ -286,7 +286,7 @@ by the welch function of the scipy package.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_power_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_power_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  7.999 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  7.990 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-power-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/6ec947a41b7bdde51b1c89781ff05693/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_power.py</span></code></a></div>
@@ -308,7 +308,7 @@ by the welch function of the scipy package.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-07.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-12.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

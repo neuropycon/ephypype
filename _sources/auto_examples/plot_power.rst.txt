@@ -146,7 +146,7 @@ the values in the infosource node
 .. code-block:: python
 
 
-    template_path = '*%s/%s/meg/%s*rest*ica.fif'
+    template_path = '*%s/%s/meg/%s*rest*0_60*ica.fif'
     template_args = [['subject_id', 'session_id', 'subject_id']]
     datasource = create_datagrabber(data_path, template_path, template_args)
 
@@ -341,7 +341,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 
 
-**Total running time of the script:** ( 0 minutes  7.999 seconds)
+**Total running time of the script:** ( 0 minutes  7.990 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:

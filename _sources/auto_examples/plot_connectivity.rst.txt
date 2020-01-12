@@ -141,7 +141,7 @@ the values in the infosource node
 .. code-block:: python
 
 
-    template_path = '*%s/%s/meg/%s*rest*ica.fif'
+    template_path = '*%s/%s/meg/%s*rest*0_60*ica.fif'
     template_args = [['subject_id', 'session_id', 'subject_id']]
     datasource = create_datagrabber(data_path, template_path, template_args)
 
@@ -389,7 +389,7 @@ to perform graph analysis on the computed connectivity matrix.
 
 
 
-**Total running time of the script:** ( 0 minutes  22.849 seconds)
+**Total running time of the script:** ( 0 minutes  22.665 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:

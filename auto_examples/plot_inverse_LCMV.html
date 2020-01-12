@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Compute inverse solution &#8212; ephypype 0.1dev0 documentation</title>
+    <title>Compute LCMV inverse solution &#8212; ephypype 0.1dev0 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -67,7 +67,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Compute inverse solution</a></li>
+<li><a class="reference internal" href="#">Compute LCMV inverse solution</a></li>
 </ul>
 </ul>
 </li>
@@ -79,7 +79,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/auto_examples/plot_inverse.rst.txt"
+  <a href="../_sources/auto_examples/plot_inverse_LCMV.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -105,10 +105,10 @@
       
   <div class="sphx-glr-download-link-note admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-inverse-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-inverse-lcmv-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="compute-inverse-solution">
-<span id="source-reconstruction"></span><span id="sphx-glr-auto-examples-plot-inverse-py"></span><h1>Compute inverse solution<a class="headerlink" href="#compute-inverse-solution" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-example-title section" id="compute-lcmv-inverse-solution">
+<span id="lcmv-source-reconstruction"></span><span id="sphx-glr-auto-examples-plot-inverse-lcmv-py"></span><h1>Compute LCMV inverse solution<a class="headerlink" href="#compute-lcmv-inverse-solution" title="Permalink to this headline">¶</a></h1>
 <p>The inverse solution pipeline performs source reconstruction starting either
 from raw/epoched data (<em>.fif</em> format) specified by the user or from the output
 of the Preprocessing pipeline (cleaned raw data).</p>
@@ -137,12 +137,12 @@ of the Preprocessing pipeline (cleaned raw data).</p>
 file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_inverse.json&quot;</span><span class="p">))</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_LCMV_inverse.json&quot;</span><span class="p">))</span>
 <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;inverse parameters&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
 
 <span class="n">spacing</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span>  <span class="c1"># ico-5 vs oct-6</span>
 <span class="n">snr</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span>  <span class="c1"># use smaller SNR for raw data</span>
-<span class="n">inv_method</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>  <span class="c1"># sLORETA, MNE, dSPM</span>
+<span class="n">inv_method</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>  <span class="c1"># sLORETA, MNE, dSPM, LCMV</span>
 <span class="n">parc</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;parcellation&#39;</span><span class="p">]</span>  <span class="c1"># parcellation to use: &#39;aparc&#39; vs &#39;aparc.a2009s&#39;</span>
 <span class="c1"># noise covariance matrix filename template</span>
 <span class="n">noise_cov_fname</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;noise_cov_fname&#39;</span><span class="p">]</span>
@@ -152,7 +152,7 @@ file and print it</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;inverse parameters&#39;: {&#39;method&#39;: &#39;MNE&#39;,
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;inverse parameters&#39;: {&#39;method&#39;: &#39;LCMV&#39;,
                         &#39;noise_cov_fname&#39;: &#39;*noise*.ds&#39;,
                         &#39;parcellation&#39;: &#39;aparc&#39;,
                         &#39;snr&#39;: 1.0,
@@ -178,7 +178,7 @@ nipype the directory in which to store the outputs.</p>
 </div>
 <p>and a node to grab data. The template_args in this node iterate upon
 the values in the infosource node</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*0_60*ica.fif&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*0_30*ica.fif&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">)</span>
 </pre></div>
@@ -238,7 +238,7 @@ here correspond to how we connected the nodes.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_inverse_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_inverse_001.png" />
+<img alt="../_images/sphx_glr_plot_inverse_LCMV_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_inverse_LCMV_001.png" />
 <p>Finally, we are now ready to execute our workflow.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
@@ -310,13 +310,13 @@ data, that could be provided by Freesurfer</p>
 <span class="n">sc</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="../_images/sphx_glr_plot_inverse_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_inverse_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  10.081 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-inverse-py">
+<img alt="../_images/sphx_glr_plot_inverse_LCMV_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_inverse_LCMV_002.png" />
+<p><strong>Total running time of the script:</strong> ( 0 minutes  10.029 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-inverse-lcmv-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/b4833c6e0e2f107adaf6f554ac59fbd3/plot_inverse.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_inverse.py</span></code></a></div>
+<a class="reference download internal" download="" href="../_downloads/d86d885a5be4fda1c7fcbd5c59debc46/plot_inverse_LCMV.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_inverse_LCMV.py</span></code></a></div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../_downloads/ce399e94bb6b3c4601ec390b90ab3293/plot_inverse.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_inverse.ipynb</span></code></a></div>
+<a class="reference download internal" download="" href="../_downloads/2ef6f87600818081976142da0dddbcab/plot_inverse_LCMV.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_inverse_LCMV.ipynb</span></code></a></div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>

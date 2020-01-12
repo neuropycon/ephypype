@@ -149,7 +149,7 @@ the values in the infosource node
 .. code-block:: python
 
 
-    template_path = '*%s/%s/meg/%s*rest*raw.fif'
+    template_path = '*%s/%s/meg/%s*rest*0_60*raw.fif'
     template_args = [['subject_id', 'session_id', 'subject_id']]
     datasource = create_datagrabber(data_path, template_path, template_args)
 
@@ -337,6 +337,16 @@ with different flag parameters.
       .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
             :class: sphx-glr-multi-img
 
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
+            :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
+            :class: sphx-glr-multi-img
+
 
 .. rst-class:: sphx-glr-script-out
 
@@ -368,9 +378,19 @@ with different flag parameters.
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
+    29 matching events found
+    No baseline correction applied
+    Not setting metadata
+    0 projection items activated
+    0 bad epochs dropped
+    29 matching events found
+    No baseline correction applied
+    Not setting metadata
+    0 projection items activated
+    0 bad epochs dropped
 
 
-**Total running time of the script:** ( 0 minutes  9.118 seconds)
+**Total running time of the script:** ( 0 minutes  10.035 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:

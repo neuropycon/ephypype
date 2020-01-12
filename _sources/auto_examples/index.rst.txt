@@ -54,6 +54,26 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Compute LCMV inverse solution">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_inverse_LCMV_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_inverse_LCMV.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_inverse_LCMV
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="The input data shoud be in **fif** or **numpy** format. ">
 
 .. only:: html

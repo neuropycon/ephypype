@@ -1,17 +1,17 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_auto_examples_plot_inverse.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_auto_examples_plot_inverse_LCMV.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_auto_examples_plot_inverse.py:
+.. _sphx_glr_auto_examples_plot_inverse_LCMV.py:
 
 
-.. _source_reconstruction:
+.. _LCMV_source_reconstruction:
 
-========================
-Compute inverse solution
-========================
+=============================
+Compute LCMV inverse solution
+=============================
 The inverse solution pipeline performs source reconstruction starting either
 from raw/epoched data (*.fif* format) specified by the user or from the output
 of the Preprocessing pipeline (cleaned raw data).
@@ -69,12 +69,12 @@ file and print it
 
     import json  # noqa
     import pprint  # noqa
-    data = json.load(open("params_inverse.json"))
+    data = json.load(open("params_LCMV_inverse.json"))
     pprint.pprint({'inverse parameters': data})
 
     spacing = data['spacing']  # ico-5 vs oct-6
     snr = data['snr']  # use smaller SNR for raw data
-    inv_method = data['method']  # sLORETA, MNE, dSPM
+    inv_method = data['method']  # sLORETA, MNE, dSPM, LCMV
     parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
     # noise covariance matrix filename template
     noise_cov_fname = data['noise_cov_fname']
@@ -92,7 +92,7 @@ file and print it
 
  .. code-block:: none
 
-    {'inverse parameters': {'method': 'MNE',
+    {'inverse parameters': {'method': 'LCMV',
                             'noise_cov_fname': '*noise*.ds',
                             'parcellation': 'aparc',
                             'snr': 1.0,
@@ -146,7 +146,7 @@ the values in the infosource node
 .. code-block:: python
 
 
-    template_path = '*%s/%s/meg/%s*rest*0_60*ica.fif'
+    template_path = '*%s/%s/meg/%s*rest*0_30*ica.fif'
     template_args = [['subject_id', 'session_id', 'subject_id']]
     datasource = create_datagrabber(data_path, template_path, template_args)
 
@@ -266,7 +266,7 @@ here correspond to how we connected the nodes.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_001.png
+.. image:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_001.png
     :class: sphx-glr-single-img
 
 
@@ -358,16 +358,16 @@ the Connectivity pipeline.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_002.png
+.. image:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_002.png
     :class: sphx-glr-single-img
 
 
 
 
-**Total running time of the script:** ( 0 minutes  10.081 seconds)
+**Total running time of the script:** ( 0 minutes  10.029 seconds)
 
 
-.. _sphx_glr_download_auto_examples_plot_inverse.py:
+.. _sphx_glr_download_auto_examples_plot_inverse_LCMV.py:
 
 
 .. only :: html
@@ -379,13 +379,13 @@ the Connectivity pipeline.
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: plot_inverse.py <plot_inverse.py>`
+     :download:`Download Python source code: plot_inverse_LCMV.py <plot_inverse_LCMV.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: plot_inverse.ipynb <plot_inverse.ipynb>`
+     :download:`Download Jupyter notebook: plot_inverse_LCMV.ipynb <plot_inverse_LCMV.ipynb>`
 
 
 .. only:: html
