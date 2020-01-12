@@ -72,7 +72,7 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # and a node to grab data. The template_args in this node iterate upon
 # the values in the infosource node
 
-template_path = '*%s/%s/meg/%s*rest*ica.fif'
+template_path = '*%s/%s/meg/%s*rest*0_60*ica.fif'
 template_args = [['subject_id', 'session_id', 'subject_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
