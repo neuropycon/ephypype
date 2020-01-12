@@ -47,23 +47,11 @@ jobs:
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 25m
+                no_output_timeout: 15m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
             - add_ssh_keys:
                 fingerprints:
                     - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
-            - deploy:
-                name: github pages deployment
-                command: |
-                  if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                    echo "Deploying dev docs.";
-                    git config --global user.email "a.pascarella@iac.cnr.it";
-                    git config --global user.name "NeuroPycon";
-                    cd doc;
-                    make install;
-                  else
-                    echo "No deployment (build: ${CIRCLE_BRANCH}).";
-                  fi    
-                
+
