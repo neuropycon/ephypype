@@ -61,7 +61,6 @@ jobs:
                     echo "Deploying dev docs.";
                     git config --global user.email "a.pascarella@iac.cnr.it";
                     git config --global user.name "NeuroPycon";
-                    cd doc;
                     make install;
                   else
                     echo "No deployment (build: ${CIRCLE_BRANCH}).";
