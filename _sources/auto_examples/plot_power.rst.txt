@@ -341,7 +341,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 
 
-**Total running time of the script:** ( 0 minutes  8.063 seconds)
+**Total running time of the script:** ( 0 minutes  8.903 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:

@@ -11,5 +11,11 @@ The following sections are a brief introduction on how to add new functionalitie
     :maxdepth: 1
 
     lcmv
-    How to wrap a node <https://neuropycon.github.io/graphpype/how_to_wrap.html>
     howto
+    
+    
+Other informations are available on |graphpype_tutorial|
+
+.. |graphpype_tutorial| raw:: html
+
+   <a href="https://neuropycon.github.io/graphpype/how_to_wrap.html" target="_blank">graphpype tutorial</a> 
