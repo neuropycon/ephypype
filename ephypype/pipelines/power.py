@@ -39,9 +39,7 @@ def create_pipeline_power(main_path, freq_bands, pipeline_name='power_pipeline',
         True if the input data are in epoch format (-epo.fif); False
         if the input data are raw data (-raw.fif)
 
-    Inputs (inputnode)
-    ------------------
-    fif_file : str
+    fif_file (inputnode): str
         path to raw or epoched meg data in fif format
 
     Returns

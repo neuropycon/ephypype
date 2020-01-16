@@ -48,15 +48,13 @@ def create_pipeline_time_series_to_spectral_connectivity(
          how to handle the values over the frequency bands:
          possible choices: "mean","max", "none"
 
-    Inputs (inputnode)
-    ------------------
-    ts_file : str
+    ts_file (inputnode): str
         path to the time series file in .npy format
-    freq_band : float
+    freq_band (inputnode): float
         frequency bands
-    sfreq : float
+    sfreq (inputnode): float
         sampling frequency
-    labels_file : str
+    labels_file (inputnode): str
         path to the file containing a list of labels associated with nodes
 
     Returns

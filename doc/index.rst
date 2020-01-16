@@ -39,8 +39,8 @@ For each possible workflow the **input data** can be specified in three differen
 
 .. _lego:
 
-.. figure::  img/tiny_all_input_doors.png
-   :width: 50%
+.. figure::  img/tiny_all_input_doors_new.jpg
+   :width: 75%
    :align:   center
 
    Main inputs and subsequent pipeline steps

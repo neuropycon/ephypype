@@ -7,14 +7,15 @@ import mne
 import glob
 import os.path as op
 
-from mne.bem import make_watershed_bem
-from mne.report import Report
 from nipype.utils.filemanip import split_filename as split_f
 
 
 def _create_bem_sol(subjects_dir, sbj_id):
     """Create bem solution."""
-
+    import mne
+    import os.path as op
+    from mne.report import Report
+    from mne.bem import make_watershed_bem
     report = Report()
 
     bem_dir = op.join(subjects_dir, sbj_id, 'bem')
