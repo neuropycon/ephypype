@@ -1,3 +1,0 @@
-.. _graphpype_link:
-
-https://neuropycon.github.io/graphpype/how_to_wrap.html
