@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>How to add MNE function to ephypype &#8212; ephypype 0.1dev0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1dev0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="index.html">Tutorial</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">How to add MNE function to ephypype</a><ul>
+<li><a class="reference internal" href="#pipeline-input">Pipeline Input</a></li>
+<li><a class="reference internal" href="#modify-interface">Modify Interface</a></li>
+<li><a class="reference internal" href="#add-function">Add Function</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/tutorial/lcmv.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="how-to-add-mne-function-to-ephypype">
+<span id="lcmv"></span><h1>How to add MNE function to ephypype<a class="headerlink" href="#how-to-add-mne-function-to-ephypype" title="Permalink to this headline">¶</a></h1>
+<p>The following section is a brief introduction on how to add to <strong>ephypype</strong> a new pipeline based on an algorithm already implemented in the software wrapped by NeuroPycon (e.g. MNE python, radatools).</p>
+<p>Here, we add a source reconstruction pipeline using a Linear Constrained Minimum Variance (LCMV) beamformer (Van Veen et al., 1997) as inverse method (see <a class="reference internal" href="../auto_examples/plot_inverse_LCMV.html#lcmv-source-reconstruction"><span class="std std-ref">Compute LCMV inverse solution</span></a> Section).
+This will lead to modify only the ephypype package by writing very few lines of code (almost 10).</p>
+<div class="contents local topic" id="main-steps">
+<p class="topic-title first">Main steps</p>
+<ul class="simple">
+<li><a class="reference internal" href="#pipeline-input" id="id1">Pipeline Input</a></li>
+<li><a class="reference internal" href="#modify-interface" id="id2">Modify Interface</a></li>
+<li><a class="reference internal" href="#add-function" id="id3">Add Function</a></li>
+</ul>
+</div>
+<div class="section" id="pipeline-input">
+<span id="pipeline"></span><h2><a class="toc-backref" href="#id1">Pipeline Input</a><a class="headerlink" href="#pipeline-input" title="Permalink to this headline">¶</a></h2>
+<p>We can use the same example script of the <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/plot_inverse.py"><code class="xref download docutils literal notranslate"><span class="pre">inverse</span> <span class="pre">solution</span> <span class="pre">pipeline</span></code></a>.
+The only thing to change is the <code class="docutils literal notranslate"><span class="pre">method</span></code> parameter in the <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_LCMV_inverse.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;spacing&quot;</span><span class="p">:</span> <span class="s2">&quot;oct-6&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;snr&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+<span class="hll">  <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;LCMV&quot;</span><span class="p">,</span>
+</span>  <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;aparc&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;noise_cov_fname&quot;</span><span class="p">:</span> <span class="s2">&quot;*noise*.ds&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modify-interface">
+<span id="interface"></span><h2><a class="toc-backref" href="#id2">Modify Interface</a><a class="headerlink" href="#modify-interface" title="Permalink to this headline">¶</a></h2>
+<p>Now, we modify the <code class="docutils literal notranslate"><span class="pre">_run_interface</span></code> method of the <a class="reference external" href="https://github.com/neuropycon/ephypype/blob/master/ephypype/interfaces/mne/Inverse_solution.py">Inverse_solution</a>  Interface
+by adding the new function <code class="docutils literal notranslate"><span class="pre">_compute_LCMV_inverse_solution</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">ts_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_coords</span> <span class="o">=</span> \
+    <span class="n">_compute_LCMV_inverse_solution</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">fwd_filename</span><span class="p">,</span> <span class="n">cov_filename</span><span class="p">,</span>
+                                    <span class="n">parc</span><span class="o">=</span><span class="n">parc</span><span class="p">,</span> <span class="n">all_src_space</span><span class="o">=</span><span class="n">all_src_space</span><span class="p">,</span> <span class="n">ROIs_mean</span><span class="o">=</span><span class="n">ROIs_mean</span><span class="p">,</span> <span class="n">is_fixed</span><span class="o">=</span><span class="n">is_fixed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-function">
+<span id="function"></span><h2><a class="toc-backref" href="#id3">Add Function</a><a class="headerlink" href="#add-function" title="Permalink to this headline">¶</a></h2>
+<p>Finally, we include in the module <a class="reference external" href="https://github.com/neuropycon/ephypype/blob/master/ephypype/compute_inv_problem.py">compute_inv_problem.py</a> the new function
+<code class="docutils literal notranslate"><span class="pre">_compute_LCMV_inverse_solution</span></code> that calls the MNE python functions (<a href="https://mne.tools/stable/generated/mne.beamformer.make_lcmv.html?highlight=make_lcmv#mne.beamformer.make_lcmv" target="_blank">make_lcmv</a>, <a href="https://mne.tools/stable/generated/mne.beamformer.apply_lcmv_raw.html?highlight=apply_lcmv_raw#mne.beamformer.apply_lcmv_raw" target="_blank">apply_lcmv_raw</a>) we have to use to reconstruct the neural activity by an LCMV beamformer starting from raw data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_compute_LCMV_inverse_solution</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">fwd_filename</span><span class="p">,</span> <span class="n">cov_fname</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="s1">&#39;aparc&#39;</span><span class="p">,</span>
+                                 <span class="n">all_src_space</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ROIs_mean</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_fixed</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Compute the inverse solution on raw data by LCMV and return the average</span>
+<span class="sd">     time series computed in the N_r regions of the source space defined by</span>
+<span class="sd">     the specified cortical parcellation</span>
+
+<span class="sd">     Inputs</span>
+<span class="sd">         raw_filename : str</span>
+<span class="sd">             filename of the raw data</span>
+<span class="sd">         sbj_id : str</span>
+<span class="sd">             subject name</span>
+<span class="sd">         subjects_dir : str</span>
+<span class="sd">             Freesurfer directory</span>
+<span class="sd">         fwd_filename : str</span>
+<span class="sd">             filename of the forward operator</span>
+<span class="sd">         cov_filename : str</span>
+<span class="sd">             filename of the noise covariance matrix</span>
+<span class="sd">         parc: str</span>
+<span class="sd">             the parcellation defining the ROIs atlas in the source space</span>
+<span class="sd">         all_src_space: bool</span>
+<span class="sd">             if True we compute the inverse for all points of the s0urce space</span>
+<span class="sd">         ROIs_mean: bool</span>
+<span class="sd">             if True we compute the mean of estimated time series on ROIs</span>
+
+
+<span class="sd">     Outputs</span>
+<span class="sd">         ts_file : str</span>
+<span class="sd">             filename of the file where are saved the estimated time series</span>
+<span class="sd">         labels_file : str</span>
+<span class="sd">             filename of the file where are saved the ROIs of the parcellation</span>
+<span class="sd">         label_names_file : str</span>
+<span class="sd">             filename of the file where are saved the name of the ROIs of the</span>
+<span class="sd">             parcellation</span>
+<span class="sd">         label_coords_file : str</span>
+<span class="sd">             filename of the file where are saved the coordinates of the</span>
+<span class="sd">             centroid of the ROIs of the parcellation</span>
+
+<span class="sd">     &quot;&quot;&quot;</span>
+     <span class="k">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** READ raw filename </span><span class="si">%s</span><span class="s1"> ***</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">raw_filename</span><span class="p">))</span>
+     <span class="n">raw</span> <span class="o">=</span> <span class="n">read_raw_fif</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">)</span>
+
+     <span class="k">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** READ noise covariance </span><span class="si">%s</span><span class="s1"> ***</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">cov_fname</span><span class="p">))</span>
+     <span class="n">noise_cov</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_cov</span><span class="p">(</span><span class="n">cov_fname</span><span class="p">)</span>
+
+     <span class="k">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** READ FWD SOL </span><span class="si">%s</span><span class="s1"> ***</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">fwd_filename</span><span class="p">))</span>
+     <span class="n">forward</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_forward_solution</span><span class="p">(</span><span class="n">fwd_filename</span><span class="p">)</span>
+     <span class="n">forward</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">convert_forward_solution</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">surf_ori</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="c1"># compute data covariance matrix</span>
+     <span class="n">picks</span> <span class="o">=</span> <span class="n">pick_types</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">meg</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ref_meg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="s1">&#39;bads&#39;</span><span class="p">)</span>
+     <span class="n">data_cov</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">compute_raw_covariance</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">picks</span><span class="o">=</span><span class="n">picks</span><span class="p">)</span>
+
+<span class="hll">     <span class="c1"># compute LCMV filters</span>
+</span><span class="hll">     <span class="n">filters</span> <span class="o">=</span> <span class="n">make_lcmv</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">data_cov</span><span class="p">,</span> <span class="n">reg</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">noise_cov</span><span class="o">=</span><span class="n">noise_cov</span><span class="p">,</span> <span class="n">pick_ori</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="n">weight_norm</span><span class="o">=</span><span class="s1">&#39;nai&#39;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</span><span class="hll">     <span class="c1"># apply spatial filter</span>
+</span><span class="hll">     <span class="n">stc</span> <span class="o">=</span> <span class="n">apply_lcmv_raw</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">max_ori_out</span><span class="o">=</span><span class="s1">&#39;signed&#39;</span><span class="p">)</span>
+</span>
+     <span class="n">ts_file</span><span class="p">,</span> <span class="n">label_ts</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">label_names_file</span><span class="p">,</span> <span class="n">label_coords_file</span> <span class="o">=</span> \
+         <span class="n">_process_stc</span><span class="p">(</span><span class="n">stc</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">parc</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="n">is_fixed</span><span class="p">,</span> <span class="n">all_src_space</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">ROIs_mean</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+     <span class="k">return</span> <span class="n">ts_file</span><span class="p">,</span> <span class="n">labels_file</span><span class="p">,</span> <span class="n">label_names_file</span><span class="p">,</span> <span class="n">label_coords_file</span>
+</pre></div>
+</div>
+<p><strong>Download</strong> Json parameters file: <a class="reference download internal" download="" href="../_downloads/743c688b1064756a8988d60c2341f063/params_LCMV_inverse.json"><code class="xref download docutils literal notranslate"><span class="pre">params_LCMV_inverse.json</span></code></a></p>
+<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/d4c6723a2b13b8b7d7dadc13f4bfc13c/plot_inverse_LCMV.py"><code class="xref download docutils literal notranslate"><span class="pre">plot_inverse_LCMV.py</span></code></a></p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-16.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
