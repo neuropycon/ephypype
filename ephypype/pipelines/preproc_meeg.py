@@ -83,11 +83,9 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
         True if we perform the analysis in sensor space and we use the
         pipeline as lego with the connectivity or inverse pipeline
 
-    Inputs (inputnode)
-    ------------------
-    raw_file : str
+    raw_file (inputnode): str
         path to raw meg data in fif format
-    subject_id : str
+    subject_id (inputnode): str
         subject id
 
     Outputs

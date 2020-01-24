@@ -1,3 +1,5 @@
+:orphan:
+
 .. _neuropycon_cli:
 
 

@@ -4,6 +4,7 @@ import mne
 import nipype.pipeline.engine as pe
 import os.path as op
 from ephypype.interfaces.mne.LF_computation import LFComputation
+from ephypype.compute_fwd_problem import _create_bem_sol
 
 
 data_path = mne.datasets.testing.data_path()
@@ -57,3 +58,12 @@ def test_mixed_LFComputation():
     lf_node.run()
 
     assert lf_node.result.outputs.fwd_filename
+
+
+def test_bem_LFComputation():
+    """Test LF interface."""
+
+    _create_bem_sol(subjects_dir, sbj_id)
+
+    bem_dir = op.join(subjects_dir, sbj_id, 'bem')
+    assert op.join(bem_dir, '{}-5120-bem-sol.fif'.format(sbj_id))

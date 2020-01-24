@@ -79,11 +79,9 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     save_mixed_src_space: bool (defualt False)
         if True the mixed src space will be saved in the FS folder
 
-    Inputs (inputnode)
-    ------------------
-    raw : str
+    raw (inputnode): str
         path to raw data in fif format
-    sbj_id : str
+    sbj_id (inputnode): str
         subject id
 
     Returns
@@ -219,11 +217,9 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
     save_mixed_src_space: bool (defualt False)
         if True the mixed src space will be saved in the FS folder
 
-    Inputs (inputnode)
-    ------------------
-    raw : str
+    raw (inputnode): str
         path to raw data in fif format
-    sbj_id : str
+    sbj_id (inputnode): str
         subject id
 
     Returns

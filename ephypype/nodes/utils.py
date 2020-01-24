@@ -30,6 +30,8 @@ def create_iterator(fields, field_values):
         raise ValueError('fields and field_values must have'
                          'the same length')
 
+    # we use IdentityInterface to create our own node, to specify the list
+    # of subjects the pipeline should be executed on
     infosource = pe.Node(interface=IdentityInterface(fields=fields),
                          name="infosource")
 
