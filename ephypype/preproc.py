@@ -294,7 +294,7 @@ def _generate_report(raw, ica, subj_name, basename,
     show_picks = np.abs(ecg_scores).argsort()[::-1][:5]
 
     # Plot estimated latent sources given the unmixing matrix.
-    fig_ecg_ts = ica.plot_sources(raw, show_picks, exclude=ecg_inds,
+    fig_ecg_ts = ica.plot_sources(raw, show_picks,
                                   title=ica_title % 'ecg' + ' in 30s',
                                   start=0, stop=30, show=is_show)
 
@@ -304,7 +304,7 @@ def _generate_report(raw, ica, subj_name, basename,
                                        colorbar=True, show=is_show)
 
     # plot ECG sources + selection
-    fig_ecg_src = ica.plot_sources(ecg_evoked, exclude=ecg_inds, show=is_show)
+    fig_ecg_src = ica.plot_sources(ecg_evoked, show=is_show)
     fig = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
     report.add_figs_to_section(fig,
                                captions=['Scores of ICs related to ECG',
@@ -349,7 +349,6 @@ def _generate_report(raw, ica, subj_name, basename,
                                        section='ICA - EOG')
 
         fig_eog_src = ica.plot_sources(eog_evoked,
-                                       exclude=eog_inds,
                                        show=is_show)
 
         fig = [fig_eog_src]
@@ -431,7 +430,7 @@ def _create_epochs(fif_file, ep_length):
 
     _, base, ext = split_filename(fif_file)
     savename = os.path.abspath(base + '-epo' + ext)
-    epochs.save(savename)
+    epochs.save(savename, overwrite=True)
     return savename
 
 
@@ -467,5 +466,5 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     # TODO -> decide where to save...
     # savename = os.path.abspath(base + '-epo' + ext)
     savename = os.path.join(data_path, base + '-epo' + ext)
-    epochs.save(savename)
+    epochs.save(savename, overwrite=True)
     return savename
