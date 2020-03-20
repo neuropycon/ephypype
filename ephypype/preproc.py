@@ -41,9 +41,11 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     return savename
 
 
-def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
+def _compute_ica(fif_file, raw_fif_file,
+                 ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution."""
     subj_path, basename, ext = split_filename(fif_file)
+    orig_raw = read_raw_fif(raw_fif_file, preload=True)
     raw = read_raw_fif(fif_file, preload=True)
 
     # select sensors
@@ -54,12 +56,13 @@ def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     # Other available choices are `infomax` or `extended-infomax`
     # We pass a float value between 0 and 1 to select n_components based on the
     # percentage of variance explained by the PCA components.
+    orig_raw.filter(l_freq=1., h_freq=None)
 
     flat = dict(mag=1e-13, grad=1e-13)
 
     ica = ICA(n_components=n_components, method='fastica', max_iter=500)
-
-    ica.fit(raw, picks=select_sensors, reject=reject, flat=flat)
+    ica.fit(orig_raw, picks=select_sensors, reject=reject, flat=flat)
+    del orig_raw
     # -------------------- Save ica timeseries ---------------------------- #
     ica_ts_file = os.path.abspath(basename + "_ica-tseries.fif")
     ica_src = ica.get_sources(raw)
