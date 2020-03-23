@@ -92,7 +92,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw']),
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw' 'events_file']),
                         name='inputnode')
 
     # Lead Field computation Node
@@ -112,11 +112,13 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     if is_epoched and events_id != {}:
         define_epochs = pe.Node(interface=DefineEpochs(), name='define_epochs')
         define_epochs.inputs.events_id = events_id
-        define_epochs.inputs.events_file = events_file
+        #define_epochs.inputs.events_file = events_file
         define_epochs.inputs.t_min = t_min
         define_epochs.inputs.t_max = t_max
 
         pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
+        pipeline.connect(inputnode, 'raw', define_epochs, 'events_file')
+
 
     return pipeline
 
