@@ -105,8 +105,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
         LF_computation.inputs.aseg_labels = aseg_labels
         LF_computation.inputs.save_mixed_src_space = save_mixed_src_space
 
-    pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
-    pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
+    #pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
+    #pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
 
     # Create epochs based on events_id
     if is_epoched and events_id != {}:
@@ -117,6 +117,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
         define_epochs.inputs.t_max = t_max
 
         pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
+
+    return pipeline
 
     # Noise Covariance Matrix Node
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
