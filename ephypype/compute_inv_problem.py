@@ -271,7 +271,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
             if 'epo' in basename:
                 basename = basename.replace('-epo', '')
-            fname_evo = op.join(subj_path, basename + '-ave.fif')
+            # fname_evo = op.join(subj_path, basename + '-ave.fif')
+            fname_evo = op.abspath(basename + '-ave.fif')
             write_evokeds(fname_evo, evoked)
 
             for k in range(len(events_name)):
@@ -282,7 +283,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                 print('***')
                 print(('stc dim ' + str(stc_evo.shape)))
                 print('***')
-                stc_evo.save(op.join(subj_path, basename + '-%d' % k))
+                # stc_evo.save(op.join(subj_path, basename + '-%d' % k))
+                stc_evo.save(op.abspath(basename + '-%d' % k))
                 stc.append(stc_evo)
         else:
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
@@ -302,7 +304,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             print('***')
             print(('stc dim ' + str(stc_evo.shape)))
             print('***')
-            stc_evo.save(op.join(subj_path, basename + '-%s' % evo.comment))
+            # stc_evo.save(op.join(subj_path, basename + '-%s' % evo.comment))
+            stc_evo.save(op.abspath(basename + '-%s' % evo.comment))
             stc.append(stc_evo)
     else:
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,

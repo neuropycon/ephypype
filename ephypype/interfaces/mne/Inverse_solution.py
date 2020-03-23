@@ -260,7 +260,8 @@ class NoiseCovariance(BaseInterface):
 
         data_path, basename, ext = split_f(raw_filename)
 
-        self.cov_fname_out = op.join(data_path, '%s-cov.fif' % basename)
+        # self.cov_fname_out = op.join(data_path, '%s-cov.fif' % basename)
+        self.cov_fname_out = op.abspath('%s-cov.fif' % basename)
 
         # Check if a noise cov matrix was already computed
         if not op.isfile(cov_fname_in):
