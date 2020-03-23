@@ -22,6 +22,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           events_id=None,
                                           condition=None,
                                           events_file='',
+                                          decim=1,
                                           t_min=None, t_max=None,
                                           is_evoked=False,
                                           parc='aparc',
@@ -115,6 +116,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
         define_epochs.inputs.events_file = events_file
         define_epochs.inputs.t_min = t_min
         define_epochs.inputs.t_max = t_max
+        define_epochs.inputs.decim = decim
 
         pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
 
