@@ -26,14 +26,14 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     raw = read_raw_fif(fif_file, preload=True)
     filt_str, down_str = '', ''
 
-    select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
+#    select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
         raw.filter(l_freq=l_freq, h_freq=h_freq,
                    picks=None, fir_design='firwin')
         filt_str = '_filt'
     if down_sfreq:
-        raw.resample(sfreq=down_sfreq, npad=0, stim_picks=select_sensors)
+        raw.resample(sfreq=down_sfreq, npad=0)
         down_str = '_dsamp'
 
     savename = os.path.abspath(basename + filt_str + down_str + ext)
