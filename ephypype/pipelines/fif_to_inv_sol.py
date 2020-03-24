@@ -135,8 +135,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     else:
         pipeline.connect(inputnode, 'raw', create_noise_cov, 'raw_filename')
 
-    return pipeline
-
     # Inverse Solution Node
     inv_solution = pe.Node(interface=InverseSolution(), name='inv_solution')
 
