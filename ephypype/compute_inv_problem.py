@@ -260,9 +260,12 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
+    stc_files = list()
+
     if is_epoched and events_id != {}:
         if is_evoked:
             stc = list()
+
             if events_id != condition and condition:
                 events_name = condition
             else:
@@ -271,7 +274,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
             if 'epo' in basename:
                 basename = basename.replace('-epo', '')
-            fname_evo = op.join(subj_path, basename + '-ave.fif')
+            fname_evo = op.abspath(basename + '-ave.fif')
             write_evokeds(fname_evo, evoked)
 
             for k in range(len(events_name)):
@@ -282,8 +285,13 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                 print('***')
                 print(('stc dim ' + str(stc_evo.shape)))
                 print('***')
-                stc_evo.save(op.join(subj_path, basename + '-%d' % k))
+
+                stc_evo_file = op.abspath(basename + '-%d' % k)
+                stc_evo.save(stc_evo_file)
+
                 stc.append(stc_evo)
+                stc_files.append(stc_evo_file)
+
         else:
             stc = apply_inverse_epochs(epochs, inverse_operator, lambda2,
                                        inv_method, pick_ori=pick_ori)
@@ -302,8 +310,11 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             print('***')
             print(('stc dim ' + str(stc_evo.shape)))
             print('***')
-            stc_evo.save(op.join(subj_path, basename + '-%s' % evo.comment))
+            stc_evo_file = op.join(subj_path, basename + '-%s' % evo.comment)
+            stc_evo.save(stc_evo_file)
+
             stc.append(stc_evo)
+            stc_files.append(stc_evo_file)
     else:
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
@@ -316,7 +327,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                      aseg, is_fixed, all_src_space=False, ROIs_mean=True)
 
     return ts_file, labels_file, label_names_file, \
-        label_coords_file
+        label_coords_file, stc_files
 
 
 def _compute_LCMV_inverse_solution(raw_filename, sbj_id, subjects_dir,

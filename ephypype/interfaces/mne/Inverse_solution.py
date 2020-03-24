@@ -70,6 +70,7 @@ class InverseSolutionConnOutputSpec(TraitedSpec):
     labels = File(exists=False, desc='labels file in pickle format')
     label_names = File(exists=False, desc='labels name file in txt format')
     label_coords = File(exists=False, desc='labels coords file in txt format')
+    stc_files = traits.List(File(exists=False, desc='list of stc files'))
 
 
 class InverseSolution(BaseInterface):
@@ -165,7 +166,7 @@ class InverseSolution(BaseInterface):
 
         if inv_method != 'LCMV':
             self.ts_file, self.labels, self.label_names, \
-                self.label_coords = \
+                self.label_coords, self.stc_files = \
                 _compute_inverse_solution(raw_filename, sbj_id, subjects_dir,
                                           fwd_filename, cov_filename,
                                           is_epoched=is_epoched,
@@ -199,6 +200,7 @@ class InverseSolution(BaseInterface):
         outputs['labels'] = self.labels
         outputs['label_names'] = self.label_names
         outputs['label_coords'] = self.label_coords
+        outputs['stc_files'] = self.stc_files
 
         return outputs
 
