@@ -120,8 +120,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
         pipeline.connect(inputnode, 'events_file', define_epochs, 'events_file')
 
 
-    return pipeline
-
     # Noise Covariance Matrix Node
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
@@ -136,6 +134,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                          create_noise_cov, 'raw_filename')
     else:
         pipeline.connect(inputnode, 'raw', create_noise_cov, 'raw_filename')
+
+    return pipeline
 
     # Inverse Solution Node
     inv_solution = pe.Node(interface=InverseSolution(), name='inv_solution')
