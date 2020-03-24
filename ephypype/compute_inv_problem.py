@@ -288,7 +288,6 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
                 stc_evo_file = op.abspath(basename + '-%d' % k)
                 stc_evo.save(stc_evo_file)
-
                 stc.append(stc_evo)
                 stc_files.append(stc_evo_file)
 
@@ -310,6 +309,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             print('***')
             print(('stc dim ' + str(stc_evo.shape)))
             print('***')
+
             stc_evo_file = op.join(subj_path, basename + '-%s' % evo.comment)
             stc_evo.save(stc_evo_file)
 

@@ -437,7 +437,7 @@ def _create_epochs(fif_file, ep_length):
     return savename
 
 
-def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
+def _define_epochs(fif_file, t_min, t_max, events_id, events_file='', decim=1):
     """Split raw .fif file into epochs depending on events file.
 
     Splitted epochs have a length ep_length with rejection criteria.
@@ -459,7 +459,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     # reject_tmax = 0.8  # duration we really care about
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
                     picks=picks, baseline=(None, 0), reject=reject,
-                    preload=True)
+                    decim=decim, preload=True)
 
     epochs.drop_bad(reject=reject)
 
@@ -467,7 +467,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     np.savetxt(good_events_file, epochs.events)
 
     # TODO -> decide where to save...
-    # savename = os.path.abspath(base + '-epo' + ext)
-    savename = os.path.join(data_path, base + '-epo' + ext)
+    savename = os.path.abspath(base + '-epo' + ext)
+    # savename = os.path.join(data_path, base + '-epo' + ext)
     epochs.save(savename, overwrite=True)
     return savename
