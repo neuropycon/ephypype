@@ -189,6 +189,7 @@ class InverseSolution(BaseInterface):
                                                all_src_space=all_src_space,
                                                ROIs_mean=ROIs_mean,
                                                is_fixed=is_fixed)
+                self.stc_files = []
 
         return runtime
 
