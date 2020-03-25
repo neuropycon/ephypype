@@ -26,14 +26,14 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     raw = read_raw_fif(fif_file, preload=True)
     filt_str, down_str = '', ''
 
-    select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
+#    select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
         raw.filter(l_freq=l_freq, h_freq=h_freq,
                    picks=None, fir_design='firwin')
         filt_str = '_filt'
     if down_sfreq:
-        raw.resample(sfreq=down_sfreq, npad=0, stim_picks=select_sensors)
+        raw.resample(sfreq=down_sfreq, npad=0)
         down_str = '_dsamp'
 
     savename = os.path.abspath(basename + filt_str + down_str + ext)
@@ -41,9 +41,11 @@ def _preprocess_fif(fif_file, l_freq=None, h_freq=None, down_sfreq=None):
     return savename
 
 
-def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
+def _compute_ica(fif_file, raw_fif_file,
+                 ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution."""
     subj_path, basename, ext = split_filename(fif_file)
+    orig_raw = read_raw_fif(raw_fif_file, preload=True)
     raw = read_raw_fif(fif_file, preload=True)
 
     # select sensors
@@ -54,12 +56,13 @@ def _compute_ica(fif_file, ecg_ch_name, eog_ch_name, n_components, reject):
     # Other available choices are `infomax` or `extended-infomax`
     # We pass a float value between 0 and 1 to select n_components based on the
     # percentage of variance explained by the PCA components.
+    orig_raw.filter(l_freq=1., h_freq=None)
 
     flat = dict(mag=1e-13, grad=1e-13)
 
     ica = ICA(n_components=n_components, method='fastica', max_iter=500)
-
-    ica.fit(raw, picks=select_sensors, reject=reject, flat=flat)
+    ica.fit(orig_raw, picks=select_sensors, reject=reject, flat=flat)
+    del orig_raw
     # -------------------- Save ica timeseries ---------------------------- #
     ica_ts_file = os.path.abspath(basename + "_ica-tseries.fif")
     ica_src = ica.get_sources(raw)
@@ -434,7 +437,7 @@ def _create_epochs(fif_file, ep_length):
     return savename
 
 
-def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
+def _define_epochs(fif_file, t_min, t_max, events_id, events_file='', decim=1):
     """Split raw .fif file into epochs depending on events file.
 
     Splitted epochs have a length ep_length with rejection criteria.
@@ -456,7 +459,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     # reject_tmax = 0.8  # duration we really care about
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
                     picks=picks, baseline=(None, 0), reject=reject,
-                    preload=True)
+                    decim=decim, preload=True)
 
     epochs.drop_bad(reject=reject)
 
@@ -464,7 +467,7 @@ def _define_epochs(fif_file, t_min, t_max, events_id, events_file=''):
     np.savetxt(good_events_file, epochs.events)
 
     # TODO -> decide where to save...
-    # savename = os.path.abspath(base + '-epo' + ext)
-    savename = os.path.join(data_path, base + '-epo' + ext)
+    savename = os.path.abspath(base + '-epo' + ext)
+    # savename = os.path.join(data_path, base + '-epo' + ext)
     epochs.save(savename, overwrite=True)
     return savename

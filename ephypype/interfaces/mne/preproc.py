@@ -17,8 +17,11 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
     """Input specification for CompIca."""
 
     fif_file = traits.File(exists=True,
-                           desc='raw meg data in fif format',
+                           desc='filtered raw meg data in fif format',
                            mandatory=True)
+    raw_fif_file = traits.File(exists=True,
+                               desc='orignal raw meg data in fif format',
+                               mandatory=True)
     ecg_ch_name = traits.String(desc='name of ecg channel')
     eog_ch_name = traits.String(desc='name of eog channel')
     n_components = traits.Float(desc='number of ica components')
@@ -76,6 +79,7 @@ class CompIca(BaseInterface):
     output_spec = CompIcaOutputSpec
 
     def _run_interface(self, runtime):
+        raw_fif_file = self.inputs.raw_fif_file
         fif_file = self.inputs.fif_file
         ecg_ch_name = self.inputs.ecg_ch_name
         eog_ch_name = self.inputs.eog_ch_name
@@ -85,7 +89,7 @@ class CompIca(BaseInterface):
         if reject == traits.Undefined:
             reject = dict(mag=4e-12, grad=4000e-13)
 
-        ica_output = _compute_ica(fif_file, ecg_ch_name,
+        ica_output = _compute_ica(fif_file, raw_fif_file, ecg_ch_name,
                                   eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
@@ -226,6 +230,8 @@ class DefineEpochsInputSpec(BaseInterfaceInputSpec):
                                 mandatory=False)
     t_min = traits.Float(None, desc='start time before event', mandatory=False)
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
+    decim = traits.Int(1, desc='Factor by which to downsample the data',
+                       mandatory=False, usedefault=True)
 
 
 class DefineEpochsOutputSpec(TraitedSpec):
@@ -261,9 +267,9 @@ class DefineEpochs(BaseInterface):
         events_file = self.inputs.events_file
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
-
+        decim = self.inputs.decim
         result_fif = _define_epochs(fif_file, t_min, t_max, events_id,
-                                    events_file)
+                                    events_file, decim)
 
         self.epo_fif_file = result_fif
         return runtime
