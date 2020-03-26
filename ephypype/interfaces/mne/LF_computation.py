@@ -101,7 +101,7 @@ class LFComputation(BaseInterface):
             print('src space contains {} spaces and {} vertices'.format(
                 len(src), n))
 
-            trans_fpath = _is_trans(raw_fname,
+            trans_fpath = _is_trans(raw_fname, sbj_id,
                                     trans_fname_template=trans_fname)
 
             _compute_fwd_sol(raw_fname, trans_fpath, src, bem,
