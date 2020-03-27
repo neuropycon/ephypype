@@ -122,8 +122,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
     if is_ICA:
         if is_set_ICA_components:
-            inp = ['fif_file', 'subject_id', 'n_comp_exclude',
-                   'is_sensor_space']
+            inp = ['fif_file', 'subject_id', 'n_comp_exclude', 'is_sensor_space']  # noqa
             out = ['out_file', 'channel_coords_file', 'channel_names_file',
                    'sfreq']
             fcn = _preprocess_set_ica_comp_fif_to_ts
@@ -150,9 +149,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
             pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
             if data_type == 'ds':
-                pipeline.connect(
-                        ds2fif_node, 'fif_file', ica_node, 'raw_fif_file')
+                pipeline.connect(ds2fif_node, 'fif_file', ica_node, 'raw_fif_file')  # noqa
             elif data_type == 'fif':
-                pipeline.connect(
-                        inputnode, 'raw_file', ica_node, 'raw_fif_file')
+                pipeline.connect(inputnode, 'raw_file', ica_node, 'raw_fif_file')  # noqa
     return pipeline
