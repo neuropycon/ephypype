@@ -103,7 +103,7 @@ def test_mne_inverse_solution_epoched_data():
                         picks=picks, baseline=(None, 0), preload=False)
     # Save all epochs in a fif file:
     epo_fname = raw_fname.replace('.fif', '-epo.fif')
-    epochs.save(epo_fname)
+    epochs.save(epo_fname, overwrite=True)
 
     inverse_node = pe.Node(interface=InverseSolution(), name='inverse')
     inverse_node.inputs.sbj_id = 'sample'
