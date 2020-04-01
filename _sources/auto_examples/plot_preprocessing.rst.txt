@@ -363,34 +363,34 @@ with different flag parameters.
     Now restoring ICA solution ...
     Ready.
         Using multitaper spectrum estimation with 7 DPSS windows
-    29 matching events found
+    30 matching events found
     No baseline correction applied
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
-    29 matching events found
+    30 matching events found
     No baseline correction applied
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
-    29 matching events found
+    30 matching events found
     No baseline correction applied
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
-    29 matching events found
+    30 matching events found
     No baseline correction applied
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
-    29 matching events found
+    30 matching events found
     No baseline correction applied
     Not setting metadata
     0 projection items activated
     0 bad epochs dropped
 
 
-**Total running time of the script:** ( 0 minutes  11.935 seconds)
+**Total running time of the script:** ( 0 minutes  9.375 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:

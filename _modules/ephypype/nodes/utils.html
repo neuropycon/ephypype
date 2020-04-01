@@ -130,6 +130,8 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;fields and field_values must have&#39;</span>
                          <span class="s1">&#39;the same length&#39;</span><span class="p">)</span>
 
+    <span class="c1"># we use IdentityInterface to create our own node, to specify the list</span>
+    <span class="c1"># of subjects the pipeline should be executed on</span>
     <span class="n">infosource</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="n">fields</span><span class="p">),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;infosource&quot;</span><span class="p">)</span>
 
@@ -160,7 +162,6 @@
 <span class="sd">    datasource : instance of pe.Node</span>
 <span class="sd">        The node which grabs the filenames.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">datasource</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">nio</span><span class="o">.</span><span class="n">DataGrabber</span><span class="p">(</span><span class="n">infields</span><span class="o">=</span><span class="n">infields</span><span class="p">,</span>
                                                    <span class="n">outfields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">]),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;datasource&#39;</span><span class="p">)</span>
@@ -218,7 +219,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-16.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-01.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

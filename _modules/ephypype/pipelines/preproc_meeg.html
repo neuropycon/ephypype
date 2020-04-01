@@ -105,6 +105,8 @@
 
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">import</span> <span class="n">IdentityInterface</span><span class="p">,</span> <span class="n">Function</span>
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span>
+
 <span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="k">import</span> <span class="n">PreprocFif</span>
 <span class="kn">from</span> <span class="nn">..interfaces.mne.preproc</span> <span class="k">import</span> <span class="n">CompIca</span>
 <span class="kn">from</span> <span class="nn">..nodes.import_data</span> <span class="k">import</span> <span class="n">ConvertDs2Fif</span>
@@ -113,9 +115,7 @@
 
 <span class="k">def</span> <span class="nf">get_ext_file</span><span class="p">(</span><span class="n">raw_file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get file extension.&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="k">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
-
-    <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
+    <span class="n">subj_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_filename</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">raw_file</span><span class="p">)</span>
     <span class="n">is_ds</span> <span class="o">=</span> <span class="kc">False</span>
@@ -249,7 +249,12 @@
                 <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">reject</span> <span class="o">=</span> <span class="n">reject</span>
 
             <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
-
+            <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                        <span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+                        <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pipeline</span></div>
 </pre></div>
 
@@ -264,7 +269,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-01-16.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-01.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
