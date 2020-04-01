@@ -160,7 +160,6 @@ def _is_trans(raw_fname, subject_id, trans_fname_template=None):
 
     trans_fname = trans_files[0]
     print(('\n*** coregistration file %s found!!!\n' % trans_fname))
-    print(trans_fname)
 
     if not op.isfile(trans_fname):
         raise RuntimeError('*** coregistration file %s NOT found!!!'

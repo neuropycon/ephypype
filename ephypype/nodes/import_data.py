@@ -11,7 +11,7 @@ from nipype.interfaces.base import File
 
 from ..import_data import _import_tsmat_to_ts, _read_hdf5
 from ..import_data import _split_txt, _read_brainvision_vhdr
-from ..import_data import _convert_ds_to_raw_fif
+from ..import_data import _convert_ds_to_raw_fif, _read_fieldtrip_epochs
 from ..fif2array import _ep2ts, _get_raw_array
 
 
@@ -488,5 +488,59 @@ class Fif2Array(BaseInterface):
         outputs['channel_coords_file'] = self.channel_coords_file
         outputs['channel_names_file'] = self.channel_names_file
         outputs['sfreq'] = self.sfreq
+
+        return outputs
+
+
+# ------------------- FT2fif --------------------------- #
+class ImportFieldTripEpochsInputSpec(BaseInterfaceInputSpec):
+    """Input specification for ImportFieldTripEpochs."""
+
+    epo_mat_file = traits.File(exists=True,
+                               desc='filename of the .mat file containing the data.',  # noqa
+                               mandatory=True)
+    data_field_name = traits.String('data', desc='Name of structure in matlab',
+                                    usedefault=True)
+
+
+class ImportFieldTripEpochsOutputSpec(TraitedSpec):
+    """Output spec for ImportFieldTripEpochs"""
+
+    fif_file = traits.File(exists=True, desc='.fif file containing the data')
+
+
+class ImportFieldTripEpochs(BaseInterface):
+    """Load epoched data from a FieldTrip structure.
+
+    Inputs
+    ------
+    epo_mat_file : str
+        path of the .mat file containing the FieldTrip data
+
+    data_field_name : str
+        Name of the structure in matlab containing the data
+
+    Outputs
+    -------
+    fif_file : str
+        Name of the file in fif format containing the loaded data
+    """
+
+    input_spec = ImportFieldTripEpochsInputSpec
+    output_spec = ImportFieldTripEpochsOutputSpec
+
+    def _run_interface(self, runtime):
+
+        epo_mat_file = self.inputs.epo_mat_file
+        data_field_name = self.inputs.data_field_name
+
+        self.fif_file = _read_fieldtrip_epochs(epo_mat_file, data_field_name)
+
+        return runtime
+
+    def _list_outputs(self):
+
+        outputs = self._outputs().get()
+        outputs["fif_file"] = self.fif_file
 
         return outputs

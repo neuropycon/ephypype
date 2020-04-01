@@ -1,7 +1,0 @@
-{
-    "spacing": "oct-6",
-    "snr": 1.0,
-    "method": "MNE",
-    "parcellation": "aparc",
-    "noise_cov_fname": "*noise*.ds"
-}

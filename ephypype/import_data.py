@@ -27,6 +27,23 @@ def _convert_ds_to_raw_fif(ds_file):
     return raw_fif_file
 
 
+def _read_fieldtrip_epochs(epo_mat_file, data_field_name='data'):
+    """Load epoched data from a FieldTrip structure contained in .mat file
+    and save in .fif file"""
+
+    _, basename, ext = split_f(epo_mat_file)
+    assert os.path.isfile(epo_mat_file)
+
+    epo = mne.read_epochs_fieldtrip(epo_mat_file, info=None,
+                                    data_name=data_field_name)
+
+    epo_fif_file = os.path.abspath(basename + "-epo.fif")
+    epo.save(epo_fif_file, overwrite=True)
+    print(('*** EPO file saved at % s' % epo_fif_file))
+
+    return epo_fif_file
+
+
 def write_hdf5(filename, data, dataset_name='dataset', dtype='f'):
     """
     Create hdf5 file

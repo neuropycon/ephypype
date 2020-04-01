@@ -28,24 +28,28 @@ from ephypype.datasets import fetch_omega_dataset
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
 
-data_type = 'fif'
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for connectivity from a
-# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_connectivity.json>`
-#  file and print it
+# then read the parameters for experiment and connectivity from a
+# :download:`json <https://github.com/neuropycon/ephypype/tree/master/examples/params.json>`
+# file and print it
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_connectivity.json"))
-pprint.pprint({'connectivity parameters': data})
+params = json.load(open("params.json"))
 
-freq_band_names = data['freq_band_names']
-freq_bands = data['freq_bands']
-con_method = data['method']
-epoch_window_length = data['epoch_window_length']
+pprint.pprint({'experiment parameters': params["general"]})
+subject_ids = params["general"]["subject_ids"]  # sub-003
+session_ids = params["general"]["session_ids"]  # ses-0001
+NJOBS = params["general"]["NJOBS"]
+
+pprint.pprint({'connectivity parameters': params["connectivity"]})
+freq_band_names = params["connectivity"]['freq_band_names']
+freq_bands = params["connectivity"]['freq_bands']
+con_method = params["connectivity"]['method']
+epoch_window_length = params["connectivity"]['epoch_window_length']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -60,8 +64,6 @@ main_workflow.base_dir = data_path
 ###############################################################################
 # Then we create a node to pass input filenames to DataGrabber from nipype
 
-subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-session_ids = ['ses-0001']
 infosource = create_iterator(['subject_id', 'session_id', 'freq_band_name'],
                              [subject_ids, session_ids, freq_band_names])
 
@@ -93,7 +95,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 #
 #   <a href="http://martinos.org/mne/stable/generated/mne.viz.plot_connectivity_circle.html#mne.viz.plot_connectivity_circle" target="_blank">spectral_connectivity function</a>
 
-from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity # noqa
+from ephypype.pipelines import create_pipeline_time_series_to_spectral_connectivity # noqa
 spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
     data_path, con_method=con_method,
     epoch_window_length=epoch_window_length)
@@ -158,7 +160,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
 # The output is the **spectral connectivty matrix in .npy format** stored
@@ -171,8 +173,8 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
 
 ##############################################################################
-from ephypype.gather.gather_results import get_results  # noqa
-from ephypype.gather.gather_results import get_channel_files  # noqa
+from ephypype.gather import get_results  # noqa
+from ephypype.gather import get_channel_files  # noqa
 from ephypype.aux_tools import _parse_string  # noqa
 from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 

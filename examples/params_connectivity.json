@@ -1,6 +1,0 @@
-{
-    "freq_band_names": ["alpha", "beta"],
-    "freq_bands": [[8, 12], [13, 29]],
-    "method": "coh",
-    "epoch_window_length": 3.0
-}

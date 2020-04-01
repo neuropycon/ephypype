@@ -30,27 +30,32 @@ from ephypype.datasets import fetch_omega_dataset
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
 
-data_type = 'fif'
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for preprocessing from a
-# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_preprocessing.json>`
+# then read the parameters for experiment and preprocessing from a
+# :download:`json <https://github.com/neuropycon/ephypype/tree/master/examples/params.json>`
 # file and print it
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_preprocessing.json"))
-pprint.pprint({'preprocessing parameters': data})
+params = json.load(open("params.json"))
 
-down_sfreq = data['down_sfreq']
-l_freq = data['l_freq']
-h_freq = data['h_freq']
-ECG_ch_name = data['ECG_ch_name']
-EoG_ch_name = data['EoG_ch_name']
-variance = data['variance']
-reject = data['reject']
+pprint.pprint({'experiment parameters': params["general"]})
+subject_ids = params["general"]["subject_ids"]  # sub-003
+session_ids = params["general"]["session_ids"]  # ses-0001
+NJOBS = params["general"]["NJOBS"]
+data_type = params["general"]["data_type"]
+
+pprint.pprint({'preprocessing parameters': params["preprocessing"]})
+down_sfreq = params["preprocessing"]['down_sfreq']
+l_freq = params["preprocessing"]['l_freq']
+h_freq = params["preprocessing"]['h_freq']
+ECG_ch_name = params["preprocessing"]['ECG_ch_name']
+EoG_ch_name = params["preprocessing"]['EoG_ch_name']
+variance = params["preprocessing"]['variance']
+reject = params["preprocessing"]['reject']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -65,8 +70,6 @@ main_workflow.base_dir = data_path
 ###############################################################################
 # Then we create a node to pass input filenames to DataGrabber from nipype
 
-subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-session_ids = ['ses-0001']
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
@@ -97,7 +100,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # * :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
 # * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
-from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
+from ephypype.pipelines import create_pipeline_preproc_meeg  # noqa
 preproc_workflow = create_pipeline_preproc_meeg(
     data_path, l_freq=l_freq, h_freq=h_freq, down_sfreq=down_sfreq,
     variance=variance, ECG_ch_name=ECG_ch_name, EoG_ch_name=EoG_ch_name,
@@ -141,7 +144,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
 # The output is the preprocessed data stored in the workflow directory
@@ -155,7 +158,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 ###############################################################################
 #
 import mne  # noqa
-from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather import get_results  # noqa
 
 ica_files, raw_files = get_results(main_workflow.base_dir,
                                    main_workflow.name, pipeline='ica')

@@ -42,12 +42,13 @@ CLI commands (:py:mod:`ephypype.commands.neuropycon`):
    process_pipeline
    psd
 
-Utils (:py:mod:`ephypype.nodes.utils`):
+Utils (:py:mod:`ephypype.nodes`):
 
-.. currentmodule:: ephypype.nodes.utils
+.. currentmodule:: ephypype.nodes
 
 .. autosummary::
    :toctree: generated/
 
    create_iterator
    create_datagrabber
+   Reference
