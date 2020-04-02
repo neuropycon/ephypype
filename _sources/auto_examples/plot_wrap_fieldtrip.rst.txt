@@ -102,7 +102,7 @@ Let us fetch the data first. It is around 675 MB download.
     *****
 
 
-**Total running time of the script:** ( 0 minutes  4.302 seconds)
+**Total running time of the script:** ( 0 minutes  4.307 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_wrap_fieldtrip.py:

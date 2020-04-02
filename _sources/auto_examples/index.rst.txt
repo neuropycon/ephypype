@@ -111,26 +111,6 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_preprocessing
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The **input** data should be a **.mat** file containing a data struct accepeted by FieldTrip ">
-
-.. only:: html
-
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_wrap_fieldtrip_thumb.png
-
-        :ref:`sphx_glr_auto_examples_plot_wrap_fieldtrip.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/plot_wrap_fieldtrip
 .. raw:: html
 
     <div style='clear:both'></div>

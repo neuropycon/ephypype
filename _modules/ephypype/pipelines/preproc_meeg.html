@@ -250,11 +250,11 @@
 
             <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-                        <span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-                        <span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pipeline</span></div>
 </pre></div>
 
@@ -269,7 +269,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-01.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>
