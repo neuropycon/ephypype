@@ -126,6 +126,40 @@ def test_mne_inverse_solution_epoched_data():
     assert data.shape[2] == epochs.get_data().shape[2]
 
 
+def test_mne_inverse_solution_from_epo_to_evo_data():
+    """Test compute MNE inverse solution."""
+
+    # create epoched data
+    raw = mne.io.read_raw_fif(raw_fname)
+    picks = mne.pick_types(raw.info, meg=True, eeg=False, eog=False,
+                           stim=False, exclude='bads')
+    # Define and read epochs:
+    events = mne.find_events(raw, stim_channel='STI 014')
+    # Define epochs parameters:
+    event_id = dict(aud_l=1, aud_r=2)  # event trigger and conditions
+    tmin = -0.2  # start of each epoch (200ms before the trigger)
+    tmax = 0.5  # end of each epoch (500ms after the trigger)
+    epochs = mne.Epochs(raw, events, event_id, tmin, tmax, proj=True,
+                        picks=picks, baseline=(None, 0), preload=False)
+    # Save all epochs in a fif file:
+    epo_fname = raw_fname.replace('.fif', '-epo.fif')
+    epochs.save(epo_fname, overwrite=True)
+
+    inverse_node = pe.Node(interface=InverseSolution(), name='inverse')
+    inverse_node.inputs.sbj_id = 'sample'
+    inverse_node.inputs.subjects_dir = subjects_dir
+    inverse_node.inputs.raw_filename = epo_fname
+    inverse_node.inputs.fwd_filename = fwd_fname
+    inverse_node.inputs.cov_filename = cov_fname
+    inverse_node.inputs.is_epoched = True
+    inverse_node.inputs.is_evoked = True
+    inverse_node.inputs.events_id = event_id
+
+    inverse_node.run()
+
+    assert inverse_node.result.outputs.stc_files
+
+
 def test_mne_inverse_solution_evoked_data():
     """Test compute MNE inverse solution."""
 
