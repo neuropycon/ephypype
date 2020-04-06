@@ -144,7 +144,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             else:
 
                 ica_node = pe.MapNode(interface=CompIca(),
-                                      iterfield = ['fif_file'], name='ica')
+                                      iterfield = ['fif_file','raw_fif_file'],
+                                      name='ica')
                 ica_node.inputs.n_components = variance
                 ica_node.inputs.ecg_ch_name = ECG_ch_name
                 ica_node.inputs.eog_ch_name = EoG_ch_name
