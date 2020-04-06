@@ -40,7 +40,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                                  data_type='fif', l_freq=1, h_freq=150,
                                  down_sfreq=None, is_ICA=True, variance=0.95,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,
-                                 is_set_ICA_components=False, mapnode = False
+                                 is_set_ICA_components=False, mapnode = False,
                                  n_comp_exclude=[], is_sensor_space=True):
     """Preprocessing pipeline.
 
