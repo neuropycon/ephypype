@@ -155,24 +155,9 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     else:
 
         if data_type == 'ds':
-            ds2fif_node = pe.MapNode(interface=ConvertDs2Fif(),
-                                     iterfield = ["raw_file"], name='ds2fif')
-            pipeline.connect(inputnode, 'raw_file', ds2fif_node, 'ds_file')
-
-        # preprocess
-        if not is_set_ICA_components:
-            preproc_node = pe.MapNode(interface=PreprocFif(),
-                                      iterfield = ["fif_file"], name='preproc')
-
-            preproc_node.inputs.l_freq = l_freq
-            preproc_node.inputs.h_freq = h_freq
-            if down_sfreq:
-                preproc_node.inputs.down_sfreq = down_sfreq
-
-            if data_type == 'ds':
-                pipeline.connect(ds2fif_node, 'fif_file', preproc_node, 'fif_file')
-            elif data_type == 'fif':
-                pipeline.connect(inputnode, 'raw_file', preproc_node, 'fif_file')
+            pipeline.connect(ds2fif_node, 'fif_file', preproc_node, 'fif_file')
+        elif data_type == 'fif':
+            pipeline.connect(inputnode, 'raw_file', preproc_node, 'fif_file')
 
         if is_ICA:
             if is_set_ICA_components:
@@ -181,11 +166,10 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 out = ['out_file', 'channel_coords_file', 'channel_names_file',
                     'sfreq']
                 fcn = _preprocess_set_ica_comp_fif_to_ts
-                ica_node = pe.MapNode(interface=Function(input_names=inp,
+                ica_node = pe.Node(interface=Function(input_names=inp,
                                                     output_names=out,
                                                     function=fcn),
-                                      iterfield = ['fif_file'],
-                                      name='ica_set_comp')
+                                name='ica_set_comp')
 
                 ica_node.inputs.n_comp_exclude = n_comp_exclude
                 ica_node.inputs.is_sensor_space = is_sensor_space
@@ -195,8 +179,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
             else:
 
-                ica_node = pe.MapNode(interface=CompIca(),
-                                   iterfield = ['fif_file'], name='ica')
+                ica_node = pe.Node(interface=CompIca(), name='ica')
                 ica_node.inputs.n_components = variance
                 ica_node.inputs.ecg_ch_name = ECG_ch_name
                 ica_node.inputs.eog_ch_name = EoG_ch_name
@@ -205,5 +188,11 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                     ica_node.inputs.reject = reject
 
                 pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
+                if data_type == 'ds':
+                    pipeline.connect(
+                            ds2fif_node, 'fif_file', ica_node, 'raw_fif_file')
+                elif data_type == 'fif':
+                    pipeline.connect(
+                            inputnode, 'raw_file', ica_node, 'raw_fif_file')
 
     return pipeline
