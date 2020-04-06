@@ -154,6 +154,13 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
                 pipeline.connect(preproc_node, 'fif_file', ica_node, 'fif_file')
 
+                if data_type == 'ds':
+                    pipeline.connect(
+                            ds2fif_node, 'fif_file', ica_node, 'raw_fif_file')
+                elif data_type == 'fif':
+                    pipeline.connect(
+                            inputnode, 'raw_file', ica_node, 'raw_fif_file')
+
     else:
 
 
