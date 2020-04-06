@@ -38,7 +38,7 @@ jobs:
                   pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  pip install PyQt5 < 5.14
+                  pip install PyQt5 > 5.11
                   pip install PyQt5_sip
                   conda install graphviz pydot
                   pip install visbrain
