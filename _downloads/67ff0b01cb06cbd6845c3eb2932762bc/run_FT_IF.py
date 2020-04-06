@@ -14,8 +14,6 @@ by FieldTrip
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 # License: BSD (3-clause)
 
-# sphinx_gallery_thumbnail_number = 1
-
 import os.path as op
 
 import ephypype

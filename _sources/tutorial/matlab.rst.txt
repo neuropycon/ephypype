@@ -4,10 +4,10 @@
 How to wrap a Fieldtrip matlab function
 =======================================
 
-The following section is a brief introduction on how to wrap a matlab function included in a desidered package.
+The following section is a brief introduction on how to wrap a matlab function included in a desired package.
 
 This example script creates an Interface wrapping a function of |FieldTrip| to
-rereferece |ECoG_data|.
+rereference |ECoG_data|.
 
 .. note:: This section is based on the |nipype_doc| on how to wrap a matlab script.
 
@@ -52,7 +52,10 @@ Here we define an interface wrapping a MATLAB script that call the |ft_preproces
 .. |interfaces| raw:: html
 
     <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_interfaces.html" target="_blank">interfaces</a>
-    
+
+.. |ft_preprocessing| raw:: html
+
+    <a href="http://www.fieldtriptoolbox.org/reference/ft_preprocessing/" target="_blank">interfaces</a>
 
 .. code:: python
 
@@ -154,6 +157,8 @@ The code below shows how to use the Reference interface.
 
 Let us fetch the data first (it is around 200 MB download) and specify the interface input variables. We use the iEEG data available |here|. 
 
+.. note:: The code needs the FieldTrip package installed, with path properly setup, for this example to run.
+
 .. code:: python  
   
     import os.path as op
@@ -163,6 +168,12 @@ Let us fetch the data first (it is around 200 MB download) and specify the inter
 
     base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
     data_path = fetch_ieeg_dataset(base_path)
+
+Now, we create the reference interface and set all its inputs.
+
+.. note:: The code needs the FieldTrip package installed, with path properly setup, for this example to run.
+
+.. code:: python  
 
     ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
     updatesens = 'no'
@@ -180,12 +191,81 @@ Let us fetch the data first (it is around 200 MB download) and specify the inter
     out = reference_if.run()
 
     print('Rereferenced data saved at {}'.format(out.outputs.data_output))
+    
+    
+Create pipeline
+---------------
+
+The code below shows how to create a |workflow| and encapsulate the Reference interface into a |node|. This allows to use the reference_node output
+as input of other nodes.
+
+.. |node| raw:: html
+
+    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">Node</a>
+    
+.. |workflow|   raw:: html
+
+    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a>
+
+As the above example, let us fetch the data first (it is around 200 MB download) and specify the interface input variables.
+
+.. code:: python  
+
+    import os.path as op
+    import nipype.pipeline.engine as pe
+
+    import ephypype
+    from ephypype.nodes import create_iterator, create_datagrabber
+    from ephypype.nodes.FT_tools import Reference
+    from ephypype.datasets import fetch_ieeg_dataset
+
+    
+    base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
+    data_path = fetch_ieeg_dataset(base_path)
+  
+Now, the reference interface is encapsulated in a node and connected to the datasource node created by `create_datagrabber <https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_datagrabber.html#ephypype.nodes.utils.create_datagrabber>`_ function.
+
+.. code:: python  
+
+    ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
+    updatesens = 'no'
+    refmethod = 'avg'
+    channels_name = '{\'LPG*\', \'LTG*\'}'
+
+    workflow_name = 'workflow'
+    main_workflow = pe.Workflow(name=workflow_name)
+    main_workflow.base_dir = data_path
+
+    subject_ids = ['SubjectUCI29']
+    infosource = create_iterator(['subject_id'], [subject_ids])
+
+    template_path = '%s*.mat'
+    template_args = [['subject_id']]
+    datasource = create_datagrabber(data_path, template_path, template_args, infields=['subject_id'])
+
+    main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+
+    reference_node = pe.Node(interface=Reference(), name='Reference')
+    reference_node.inputs.channels = channels_name
+    reference_node.inputs.ft_path = ft_path
+    reference_node.inputs.updatesens = updatesens
+    reference_node.inputs.refmethod = refmethod
+    reference_node.inputs.script = ''
+
+    main_workflow.connect(datasource, 'raw_file', reference_node, 'data_file')
+
+    main_workflow.write_graph(graph2use='colored')  # colored
+    main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+
+    # Run workflow locally on 1 CPU
+    main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 
-      
-**Download** Json parameters file: :download:`FT_tools.py <FT_tools.py>`
+**Download** Python source code: :download:`FT_tools.py <FT_tools.py>`
 
 **Download** Python source code: :download:`run_FT_IF.py <run_FT_IF.py>`
+
+**Download** Python source code: :download:`plot_wrap_fieldtrip.py <plot_wrap_fieldtrip.py>`
 
 
 
