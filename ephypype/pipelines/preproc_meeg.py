@@ -184,7 +184,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 ica_node = pe.MapNode(interface=Function(input_names=inp,
                                                     output_names=out,
                                                     function=fcn),
-                                      iterfield = ['fif_file']
+                                      iterfield = ['fif_file'],
                                       name='ica_set_comp')
 
                 ica_node.inputs.n_comp_exclude = n_comp_exclude
