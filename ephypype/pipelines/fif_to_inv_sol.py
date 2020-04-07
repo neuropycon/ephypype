@@ -29,7 +29,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           aseg=False,
                                           aseg_labels=[],
                                           noise_cov_fname='',
-                                          trans_fname='',
+                                          #trans_fname='',
                                           all_src_space=False,
                                           ROIs_mean=True,
                                           save_mixed_src_space=False,
@@ -93,13 +93,13 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'events_file']),
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'events_file', 'trans_file']),
                         name='inputnode')
 
     # Lead Field computation Node
     LF_computation = pe.Node(interface=LFComputation(), name='LF_computation')
     LF_computation.inputs.subjects_dir = subjects_dir
-    LF_computation.inputs.trans_fname = trans_fname
+    #LF_computation.inputs.trans_fname = trans_fname
     LF_computation.inputs.spacing = spacing
     LF_computation.inputs.aseg = aseg
     if aseg:
@@ -108,6 +108,7 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
 
     pipeline.connect(inputnode, 'sbj_id', LF_computation, 'sbj_id')
     pipeline.connect(inputnode, 'raw', LF_computation, 'raw_fname')
+    pipeline.connect(inputnode, 'trans_file', LF_computation, 'trans_file')
 
     # Create epochs based on events_id
     if is_epoched and events_id != {}:
