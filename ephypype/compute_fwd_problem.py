@@ -138,7 +138,7 @@ def _create_mixed_source_space(subjects_dir, sbj_id, spacing, labels, src,
     return src
 
 
-def _is_trans(raw_fname, trans_fname_template=None):
+def _is_trans(raw_fname, subject_id, trans_fname_template=None):
     """Check if coregistration file."""
     data_path, raw_fname, ext = split_f(raw_fname)
 
@@ -153,20 +153,18 @@ def _is_trans(raw_fname, trans_fname_template=None):
 
         trans_fpath = op.join(data_path, '%s*trans.fif' % raw_fname_4trans)
     else:
-        trans_fpath = op.join(data_path, trans_fname_template)
+        trans_fpath = trans_fname_template.format(sbj=subject_id)
 
     trans_files = glob.glob(trans_fpath)
     assert len(trans_files) == 1, "Error, should be only one trans file"
 
     trans_fname = trans_files[0]
-
     print(('\n*** coregistration file %s found!!!\n' % trans_fname))
-
-    print (trans_fname)
+    print(trans_fname)
 
     if not op.isfile(trans_fname):
         raise RuntimeError('*** coregistration file %s NOT found!!!'
-                        % trans_fname)
+                           % trans_fname)
 
     return trans_fname
 

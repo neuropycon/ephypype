@@ -22,7 +22,6 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     subjects_dir = traits.String(exists=True, desc='Freesurfer main directory',
                                  mandatory=True)
     raw_fname = traits.String(desc='raw file name', mandatory=True)
-    #trans_fname = traits.String(desc='raw file name', mandatory=False)
     trans_file = traits.String(desc='trans file name', mandatory=False)
     spacing = traits.String(desc='spacing to use to setup a source space',
                             mandatory=False)
@@ -102,9 +101,6 @@ class LFComputation(BaseInterface):
             n = sum(src[i]['nuse'] for i in range(len(src)))
             print('src space contains {} spaces and {} vertices'.format(
                 len(src), n))
-
-            #trans_fpath = _is_trans(raw_fname,
-                                    #trans_fname_template=trans_fname)
 
             _compute_fwd_sol(raw_fname, trans_file, src, bem,
                              self.fwd_filename)
