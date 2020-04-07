@@ -29,7 +29,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           aseg=False,
                                           aseg_labels=[],
                                           noise_cov_fname='',
-                                          #trans_fname='',
                                           all_src_space=False,
                                           ROIs_mean=True,
                                           save_mixed_src_space=False,
@@ -93,13 +92,14 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'events_file', 'trans_file']),  # noqa
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
+                                                  'events_file',
+                                                  'trans_file']),
                         name='inputnode')
 
     # Lead Field computation Node
     LF_computation = pe.Node(interface=LFComputation(), name='LF_computation')
     LF_computation.inputs.subjects_dir = subjects_dir
-    #LF_computation.inputs.trans_fname = trans_fname
     LF_computation.inputs.spacing = spacing
     LF_computation.inputs.aseg = aseg
     if aseg:
@@ -114,7 +114,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     if is_epoched and events_id != {}:
         define_epochs = pe.Node(interface=DefineEpochs(), name='define_epochs')
         define_epochs.inputs.events_id = events_id
-        # define_epochs.inputs.events_file = events_file
         define_epochs.inputs.t_min = t_min
         define_epochs.inputs.t_max = t_max
         define_epochs.inputs.decim = decim
@@ -182,7 +181,6 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
                                             aseg=False,
                                             aseg_labels=[],
                                             noise_cov_fname='',
-                                            #trans_fname=None,
                                             all_src_space=False,
                                             ROIs_mean=True,
                                             save_mixed_src_space=False,
@@ -234,13 +232,13 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'trans_file']),
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
+                                                  'trans_file']),
                         name='inputnode')
 
     # Lead Field computation Node
     LF_computation = pe.Node(interface=LFComputation(), name='LF_computation')
     LF_computation.inputs.subjects_dir = subjects_dir
-    #LF_computation.inputs.trans_fname = trans_fname
     LF_computation.inputs.spacing = spacing
     LF_computation.inputs.aseg = aseg
     if aseg:

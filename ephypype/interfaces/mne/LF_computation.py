@@ -11,7 +11,7 @@ from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_fwd_problem import _create_mixed_source_space
 from ...compute_fwd_problem import _create_bem_sol, _create_src_space
-from ...compute_fwd_problem import _is_trans, _compute_fwd_sol
+from ...compute_fwd_problem import _compute_fwd_sol
 from ...compute_fwd_problem import _get_fwd_filename
 
 
@@ -75,7 +75,7 @@ class LFComputation(BaseInterface):
         sbj_id = self.inputs.sbj_id
         subjects_dir = self.inputs.subjects_dir
         raw_fname = self.inputs.raw_fname
-        #trans_fname = self.inputs.trans_fname
+        # trans_fname = self.inputs.trans_fname
         trans_file = self.inputs.trans_file
         aseg = self.inputs.aseg
         spacing = self.inputs.spacing
