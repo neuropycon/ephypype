@@ -104,7 +104,7 @@ class LFComputation(BaseInterface):
                 len(src), n))
 
             #trans_fpath = _is_trans(raw_fname,
-                                    trans_fname_template=trans_fname)
+                                    #trans_fname_template=trans_fname)
 
             _compute_fwd_sol(raw_fname, trans_file, src, bem,
                              self.fwd_filename)
