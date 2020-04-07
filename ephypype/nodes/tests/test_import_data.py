@@ -107,7 +107,7 @@ def test_ep2ts_node():
     data = epochs.get_data()
     # Save all epochs in a fif file:
     epo_filename = raw_fname.replace('.fif', '-epo.fif')
-    epochs.save(epo_filename)
+    epochs.save(epo_filename, overwrite=True)
 
     # Call Ep2ts node in order to write the timeseries of epoched data in .npy
     ep2ts_node = pe.Node(interface=Ep2ts(), name='ep2ts')
