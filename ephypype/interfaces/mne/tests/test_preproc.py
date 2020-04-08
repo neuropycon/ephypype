@@ -85,6 +85,7 @@ def test_compute_ica():
     # create CompIca node to compute ica on raw data
     ica_node = pe.Node(interface=CompIca(), name='ica')
     ica_node.inputs.fif_file = segment_raw_fname
+    ica_node.inputs.raw_fif_file = segment_raw_fname
     ica_node.inputs.ecg_ch_name = ecg_ch_name
     ica_node.inputs.eog_ch_name = eog_ch_name
     ica_node.inputs.n_components = variance
@@ -120,6 +121,7 @@ def test_set_IC_components():
     # create CompIca node to compute ica on raw data
     ica_node = pe.Node(interface=CompIca(), name='ica')
     ica_node.inputs.fif_file = segment_raw_fname
+    ica_node.inputs.raw_fif_file = segment_raw_fname
     ica_node.inputs.ecg_ch_name = ecg_ch_name
     ica_node.inputs.eog_ch_name = eog_ch_name
     ica_node.inputs.n_components = variance

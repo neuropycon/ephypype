@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.6-jessie
+            - image: circleci/python:3.7-stretch
         steps:
             - checkout
             - run:
@@ -31,13 +31,12 @@ jobs:
                   pip install matplotlib Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install --upgrade mne
+                  pip install mne
                   pip install scikit-learn==0.20.0
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  pip install PyQt5==5.11.3
                   conda install graphviz pydot
                   pip install visbrain
                   python setup.py develop
