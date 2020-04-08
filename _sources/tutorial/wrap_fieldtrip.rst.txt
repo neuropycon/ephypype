@@ -1,0 +1,275 @@
+.. _wrap_fieldtrip:
+
+   
+How to wrap a Fieldtrip matlab function
+=======================================
+
+The following section is a brief introduction on how to wrap a **matlab** function included in a desired package.
+
+This example script creates an Interface wrapping a function of |FieldTrip| to apply a bipolar montage to |depth_electrodes|
+(see :ref:`ft_wf_seeg_example` Section).
+
+.. note:: This section is based on the |nipype_doc| on how to wrap a matlab script.
+
+.. |FieldTrip| raw:: html
+
+    <a href="http://www.fieldtriptoolbox.org/" target="_blank">FieldTrip</a>
+
+.. |depth_electrodes| raw:: html
+
+    <a href="http://www.fieldtriptoolbox.org/tutorial/human_ecog/#preprocessing-of-the-neural-recordings" target="_blank">depth electrodes</a>
+    
+.. |nipype_doc| raw:: html
+
+   <a href="https://nipype.readthedocs.io/en/0.11.0/devel/matlab_interface_devel.html" target="_blank">nipype documentation</a>
+
+
+.. contents:: Main steps
+    :local:
+    :depth: 2
+
+    
+.. _interface:
+
+Define Interface
+----------------
+
+The first step is to define an Interface wrapping MATLAB code. In Nipype, |interfaces| are python modules that allow you to use external package even if they themselves are written in another programming language than python. 
+Here we define an interface wrapping a MATLAB script that call the |ft_preprocessing| function of FieldTrip to apply a bipolar montage to sEEG electrodes.
+
+.. |interfaces| raw:: html
+
+    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_interfaces.html" target="_blank">interfaces</a>
+
+.. |ft_preprocessing| raw:: html
+
+    <a href="http://www.fieldtriptoolbox.org/reference/ft_preprocessing/" target="_blank">interfaces</a>
+
+.. code:: python
+
+    import os
+    from nipype.interfaces.base import traits, TraitedSpec
+    from nipype.interfaces.matlab import MatlabCommand, MatlabInputSpec
+
+
+    class ReferenceInputSpec(MatlabInputSpec):
+        data_file = traits.File(exists=True,
+                                desc='FieldTrip data structure .mat',
+                                mandatory=True)
+        ft_path = traits.String('', desc='FieldTrip path', mandatory=True)
+        channels = traits.String('', desc='channel names')
+        refmethod = traits.String('', desc='reference type (avg, bipolar)', mandatory=True)
+
+
+    class ReferenceOutputSpec(TraitedSpec):
+        matlab_output = traits.Str()
+        data_output = traits.Str('', desc='data structure .mat')
+
+
+    class Reference(MatlabCommand):
+        """
+        Apply the specified reference
+
+        Inputs
+        ------
+
+        data_file : str
+            data structure .mat (matlab format)
+        ft_path : str
+            path of FieldTrip package
+        channels : str
+            channels name to include in the reference process
+        updatesens : bool
+            update sensors information
+        refmethod : str
+            kind of reference (avg, bipolar)
+
+        Outputs
+        -------
+
+        matlab_output : str
+            file path of new FieldTrip data structure
+        data_output : str
+            fieldtrip data structure in .mat containing the rereferce data
+        """
+        input_spec = ReferenceInputSpec
+        output_spec = ReferenceOutputSpec
+
+        def _bipolar_reference(self):
+            """call FieldTrip function to Apply a bipolar montage to the depth
+            electrodes"""
+            script = """
+            fpath = '%s'
+            addpath(fpath)
+            disp(fpath)
+            ft_defaults
+            load('%s');
+            depths = %s;
+            for d = 1:numel(depths)
+                cfg             = [];
+                cfg.channel     = ft_channelselection(depths{d}, data.label);
+                cfg.reref       = 'yes';
+                cfg.refchannel  = 'all';
+                cfg.refmethod   = '%s';
+                cfg.updatesens  = 'yes';
+                reref_depths{d} = ft_preprocessing(cfg, data);
+            end
+            cfg            = [];
+            cfg.appendsens = 'yes';
+            reref_data = ft_appenddata(cfg, reref_depths{:});
+            save('%s', 'reref_data')
+            """ % (self.inputs.ft_path, self.inputs.data_file,
+                self.inputs.channels, self.inputs.refmethod, self.data_output)
+            return script
+
+        def run(self, **inputs):
+            # Inject your script
+            self.data_output = os.path.abspath('reref_data.mat')
+            
+            print('*** APPLY {} montage'.format(self.inputs.refmethod))
+            self.inputs.script = self._bipolar_reference()
+            
+            results = super(MatlabCommand, self).run(**inputs)
+            stdout = results.runtime.stdout
+            # Attach stdout to outputs to access matlab results
+            results.outputs.matlab_output = stdout
+            print(stdout)
+            return results
+
+        def _list_outputs(self):
+            outputs = self._outputs().get()
+            outputs['data_output'] = self.data_output
+            return outputs
+
+.. _Node:
+
+
+Call interface
+--------------
+
+The code below shows how to use the Reference interface. 
+
+.. |here| raw:: html
+
+    <a href="https://zenodo.org/record/1201560#.XoXw8c1S9j4" target="_blank">here</a>
+
+Let us fetch the data first (it is around 200 MB download) and specify the interface input variables. We use the iEEG data available |here|. 
+
+.. code:: python  
+  
+    import os.path as op
+    import ephypype
+    from ephypype.nodes.FT_tools import Reference
+    from ephypype.datasets import fetch_ieeg_dataset
+
+    base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
+    data_path = fetch_ieeg_dataset(base_path)
+
+Now, we create the reference interface and set all its inputs.
+
+.. note:: The code needs the FieldTrip package installed, with path properly setup, for this example to run.
+
+.. code:: python  
+
+    ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
+    refmethod = 'bipolar'
+    channels_name = '{\'RAM*\', \'RHH*\', \'RTH*\', \'ROC*\', \'LAM*\',\'LHH*\', \'LTH*\'}'
+
+    reference_if = Reference()
+    reference_if.inputs.data_file = op.join(data_path, 'SubjectUCI29_data.mat')
+    reference_if.inputs.channels = channels_name
+    reference_if.inputs.ft_path = ft_path
+    reference_if.inputs.refmethod = refmethod
+    reference_if.inputs.script = ''
+
+    out = reference_if.run()
+
+    print('Rereferenced data saved at {}'.format(out.outputs.data_output))
+  
+  
+.. comment:  
+    Create pipeline
+    ---------------
+
+    The code below shows how to create a |workflow| and encapsulate the Reference interface into a |node|. This allows to use the reference_node output
+    as input of other nodes.
+
+    .. |node| raw:: html
+
+        <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">Node</a>
+        
+    .. |workflow|   raw:: html
+
+        <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a>
+
+    As the above example, let us fetch the data first (it is around 200 MB download) and specify the interface input variables.
+
+    .. code:: python  
+
+        import os.path as op
+        import nipype.pipeline.engine as pe
+
+        import ephypype
+        from ephypype.nodes import create_iterator, create_datagrabber
+        from ephypype.nodes.FT_tools import Reference
+        from ephypype.datasets import fetch_ieeg_dataset
+
+        
+        base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
+        data_path = fetch_ieeg_dataset(base_path)
+    
+    Now, the reference interface is encapsulated in a node and connected to the datasource node created by `create_datagrabber <https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_datagrabber.html#ephypype.nodes.utils.create_datagrabber>`_ function.
+
+    .. code:: python  
+
+        ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
+        updatesens = 'no'
+        refmethod = 'avg'
+        channels_name = '{\'LPG*\', \'LTG*\'}'
+
+        workflow_name = 'workflow'
+        main_workflow = pe.Workflow(name=workflow_name)
+        main_workflow.base_dir = data_path
+
+        subject_ids = ['SubjectUCI29']
+        infosource = create_iterator(['subject_id'], [subject_ids])
+
+        template_path = '%s*.mat'
+        template_args = [['subject_id']]
+        datasource = create_datagrabber(data_path, template_path, template_args, infields=['subject_id'])
+
+        main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
+
+        reference_node = pe.Node(interface=Reference(), name='Reference')
+        reference_node.inputs.channels = channels_name
+        reference_node.inputs.ft_path = ft_path
+        reference_node.inputs.updatesens = updatesens
+        reference_node.inputs.refmethod = refmethod
+        reference_node.inputs.script = ''
+
+        main_workflow.connect(datasource, 'raw_file', reference_node, 'data_file')
+
+        main_workflow.write_graph(graph2use='colored')  # colored
+        main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+
+        # Run workflow locally on 1 CPU
+        main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+
+
+.. note:: In :ref:`ft_wf_seeg_example` Section there is an example on how to create a |workflow| connecting a |node| that wraps a desired function of a Matlab toolbo (FieldTrip) with a Node that wraps a function of a python toolbox (MNE).
+         
+    .. |node| raw:: html
+
+        <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">node</a>
+        
+    .. |workflow|   raw:: html
+
+        <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a>
+
+
+**Download** Python source code: :download:`FT_tools.py <../../ephypype/nodes/FT_tools.py>`
+
+**Download** Python source code: :download:`plot_run_FT_IF.py <../../examples/plot_run_FT_IF.py>`
+
+
+

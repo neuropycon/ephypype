@@ -71,7 +71,6 @@
 <li><a class="reference internal" href="#">How to wrap a Fieldtrip matlab function</a><ul>
 <li><a class="reference internal" href="#define-interface">Define Interface</a></li>
 <li><a class="reference internal" href="#call-interface">Call interface</a></li>
-<li><a class="reference internal" href="#create-pipeline">Create pipeline</a></li>
 </ul>
 </li>
 </ul>
@@ -85,7 +84,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="../_sources/tutorial/matlab.rst.txt"
+  <a href="../_sources/tutorial/wrap_fieldtrip.rst.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -110,10 +109,10 @@
     <div class="col-md-12 content">
       
   <div class="section" id="how-to-wrap-a-fieldtrip-matlab-function">
-<span id="matlab"></span><h1>How to wrap a Fieldtrip matlab function<a class="headerlink" href="#how-to-wrap-a-fieldtrip-matlab-function" title="Permalink to this headline">¶</a></h1>
-<p>The following section is a brief introduction on how to wrap a matlab function included in a desired package.</p>
-<p>This example script creates an Interface wrapping a function of <a href="http://www.fieldtriptoolbox.org/" target="_blank">FieldTrip</a> to
-rereference <a href="http://www.fieldtriptoolbox.org/tutorial/human_ecog/#preprocessing-of-the-neural-recordings" target="_blank">ECoG data</a>.</p>
+<span id="wrap-fieldtrip"></span><h1>How to wrap a Fieldtrip matlab function<a class="headerlink" href="#how-to-wrap-a-fieldtrip-matlab-function" title="Permalink to this headline">¶</a></h1>
+<p>The following section is a brief introduction on how to wrap a <strong>matlab</strong> function included in a desired package.</p>
+<p>This example script creates an Interface wrapping a function of <a href="http://www.fieldtriptoolbox.org/" target="_blank">FieldTrip</a> to apply a bipolar montage to <a href="http://www.fieldtriptoolbox.org/tutorial/human_ecog/#preprocessing-of-the-neural-recordings" target="_blank">depth electrodes</a>
+(see <a class="reference internal" href="../auto_examples/plot_wrap_fieldtrip.html#ft-wf-seeg-example"><span class="std std-ref">Time-frequency analysis on sEEG data</span></a> Section).</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This section is based on the <a href="https://nipype.readthedocs.io/en/0.11.0/devel/matlab_interface_devel.html" target="_blank">nipype documentation</a> on how to wrap a matlab script.</p>
@@ -123,13 +122,12 @@ rereference <a href="http://www.fieldtriptoolbox.org/tutorial/human_ecog/#prepro
 <ul class="simple">
 <li><a class="reference internal" href="#define-interface" id="id1">Define Interface</a></li>
 <li><a class="reference internal" href="#call-interface" id="id2">Call interface</a></li>
-<li><a class="reference internal" href="#create-pipeline" id="id3">Create pipeline</a></li>
 </ul>
 </div>
 <div class="section" id="define-interface">
 <span id="interface"></span><h2><a class="toc-backref" href="#id1">Define Interface</a><a class="headerlink" href="#define-interface" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to define an Interface wrapping MATLAB code. In Nipype, <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_interfaces.html" target="_blank">interfaces</a> are python modules that allow you to use external package even if they themselves are written in another programming language than python.
-Here we define an interface wrapping a MATLAB script that call the <a href="http://www.fieldtriptoolbox.org/reference/ft_preprocessing/" target="_blank">interfaces</a> function of FieldTrip to rereference ECoG data to a common average reference.</p>
+Here we define an interface wrapping a MATLAB script that call the <a href="http://www.fieldtriptoolbox.org/reference/ft_preprocessing/" target="_blank">interfaces</a> function of FieldTrip to apply a bipolar montage to sEEG electrodes.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="k">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">TraitedSpec</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.matlab</span> <span class="k">import</span> <span class="n">MatlabCommand</span><span class="p">,</span> <span class="n">MatlabInputSpec</span>
@@ -141,8 +139,7 @@ Here we define an interface wrapping a MATLAB script that call the <a href="http
                             <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">ft_path</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;FieldTrip path&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">channels</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;channel names&#39;</span><span class="p">)</span>
-    <span class="n">updatesens</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;update sensors (yes or no)&#39;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># noqa</span>
-    <span class="n">refmethod</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;reference type (avg, bipolar)&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># noqa</span>
+    <span class="n">refmethod</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;reference type (avg, bipolar)&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">ReferenceOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
@@ -173,35 +170,46 @@ Here we define an interface wrapping a MATLAB script that call the <a href="http
 
 <span class="sd">    matlab_output : str</span>
 <span class="sd">        file path of new FieldTrip data structure</span>
+<span class="sd">    data_output : str</span>
+<span class="sd">        fieldtrip data structure in .mat containing the rereferce data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_spec</span> <span class="o">=</span> <span class="n">ReferenceInputSpec</span>
     <span class="n">output_spec</span> <span class="o">=</span> <span class="n">ReferenceOutputSpec</span>
 
-    <span class="k">def</span> <span class="nf">_my_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This is where you implement your MATLAB script&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_bipolar_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;call FieldTrip function to Apply a bipolar montage to the depth</span>
+<span class="sd">        electrodes&quot;&quot;&quot;</span>
         <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        out_path = pwd</span>
-<span class="s2">        out_file = fullfile(out_path, &#39;reref_grids&#39;)</span>
 <span class="s2">        fpath = &#39;</span><span class="si">%s</span><span class="s2">&#39;</span>
 <span class="s2">        addpath(fpath)</span>
 <span class="s2">        disp(fpath)</span>
 <span class="s2">        ft_defaults</span>
 <span class="s2">        load(&#39;</span><span class="si">%s</span><span class="s2">&#39;);</span>
-<span class="s2">        cfg             = [];</span>
-<span class="s2">        cfg.channel     = </span><span class="si">%s</span><span class="s2">;</span>
-<span class="s2">        cfg.reref       = &#39;yes&#39;;</span>
-<span class="s2">        cfg.refchannel  = &#39;all&#39;;</span>
-<span class="s2">        cfg.refmethod   = &#39;</span><span class="si">%s</span><span class="s2">&#39;;</span>
-<span class="s2">        reref_grids = ft_preprocessing(cfg, data);</span>
-<span class="s2">        save(out_file, &#39;reref_grids&#39;)</span>
+<span class="s2">        depths = </span><span class="si">%s</span><span class="s2">;</span>
+<span class="s2">        for d = 1:numel(depths)</span>
+<span class="s2">            cfg             = [];</span>
+<span class="s2">            cfg.channel     = ft_channelselection(depths</span><span class="si">{d}</span><span class="s2">, data.label);</span>
+<span class="s2">            cfg.reref       = &#39;yes&#39;;</span>
+<span class="s2">            cfg.refchannel  = &#39;all&#39;;</span>
+<span class="s2">            cfg.refmethod   = &#39;</span><span class="si">%s</span><span class="s2">&#39;;</span>
+<span class="s2">            cfg.updatesens  = &#39;yes&#39;;</span>
+<span class="s2">            reref_depths</span><span class="si">{d}</span><span class="s2"> = ft_preprocessing(cfg, data);</span>
+<span class="s2">        end</span>
+<span class="s2">        cfg            = [];</span>
+<span class="s2">        cfg.appendsens = &#39;yes&#39;;</span>
+<span class="s2">        reref_data = ft_appenddata(cfg, reref_depths</span><span class="si">{:}</span><span class="s2">);</span>
+<span class="s2">        save(&#39;</span><span class="si">%s</span><span class="s2">&#39;, &#39;reref_data&#39;)</span>
 <span class="s2">        &quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ft_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">data_file</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">channels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_output</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">script</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
         <span class="c1"># Inject your script</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;reref_data.mat&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_my_script</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;*** APPLY </span><span class="si">{}</span><span class="s1"> montage&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bipolar_reference</span><span class="p">()</span>
+
         <span class="n">results</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MatlabCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
         <span class="n">stdout</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">runtime</span><span class="o">.</span><span class="n">stdout</span>
         <span class="c1"># Attach stdout to outputs to access matlab results</span>
@@ -220,13 +228,9 @@ Here we define an interface wrapping a MATLAB script that call the <a href="http
 <span id="node"></span><h2><a class="toc-backref" href="#id2">Call interface</a><a class="headerlink" href="#call-interface" title="Permalink to this headline">¶</a></h2>
 <p>The code below shows how to use the Reference interface.</p>
 <p>Let us fetch the data first (it is around 200 MB download) and specify the interface input variables. We use the iEEG data available <a href="https://zenodo.org/record/1201560#.XoXw8c1S9j4" target="_blank">here</a>.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The code needs the FieldTrip package installed, with path properly setup, for this example to run.</p>
-</div>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">import</span> <span class="nn">ephypype</span>
-<span class="kn">from</span> <span class="nn">FT_tools</span> <span class="k">import</span> <span class="n">Reference</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes.FT_tools</span> <span class="k">import</span> <span class="n">Reference</span>
 <span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="k">import</span> <span class="n">fetch_ieeg_dataset</span>
 
 <span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
@@ -239,15 +243,13 @@ Here we define an interface wrapping a MATLAB script that call the <a href="http
 <p class="last">The code needs the FieldTrip package installed, with path properly setup, for this example to run.</p>
 </div>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ft_path</span> <span class="o">=</span> <span class="s1">&#39;/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/&#39;</span>
-<span class="n">updatesens</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span>
-<span class="n">refmethod</span> <span class="o">=</span> <span class="s1">&#39;avg&#39;</span>
-<span class="n">channels_name</span> <span class="o">=</span> <span class="s1">&#39;{</span><span class="se">\&#39;</span><span class="s1">LPG*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">LTG*</span><span class="se">\&#39;</span><span class="s1">}&#39;</span>
+<span class="n">refmethod</span> <span class="o">=</span> <span class="s1">&#39;bipolar&#39;</span>
+<span class="n">channels_name</span> <span class="o">=</span> <span class="s1">&#39;{</span><span class="se">\&#39;</span><span class="s1">RAM*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">RHH*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">RTH*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">ROC*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">LAM*</span><span class="se">\&#39;</span><span class="s1">,</span><span class="se">\&#39;</span><span class="s1">LHH*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">LTH*</span><span class="se">\&#39;</span><span class="s1">}&#39;</span>
 
 <span class="n">reference_if</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">()</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">data_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;SubjectUCI29_data.mat&#39;</span><span class="p">)</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="n">channels_name</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ft_path</span> <span class="o">=</span> <span class="n">ft_path</span>
-<span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">updatesens</span> <span class="o">=</span> <span class="n">updatesens</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span> <span class="o">=</span> <span class="n">refmethod</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -256,63 +258,12 @@ Here we define an interface wrapping a MATLAB script that call the <a href="http
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Rereferenced data saved at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">data_output</span><span class="p">))</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In <a class="reference internal" href="../auto_examples/plot_wrap_fieldtrip.html#ft-wf-seeg-example"><span class="std std-ref">Time-frequency analysis on sEEG data</span></a> Section there is an example on how to create a <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a> connecting a <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">node</a> that wraps a desired function of a Matlab toolbo (FieldTrip) with a Node that wraps a function of a python toolbox (MNE).</p>
 </div>
-<div class="section" id="create-pipeline">
-<h2><a class="toc-backref" href="#id3">Create pipeline</a><a class="headerlink" href="#create-pipeline" title="Permalink to this headline">¶</a></h2>
-<p>The code below shows how to create a <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a> and encapsulate the Reference interface into a <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">Node</a>. This allows to use the reference_node output
-as input of other nodes.</p>
-<p>As the above example, let us fetch the data first (it is around 200 MB download) and specify the interface input variables.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
-<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
-
-<span class="kn">import</span> <span class="nn">ephypype</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="k">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes.FT_tools</span> <span class="k">import</span> <span class="n">Reference</span>
-<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="k">import</span> <span class="n">fetch_ieeg_dataset</span>
-
-
-<span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
-<span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_ieeg_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Now, the reference interface is encapsulated in a node and connected to the datasource node created by <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_datagrabber.html#ephypype.nodes.utils.create_datagrabber">create_datagrabber</a> function.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ft_path</span> <span class="o">=</span> <span class="s1">&#39;/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/&#39;</span>
-<span class="n">updatesens</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span>
-<span class="n">refmethod</span> <span class="o">=</span> <span class="s1">&#39;avg&#39;</span>
-<span class="n">channels_name</span> <span class="o">=</span> <span class="s1">&#39;{</span><span class="se">\&#39;</span><span class="s1">LPG*</span><span class="se">\&#39;</span><span class="s1">, </span><span class="se">\&#39;</span><span class="s1">LTG*</span><span class="se">\&#39;</span><span class="s1">}&#39;</span>
-
-<span class="n">workflow_name</span> <span class="o">=</span> <span class="s1">&#39;workflow&#39;</span>
-<span class="n">main_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">workflow_name</span><span class="p">)</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">data_path</span>
-
-<span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SubjectUCI29&#39;</span><span class="p">]</span>
-<span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">subject_ids</span><span class="p">])</span>
-
-<span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">*.mat&#39;</span>
-<span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
-<span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">,</span> <span class="n">infields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">])</span>
-
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
-
-<span class="n">reference_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Reference</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Reference&#39;</span><span class="p">)</span>
-<span class="n">reference_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="n">channels_name</span>
-<span class="n">reference_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ft_path</span> <span class="o">=</span> <span class="n">ft_path</span>
-<span class="n">reference_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">updatesens</span> <span class="o">=</span> <span class="n">updatesens</span>
-<span class="n">reference_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span> <span class="o">=</span> <span class="n">refmethod</span>
-<span class="n">reference_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">script</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">reference_node</span><span class="p">,</span> <span class="s1">&#39;data_file&#39;</span><span class="p">)</span>
-
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
-
-<span class="c1"># Run workflow locally on 1 CPU</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-</pre></div>
-</div>
-<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/c8c0daa7b74e8b5c316399a30bed1306/FT_tools.py"><code class="xref download docutils literal notranslate"><span class="pre">FT_tools.py</span></code></a></p>
-<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/67ff0b01cb06cbd6845c3eb2932762bc/run_FT_IF.py"><code class="xref download docutils literal notranslate"><span class="pre">run_FT_IF.py</span></code></a></p>
-<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/76189625eda5866bad2c7116aec064dc/plot_wrap_fieldtrip.py"><code class="xref download docutils literal notranslate"><span class="pre">plot_wrap_fieldtrip.py</span></code></a></p>
+<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/443beb372556730636040d01e35a7635/FT_tools.py"><code class="xref download docutils literal notranslate"><span class="pre">FT_tools.py</span></code></a></p>
+<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/4aec1581196418fb5db1a34922a19768/plot_run_FT_IF.py"><code class="xref download docutils literal notranslate"><span class="pre">plot_run_FT_IF.py</span></code></a></p>
 </div>
 </div>
 
@@ -328,7 +279,7 @@ as input of other nodes.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-06.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-08.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

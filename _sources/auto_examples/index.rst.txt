@@ -111,6 +111,46 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_preprocessing
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_run_FT_IF_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_run_FT_IF.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_run_FT_IF
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
+
+.. only:: html
+
+    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_wrap_fieldtrip_thumb.png
+
+        :ref:`sphx_glr_auto_examples_plot_wrap_fieldtrip.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_wrap_fieldtrip
 .. raw:: html
 
     <div style='clear:both'></div>
