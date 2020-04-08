@@ -102,7 +102,6 @@ class LFComputation(BaseInterface):
             print('src space contains {} spaces and {} vertices'.format(
                 len(src), n))
 
-
             _compute_fwd_sol(raw_fname, trans_file, src, bem,
                              self.fwd_filename)
         else:

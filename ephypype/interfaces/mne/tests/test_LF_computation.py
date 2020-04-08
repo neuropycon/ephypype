@@ -45,7 +45,7 @@ def test_trans_LFComputation():
     lf_node.run()
 
     assert lf_node.result.outputs.fwd_filename
-    
+
 
 def test_mixed_LFComputation():
     """Test LF interface."""
