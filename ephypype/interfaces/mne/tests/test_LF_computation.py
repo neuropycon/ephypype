@@ -12,7 +12,10 @@ sbj_id = 'sample'
 subjects_dir = op.join(data_path, 'subjects')
 raw_fname = op.join(data_path, 'MEG', 'sample',
                     'sample_audvis_trunc_raw.fif')
-trans_fname = '-trans.fif'
+# trans_fname = '-trans.fif'
+# trans_fname_template = '*_audvis_trunc-trans.fif'
+# test_trans_fname = '-.fif'
+trans_file = op.join(raw_fname, 'sample_audvis_trunc-trans.fif')
 
 
 def test_LFComputation():
@@ -35,7 +38,7 @@ def test_trans_LFComputation():
     lf_node = pe.Node(interface=LFComputation(), name='LF')
     lf_node.inputs.sbj_id = 'sample'
     lf_node.inputs.subjects_dir = subjects_dir
-    lf_node.inputs.trans_fname = trans_fname
+    lf_node.inputs.trans_file = trans_file
     lf_node.inputs.raw_fname = raw_fname
     lf_node.inputs.spacing = 'oct-5'
 
