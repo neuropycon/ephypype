@@ -44,7 +44,7 @@
             
                 <li><a href="index.html">Gallery</a></li>
                 <li><a href="../api.html">API</a></li>
-                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -129,28 +129,36 @@ sensor or source space.</p>
 </pre></div>
 </div>
 <p>Let us fetch the data first. It is around 675 MB download.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_type</span> <span class="o">=</span> <span class="s1">&#39;fif&#39;</span>
-<span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>then read the parameters for connectivity from a
-<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_connectivity.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a></p>
-<blockquote>
-<div>file and print it</div></blockquote>
+<p>then read the parameters for experiment and connectivity from a
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
+file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_connectivity.json&quot;</span><span class="p">))</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;connectivity parameters&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
 
-<span class="n">freq_band_names</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freq_band_names&#39;</span><span class="p">]</span>
-<span class="n">freq_bands</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freq_bands&#39;</span><span class="p">]</span>
-<span class="n">con_method</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
-<span class="n">epoch_window_length</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;epoch_window_length&#39;</span><span class="p">]</span>
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;experiment parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]})</span>
+<span class="n">subject_ids</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subject_ids&quot;</span><span class="p">]</span>  <span class="c1"># sub-003</span>
+<span class="n">session_ids</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;session_ids&quot;</span><span class="p">]</span>  <span class="c1"># ses-0001</span>
+<span class="n">NJOBS</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;NJOBS&quot;</span><span class="p">]</span>
+
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;connectivity parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;connectivity&quot;</span><span class="p">]})</span>
+<span class="n">freq_band_names</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;connectivity&quot;</span><span class="p">][</span><span class="s1">&#39;freq_band_names&#39;</span><span class="p">]</span>
+<span class="n">freq_bands</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;connectivity&quot;</span><span class="p">][</span><span class="s1">&#39;freq_bands&#39;</span><span class="p">]</span>
+<span class="n">con_method</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;connectivity&quot;</span><span class="p">][</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
+<span class="n">epoch_window_length</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;connectivity&quot;</span><span class="p">][</span><span class="s1">&#39;epoch_window_length&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;connectivity parameters&#39;: {&#39;epoch_window_length&#39;: 3.0,
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;experiment parameters&#39;: {&#39;NJOBS&#39;: 1,
+                           &#39;data_type&#39;: &#39;fif&#39;,
+                           &#39;session_ids&#39;: [&#39;ses-0001&#39;],
+                           &#39;subject_ids&#39;: [&#39;sub-0003&#39;],
+                           &#39;subjects_dir&#39;: &#39;FSF&#39;}}
+{&#39;connectivity parameters&#39;: {&#39;epoch_window_length&#39;: 3.0,
                              &#39;freq_band_names&#39;: [&#39;alpha&#39;, &#39;beta&#39;],
                              &#39;freq_bands&#39;: [[8, 12], [13, 29]],
                              &#39;method&#39;: &#39;coh&#39;}}
@@ -166,9 +174,7 @@ nipype the directory in which to store the outputs.</p>
 </pre></div>
 </div>
 <p>Then we create a node to pass input filenames to DataGrabber from nipype</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
-<span class="n">session_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ses-0001&#39;</span><span class="p">]</span>
-<span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;freq_band_name&#39;</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;freq_band_name&#39;</span><span class="p">],</span>
                              <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">,</span> <span class="n">freq_band_names</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -193,8 +199,8 @@ can be found in the description of <a class="reference external" href="https://m
 <li><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.spectral.SpectralConn</span></code> computes spectral connectivity in a given frequency bands</li>
 <li><code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.spectral.PlotSpectralConn</span></code> plot connectivity matrix using the <a href="http://martinos.org/mne/stable/generated/mne.viz.plot_connectivity_circle.html#mne.viz.plot_connectivity_circle" target="_blank">spectral_connectivity function</a> function</li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.ts_to_conmat</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="View documentation for ephypype.pipelines.ts_to_conmat.create_pipeline_time_series_to_spectral_connectivity"><span class="n">create_pipeline_time_series_to_spectral_connectivity</span></a> <span class="c1"># noqa</span>
-<span class="n">spectral_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="View documentation for ephypype.pipelines.ts_to_conmat.create_pipeline_time_series_to_spectral_connectivity"><span class="n">create_pipeline_time_series_to_spectral_connectivity</span></a><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="View documentation for ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity"><span class="n">create_pipeline_time_series_to_spectral_connectivity</span></a> <span class="c1"># noqa</span>
+<span class="n">spectral_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="View documentation for ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity"><span class="n">create_pipeline_time_series_to_spectral_connectivity</span></a><span class="p">(</span>
     <span class="n">data_path</span><span class="p">,</span> <span class="n">con_method</span><span class="o">=</span><span class="n">con_method</span><span class="p">,</span>
     <span class="n">epoch_window_length</span><span class="o">=</span><span class="n">epoch_window_length</span><span class="p">)</span>
 </pre></div>
@@ -256,15 +262,15 @@ here correspond to how we connected the nodes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
 <span class="c1"># Run workflow locally on 1 CPU</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="n">NJOBS</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The output is the <strong>spectral connectivty matrix in .npy format</strong> stored
 in the workflow directory defined by <cite>base_dir</cite>.
 We can use the pipelines defined in <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a> package
 to perform graph analysis on the computed connectivity matrix.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_channel_files</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_channel_files</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">ephypype.aux_tools</span> <span class="kn">import</span> <span class="n">_parse_string</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="kn">import</span> <span class="n">ConnectObj</span><span class="p">,</span> <span class="n">SourceObj</span><span class="p">,</span> <span class="n">SceneObj</span><span class="p">,</span> <span class="n">ColorbarObj</span>  <span class="c1"># noqa</span>
 
@@ -315,7 +321,7 @@ to perform graph analysis on the computed connectivity matrix.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_connectivity_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_connectivity_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  22.955 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  22.763 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-connectivity-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/b526b15bacefc4118fbacd5c19534856/plot_connectivity.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_connectivity.py</span></code></a></div>
@@ -337,7 +343,7 @@ to perform graph analysis on the computed connectivity matrix.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-08.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

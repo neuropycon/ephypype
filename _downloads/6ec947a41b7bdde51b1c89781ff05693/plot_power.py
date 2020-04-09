@@ -34,21 +34,26 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for PSD computation from a
-# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json>`
+# then read the parameters for experiment and power analysis from a
+# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params.json>`
 # file and print it
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_power.json"))
-pprint.pprint({'power parameters': data})
+params = json.load(open("params.json"))
 
-freq_band_names = data['freq_band_names']
-freq_bands = data['freq_bands']
-is_epoched = data['is_epoched']
-fmin = data['fmin']
-fmax = data['fmax']
-power_method = data['method']
+pprint.pprint({'experiment parameters': params["general"]})
+subject_ids = params["general"]["subject_ids"]  # sub-003
+session_ids = params["general"]["session_ids"]  # ses-0001
+NJOBS = params["general"]["NJOBS"]
+
+pprint.pprint({'power parameters': params["power"]})
+freq_band_names = params["power"]['freq_band_names']
+freq_bands = params["power"]['freq_bands']
+is_epoched = params["power"]['is_epoched']
+fmin = params["power"]['fmin']
+fmax = params["power"]['fmax']
+power_method = params["power"]['method']
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -63,8 +68,6 @@ main_workflow.base_dir = data_path
 ###############################################################################
 # Then we create a node to pass input filenames to DataGrabber from nipype
 
-subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-session_ids = ['ses-0001']
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
@@ -88,7 +91,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # :func:`mne.time_frequency.psd_multitaper` for computing the PSD using
 # Welch's method and multitapers respectively.
 
-from ephypype.pipelines.power import create_pipeline_power  # noqa
+from ephypype.pipelines import create_pipeline_power  # noqa
 power_workflow = create_pipeline_power(data_path, freq_bands,
                                        fmin=fmin, fmax=fmax,
                                        method=power_method,
@@ -131,7 +134,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
 # The outputs are the **psd tensor and frequencies in .npz format** and the
@@ -144,7 +147,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #   by the welch function of the scipy package.
 
 ##############################################################################
-from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather import get_results  # noqa
 from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
 from visbrain.utils import normalize  # noqa
 from nipype.utils.filemanip import split_filename  # noqa

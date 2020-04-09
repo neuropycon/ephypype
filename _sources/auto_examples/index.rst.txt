@@ -118,9 +118,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_run_FT_IF_thumb.png
+    .. figure:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_IF_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_run_FT_IF.py`
+        :ref:`sphx_glr_auto_examples_run_fieldtrip_IF.py`
 
 .. raw:: html
 
@@ -130,7 +130,7 @@ Examples Gallery
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_run_FT_IF
+   /auto_examples/run_fieldtrip_IF
 
 .. raw:: html
 
@@ -138,9 +138,9 @@ Examples Gallery
 
 .. only:: html
 
-    .. figure:: /auto_examples/images/thumb/sphx_glr_plot_wrap_fieldtrip_thumb.png
+    .. figure:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_wf_thumb.png
 
-        :ref:`sphx_glr_auto_examples_plot_wrap_fieldtrip.py`
+        :ref:`sphx_glr_auto_examples_run_fieldtrip_wf.py`
 
 .. raw:: html
 
@@ -150,7 +150,7 @@ Examples Gallery
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_wrap_fieldtrip
+   /auto_examples/run_fieldtrip_wf
 .. raw:: html
 
     <div style='clear:both'></div>

@@ -61,8 +61,8 @@ Let us fetch the data first. It is around 675 MB download.
 
 
 
-then read the parameters for PSD computation from a
-:download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json>`
+then read the parameters for experiment and power analysis from a
+:download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params.json>`
 file and print it
 
 
@@ -72,15 +72,20 @@ file and print it
 
     import json  # noqa
     import pprint  # noqa
-    data = json.load(open("params_power.json"))
-    pprint.pprint({'power parameters': data})
+    params = json.load(open("params.json"))
 
-    freq_band_names = data['freq_band_names']
-    freq_bands = data['freq_bands']
-    is_epoched = data['is_epoched']
-    fmin = data['fmin']
-    fmax = data['fmax']
-    power_method = data['method']
+    pprint.pprint({'experiment parameters': params["general"]})
+    subject_ids = params["general"]["subject_ids"]  # sub-003
+    session_ids = params["general"]["session_ids"]  # ses-0001
+    NJOBS = params["general"]["NJOBS"]
+
+    pprint.pprint({'power parameters': params["power"]})
+    freq_band_names = params["power"]['freq_band_names']
+    freq_bands = params["power"]['freq_bands']
+    is_epoched = params["power"]['is_epoched']
+    fmin = params["power"]['fmin']
+    fmax = params["power"]['fmax']
+    power_method = params["power"]['method']
 
 
 
@@ -92,6 +97,11 @@ file and print it
 
  .. code-block:: none
 
+    {'experiment parameters': {'NJOBS': 1,
+                               'data_type': 'fif',
+                               'session_ids': ['ses-0001'],
+                               'subject_ids': ['sub-0003'],
+                               'subjects_dir': 'FSF'}}
     {'power parameters': {'fmax': 150,
                           'fmin': 0.1,
                           'freq_band_names': ['theta', 'alpha', 'beta'],
@@ -127,8 +137,6 @@ Then we create a node to pass input filenames to DataGrabber from nipype
 .. code-block:: python
 
 
-    subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-    session_ids = ['ses-0001']
     infosource = create_iterator(['subject_id', 'session_id'],
                                  [subject_ids, session_ids])
 
@@ -172,7 +180,7 @@ Welch's method and multitapers respectively.
 .. code-block:: python
 
 
-    from ephypype.pipelines.power import create_pipeline_power  # noqa
+    from ephypype.pipelines import create_pipeline_power  # noqa
     power_workflow = create_pipeline_power(data_path, freq_bands,
                                            fmin=fmin, fmax=fmax,
                                            method=power_method,
@@ -275,7 +283,7 @@ Finally, we are now ready to execute our workflow.
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
     # Run workflow locally on 1 CPU
-    main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+    main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 
 
@@ -296,7 +304,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 .. code-block:: python
 
-    from ephypype.gather.gather_results import get_results  # noqa
+    from ephypype.gather import get_results  # noqa
     from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
     from visbrain.utils import normalize  # noqa
     from nipype.utils.filemanip import split_filename  # noqa
@@ -341,7 +349,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 
 
-**Total running time of the script:** ( 0 minutes  8.137 seconds)
+**Total running time of the script:** ( 0 minutes  8.525 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:

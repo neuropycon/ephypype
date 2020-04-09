@@ -31,9 +31,8 @@ import nipype.pipeline.engine as pe
 
 import ephypype
 from ephypype.nodes import create_iterator, create_datagrabber
-from ephypype.nodes.FT_tools import Reference
-from ephypype.interfaces.mne.spectral import TFRmorlet
-from ephypype.nodes.import_data import ImportFieldTripEpochs
+from ephypype.nodes import ImportFieldTripEpochs, Reference
+from ephypype.interfaces import TFRmorlet
 from ephypype.datasets import fetch_ieeg_dataset
 
 
@@ -141,7 +140,7 @@ main_workflow.write_graph(graph2use='colored')  # colored
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, workflow_name, 'graph.png'))
-plt.figure(figsize=(4, 4))
+plt.figure(figsize=(6, 6))
 plt.imshow(img)
 plt.axis('off')
 main_workflow.write_graph(graph2use='colored')  # colored
@@ -159,7 +158,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 #    <a href="https://mne.tools/stable/generated/mne.time_frequency.AverageTFR.html#mne.time_frequency.AverageTFR.plot" target="_blank">visualization function </a>
 
 import mne  # noqa
-from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather import get_results  # noqa
 
 tfr_files, _ = get_results(main_workflow.base_dir,
                            main_workflow.name, pipeline='tfr_morlet')

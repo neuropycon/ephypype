@@ -44,7 +44,7 @@
             
                 <li><a href="index.html">Gallery</a></li>
                 <li><a href="../api.html">API</a></li>
-                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -135,24 +135,34 @@ computed and saved in a numpy file.</p>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>then read the parameters for PSD computation from a
-<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
+<p>then read the parameters for experiment and power analysis from a
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a>
 file and print it</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params_power.json&quot;</span><span class="p">))</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;power parameters&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">})</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
 
-<span class="n">freq_band_names</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freq_band_names&#39;</span><span class="p">]</span>
-<span class="n">freq_bands</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;freq_bands&#39;</span><span class="p">]</span>
-<span class="n">is_epoched</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;is_epoched&#39;</span><span class="p">]</span>
-<span class="n">fmin</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fmin&#39;</span><span class="p">]</span>
-<span class="n">fmax</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;fmax&#39;</span><span class="p">]</span>
-<span class="n">power_method</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;experiment parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]})</span>
+<span class="n">subject_ids</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subject_ids&quot;</span><span class="p">]</span>  <span class="c1"># sub-003</span>
+<span class="n">session_ids</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;session_ids&quot;</span><span class="p">]</span>  <span class="c1"># ses-0001</span>
+<span class="n">NJOBS</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;NJOBS&quot;</span><span class="p">]</span>
+
+<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;power parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">]})</span>
+<span class="n">freq_band_names</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;freq_band_names&#39;</span><span class="p">]</span>
+<span class="n">freq_bands</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;freq_bands&#39;</span><span class="p">]</span>
+<span class="n">is_epoched</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;is_epoched&#39;</span><span class="p">]</span>
+<span class="n">fmin</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;fmin&#39;</span><span class="p">]</span>
+<span class="n">fmax</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;fmax&#39;</span><span class="p">]</span>
+<span class="n">power_method</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;power&quot;</span><span class="p">][</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;power parameters&#39;: {&#39;fmax&#39;: 150,
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;experiment parameters&#39;: {&#39;NJOBS&#39;: 1,
+                           &#39;data_type&#39;: &#39;fif&#39;,
+                           &#39;session_ids&#39;: [&#39;ses-0001&#39;],
+                           &#39;subject_ids&#39;: [&#39;sub-0003&#39;],
+                           &#39;subjects_dir&#39;: &#39;FSF&#39;}}
+{&#39;power parameters&#39;: {&#39;fmax&#39;: 150,
                       &#39;fmin&#39;: 0.1,
                       &#39;freq_band_names&#39;: [&#39;theta&#39;, &#39;alpha&#39;, &#39;beta&#39;],
                       &#39;freq_bands&#39;: [[3, 6], [8, 13], [13, 30]],
@@ -170,9 +180,7 @@ nipype the directory in which to store the outputs.</p>
 </pre></div>
 </div>
 <p>Then we create a node to pass input filenames to DataGrabber from nipype</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>  <span class="c1"># &#39;sub-0004&#39;, &#39;sub-0006&#39;</span>
-<span class="n">session_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ses-0001&#39;</span><span class="p">]</span>
-<span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
                              <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -193,8 +201,8 @@ The power pipeline contains only one node
 that wraps the MNE-Python functions <a class="reference external" href="https://mne.tools/stable/generated/mne.time_frequency.psd_welch.html#mne.time_frequency.psd_welch" title="(in MNE v0.20.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_welch()</span></code></a> and
 <a class="reference external" href="https://mne.tools/stable/generated/mne.time_frequency.psd_multitaper.html#mne.time_frequency.psd_multitaper" title="(in MNE v0.20.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">mne.time_frequency.psd_multitaper()</span></code></a> for computing the PSD using
 Welch’s method and multitapers respectively.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines.power</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.power.create_pipeline_power"><span class="n">create_pipeline_power</span></a>  <span class="c1"># noqa</span>
-<span class="n">power_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.power.create_pipeline_power"><span class="n">create_pipeline_power</span></a><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.pipelines</span> <span class="kn">import</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.create_pipeline_power"><span class="n">create_pipeline_power</span></a>  <span class="c1"># noqa</span>
+<span class="n">power_workflow</span> <span class="o">=</span> <a href="http://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="View documentation for ephypype.pipelines.create_pipeline_power"><span class="n">create_pipeline_power</span></a><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">,</span>
                                        <span class="n">fmin</span><span class="o">=</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="n">fmax</span><span class="p">,</span>
                                        <span class="n">method</span><span class="o">=</span><span class="n">power_method</span><span class="p">,</span>
                                        <span class="n">is_epoched</span><span class="o">=</span><span class="n">is_epoched</span><span class="p">)</span>
@@ -235,7 +243,7 @@ here correspond to how we connected the nodes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
 <span class="c1"># Run workflow locally on 1 CPU</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="n">NJOBS</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The outputs are the <strong>psd tensor and frequencies in .npz format</strong> and the
@@ -248,7 +256,7 @@ function <code class="xref py py-func docutils literal notranslate"><span class=
 and its Node <code class="xref py py-class docutils literal notranslate"><span class="pre">ephypype.interfaces.mne.power.Power</span></code> compute the PSD
 by the welch function of the scipy package.</p>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">visbrain.objects</span> <span class="kn">import</span> <span class="n">SourceObj</span><span class="p">,</span> <span class="n">SceneObj</span><span class="p">,</span> <span class="n">ColorbarObj</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">visbrain.utils</span> <span class="kn">import</span> <span class="n">normalize</span>  <span class="c1"># noqa</span>
 <span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span>  <span class="c1"># noqa</span>
@@ -287,7 +295,7 @@ by the welch function of the scipy package.</p>
 </pre></div>
 </div>
 <img alt="../_images/sphx_glr_plot_power_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_power_002.png" />
-<p><strong>Total running time of the script:</strong> ( 0 minutes  8.137 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  8.525 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-power-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/6ec947a41b7bdde51b1c89781ff05693/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_power.py</span></code></a></div>
@@ -309,7 +317,7 @@ by the welch function of the scipy package.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-08.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

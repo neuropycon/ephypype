@@ -34,7 +34,7 @@ ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
 refmethod = 'bipolar'
 channels_name = '{\'RAM*\', \'RHH*\', \'RTH*\', \'ROC*\', \'LAM*\',\'LHH*\', \'LTH*\'}'  # noqa
 
-
+# Now we call the interface Reference to apply a bipolar montage to sEEG data
 reference_if = Reference()
 reference_if.inputs.data_file = op.join(data_path, 'SubjectUCI29_data.mat')
 reference_if.inputs.channels = channels_name

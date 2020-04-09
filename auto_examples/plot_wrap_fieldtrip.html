@@ -44,7 +44,7 @@
             
                 <li><a href="index.html">Gallery</a></li>
                 <li><a href="../api.html">API</a></li>
-                <li><a href="../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -126,9 +126,8 @@ structure.</p>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
 <span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes.FT_tools</span> <span class="kn">import</span> <span class="n">Reference</span>
-<span class="kn">from</span> <span class="nn">ephypype.interfaces.mne.spectral</span> <span class="kn">import</span> <span class="n">TFRmorlet</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes.import_data</span> <span class="kn">import</span> <span class="n">ImportFieldTripEpochs</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">ImportFieldTripEpochs</span><span class="p">,</span> <span class="n">Reference</span>
+<span class="kn">from</span> <span class="nn">ephypype.interfaces</span> <span class="kn">import</span> <span class="n">TFRmorlet</span>
 <span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="kn">import</span> <span class="n">fetch_ieeg_dataset</span>
 </pre></div>
 </div>
@@ -227,7 +226,7 @@ graph of the workflow (optional)</p>
 here correspond to how we connected the nodes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">workflow_name</span><span class="p">,</span> <span class="s1">&#39;graph.png&#39;</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
@@ -241,7 +240,7 @@ here correspond to how we connected the nodes.</p>
 <p>To visualize the results we first grab it from workflow directort (base_dir)
 and use an MNE <a href="https://mne.tools/stable/generated/mne.time_frequency.AverageTFR.html#mne.time_frequency.AverageTFR.plot" target="_blank">visualization function </a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
-<span class="kn">from</span> <span class="nn">ephypype.gather.gather_results</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_results</span>  <span class="c1"># noqa</span>
 
 <span class="n">tfr_files</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span>
                            <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;tfr_morlet&#39;</span><span class="p">)</span>
@@ -258,7 +257,7 @@ and use an MNE <a href="https://mne.tools/stable/generated/mne.time_frequency.Av
 Applying baseline correction (mode: logratio)
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  8.918 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 1 minutes  28.782 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-wrap-fieldtrip-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/98b53b639a35d40c9d29fb9844c337fd/plot_wrap_fieldtrip.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_wrap_fieldtrip.py</span></code></a></div>
@@ -280,7 +279,7 @@ Applying baseline correction (mode: logratio)
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-08.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

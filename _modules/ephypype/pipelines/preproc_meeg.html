@@ -44,7 +44,7 @@
             
                 <li><a href="../../../auto_examples/index.html">Gallery</a></li>
                 <li><a href="../../../api.html">API</a></li>
-                <li><a href="../../../tutorial/index.html">Tutorial</a></li>
+                <li><a href="../../../tutorials/index.html">Tutorials</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -102,6 +102,7 @@
 
 <span class="c1"># Authors: Dmitrii Altukhov &lt;dm-altukhov@ya.ru&gt;</span>
 <span class="c1">#          Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<span class="c1">#          David Meunier &lt;david_meunier_79@hotmail.fr&gt;</span>
 
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="k">import</span> <span class="n">IdentityInterface</span><span class="p">,</span> <span class="n">Function</span>
@@ -140,7 +141,7 @@
                                  <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;fif&#39;</span><span class="p">,</span> <span class="n">l_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">h_freq</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span>
                                  <span class="n">down_sfreq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">is_ICA</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">variance</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span>
                                  <span class="n">ECG_ch_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">EoG_ch_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reject</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                 <span class="n">is_set_ICA_components</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">is_set_ICA_components</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mapnode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                  <span class="n">n_comp_exclude</span><span class="o">=</span><span class="p">[],</span> <span class="n">is_sensor_space</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Preprocessing pipeline.</span>
 
@@ -202,57 +203,132 @@
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]),</span>
                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
-        <span class="n">ds2fif_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">ConvertDs2Fif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ds2fif&#39;</span><span class="p">)</span>
-        <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;ds_file&#39;</span><span class="p">)</span>
-
-    <span class="c1"># preprocess</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
-        <span class="n">preproc_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">PreprocFif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
-
-        <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">l_freq</span> <span class="o">=</span> <span class="n">l_freq</span>
-        <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">h_freq</span> <span class="o">=</span> <span class="n">h_freq</span>
-        <span class="k">if</span> <span class="n">down_sfreq</span><span class="p">:</span>
-            <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">down_sfreq</span> <span class="o">=</span> <span class="n">down_sfreq</span>
+    <span class="k">if</span> <span class="n">mapnode</span><span class="p">:</span>
 
         <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+            <span class="n">ds2fif_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">ConvertDs2Fif</span><span class="p">(),</span>
+                                     <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ds_file&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ds2fif&#39;</span><span class="p">)</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;ds_file&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">is_ICA</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
-            <span class="n">inp</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;n_comp_exclude&#39;</span><span class="p">,</span> <span class="s1">&#39;is_sensor_space&#39;</span><span class="p">]</span>  <span class="c1"># noqa</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_coords_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_names_file&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
-            <span class="n">fcn</span> <span class="o">=</span> <span class="n">_preprocess_set_ica_comp_fif_to_ts</span>
-            <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span>
-                                                  <span class="n">output_names</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
-                                                  <span class="n">function</span><span class="o">=</span><span class="n">fcn</span><span class="p">),</span>
-                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica_set_comp&#39;</span><span class="p">)</span>
+        <span class="c1"># preprocess</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
+            <span class="n">preproc_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">PreprocFif</span><span class="p">(),</span>
+                                      <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
 
-            <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_comp_exclude</span> <span class="o">=</span> <span class="n">n_comp_exclude</span>
-            <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_sensor_space</span> <span class="o">=</span> <span class="n">is_sensor_space</span>
+            <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">l_freq</span> <span class="o">=</span> <span class="n">l_freq</span>
+            <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">h_freq</span> <span class="o">=</span> <span class="n">h_freq</span>
+            <span class="k">if</span> <span class="n">down_sfreq</span><span class="p">:</span>
+                <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">down_sfreq</span> <span class="o">=</span> <span class="n">down_sfreq</span>
 
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-
-            <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">CompIca</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
-            <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">variance</span>
-            <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ecg_ch_name</span> <span class="o">=</span> <span class="n">ECG_ch_name</span>
-            <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">eog_ch_name</span> <span class="o">=</span> <span class="n">EoG_ch_name</span>
-
-            <span class="k">if</span> <span class="n">reject</span><span class="p">:</span>
-                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">reject</span> <span class="o">=</span> <span class="n">reject</span>
-
-            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                 <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                                 <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">is_ICA</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
+                <span class="n">inp</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;n_comp_exclude&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;is_sensor_space&#39;</span><span class="p">]</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_coords_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_names_file&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+                <span class="n">fcn</span> <span class="o">=</span> <span class="n">_preprocess_set_ica_comp_fif_to_ts</span>
+                <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span>
+                                                         <span class="n">output_names</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
+                                                         <span class="n">function</span><span class="o">=</span><span class="n">fcn</span><span class="p">),</span>
+                                      <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">],</span>
+                                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica_set_comp&#39;</span><span class="p">)</span>
+
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_comp_exclude</span> <span class="o">=</span> <span class="n">n_comp_exclude</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_sensor_space</span> <span class="o">=</span> <span class="n">is_sensor_space</span>
+
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">MapNode</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">CompIca</span><span class="p">(),</span>
+                                      <span class="n">iterfield</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">],</span>
+                                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">variance</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ecg_ch_name</span> <span class="o">=</span> <span class="n">ECG_ch_name</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">eog_ch_name</span> <span class="o">=</span> <span class="n">EoG_ch_name</span>
+
+                <span class="k">if</span> <span class="n">reject</span><span class="p">:</span>
+                    <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">reject</span> <span class="o">=</span> <span class="n">reject</span>
+
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
+                    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                     <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
+                    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                                     <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
+            <span class="n">ds2fif_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">ConvertDs2Fif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ds2fif&#39;</span><span class="p">)</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;ds_file&#39;</span><span class="p">)</span>
+
+        <span class="c1"># preprocess</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
+            <span class="n">preproc_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">PreprocFif</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;preproc&#39;</span><span class="p">)</span>
+
+            <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">l_freq</span> <span class="o">=</span> <span class="n">l_freq</span>
+            <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">h_freq</span> <span class="o">=</span> <span class="n">h_freq</span>
+
+            <span class="k">if</span> <span class="n">down_sfreq</span><span class="p">:</span>
+                <span class="n">preproc_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">down_sfreq</span> <span class="o">=</span> <span class="n">down_sfreq</span>
+
+            <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                 <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                                 <span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_ICA</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">is_set_ICA_components</span><span class="p">:</span>
+                <span class="n">inp</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fif_file&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;n_comp_exclude&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;is_sensor_space&#39;</span><span class="p">]</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;out_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_coords_file&#39;</span><span class="p">,</span> <span class="s1">&#39;channel_names_file&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+                <span class="n">fcn</span> <span class="o">=</span> <span class="n">_preprocess_set_ica_comp_fif_to_ts</span>
+                <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="n">inp</span><span class="p">,</span>
+                                                      <span class="n">output_names</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
+                                                      <span class="n">function</span><span class="o">=</span><span class="n">fcn</span><span class="p">),</span>
+                                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica_set_comp&#39;</span><span class="p">)</span>
+
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_comp_exclude</span> <span class="o">=</span> <span class="n">n_comp_exclude</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_sensor_space</span> <span class="o">=</span> <span class="n">is_sensor_space</span>
+
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="n">ica_node</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">CompIca</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">n_components</span> <span class="o">=</span> <span class="n">variance</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ecg_ch_name</span> <span class="o">=</span> <span class="n">ECG_ch_name</span>
+                <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">eog_ch_name</span> <span class="o">=</span> <span class="n">EoG_ch_name</span>
+
+                <span class="k">if</span> <span class="n">reject</span><span class="p">:</span>
+                    <span class="n">ica_node</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">reject</span> <span class="o">=</span> <span class="n">reject</span>
+
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">preproc_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                 <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;ds&#39;</span><span class="p">:</span>
+                    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">ds2fif_node</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">,</span>
+                                     <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;fif&#39;</span><span class="p">:</span>
+                    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                                     <span class="n">ica_node</span><span class="p">,</span> <span class="s1">&#39;raw_fif_file&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pipeline</span></div>
 </pre></div>
 
@@ -267,7 +343,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-08.<br/>
+        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-09.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
     </p>
   </div>

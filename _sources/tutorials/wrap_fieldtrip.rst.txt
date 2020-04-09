@@ -269,7 +269,7 @@ Now, we create the reference interface and set all its inputs.
 
 **Download** Python source code: :download:`FT_tools.py <../../ephypype/nodes/FT_tools.py>`
 
-**Download** Python source code: :download:`plot_run_FT_IF.py <../../examples/plot_run_FT_IF.py>`
+**Download** Python source code: :download:`plot_run_FT_IF.py <../../examples/run_fieldtrip_IF.py>`
 
 
 

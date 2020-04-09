@@ -50,7 +50,6 @@ Let us fetch the data first. It is around 675 MB download.
 .. code-block:: python
 
 
-    data_type = 'fif'
     base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
     data_path = fetch_omega_dataset(base_path)
 
@@ -60,9 +59,9 @@ Let us fetch the data first. It is around 675 MB download.
 
 
 
-then read the parameters for connectivity from a
-:download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_connectivity.json>`
- file and print it
+then read the parameters for experiment and connectivity from a
+:download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params.json>`
+file and print it
 
 
 
@@ -71,13 +70,18 @@ then read the parameters for connectivity from a
 
     import json  # noqa
     import pprint  # noqa
-    data = json.load(open("params_connectivity.json"))
-    pprint.pprint({'connectivity parameters': data})
+    params = json.load(open("params.json"))
 
-    freq_band_names = data['freq_band_names']
-    freq_bands = data['freq_bands']
-    con_method = data['method']
-    epoch_window_length = data['epoch_window_length']
+    pprint.pprint({'experiment parameters': params["general"]})
+    subject_ids = params["general"]["subject_ids"]  # sub-003
+    session_ids = params["general"]["session_ids"]  # ses-0001
+    NJOBS = params["general"]["NJOBS"]
+
+    pprint.pprint({'connectivity parameters': params["connectivity"]})
+    freq_band_names = params["connectivity"]['freq_band_names']
+    freq_bands = params["connectivity"]['freq_bands']
+    con_method = params["connectivity"]['method']
+    epoch_window_length = params["connectivity"]['epoch_window_length']
 
 
 
@@ -89,6 +93,11 @@ then read the parameters for connectivity from a
 
  .. code-block:: none
 
+    {'experiment parameters': {'NJOBS': 1,
+                               'data_type': 'fif',
+                               'session_ids': ['ses-0001'],
+                               'subject_ids': ['sub-0003'],
+                               'subjects_dir': 'FSF'}}
     {'connectivity parameters': {'epoch_window_length': 3.0,
                                  'freq_band_names': ['alpha', 'beta'],
                                  'freq_bands': [[8, 12], [13, 29]],
@@ -122,8 +131,6 @@ Then we create a node to pass input filenames to DataGrabber from nipype
 .. code-block:: python
 
 
-    subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-    session_ids = ['ses-0001']
     infosource = create_iterator(['subject_id', 'session_id', 'freq_band_name'],
                                  [subject_ids, session_ids, freq_band_names])
 
@@ -175,7 +182,7 @@ In particular, the two nodes are:
 .. code-block:: python
 
 
-    from ephypype.pipelines.ts_to_conmat import create_pipeline_time_series_to_spectral_connectivity # noqa
+    from ephypype.pipelines import create_pipeline_time_series_to_spectral_connectivity # noqa
     spectral_workflow = create_pipeline_time_series_to_spectral_connectivity(
         data_path, con_method=con_method,
         epoch_window_length=epoch_window_length)
@@ -310,7 +317,7 @@ Finally, we are now ready to execute our workflow.
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
     # Run workflow locally on 1 CPU
-    main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+    main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 
 
@@ -331,8 +338,8 @@ to perform graph analysis on the computed connectivity matrix.
 
 .. code-block:: python
 
-    from ephypype.gather.gather_results import get_results  # noqa
-    from ephypype.gather.gather_results import get_channel_files  # noqa
+    from ephypype.gather import get_results  # noqa
+    from ephypype.gather import get_channel_files  # noqa
     from ephypype.aux_tools import _parse_string  # noqa
     from visbrain.objects import ConnectObj, SourceObj, SceneObj, ColorbarObj  # noqa
 
@@ -389,7 +396,7 @@ to perform graph analysis on the computed connectivity matrix.
 
 
 
-**Total running time of the script:** ( 0 minutes  22.955 seconds)
+**Total running time of the script:** ( 0 minutes  22.763 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:

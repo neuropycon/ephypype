@@ -17,9 +17,10 @@ of the Preprocessing pipeline (cleaned raw data).
 import os.path as op
 import numpy as np
 import nipype.pipeline.engine as pe
+import nipype.interfaces.io as nio
 
 import ephypype
-from ephypype.nodes import create_iterator, create_datagrabber
+from ephypype.nodes import create_iterator
 from ephypype.datasets import fetch_omega_dataset
 
 
@@ -31,24 +32,29 @@ base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 
 ###############################################################################
-# then read the parameters for inverse solution from a
-# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_inverse.json>`
+# then read the parameters for experiment and inverse problem from a
+# :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params.json>`
 # file and print it
 
 import json  # noqa
 import pprint  # noqa
-data = json.load(open("params_LCMV_inverse.json"))
-pprint.pprint({'inverse parameters': data})
+params = json.load(open("params.json"))
 
-spacing = data['spacing']  # ico-5 vs oct-6
-snr = data['snr']  # use smaller SNR for raw data
-inv_method = data['method']  # sLORETA, MNE, dSPM, LCMV
-parc = data['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'
+pprint.pprint({'experiment parameters': params["general"]})
+subject_ids = params["general"]["subject_ids"]  # sub-003
+session_ids = params["general"]["session_ids"]  # ses-0001
+NJOBS = params["general"]["NJOBS"]
+
+pprint.pprint({'inverse parameters': params["inverse"]})
+spacing = params["inverse"]['spacing']  # ico-5 vs oct-6
+snr = params["inverse"]['snr']  # use smaller SNR for raw data
+inv_method = params["inverse"]['method']  # sLORETA, MNE, dSPM, LCMV
+parc = params["inverse"]['parcellation']  # parcellation to use: 'aparc' vs 'aparc.a2009s'  # noqa
 # noise covariance matrix filename template
-noise_cov_fname = data['noise_cov_fname']
+noise_cov_fname = params["inverse"]['noise_cov_fname']
 
 # set sbj dir path, i.e. where the FS folfers are
-subjects_dir = op.join(data_path, 'FSF')
+subjects_dir = op.join(data_path, params["general"]["subjects_dir"])
 
 ###############################################################################
 # Then, we create our workflow and specify the `base_dir` which tells
@@ -64,8 +70,6 @@ main_workflow.base_dir = data_path
 ###############################################################################
 # Then we create a node to pass input filenames to DataGrabber from nipype
 
-subject_ids = ['sub-0003']  # 'sub-0004', 'sub-0006'
-session_ids = ['ses-0001']
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
@@ -73,9 +77,18 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # and a node to grab data. The template_args in this node iterate upon
 # the values in the infosource node
 
-template_path = '*%s/%s/meg/%s*rest*0_30*ica.fif'
-template_args = [['subject_id', 'session_id', 'subject_id']]
-datasource = create_datagrabber(data_path, template_path, template_args)
+datasource = pe.Node(interface=nio.DataGrabber(infields=['subject_id'],
+                                               outfields=['raw_file', 'trans_file']),  # noqa
+                     name='datasource')
+
+datasource.inputs.base_directory = data_path
+datasource.inputs.template = '*%s/%s/meg/%s*rest*%s.fif'
+
+datasource.inputs.template_args = dict(
+        raw_file=[['subject_id', 'session_id', 'subject_id', '0_30*ica']],
+        trans_file=[['subject_id', 'session_id', 'subject_id', "-trans"]])
+
+datasource.inputs.sort_filelist = True
 
 ###############################################################################
 # Ephypype creates for us a pipeline which can be connected to these
@@ -96,7 +109,7 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # * :class:`ephypype.interfaces.mne.Inverse_solution.InverseSolution` estimates
 #   the time series of the neural sources on a set of dipoles grid
 
-from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruction  # noqa
+from ephypype.pipelines import create_pipeline_source_reconstruction  # noqa
 inv_sol_workflow = create_pipeline_source_reconstruction(
     data_path, subjects_dir, spacing=spacing, inv_method=inv_method, parc=parc,
     noise_cov_fname=noise_cov_fname)
@@ -117,6 +130,8 @@ main_workflow.connect(infosource, 'subject_id',
                       inv_sol_workflow, 'inputnode.sbj_id')
 main_workflow.connect(datasource, 'raw_file',
                       inv_sol_workflow, 'inputnode.raw')
+main_workflow.connect(datasource, 'trans_file',
+                      inv_sol_workflow, 'inputnode.trans_file')
 
 ###############################################################################
 # To do so, we first write the workflow graph (optional)
@@ -139,7 +154,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
+main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
 # The output is the source reconstruction matrix stored in the workflow
@@ -151,7 +166,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': 1})
 
 ##############################################################################
 import pickle  # noqa
-from ephypype.gather.gather_results import get_results  # noqa
+from ephypype.gather import get_results  # noqa
 from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa
 
 time_series_files, label_files = get_results(main_workflow.base_dir,
