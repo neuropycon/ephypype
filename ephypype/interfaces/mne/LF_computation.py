@@ -11,7 +11,7 @@ from nipype.interfaces.base import traits, File, TraitedSpec
 
 from ...compute_fwd_problem import _create_mixed_source_space
 from ...compute_fwd_problem import _create_bem_sol, _create_src_space
-from ...compute_fwd_problem import _is_trans, _compute_fwd_sol
+from ...compute_fwd_problem import _compute_fwd_sol
 from ...compute_fwd_problem import _get_fwd_filename
 
 
@@ -22,7 +22,7 @@ class LFComputationConnInputSpec(BaseInterfaceInputSpec):
     subjects_dir = traits.String(exists=True, desc='Freesurfer main directory',
                                  mandatory=True)
     raw_fname = traits.String(desc='raw file name', mandatory=True)
-    trans_fname = traits.String(desc='raw file name', mandatory=False)
+    trans_file = traits.String(desc='trans file name', mandatory=False)
     spacing = traits.String(desc='spacing to use to setup a source space',
                             mandatory=False)
     aseg = traits.Bool(desc='if true sub structures will be considered',
@@ -75,7 +75,8 @@ class LFComputation(BaseInterface):
         sbj_id = self.inputs.sbj_id
         subjects_dir = self.inputs.subjects_dir
         raw_fname = self.inputs.raw_fname
-        trans_fname = self.inputs.trans_fname
+        # trans_fname = self.inputs.trans_fname
+        trans_file = self.inputs.trans_file
         aseg = self.inputs.aseg
         spacing = self.inputs.spacing
         aseg_labels = self.inputs.aseg_labels
@@ -101,10 +102,7 @@ class LFComputation(BaseInterface):
             print('src space contains {} spaces and {} vertices'.format(
                 len(src), n))
 
-            trans_fpath = _is_trans(raw_fname, sbj_id,
-                                    trans_fname_template=trans_fname)
-
-            _compute_fwd_sol(raw_fname, trans_fpath, src, bem,
+            _compute_fwd_sol(raw_fname, trans_file, src, bem,
                              self.fwd_filename)
         else:
             print(('\n*** FWD file {} exists!!!\n'.format(self.fwd_filename)))
