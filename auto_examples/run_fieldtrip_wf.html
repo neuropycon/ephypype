@@ -153,6 +153,14 @@ file and print it</p>
 <span class="n">channels_name</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">][</span><span class="s1">&#39;channels_name&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;time frequency parameters&#39;: {&#39;channels_name&#39;: &quot;{&#39;RAM*&#39;, &#39;RHH*&#39;, &#39;RTH*&#39;, &quot;
+                                                &quot;&#39;ROC*&#39;, &#39;LAM*&#39;, &#39;LHH*&#39;, &quot;
+                                                &quot;&#39;LTH*&#39;}&quot;,
+                               &#39;fieldtrip_path&#39;: &#39;/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/&#39;,
+                               &#39;refmethod&#39;: &#39;bipolar&#39;}}
+</pre></div>
+</div>
 <p>Then, we create our workflow and specify the <cite>base_dir</cite> which tells
 nipype the directory in which to store the outputs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">workflow_name</span> <span class="o">=</span> <span class="s1">&#39;time_frequency_analysis&#39;</span>
@@ -229,6 +237,7 @@ here correspond to how we connected the nodes.</p>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
+<img alt="../_images/sphx_glr_run_fieldtrip_wf_001.png" class="sphx-glr-single-img" src="../_images/sphx_glr_run_fieldtrip_wf_001.png" />
 <p>To visualize the results we first grab it from workflow directort (base_dir)
 and use an MNE <a href="https://mne.tools/stable/generated/mne.time_frequency.AverageTFR.html#mne.time_frequency.AverageTFR.plot" target="_blank">visualization function </a></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
@@ -243,7 +252,13 @@ and use an MNE <a href="https://mne.tools/stable/generated/mne.time_frequency.Av
                   <span class="n">title</span><span class="o">=</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ch_names</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<img alt="../_images/sphx_glr_run_fieldtrip_wf_002.png" class="sphx-glr-single-img" src="../_images/sphx_glr_run_fieldtrip_wf_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/ieeg/time_frequency_analysis/_subject_id_SubjectUCI29/tfr_morlet/reref_data-epo-tfr.h5 ...
+Applying baseline correction (mode: logratio)
+</pre></div>
+</div>
+<p><strong>Total running time of the script:</strong> ( 1 minutes  34.789 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-fieldtrip-wf-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../_downloads/7a84d2811e195367c0317196a841424b/run_fieldtrip_wf.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_fieldtrip_wf.py</span></code></a></div>
