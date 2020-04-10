@@ -11,7 +11,9 @@ The following sections are a brief introduction on how to add new functionalitie
     :maxdepth: 1
 
     lcmv
+    wrap_fieldtrip
     howto
+    
     
     
 Other informations are available on |graphpype_tutorial|

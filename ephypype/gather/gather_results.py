@@ -58,20 +58,27 @@ def get_results(workflow_path, workflow_name, pipeline=None):
     if pipeline == 'connectivity':
         result_file = '*.npy'
         label_file = None
+        node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
 
     elif pipeline == 'power':
         result_file = '*.npz'
         label_file = '*coords.txt'
+        node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
 
     elif pipeline == 'inverse':
         result_file = '*.npy'
         label_file = '*.pkl'
+        node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
 
     elif pipeline == 'ica':
         result_file = '*ica_solution.fif'
         label_file = '*ica.fif'
+        node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
 
-    node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
+    elif pipeline == 'tfr_morlet':
+        result_file = '*-tfr.h5'
+        label_file = None
+        node_path = op.join(workflow_path, workflow_name, '*', '*')
 
     results_files = _get_list(node_path, result_file)
 

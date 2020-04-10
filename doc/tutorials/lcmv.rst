@@ -145,7 +145,7 @@ Finally, we include in the module `compute_inv_problem.py <https://github.com/ne
         return ts_file, labels_file, label_names_file, label_coords_file
 
       
-**Download** Json parameters file: :download:`params_LCMV_inverse.json <../../examples/params_LCMV_inverse.json>`
+**Download** Json parameters file: :download:`params.json <../../examples/params.json>`
 
 **Download** Python source code: :download:`plot_inverse_LCMV.py <../../examples/plot_inverse_LCMV.py>`
 

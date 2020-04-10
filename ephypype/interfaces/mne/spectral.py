@@ -15,7 +15,7 @@ from nipype.utils.filemanip import split_filename as split_f
 
 from ...spectral import (_compute_and_save_spectral_connectivity,
                          _compute_and_save_multi_spectral_connectivity,
-                         _plot_circular_connectivity)
+                         _plot_circular_connectivity, _compute_tfr_morlet)
 
 
 # -------------------------- SpectralConn -------------------------- #
@@ -335,4 +335,73 @@ class PlotSpectralConn(BaseInterface):
     def _list_outputs(self):
         outputs = self._outputs().get()
         outputs["plot_conmat_file"] = self.plot_conmat_file
+        return outputs
+
+
+class TFRmorletInputSpec(BaseInterfaceInputSpec):
+    """Input specification."""
+
+    epo_file = traits.File(
+        exists=True, desc='epochs file in .fif format', mandatory=True)
+
+    freqs = traits.Array(exists=True, desc='frequencies in Hz', mandatory=True)
+
+    n_cycles = traits.Array(desc='the number of cycles globally or for each frequency')  # noqa
+
+
+class TFRmorletOutputSpec(TraitedSpec):
+    """Output specification."""
+
+    power_file = File(exists=True, desc="the average power file in npy format")
+
+
+class TFRmorlet(BaseInterface):
+    """Compute Time-Frequency Representation (TFR) using Morlet wavelets on
+    epoched data.
+
+    Inputs
+    ------
+    epo_file : str
+        Path of .fif file with epoched data
+
+    freqs : list
+        frequencies in Hz
+
+    n_cycles : int
+        the number of cycles globally or for each frequency
+
+    Outputs
+    -------
+    power_file : str
+        Name of .npy file with average power
+    """
+
+    input_spec = TFRmorletInputSpec
+    output_spec = TFRmorletOutputSpec
+
+    def __init__(self):
+        BaseInterface.__init__(self)
+        self.power_file = []
+
+    def _run_interface(self, runtime):
+        """Run interface."""
+        print('in PlotSpectralConn')
+
+        # reading matrix and base filename from conmat_file
+        _, fname, _ = split_f(self.inputs.epo_file)
+        print(fname)
+
+        if len(self.inputs.n_cycles) == 0:
+            n_cycles = self.inputs.freqs / 2.
+        else:
+            n_cycles = self.inputs.n_cycles
+        self.power_file = \
+            _compute_tfr_morlet(
+                    self.inputs.epo_file, self.inputs.freqs, n_cycles)  # noqa
+
+        return runtime
+
+    def _list_outputs(self):
+        outputs = self._outputs().get()
+        outputs["power_file"] = self.power_file
         return outputs

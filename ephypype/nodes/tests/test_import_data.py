@@ -8,7 +8,7 @@ import scipy.io as sio
 import nipype.pipeline.engine as pe
 
 from ephypype.nodes.import_data import ConvertDs2Fif, ImportHdf5, ImportMat
-from ephypype.nodes.import_data import Ep2ts, Fif2Array
+from ephypype.nodes.import_data import Ep2ts, Fif2Array, ImportFieldTripEpochs
 from ephypype.import_data import write_hdf5
 
 from numpy.testing import assert_array_almost_equal, assert_array_equal
@@ -18,6 +18,8 @@ data_path = mne.datasets.testing.data_path()
 ds_fname = op.join(data_path, 'CTF', 'testdata_ctf.ds')
 raw_fname = op.join(data_path, 'MEG', 'sample',
                     'sample_audvis_trunc_raw.fif')
+epo_fname = op.join(data_path, 'fieldtrip', 'ft_test_data', 'neuromag306',
+                    'epoched_v73.mat')
 
 
 @pytest.mark.usefixtures("change_wd")
@@ -159,3 +161,15 @@ def test_fif2array_node():
     # check sensor locations and labels
     assert_array_equal(channel_coo, channel_coo_test)
     assert_array_equal(channel_names, channel_names_test)
+
+
+def test_import_fieldtrip_epo():
+    "Test import fieldtrip epochs"
+    import_epochs = pe.Node(interface=ImportFieldTripEpochs(),
+                            name='import_epochs')  # noqa
+    import_epochs.inputs.epo_mat_file = epo_fname
+    import_epochs.inputs.data_field_name = 'data'
+
+    import_epochs.run()
+
+    assert import_epochs.result.outputs.fif_file

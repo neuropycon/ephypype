@@ -9,8 +9,12 @@ import numpy as np
 
 from scipy.io import savemat
 
+from nipype.utils.filemanip import split_filename
+
+from mne import read_epochs
 from mne.connectivity import spectral_connectivity
 from mne.viz import circular_layout, plot_connectivity_circle
+from mne.time_frequency import tfr_morlet, write_tfrs
 
 
 def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
@@ -181,3 +185,22 @@ def _plot_circular_connectivity(conmat, label_names, node_colors=None,
     fig.savefig(plot_conmat_file, facecolor='black')
     plt.close(fig)
     return plot_conmat_file
+
+
+def _compute_tfr_morlet(epo_fpath, freqs, n_cycles):
+
+    assert os.path.exists(epo_fpath)
+
+    epochs = read_epochs(epo_fpath)
+
+    power = tfr_morlet(epochs, freqs=freqs, n_cycles=n_cycles,
+                       use_fft=True, return_itc=False, decim=3, n_jobs=1)
+
+    data_path, basename, ext = split_filename(epo_fpath)
+
+    tfr_fname = os.path.abspath(basename + '-tfr.h5')
+    print((power.data.shape))
+    print(('*** save {} ***'.format(tfr_fname)))
+    write_tfrs(tfr_fname, power, overwrite=True)
+
+    return tfr_fname

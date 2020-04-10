@@ -17,6 +17,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import re
 import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
@@ -35,6 +36,8 @@ from visbrain.config import CONFIG
 curdir = os.path.dirname(__file__)
 sys.path.append(os.path.abspath(os.path.join(curdir, '..', 'ephypype')))
 sys.path.append(os.path.abspath(os.path.join(curdir, '..', 'ephypype', 'pipelines')))
+sys.path.append(os.path.abspath(os.path.join(curdir, '..', 'ephypype', 'nodes')))
+sys.path.append(os.path.abspath(os.path.join(curdir, '..', 'ephypype', 'interfaces', 'mne')))
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -121,7 +124,7 @@ html_theme_options = {
     'navbar_links': [
         ("Gallery", "auto_examples/index"),
         ("API", "api"),
-        ("Tutorial", "tutorial/index"),
+        ("Tutorials", "tutorials/index"),
         ("Github", "https://github.com/neuropycon/ephypype", True),
     ],
     'bootswatch_theme': "united"}
@@ -189,13 +192,19 @@ texinfo_documents = [
 ]
 
 intersphinx_mapping = {'python': ('https://docs.python.org/', None),
-                       'mne': ('http://martinos.org/mne/stable/', None)
+                       'mne': ('http://martinos.org/mne/stable/', None),
                        }
 
+##############################################################################
+# sphinx-gallery
+
+examples_dirs = ['../examples']  # , '../tutorials'
+gallery_dirs = ['auto_examples']  # , 'auto_tutorials'
+
 sphinx_gallery_conf = {
-    'examples_dirs': '../examples',
-    'gallery_dirs': 'auto_examples',
-    'filename_pattern': '^((?!sgskip).)*$',
+    'examples_dirs': examples_dirs,
+    'gallery_dirs': gallery_dirs,
+    'filename_pattern': re.escape(os.sep) + 'plot',
     'backreferences_dir': 'generated',
     'within_subsection_order': FileNameSortKey,
     'reference_url': {
@@ -203,9 +212,13 @@ sphinx_gallery_conf = {
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
         'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
         'nipype': 'https://nipype.readthedocs.io/en/latest/api',
-        'ephypype': 'http://neuropycon.github.io/ephypype/',
+        'ephypype': None,
     }
 }
+    
+# gallery_conf["filename_pattern"] = '^((?!sgskip).)*$'
+# gallery_conf["ignore_pattern"]   = '__init__\\.py'
+
 
 import sys
 import os.path as op

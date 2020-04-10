@@ -2,6 +2,7 @@
 
 # Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
 #          Annalisa Pascarella <a.pascarella@iac.cnr.it>
+#          David Meunier <david_meunier_79@hotmail.fr>
 
 import nipype.pipeline.engine as pe
 from nipype.interfaces.utility import IdentityInterface, Function

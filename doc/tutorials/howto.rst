@@ -255,7 +255,7 @@ This is achieved by recording a hash of the inputs.
     Workflow graph
 
       
-**Download** Json parameters file: :download:`params_power.json <../../examples/params_power.json>`
+**Download** Json parameters file: :download:`params.json <../../examples/params.json>`
 
 **Download** Python source code: :download:`plot_power.py <../../examples/plot_power.py>`
 

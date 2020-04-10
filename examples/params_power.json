@@ -1,8 +1,0 @@
-{
-    "freq_band_names": ["theta", "alpha", "beta"],
-    "freq_bands": [[3, 6], [8, 13], [13, 30]],
-    "method": "welch",
-    "is_epoched": false,
-    "fmin": 0.1,
-    "fmax": 150
-}

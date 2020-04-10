@@ -1,4 +1,4 @@
-"""Lead Field computation functions."""
+"""Functions to fetch online data."""
 
 # Authors: Mainak Jas <mainakjas@gmail.com>
 #
@@ -23,4 +23,18 @@ def fetch_omega_dataset(base_path):
         print('Extracting files. This may take a while ...')
         zf.extractall(path=data_path)
         os.remove(target)
+    return os.path.abspath(data_path)
+
+
+def fetch_ieeg_dataset(base_path):
+    src_url = ('https://www.dropbox.com/s/njqtyk8j8bzdz8s/'
+               'SubjectUCI29_data.mat?dl=1')
+
+    data_path = os.path.join(base_path, 'ieeg')
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+    target = os.path.join(data_path, 'SubjectUCI29_data.mat')
+    if not os.path.exists(target):
+        _fetch_file(src_url, target)
+        print('Downloading files ...')
     return os.path.abspath(data_path)
