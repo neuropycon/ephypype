@@ -324,7 +324,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
 
     ts_file, label_ts, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
-                     aseg, is_fixed, all_src_space=False, ROIs_mean=True)
+                     aseg, is_fixed, all_src_space=all_src_space,
+                     ROIs_mean=ROIs_mean)
 
     return ts_file, labels_file, label_names_file, \
         label_coords_file, stc_files
