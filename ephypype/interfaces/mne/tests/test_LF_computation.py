@@ -15,7 +15,8 @@ raw_fname = op.join(data_path, 'MEG', 'sample',
 # trans_fname = '-trans.fif'
 # trans_fname_template = '*_audvis_trunc-trans.fif'
 # test_trans_fname = '-.fif'
-trans_file = op.join(raw_fname, 'sample_audvis_trunc-trans.fif')
+trans_file = op.join(
+        data_path, 'MEG', 'sample', 'sample_audvis_trunc-trans.fif')
 
 
 def test_LFComputation():
@@ -57,6 +58,7 @@ def test_mixed_LFComputation():
     lf_node.inputs.spacing = 'oct-5'
     lf_node.inputs.aseg = True
     lf_node.inputs.aseg_labels = ['Left-Amygdala']
+    lf_node.inputs.trans_file = trans_file
 
     lf_node.run()
 
