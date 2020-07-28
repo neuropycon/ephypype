@@ -16,6 +16,7 @@ from nipype.utils.filemanip import split_filename as split_f
 from ...spectral import (_compute_and_save_spectral_connectivity,
                          _compute_and_save_multi_spectral_connectivity,
                          _plot_circular_connectivity, _compute_tfr_morlet)
+from ...import_data import _read_hdf5
 
 
 # -------------------------- SpectralConn -------------------------- #
@@ -119,13 +120,21 @@ class SpectralConn(BaseInterface):
         multi_con = self.inputs.multi_con
 
         print(mode)
+        _, _, ext = split_f(self.inputs.ts_file)
 
         if epoch_window_length == traits.Undefined:
             print('*** NO epoch_window_length ***')
 
-            data = np.load(self.inputs.ts_file, allow_pickle=True)
+            if ext == '.hdf5':
+                data = _read_hdf5(self.inputs.ts_file, dataset_name='stc_data')
+            else:
+                data = np.load(self.inputs.ts_file, allow_pickle=True)
         else:
-            raw_data = np.load(self.inputs.ts_file, allow_pickle=True)
+            if ext == '.hdf5':
+                raw_data = \
+                    _read_hdf5(self.inputs.ts_file, dataset_name='stc_data')
+            else:
+                raw_data = np.load(self.inputs.ts_file, allow_pickle=True)
 
             print(raw_data.shape)
             print(int(epoch_window_length * sfreq))
