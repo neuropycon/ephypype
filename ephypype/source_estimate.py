@@ -54,7 +54,7 @@ def _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
         label_names_file = ''
         label_coords_file = ''
 
-    return ts_file, label_ts, labels_file, label_names_file, label_coords_file
+    return ts_file, labels_file, label_names_file, label_coords_file
 
 
 def _compute_mean_ROIs(stc, sbj_id, subjects_dir, parc,
