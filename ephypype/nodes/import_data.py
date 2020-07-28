@@ -98,7 +98,7 @@ class ImportHdf5InputSpec(BaseInterfaceInputSpec):
 class ImportHdf5OutputSpec(TraitedSpec):
     """Output spec for ImportHdf5"""
 
-    ts_file = traits.File(exists=True, desc="time series in .npy format")
+    ts_data = traits.File(exists=True, desc="time series in .npy format")
 
 
 class ImportHdf5(BaseInterface):
@@ -124,7 +124,7 @@ class ImportHdf5(BaseInterface):
 
     Outputs
     -------
-    ts_file : str
+    ts_data : str
         Name of the .npy file where the time series matrix is saved
     """
 
@@ -136,7 +136,7 @@ class ImportHdf5(BaseInterface):
         ts_hdf5_file = self.inputs.ts_hdf5_file
         data_field_name = self.inputs.data_field_name
 
-        self.ts_file = _read_hdf5(ts_hdf5_file, dataset_name=data_field_name,
+        self.ts_data = _read_hdf5(ts_hdf5_file, dataset_name=data_field_name,
                                   transpose=self.inputs.transpose)
 
         return runtime
