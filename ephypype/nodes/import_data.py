@@ -98,7 +98,7 @@ class ImportHdf5InputSpec(BaseInterfaceInputSpec):
 class ImportHdf5OutputSpec(TraitedSpec):
     """Output spec for ImportHdf5"""
 
-    ts_data = traits.File(exists=True, desc="time series in .npy format")
+    ts_data = traits.Array(exists=True, desc="time series in array format")
 
 
 class ImportHdf5(BaseInterface):
@@ -144,7 +144,7 @@ class ImportHdf5(BaseInterface):
     def _list_outputs(self):
 
         outputs = self._outputs().get()
-        outputs['ts_file'] = self.ts_file
+        outputs['ts_data'] = self.ts_data
 
         return outputs
 

@@ -54,9 +54,10 @@ def test_import_hdf5_node():
     hdf5_node.run()
 
     # check if the node output contains the same data previously created
-    npy_filename = hdf5_node.result.outputs.ts_file
-    data_test = np.load(npy_filename)
+    # npy_filename = hdf5_node.result.outputs.ts_file
+    data_test = hdf5_node.result.outputs.ts_data
 
+    assert isinstance(data_test, np.ndarray)
     assert data.shape == data_test.shape
     assert_array_almost_equal(data, data_test)
 
