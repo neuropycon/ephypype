@@ -15,7 +15,6 @@ from ...compute_inv_problem import _compute_inverse_solution, compute_noise_cov
 from ...compute_inv_problem import _compute_LCMV_inverse_solution
 from mne import compute_covariance
 from mne import write_cov, read_epochs
-from sklearn.model_selection import KFold
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
