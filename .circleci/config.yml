@@ -32,7 +32,7 @@ jobs:
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
-                  pip install scikit-learn==0.20.0
+                  pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
