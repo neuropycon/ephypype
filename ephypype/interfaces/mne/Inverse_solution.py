@@ -275,9 +275,9 @@ class NoiseCovariance(BaseInterface):
                     print(('\n*** COMPUTE COV FROM EPOCHS ***\n' +
                            self.cov_fname_out))
                     # make sure cv is deterministic
-                    cv = KFold(3, random_state=42)
+                    # cv = KFold(3, random_state=42)
                     noise_cov = compute_covariance(epochs, tmax=0,
-                                                   method='shrunk', cv=cv)
+                                                   method='shrunk', cv=3)
                     write_cov(self.cov_fname_out, noise_cov)
                 else:
                     print(('\n *** NOISE cov file %s exists!!! \n'
