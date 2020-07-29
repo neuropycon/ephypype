@@ -396,7 +396,7 @@ def _compute_LCMV_inverse_solution(raw_filename, sbj_id, subjects_dir,
     # apply spatial filter
     stc = apply_lcmv_raw(raw, filters, max_ori_out='signed')
 
-    ts_file, label_ts, labels_file, label_names_file, label_coords_file = \
+    ts_file, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
                      False, is_fixed, all_src_space=False, ROIs_mean=True)
 
