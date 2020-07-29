@@ -299,7 +299,7 @@ def _generate_report(raw, ica, subj_name, basename,
     # Plot estimated latent sources given the unmixing matrix.
     fig_ecg_ts = ica.plot_sources(raw, show_picks,
                                   title=ica_title % 'ecg' + ' in 30s',
-                                  start=0, stop=30, show=is_show)
+                                  show=is_show)
 
     # topoplot of unmixing matrix columns
     fig_ecg_comp = ica.plot_components(show_picks,
