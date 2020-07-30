@@ -297,7 +297,7 @@ def _generate_report(raw, ica, subj_name, basename,
     show_picks = np.abs(ecg_scores).argsort()[::-1][:5]
 
     # Plot estimated latent sources given the unmixing matrix.
-    fig_ecg_ts = ica.plot_sources(raw,
+    fig_ecg_ts = ica.plot_sources(raw, show_picks,
                                   title=ica_title % 'ecg' + ' in 30s',
                                   start=0, stop=30, show=is_show)
 
