@@ -28,10 +28,11 @@ jobs:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
-                  pip install matplotlib Pillow
+                  pip install matplotlib==3.0.0
+                  pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install mne==0.20.5
+                  pip install --upgrade mne
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
