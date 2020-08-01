@@ -322,9 +322,10 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                                 buffer_size=1000,
                                 pick_ori=pick_ori)  # None 'normal'
 
-    ts_file, label_ts, labels_file, label_names_file, label_coords_file = \
+    ts_file, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
-                     aseg, is_fixed, all_src_space=False, ROIs_mean=True)
+                     aseg, is_fixed, all_src_space=all_src_space,
+                     ROIs_mean=ROIs_mean)
 
     return ts_file, labels_file, label_names_file, \
         label_coords_file, stc_files
@@ -395,7 +396,7 @@ def _compute_LCMV_inverse_solution(raw_filename, sbj_id, subjects_dir,
     # apply spatial filter
     stc = apply_lcmv_raw(raw, filters, max_ori_out='signed')
 
-    ts_file, label_ts, labels_file, label_names_file, label_coords_file = \
+    ts_file, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
                      False, is_fixed, all_src_space=False, ROIs_mean=True)
 

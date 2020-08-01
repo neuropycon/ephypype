@@ -88,11 +88,11 @@ def _read_hdf5(filename, dataset_name='dataset', transpose=False):
     if transpose:
         data = np.transpose(data)
 
-    old_path, basename, ext = split_f(filename)
-    npy_filename = os.path.abspath(basename + '.npy')
-    print(npy_filename)
-    np.save(npy_filename, data, allow_pickle=True)
-    return npy_filename
+    # old_path, basename, ext = split_f(filename)
+    # npy_filename = os.path.abspath(basename + '.npy')
+    # print(npy_filename)
+    # np.save(npy_filename, data, allow_pickle=True)
+    return data
 
 
 def import_mat_to_conmat(mat_file, data_field_name='F',

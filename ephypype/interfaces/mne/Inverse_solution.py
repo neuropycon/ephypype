@@ -15,7 +15,6 @@ from ...compute_inv_problem import _compute_inverse_solution, compute_noise_cov
 from ...compute_inv_problem import _compute_LCMV_inverse_solution
 from mne import compute_covariance
 from mne import write_cov, read_epochs
-from sklearn.model_selection import KFold
 
 
 class InverseSolutionConnInputSpec(BaseInterfaceInputSpec):
@@ -275,9 +274,9 @@ class NoiseCovariance(BaseInterface):
                     print(('\n*** COMPUTE COV FROM EPOCHS ***\n' +
                            self.cov_fname_out))
                     # make sure cv is deterministic
-                    cv = KFold(3, random_state=42)
+                    # cv = KFold(3, random_state=42)
                     noise_cov = compute_covariance(epochs, tmax=0,
-                                                   method='shrunk', cv=cv)
+                                                   method='shrunk', cv=3)
                     write_cov(self.cov_fname_out, noise_cov)
                 else:
                     print(('\n *** NOISE cov file %s exists!!! \n'

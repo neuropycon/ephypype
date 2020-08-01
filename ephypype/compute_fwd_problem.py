@@ -126,7 +126,7 @@ def _create_mixed_source_space(subjects_dir, sbj_id, spacing, labels, src,
         nii_fname = op.join(bem_dir, '%s-%s-aseg-src.nii' % (sbj_id, spacing))
 
         # Combine the source spaces
-        src.export_volume(nii_fname, mri_resolution=True)
+        src.export_volume(nii_fname, mri_resolution=True, overwrite=True)
     else:
         print("\n*** source space file {} "
               "exists!!!\n".format(src_aseg_fname))
