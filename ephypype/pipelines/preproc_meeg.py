@@ -12,6 +12,7 @@ from ..interfaces.mne.preproc import PreprocFif
 from ..interfaces.mne.preproc import CompIca
 from ..nodes.import_data import ConvertDs2Fif
 from ..preproc import _preprocess_set_ica_comp_fif_to_ts
+from ..interfaces.mne.preproc import DefineEpochs, DefineEvoked
 
 
 def get_ext_file(raw_file):
@@ -42,7 +43,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                                  down_sfreq=None, is_ICA=True, variance=0.95,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,
                                  is_set_ICA_components=False, mapnode=False,
-                                 n_comp_exclude=[], is_sensor_space=True):
+                                 n_comp_exclude=[], is_sensor_space=True,
+                                 montage=None, misc=None):
     """Preprocessing pipeline.
 
     Parameters
@@ -119,6 +121,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             preproc_node.inputs.h_freq = h_freq
             if down_sfreq:
                 preproc_node.inputs.down_sfreq = down_sfreq
+            if data_type:
+                preproc_node.inputs.data_type = data_type
 
             if data_type == 'ds':
                 pipeline.connect(ds2fif_node, 'fif_file',
@@ -188,6 +192,13 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             if data_type == 'ds':
                 pipeline.connect(ds2fif_node, 'fif_file',
                                  preproc_node, 'fif_file')
+            elif data_type == 'eeg':
+                preproc_node.inputs.data_type = data_type
+                preproc_node.inputs.montage = montage
+                preproc_node.inputs.misc = misc
+                preproc_node.inputs.eog = EoG_ch_name
+                pipeline.connect(inputnode, 'raw_file',
+                                 preproc_node, 'fif_file')
             elif data_type == 'fif':
                 pipeline.connect(inputnode, 'raw_file',
                                  preproc_node, 'fif_file')
@@ -217,6 +228,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 ica_node.inputs.n_components = variance
                 ica_node.inputs.ecg_ch_name = ECG_ch_name
                 ica_node.inputs.eog_ch_name = EoG_ch_name
+                ica_node.inputs.data_type = data_type
 
                 if reject:
                     ica_node.inputs.reject = reject
@@ -229,4 +241,71 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 elif data_type == 'fif':
                     pipeline.connect(inputnode, 'raw_file',
                                      ica_node, 'raw_fif_file')
+                elif data_type == 'eeg':
+                    pipeline.connect(preproc_node, 'fif_file',
+                                     ica_node, 'raw_fif_file')
+
+    return pipeline
+
+
+def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
+                           events_id={}, condition=None, events_file='',
+                           decim=1, t_min=None, t_max=None,
+                           data_type='meg'):
+    """ERP reconstruction pipeline.
+
+    Parameters
+    ----------
+    main_path : str
+        the main path of the workflow
+    pipeline_name : str (default ERP_pipeline)
+        name of the pipeline
+    is_epoched : bool (default False)
+        if True and events_id = None the input data are epoch data
+        in the format -epo.fif
+        if True and events_id is not None, the raw data are epoched
+        according to events_id and t_min and t_max values
+    events_id: dict (default None)
+        the dict of events
+    t_min, t_max: int (defualt None)
+        define the time interval in which to epoch the raw data
+    is_evoked: bool (default False)
+        if True the raw data will be averaged according to the events
+        contained in the dict events_id
+
+    raw (inputnode): str
+        path to raw data in fif format
+    sbj_id (inputnode): str
+        subject id
+
+    Returns
+    -------
+    pipeline : instance of Workflow
+    """
+
+    pipeline = pe.Workflow(name=pipeline_name)
+    pipeline.base_dir = main_path
+
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw']),
+                        name='inputnode')
+
+    # Create epochs based on events_id
+    assert events_id != {}
+    define_epochs = pe.Node(interface=DefineEpochs(), name='define_epochs')
+    define_epochs.inputs.events_id = events_id
+    define_epochs.inputs.t_min = t_min
+    define_epochs.inputs.t_max = t_max
+    define_epochs.inputs.decim = decim
+    define_epochs.inputs.events_file = events_file
+    define_epochs.inputs.data_type = data_type
+
+    pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
+
+    compute_evoked = pe.Node(interface=DefineEvoked(), name='compute_evoked')
+    compute_evoked.inputs.events_id = events_id
+    compute_evoked.inputs.condition = condition
+
+    pipeline.connect(define_epochs, 'epo_fif_file',
+                     compute_evoked, 'fif_file')
+
     return pipeline
