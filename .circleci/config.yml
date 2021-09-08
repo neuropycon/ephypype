@@ -44,7 +44,9 @@ jobs:
             - run:
                 name: Build the documentation
                 command: |
-                    make -C doc html 
+                    cd doc
+                    make clean
+                    make html
                 no_output_timeout: 35m
             - store_artifacts:
                 path: doc/_build/html/
