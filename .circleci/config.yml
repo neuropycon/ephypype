@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7-stretch
+            - image: cimg/python:3.9
         steps:
             - checkout
             - run:
@@ -44,9 +44,7 @@ jobs:
             - run:
                 name: Build the documentation
                 command: |
-                    cd doc
-                    make clean
-                    make html
+                    make -C doc html 
                 no_output_timeout: 35m
             - store_artifacts:
                 path: doc/_build/html/
