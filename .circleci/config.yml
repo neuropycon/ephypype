@@ -21,8 +21,8 @@ jobs:
             - run:
                 name: Setup Python environment
                 command: |
-                  pip install Pillow
-                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
+                  pip install --user Pillow
+                  pip install --user sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
                   pip install scikit-learn
@@ -32,7 +32,7 @@ jobs:
                   pip install h5py
                   pip install pyqt5
                   pip install visbrain
-                  python setup.py develop
+                  python setup.py develop --user
             - run:
                 name: Build the documentation
                 command: |
