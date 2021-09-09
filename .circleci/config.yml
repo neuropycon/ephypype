@@ -41,7 +41,7 @@ jobs:
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 35m
+                no_output_timeout: 1h
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
