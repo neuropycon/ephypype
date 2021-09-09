@@ -36,7 +36,7 @@ jobs:
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
-                  pip install nipype
+                  pip install nipype==1.6.1
                   pip install h5py
                   pip install pyqt5
                   conda install graphviz pydot
