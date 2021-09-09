@@ -21,7 +21,6 @@ jobs:
             - run:
                 name: Setup Python environment
                 command: |
-                  conda update --yes --quiet conda;
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
