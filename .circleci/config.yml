@@ -19,13 +19,6 @@ jobs:
             - run: sudo apt-get install python3-pyqt5
             - run: sudo apt-get install libxcb-xinerama0
             - run:
-                name: Install miniconda
-                command: |
-                  wget -q https://repo.continuum.io/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh;
-                  chmod +x ~/miniconda.sh;
-                  ~/miniconda.sh -b -p ~/miniconda;
-                  echo "export PATH=~/miniconda/bin:$PATH" >> $BASH_ENV;
-            - run:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
