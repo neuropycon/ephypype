@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7
+            - image: circleci/python:3.7-stretch
         steps:
             - checkout
             - run:
@@ -16,12 +16,19 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install python3-pyqt5
-            - run: sudo apt-get install libxcb-xinerama0
-            - run: sudo apt install graphviz
+            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
+            - run:
+                name: Install miniconda
+                command: |
+                  wget -q https://repo.continuum.io/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh;
+                  chmod +x ~/miniconda.sh;
+                  ~/miniconda.sh -b -p ~/miniconda;
+                  echo "export PATH=~/miniconda/bin:$PATH" >> $BASH_ENV;
             - run:
                 name: Setup Python environment
                 command: |
+                  conda update --yes --quiet conda;
+                  pip install matplotlib==3.0.0
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
@@ -29,20 +36,18 @@ jobs:
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
-                  pip install nipype==1.6.1
+                  pip install nipype
                   pip install h5py
-                  pip install pyqt5
-                  pip install joblib
-                  pip install pydot graphviz
+                  conda install graphviz pydot
                   pip install visbrain
-                  python setup.py develop --user
+                  python setup.py develop
             - run:
                 name: Build the documentation
                 command: |
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 1h
+                no_output_timeout: 35m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
