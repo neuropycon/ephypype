@@ -53,4 +53,4 @@ jobs:
                 destination: html
             - add_ssh_keys:
                 fingerprints:
-                    - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
+                    - "7f:6f:31:22:7d:5f:6f:80:70:43:f4:6c:14:ef:15:ed"
