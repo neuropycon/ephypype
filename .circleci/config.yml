@@ -40,7 +40,7 @@ jobs:
                   pip install pyqt5
                   conda install graphviz pydot
                   pip install visbrain
-                  python setup.py develop
+                  python setup.py develop --user
             - run:
                 name: Build the documentation
                 command: |
