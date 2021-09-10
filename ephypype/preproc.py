@@ -318,7 +318,7 @@ def _generate_report(raw, ica, subj_name, basename,
     is_show = False
 
     # ------------------- Generate report for ECG ------------------------ #
-    if ecg_scores:
+    if len(ecg_scores) > 0:
         fig_ecg_scores = ica.plot_scores(ecg_scores,
                                          exclude=ecg_inds,
                                          title=ica_title % 'ecg',

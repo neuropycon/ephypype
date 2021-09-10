@@ -168,7 +168,7 @@ class PreprocFif(BaseInterface):
             montage = self.inputs.montage
             misc = self.inputs.misc
             EoG_ch_name = self.inputs.eog
-        elif data_type == 'meg':
+        else:
             montage = None
             misc = None
             EoG_ch_name = None

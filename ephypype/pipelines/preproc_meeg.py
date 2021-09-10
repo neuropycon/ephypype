@@ -100,7 +100,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     pipeline.base_dir = main_path
 
     print(('*** main_path -> %s' % main_path + ' ***'))
-
+    
     # define the inputs of the pipeline
     inputnode = pe.Node(IdentityInterface(fields=['raw_file', 'subject_id']),
                         name='inputnode')
@@ -185,6 +185,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
             preproc_node.inputs.l_freq = l_freq
             preproc_node.inputs.h_freq = h_freq
+            preproc_node.inputs.data_type = data_type
 
             if down_sfreq:
                 preproc_node.inputs.down_sfreq = down_sfreq
@@ -193,7 +194,6 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 pipeline.connect(ds2fif_node, 'fif_file',
                                  preproc_node, 'fif_file')
             elif data_type == 'eeg':
-                preproc_node.inputs.data_type = data_type
                 preproc_node.inputs.montage = montage
                 preproc_node.inputs.misc = misc
                 preproc_node.inputs.eog = EoG_ch_name
