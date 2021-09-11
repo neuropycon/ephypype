@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "NJOBS": 2,
+        "NJOBS": 1,
         "subject_ids": ["sub-0003"],
         "session_ids": ["ses-0001"],
         "data_type": "fif",
