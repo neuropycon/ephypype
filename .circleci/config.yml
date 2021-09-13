@@ -31,7 +31,7 @@ jobs:
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install mne==0.23.0
+                  pip install mne==0.22.0
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc

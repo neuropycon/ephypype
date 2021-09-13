@@ -319,7 +319,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
                                 start=None, stop=None,
-                                buffer_size=1000,
+                                buffer_size=None,
                                 pick_ori=pick_ori)  # None 'normal'
 
     ts_file, labels_file, label_names_file, label_coords_file = \
