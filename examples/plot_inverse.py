@@ -153,7 +153,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
+main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS, 'maxtasksperchild': 1, 'memory_gb': 250})
 
 ###############################################################################
 # The output is the source reconstruction matrix stored in the workflow
