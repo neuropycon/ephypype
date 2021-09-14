@@ -16,8 +16,7 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update 
-            - run: sudo apt-add-repository universe
-            - run: sudo apt-get install qt5-default;
+            - run: sudo apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
             - run:
                 name: Install miniconda
                 command: |
