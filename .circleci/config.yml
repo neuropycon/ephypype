@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7
+            - image: circleci/python:3.7-stretch
         steps:
             - checkout
             - run:
@@ -30,7 +30,6 @@ jobs:
                   pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  pip install pyqt5
                   pip install visbrain
                   python setup.py develop --user
                   QT_DEBUG_PLUGINS=1
