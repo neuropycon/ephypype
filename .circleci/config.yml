@@ -41,6 +41,7 @@ jobs:
                   conda install graphviz pydot
                   pip install visbrain
                   python setup.py develop --user
+                  QT_DEBUG_PLUGINS=1
             - run:
                 name: Build the documentation
                 command: |
