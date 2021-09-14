@@ -40,9 +40,6 @@ jobs:
                   pip install visbrain
                   python setup.py develop --user
             - run:
-                name: Check PyQt5
-                command: LD_DEBUG=libs python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
-            - run:
                 name: Build the documentation
                 command: |
                     cd doc
