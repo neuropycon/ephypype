@@ -25,7 +25,6 @@ jobs:
             - run:
                 name: Setup Python environment
                 command: |
-                  QT_DEBUG_PLUGINS=1 mne sys_info
                   conda update --yes --quiet conda;
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
