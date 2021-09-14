@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7-stretch
+            - image: circleci/python:3.7.11
         steps:
             - checkout
             - run:
@@ -15,6 +15,8 @@ jobs:
                 command: |
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
+            - run: sudo apt-get update        
+            - run: sudo apt-get install python3-pyqt5
             - run:
                 name: Install miniconda
                 command: |
@@ -29,25 +31,26 @@ jobs:
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install mne==0.19
+                  pip install mne==0.19.0
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
                   pip install h5py
+                  pip install pyqt5
                   conda install graphviz pydot
                   pip install visbrain
-                  python setup.py develop
+                  python setup.py develop --user
             - run:
                 name: Build the documentation
                 command: |
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 35m
+                no_output_timeout: 15m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
             - add_ssh_keys:
                 fingerprints:
-                    - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
+                    - "7f:6f:31:22:7d:5f:6f:80:70:43:f4:6c:14:ef:15:ed"
