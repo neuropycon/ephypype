@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.9
+            - image: circleci/python:3.7
         steps:
             - checkout
             - run:
@@ -24,7 +24,7 @@ jobs:
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install mne==0.23.0
+                  pip install mne==0.19.0
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
