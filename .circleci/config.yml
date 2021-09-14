@@ -16,6 +16,9 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run:
+                name: Check PyQt5
+                command: LD_DEBUG=libs python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
+            - run:
                 name: Install miniconda
                 command: |
                   wget -q https://repo.continuum.io/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh;
@@ -25,7 +28,7 @@ jobs:
             - run:
                 name: Setup Python environment
                 command: |
-                  QT_DEBUG_PLUGINS=1
+                  QT_DEBUG_PLUGINS=1 mne sys_info
                   conda update --yes --quiet conda;
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
