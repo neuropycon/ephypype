@@ -25,7 +25,7 @@ from datetime import date
 import sphinx_gallery  # noqa
 from sphinx_gallery.sorting import FileNameSortKey
 import sphinx_bootstrap_theme
-from visbrain.config import CONFIG
+#from visbrain.config import CONFIG
 
 # -- General configuration ------------------------------------------------
 
@@ -226,4 +226,4 @@ import os.path as op
 path = op.join(op.dirname(__file__), '../examples/')
 sys.path.insert(0, path)
 
-CONFIG['MPL_RENDER'] = True
+#CONFIG['MPL_RENDER'] = True
