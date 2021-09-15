@@ -30,8 +30,7 @@ jobs:
                   conda update --yes --quiet conda;
                   pip install matplotlib==3.0.0
                   pip install Pillow
-                  pip install sphinx==3.1.2
-                  pip install sphinx-gallery sphinx_bootstrap_theme
+                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
                   pip install scikit-learn
@@ -42,6 +41,9 @@ jobs:
                   conda install graphviz pydot
                   pip install visbrain
                   python setup.py develop
+            - run:
+                name: Check PyQt5
+                command: python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
             - run:
                 name: Build the documentation
                 command: |
