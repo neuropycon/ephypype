@@ -27,7 +27,7 @@ jobs:
                   pip install sphinx-gallery==0.7
                   pip install sphinx_bootstrap_theme==0.7.1
                   pip install cython scipy
-                  pip install mne==0.207
+                  pip install mne==0.20.7
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
