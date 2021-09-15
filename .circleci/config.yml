@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7-stretch
+            - image: circleci/python:python:3.6-jessie
         steps:
             - checkout
             - run:
@@ -32,10 +32,12 @@ jobs:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
+                  conda install -c conda-forge scikit-image;
                   pip install Pillow
-                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
+                  pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
                   pip install cython scipy
                   pip install --upgrade mne
+                  pip install git+https://github.com/vispy/vispy.git;
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
