@@ -184,7 +184,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             preproc_node = pe.Node(interface=PreprocFif(), name='preproc')
 
             preproc_node.inputs.l_freq = l_freq
-            preproc_node.inputs.h_freq = h_freq
+            if h_freq:
+                preproc_node.inputs.h_freq = h_freq
             preproc_node.inputs.data_type = data_type
 
             if down_sfreq:
@@ -195,7 +196,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                                  preproc_node, 'fif_file')
             elif data_type == 'eeg':
                 preproc_node.inputs.montage = montage
-                preproc_node.inputs.misc = misc
+                if misc:
+                    preproc_node.inputs.misc = misc
                 preproc_node.inputs.eog = EoG_ch_name
                 pipeline.connect(inputnode, 'raw_file',
                                  preproc_node, 'fif_file')

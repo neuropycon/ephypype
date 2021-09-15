@@ -117,7 +117,7 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
                            desc='raw meg data in fif format',
                            mandatory=True)
     l_freq = traits.Float(desc='lower bound for filtering')
-    h_freq = traits.Float(desc='upper bound for filtering')
+    h_freq = traits.Float(None, desc='upper bound for filtering', mandatory=False)
     data_type = traits.String(desc='data type')
     montage = traits.String(desc='EEG layout')
     misc = traits.String(desc='EEG misc channels')

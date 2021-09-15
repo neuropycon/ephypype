@@ -12,7 +12,7 @@ import os.path as op
 
 from mne import pick_types, read_epochs, Epochs, read_events, find_events
 from mne import write_evokeds
-from mne.io import read_raw_fif, read_raw_brainvision
+from mne.io import read_raw_fif, read_raw_brainvision, read_raw_eeglab
 from mne.preprocessing import ICA
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
@@ -28,16 +28,25 @@ def _preprocess_fif(
     """Filter and downsample data."""
     _, basename, ext = split_filename(fif_file)
 
+    print('*************************************** {}'.format(ext))
     if data_type == 'fif':
         raw = read_raw_fif(fif_file, preload=True)
     elif data_type == 'eeg':
-        raw = read_raw_brainvision(fif_file, preload=True)
+        if ext == '.vhdr':
+            raw = read_raw_brainvision(fif_file, preload=True)
+        elif ext == '.set':
+            raw = read_raw_eeglab(fif_file, preload=True)
         ext = '.fif'
 #        channels = misc.replace(' ', '').split(',')
 #        for ch in channels:
 #            raw.set_channel_types({ch: 'misc'})
         channels = eog_ch.replace(' ', '').split(',')
-        montage = read_custom_montage(montage)
+        
+        try:
+            montage = read_custom_montage(montage)
+        except:
+            montage = 'standard_1005'    
+        
         raw.set_montage(montage, on_missing='ignore')
         for ch in channels:
             raw.set_channel_types({ch: 'eog'})
