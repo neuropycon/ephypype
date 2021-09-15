@@ -39,6 +39,7 @@ jobs:
                   pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
                   pip install numpydoc;
                   pip install nipype
+                  pip install h5py
                   conda install graphviz pydot
                   pip install visbrain
                   python setup.py develop
