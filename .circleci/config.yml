@@ -28,7 +28,7 @@ jobs:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
-                  conda install pyqt
+                  conda install -c conda-forge pyside2
                   pip install matplotlib==3.0.0
                   pip install Pillow
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
