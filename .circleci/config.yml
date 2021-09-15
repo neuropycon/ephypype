@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.6-jessie
+            - image: circleci/python:3.7
         steps:
             - checkout
             - run:
@@ -16,28 +16,24 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
+            - run: sudo apt-get install libxcb-xinerama0 libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
             - run:
                 name: Install miniconda
                 command: |
-                  if [ ! -d "~/miniconda3" ]; then
-                    wget -q http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;
-                        chmod +x ~/miniconda.sh;
-                        ~/miniconda.sh -b -p ~/miniconda3;
-                        echo "export PATH=~/miniconda3/bin:$PATH" >> $BASH_ENV;
-                  else
-                    echo "Miniconda3 already set up.";
-                  fi
+                  wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh;
+                  chmod +x ~/miniconda.sh;
+                  ~/miniconda.sh -b -p ~/miniconda;
+                  echo "export PATH=~/miniconda/bin:$PATH" >> $BASH_ENV;
             - run:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
-                  conda install -c conda-forge scikit-image;
+                  conda create -n testenv --yes python=3.6 numpy scipy pip cython qt==5.9.4 matplotlib==2.2.2 pyqt==5.9.2;
+                  source activate testenv;
                   pip install Pillow
-                  pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
+                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
-                  pip install git+https://github.com/vispy/vispy.git;
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
@@ -49,6 +45,7 @@ jobs:
             - run:
                 name: Build the documentation
                 command: |
+                    source activate testenv;
                     cd doc
                     make clean
                     make html
