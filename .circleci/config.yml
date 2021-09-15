@@ -37,6 +37,7 @@ jobs:
                   pip install visbrain
                   pip install PyQt5-sip==12.8.0
                   pip install pyqt5==5.15.0
+                  pip install threadpoolctl==2.1.0
                   python setup.py develop --user
             - run:
                 name: Build the documentation
