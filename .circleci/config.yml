@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: circleci/python:3.7.11
+            - image: circleci/python:3.7-stretch
         steps:
             - checkout
             - run:
@@ -16,29 +16,31 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install libxcb-xinerama0 qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools 
-            - run: sudo apt-get install graphviz
+            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
+            - run:
+                name: Install miniconda
+                command: |
+                  wget -q https://repo.continuum.io/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh;
+                  chmod +x ~/miniconda.sh;
+                  ~/miniconda.sh -b -p ~/miniconda;
+                  echo "export PATH=~/miniconda/bin:$PATH" >> $BASH_ENV;
             - run:
                 name: Setup Python environment
                 command: |
+                  conda update --yes --quiet conda;
                   pip install matplotlib==3.0.0
-                  pip install Pillow==7.2.0
-                  pip install sphinx==3.1.2
-                  pip install sphinx-gallery==0.7
-                  pip install sphinx_bootstrap_theme==0.7.1
+                  pip install Pillow
+                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
-                  pip install mne==0.20.7
+                  pip install --upgrade mne
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
-                  pip install nipype==1.5.0
+                  pip install nipype
                   pip install h5py
-                  pip install traits==6.1.1
+                  conda install graphviz pydot
                   pip install visbrain
-                  pip install PyQt5-sip==12.8.0
-                  pip install pyqt5==5.15.0
-                  pip install threadpoolctl==2.1.0
-                  python setup.py develop --user
+                  python setup.py develop
             - run:
                 name: Build the documentation
                 command: |
@@ -51,4 +53,4 @@ jobs:
                 destination: html
             - add_ssh_keys:
                 fingerprints:
-                    - "7f:6f:31:22:7d:5f:6f:80:70:43:f4:6c:14:ef:15:ed"
+                    - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
