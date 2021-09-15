@@ -22,16 +22,21 @@ jobs:
                 name: Setup Python environment
                 command: |
                   pip install matplotlib==3.0.0
-                  pip install Pillow
-                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
+                  pip install Pillow==7.2.0
+                  pip install sphinx==3.1.2
+                  pip install sphinx-gallery==0.7
+                  pip install sphinx_bootstrap_theme==0.7.1
                   pip install cython scipy
-                  pip install --upgrade mne
+                  pip install mne==0.207
                   pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
-                  pip install nipype
+                  pip install nipype==1.5.0
                   pip install h5py
+                  pip install traits==6.1.1
                   pip install visbrain
+                  pip install PyQt5-sip==12.8.0
+                  pip install pyqt5==5.15.0
                   python setup.py develop --user
             - run:
                 name: Build the documentation
