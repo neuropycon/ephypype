@@ -40,11 +40,13 @@ def get_ext_file(raw_file):
 
 def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline',  # noqa
                                  data_type='fif', l_freq=1, h_freq=150,
-                                 down_sfreq=None, is_ICA=True, variance=0.95,
+                                 down_sfreq=None, is_ICA=True, variance=None,
+                                 n_components=None,
                                  ECG_ch_name='', EoG_ch_name='', reject=None,
                                  is_set_ICA_components=False, mapnode=False,
                                  n_comp_exclude=[], is_sensor_space=True,
-                                 montage=None, misc=None):
+                                 montage=None, misc=None, bipolar=None,
+                                 ch_new_names=None):
     """Preprocessing pipeline.
 
     Parameters
@@ -156,7 +158,10 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 ica_node = pe.MapNode(interface=CompIca(),
                                       iterfield=['fif_file', 'raw_fif_file'],
                                       name='ica')
-                ica_node.inputs.n_components = variance
+                if variance:
+                    ica_node.inputs.variance = variance
+                elif n_components:
+                    ica_node.inputs.n_components = n_components
                 ica_node.inputs.ecg_ch_name = ECG_ch_name
                 ica_node.inputs.eog_ch_name = EoG_ch_name
 
@@ -196,8 +201,12 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                                  preproc_node, 'fif_file')
             elif data_type == 'eeg':
                 preproc_node.inputs.montage = montage
+                if bipolar:
+                    preproc_node.inputs.bipolar = bipolar
                 if misc:
                     preproc_node.inputs.misc = misc
+                if ch_new_names:
+                    preproc_node.inputs.ch_new_names = ch_new_names
                 preproc_node.inputs.eog = EoG_ch_name
                 pipeline.connect(inputnode, 'raw_file',
                                  preproc_node, 'fif_file')
@@ -227,7 +236,11 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             else:
 
                 ica_node = pe.Node(interface=CompIca(), name='ica')
-                ica_node.inputs.n_components = variance
+                if variance:
+                    ica_node.inputs.variance = variance
+                elif n_components:
+                    ica_node.inputs.n_components = n_components
+
                 ica_node.inputs.ecg_ch_name = ECG_ch_name
                 ica_node.inputs.eog_ch_name = EoG_ch_name
                 ica_node.inputs.data_type = data_type
@@ -252,7 +265,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
 def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
                            events_id={}, condition=None, events_file='',
-                           decim=1, t_min=None, t_max=None,
+                           decim=1, t_min=None, t_max=None, baseline=None,
                            data_type='meg'):
     """ERP reconstruction pipeline.
 
@@ -301,6 +314,9 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
     define_epochs.inputs.events_file = events_file
     define_epochs.inputs.data_type = data_type
 
+    if baseline:
+        define_epochs.inputs.baseline = baseline
+        
     pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
 
     compute_evoked = pe.Node(interface=DefineEvoked(), name='compute_evoked')

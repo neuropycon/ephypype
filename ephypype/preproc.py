@@ -11,44 +11,53 @@ import glob
 import os.path as op
 
 from mne import pick_types, read_epochs, Epochs, read_events, find_events
-from mne import write_evokeds
+from mne import write_evokeds, set_bipolar_reference
 from mne.io import read_raw_fif, read_raw_brainvision, read_raw_eeglab
 from mne.preprocessing import ICA
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
 from mne.time_frequency import psd_multitaper
-from mne.channels import read_custom_montage
+from mne.channels import read_custom_montage, make_standard_montage
 
 from nipype.utils.filemanip import split_filename
 
 
 def _preprocess_fif(
         fif_file, data_type='fif', l_freq=None, h_freq=None, down_sfreq=None,
-        montage=None, misc=None, eog_ch=None):
+        montage=None, misc=None, eog_ch=None, ch_new_names=None,
+        bipolar=None):
     """Filter and downsample data."""
     _, basename, ext = split_filename(fif_file)
 
-    print('*************************************** {}'.format(ext))
     if data_type == 'fif':
         raw = read_raw_fif(fif_file, preload=True)
     elif data_type == 'eeg':
         if ext == '.vhdr':
             raw = read_raw_brainvision(fif_file, preload=True)
-        elif ext == '.set':
+        elif ext == '.set':  # EEGLAB
             raw = read_raw_eeglab(fif_file, preload=True)
         ext = '.fif'
-#        channels = misc.replace(' ', '').split(',')
-#        for ch in channels:
-#            raw.set_channel_types({ch: 'misc'})
-        channels = eog_ch.replace(' ', '').split(',')
+        if misc:
+            for ch in misc:
+                raw.set_channel_types({ch: 'misc'})
+        # channels = eog_ch.replace(' ', '').split(',')
         
         try:
             montage = read_custom_montage(montage)
         except:
-            montage = 'standard_1005'    
-        
+            # when raw is read from EEGLAB some channels name has different
+            # name from the one in the standard montage
+            if ch_new_names:
+                raw.rename_channels(ch_new_names)
+            montage = make_standard_montage(montage)
         raw.set_montage(montage, on_missing='ignore')
-        for ch in channels:
+        
+        if bipolar:
+            for key in bipolar.keys():
+                raw = set_bipolar_reference(
+                    raw, anode=bipolar[key][0], cathode=bipolar[key][1], ch_name=key)  # noqa
+        print(raw.info['ch_names'])
+        for ch in eog_ch:
             raw.set_channel_types({ch: 'eog'})
 
     filt_str, down_str = '', ''
@@ -77,9 +86,6 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
 
     # select sensors
     if data_type == 'eeg':
-        eog = eog_ch_name.replace(' ', '').split(',')
-        for eog_ch in eog:
-            raw.set_channel_types({eog_ch: 'eog'})
         select_sensors = pick_types(raw.info, eeg=True, exclude='bads')
     else:
         select_sensors = pick_types(
@@ -93,7 +99,7 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
 
     flat = dict(mag=1e-13, grad=1e-13)
 
-    ica = ICA(n_components=n_components, method='fastica', max_iter=500)
+    ica = ICA(n_components=n_components, method='fastica', max_iter='auto')
     ica.fit(orig_raw, picks=select_sensors, reject=reject, flat=flat)
     del orig_raw
     # -------------------- Save ica timeseries ---------------------------- #
@@ -136,8 +142,8 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
         ecg_evoked = []
         ecg_scores = []
 
-    eog_ch_name = eog_ch_name.replace(' ', '')
-    if set(eog_ch_name.split(',')).issubset(set(raw.info['ch_names'])):
+    # eog_ch_name = eog_ch_name.replace(' ', '')
+    if set(eog_ch_name).issubset(set(raw.info['ch_names'])):
         print('*** EOG CHANNELS FOUND ***')
         eog_inds, eog_scores = ica.find_bads_eog(raw, ch_name=eog_ch_name)
         eog_inds = eog_inds[:n_max_eog]
@@ -359,7 +365,7 @@ def _generate_report(raw, ica, subj_name, basename,
 
     # -------------------------- Generate report for EoG -------------------- #
     # check how many EoG ch we have
-    if set(eog_ch_name.split(',')).issubset(set(raw.info['ch_names'])):
+    if set(eog_ch_name).issubset(set(raw.info['ch_names'])):
         fig_eog_scores = ica.plot_scores(eog_scores, exclude=eog_inds,
                                          title=ica_title % 'eog', show=is_show)
 
@@ -478,7 +484,8 @@ def _create_epochs(fif_file, ep_length):
 
 
 def _define_epochs(
-        fif_file, t_min, t_max, events_id, events_file='', decim=1, data_type='meg'):
+        fif_file, t_min, t_max, events_id, events_file='',
+        decim=1, data_type='meg', baseline=(None, 0)):
     """Split raw .fif file into epochs depending on events file.
 
     Splitted epochs have a length ep_length with rejection criteria.
@@ -506,7 +513,7 @@ def _define_epochs(
     # TODO -> use autoreject ?
     # reject_tmax = 0.8  # duration we really care about
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
-                    picks=picks, baseline=(None, 0), reject=reject,
+                    picks=picks, baseline=baseline, reject=reject,
                     decim=decim, preload=True)
 
     epochs.drop_bad(reject=reject)
