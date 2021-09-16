@@ -13,7 +13,7 @@
         "h_freq": 150,
         "down_sfreq": 300,
         "ECG_ch_name": "ECG",
-        "EoG_ch_name": ["HEOG, VEOG",]
+        "EoG_ch_name": ["HEOG, VEOG"],
         "variance": 0.95,
         "reject": {
             "mag": 5e-12,
