@@ -38,6 +38,7 @@ jobs:
                   pip install git+https://github.com/hbldh/lspopt.git#egg=lspopt;
                   pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
                   pip install numpydoc;
+                  pip install scikit-learn
                   pip install nipype
                   pip install h5py
                   conda install graphviz pydot
