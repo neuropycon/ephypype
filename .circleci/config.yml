@@ -16,7 +16,7 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
+            - run: sudo apt-get install libxcb-xinerama0 libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
             - run:
                 name: Install miniconda
                 command: |
@@ -32,7 +32,7 @@ jobs:
                   pip install sphinx sphinx-gallery sphinx_bootstrap_theme
                   pip install cython scipy
                   pip install --upgrade mne
-                  pip install scikit-learn==0.20.0
+                  pip install scikit-learn
                   pip install scikit-optimize
                   pip install numpydoc
                   pip install nipype
@@ -54,16 +54,4 @@ jobs:
             - add_ssh_keys:
                 fingerprints:
                     - "7f:6f:31:22:7d:5f:6f:80:70:43:f4:6c:14:ef:15:ed"
-            - deploy:
-                name: github pages deployment
-                command: |
-                  if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                    echo "Deploying dev docs.";
-                    git config --global user.email "a.pascarella@iac.cnr.it";
-                    git config --global user.name "NeuroPycon";
-                    cd doc;
-                    make install;
-                  else
-                    echo "No deployment (build: ${CIRCLE_BRANCH}).";
-                  fi    
-                
+
