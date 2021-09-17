@@ -16,7 +16,7 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install libgcc1 libxcb-xinerama0 libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
+            - run: sudo apt-get install libxcb-xinerama0 libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
             - run:
                 name: Install miniconda
                 command: |
@@ -28,27 +28,30 @@ jobs:
                 name: Setup Python environment
                 command: |
                   conda update --yes --quiet conda;
-                  conda install -c anaconda libgcc 
-                  pip install matplotlib Pillow
-                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
-                  pip install cython scipy
-                  pip install --upgrade mne
+                  conda create -n testenv --yes python=3.6 numpy scipy pip cython qt==5.9.4 matplotlib==2.2.2 pyqt==5.9.2;
+                  source activate testenv;
+                  pip install -U pip;
+                  pip install git+https://github.com/vispy/vispy.git;
+                  pip install pytest pytest-travis-fold;
+                  pip install mne nibabel pandas openpyxl tensorpac xlrd;
+                  conda install -c conda-forge scikit-image;
+                  pip install git+https://github.com/hbldh/lspopt.git#egg=lspopt;
+                  pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
+                  pip install numpydoc;
                   pip install scikit-learn
-                  pip install scikit-optimize
-                  pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  pip install PyQt5==5.11.3
                   conda install graphviz pydot
                   pip install visbrain
-                  python setup.py develop --user
+                  python setup.py develop
             - run:
                 name: Build the documentation
                 command: |
+                    source activate testenv;
                     cd doc
                     make clean
                     make html
-                no_output_timeout: 25m
+                no_output_timeout: 35m
             - store_artifacts:
                 path: doc/_build/html/
                 destination: html
