@@ -16,31 +16,19 @@ jobs:
                     /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset;
                     echo "export DISPLAY=:99" >> $BASH_ENV;
             - run: sudo apt-get update        
-            - run: sudo apt-get install libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default;
-            - run:
-                name: Install miniconda
-                command: |
-                  wget -q https://repo.continuum.io/miniconda/Miniconda3-py37_4.8.3-Linux-x86_64.sh -O ~/miniconda.sh;
-                  chmod +x ~/miniconda.sh;
-                  ~/miniconda.sh -b -p ~/miniconda;
-                  echo "export PATH=~/miniconda/bin:$PATH" >> $BASH_ENV;
+            - run: sudo apt-get install libxcb-xinerama0 libgl1-mesa-glx libegl1-mesa libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6 qt5-default graphviz;
             - run:
                 name: Setup Python environment
                 command: |
-                  conda update --yes --quiet conda;
-                  pip install matplotlib==3.0.0
-                  pip install Pillow
-                  pip install sphinx sphinx-gallery sphinx_bootstrap_theme
-                  pip install cython scipy
+                  pip install -U pip;
                   pip install --upgrade mne
+                  pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
+                  pip install numpydoc;
                   pip install scikit-learn
-                  pip install scikit-optimize
-                  pip install numpydoc
                   pip install nipype
                   pip install h5py
-                  conda install graphviz pydot
                   pip install visbrain
-                  python setup.py develop
+                  python setup.py develop --user
             - run:
                 name: Build the documentation
                 command: |
@@ -53,4 +41,5 @@ jobs:
                 destination: html
             - add_ssh_keys:
                 fingerprints:
-                    - "42:95:ca:f6:27:af:76:f7:eb:50:40:d0:bf:25:b0:ea"
+                    - "7f:6f:31:22:7d:5f:6f:80:70:43:f4:6c:14:ef:15:ed"
+

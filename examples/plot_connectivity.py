@@ -173,6 +173,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 #   <a href="https://github.com/neuropycon/graphpype" target="_blank">graphpype</a>
 
 ##############################################################################
+
 from ephypype.gather import get_results  # noqa
 from ephypype.gather import get_channel_files  # noqa
 from ephypype.aux_tools import _parse_string  # noqa

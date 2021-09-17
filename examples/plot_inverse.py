@@ -153,7 +153,7 @@ plt.axis('off')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 
 # Run workflow locally on 1 CPU
-main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
+main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
 # The output is the source reconstruction matrix stored in the workflow
@@ -164,6 +164,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 #   data, that could be provided by Freesurfer
 
 ##############################################################################
+
 import pickle  # noqa
 from ephypype.gather import get_results  # noqa
 from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa

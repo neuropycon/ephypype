@@ -7,8 +7,11 @@ crash*
 .coverage
 .coverage.*
 .pytest*
+.cache
 
 # Sphinx documentation
+build/
+dist/
 doc/_build/
 doc/auto_examples/
 doc/auto_tutorials/

@@ -322,6 +322,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                                 buffer_size=1000,
                                 pick_ori=pick_ori)  # None 'normal'
 
+
     ts_file, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
                      aseg, is_fixed, all_src_space=all_src_space,

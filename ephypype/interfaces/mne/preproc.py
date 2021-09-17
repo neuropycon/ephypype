@@ -10,7 +10,7 @@ from nipype.interfaces.base import BaseInterface,\
 
 from ...preproc import _compute_ica,\
     _preprocess_fif,\
-    _create_epochs, _define_epochs
+    _create_epochs, _define_epochs, _compute_evoked
 
 
 class CompIcaInputSpec(BaseInterfaceInputSpec):
@@ -23,8 +23,10 @@ class CompIcaInputSpec(BaseInterfaceInputSpec):
                                desc='orignal raw meg data in fif format',
                                mandatory=True)
     ecg_ch_name = traits.String(desc='name of ecg channel')
-    eog_ch_name = traits.String(desc='name of eog channel')
-    n_components = traits.Float(desc='number of ica components')
+    eog_ch_name = traits.List(desc='name of eog channel')
+    data_type = traits.String(desc='data type (MEG or EEG)')
+    n_components = traits.Int(desc='number of ica components')
+    variance = traits.Float(desc='number of ica components')
     reject = traits.Dict(desc='rejection parameters', mandatory=False)
 
 
@@ -58,6 +60,8 @@ class CompIca(BaseInterface):
         Name of ecg channel
     eog_ch_name : str
         Name of eog channel
+    variance : float
+        Number of ica components
     n_components : float
         Number of ica components
     reject : dict
@@ -84,13 +88,17 @@ class CompIca(BaseInterface):
         ecg_ch_name = self.inputs.ecg_ch_name
         eog_ch_name = self.inputs.eog_ch_name
         n_components = self.inputs.n_components
+        variance = self.inputs.variance
         reject = self.inputs.reject
+        data_type = self.inputs.data_type
 
         if reject == traits.Undefined:
             reject = dict(mag=4e-12, grad=4000e-13)
 
-        ica_output = _compute_ica(fif_file, raw_fif_file, ecg_ch_name,
-                                  eog_ch_name, n_components, reject)
+        n_components = variance if variance else n_components
+        ica_output = _compute_ica(
+                fif_file, raw_fif_file, data_type, ecg_ch_name,
+                eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
         self.ica_ts_file = ica_output[2]
@@ -114,7 +122,13 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
                            desc='raw meg data in fif format',
                            mandatory=True)
     l_freq = traits.Float(desc='lower bound for filtering')
-    h_freq = traits.Float(desc='upper bound for filtering')
+    h_freq = traits.Float(None, desc='upper bound for filtering', mandatory=False)
+    data_type = traits.String('fif', desc='data type', usedefault=True)
+    montage = traits.String(desc='EEG layout')
+    misc = traits.String(desc='EEG misc channels')
+    bipolar = traits.Dict(desc='set EEG bipolar channels')
+    ch_new_names = traits.Dict(desc='new channel name')
+    eog = traits.List(desc='EEG eog channels')
     down_sfreq = traits.Int(None, desc='downsampling frequency',
                             mandatory=False)
 
@@ -140,7 +154,20 @@ class PreprocFif(BaseInterface):
         Upper bound for filtering
     down_sfreq : int
         Downsampling frequency
-
+    data_type : str
+        Data type (.fif, .set)
+    montage : str
+        EEG montage
+    misc : str
+        miscellaneous channles
+    bipolar : dict
+        EEG bipolar channels
+    ch_new_names : dict
+        rename channels
+    eog : list
+        eog channel names
+    
+        
     Outputs
     -------
     fif_file : str
@@ -155,8 +182,22 @@ class PreprocFif(BaseInterface):
         l_freq = self.inputs.l_freq
         h_freq = self.inputs.h_freq
         down_sfreq = self.inputs.down_sfreq
+        data_type = self.inputs.data_type
 
-        result_fif = _preprocess_fif(fif_file, l_freq, h_freq, down_sfreq)
+        if data_type == 'eeg':
+            montage = self.inputs.montage
+            misc = self.inputs.misc
+            bipolar = self.inputs.bipolar
+            EoG_ch_name = self.inputs.eog
+            ch_new_names = self.inputs.ch_new_names
+        else:
+            montage, misc, bipolar, EoG_ch_name = None, None, None, None
+            ch_new_names = None
+            
+        result_fif = _preprocess_fif(
+                fif_file, data_type, l_freq=l_freq, h_freq=h_freq,
+                down_sfreq=down_sfreq, montage=montage, misc=misc,
+                eog_ch=EoG_ch_name, bipolar=bipolar, ch_new_names=ch_new_names)
 
         self.fif_file = result_fif
         return runtime
@@ -232,6 +273,9 @@ class DefineEpochsInputSpec(BaseInterfaceInputSpec):
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
     decim = traits.Int(1, desc='Factor by which to downsample the data',
                        mandatory=False, usedefault=True)
+    data_type = traits.String('', exists=True, desc='data type',
+                              mandatory=False)
+    baseline = traits.Tuple((None, 0), desc='baseline', mandatory=False)
 
 
 class DefineEpochsOutputSpec(TraitedSpec):
@@ -243,7 +287,7 @@ class DefineEpochsOutputSpec(TraitedSpec):
 
 
 class DefineEpochs(BaseInterface):
-    """Interface for preproc.create_epochs.
+    """Interface for preproc.define_epochs.
 
     Inputs
     ------
@@ -268,13 +312,73 @@ class DefineEpochs(BaseInterface):
         t_min = self.inputs.t_min
         t_max = self.inputs.t_max
         decim = self.inputs.decim
-        result_fif = _define_epochs(fif_file, t_min, t_max, events_id,
-                                    events_file, decim)
+        data_type = self.inputs.data_type
+        baseline = self.inputs.baseline
 
+        result_fif = _define_epochs(fif_file, t_min, t_max, events_id,
+                                    events_file=events_file, decim=decim,
+                                    data_type=data_type, baseline=baseline)
         self.epo_fif_file = result_fif
         return runtime
 
     def _list_outputs(self):
         outputs = self._outputs().get()
         outputs['epo_fif_file'] = self.epo_fif_file
+        return outputs
+
+
+class DefineEvokedInputSpec(BaseInterfaceInputSpec):
+    """Input specification for DefineEpochs."""
+
+    fif_file = traits.File(exists=True,
+                           desc='epoched data in fif format',
+                           mandatory=True)
+    events_id = traits.Dict(None, desc='the id of all events to consider.',
+                            mandatory=False)
+    condition = traits.List(None, desc='conditions to consider.',
+                            mandatory=False)
+
+
+class DefineEvokedOutputSpec(TraitedSpec):
+    """Output specification for DefineEpochs."""
+
+    evo_fif_file = traits.File(exists=True,
+                               desc='-ave.fif file',
+                               mandatory=True)
+
+
+class DefineEvoked(BaseInterface):
+    """Interface for preproc._compute_evoked
+
+    Inputs
+    ------
+    fif_file : str
+        Filename of epoched data in fif format
+    events_id : dict
+        events id
+    condition : dict
+        condition for averaging
+
+    Outputs
+    -------
+    evo_fif_file : str
+        Name of .fif file with evoked data
+    """
+
+    input_spec = DefineEvokedInputSpec
+    output_spec = DefineEvokedOutputSpec
+
+    def _run_interface(self, runtime):
+        fif_file = self.inputs.fif_file
+        events_id = self.inputs.events_id
+        condition = self.inputs.condition
+
+        result_fif = _compute_evoked(fif_file, events_id, condition)
+
+        self.evo_fif_file = result_fif
+        return runtime
+
+    def _list_outputs(self):
+        outputs = self._outputs().get()
+        outputs['evo_fif_file'] = self.evo_fif_file
         return outputs

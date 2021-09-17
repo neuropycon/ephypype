@@ -147,6 +147,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 #   by the welch function of the scipy package.
 
 ##############################################################################
+
 from ephypype.gather import get_results  # noqa
 from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
 from visbrain.utils import normalize  # noqa

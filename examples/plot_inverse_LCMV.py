@@ -165,6 +165,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 #   data, that could be provided by Freesurfer
 
 ##############################################################################
+
 import pickle  # noqa
 from ephypype.gather import get_results  # noqa
 from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa

@@ -6,7 +6,7 @@ import os.path as op
 import numpy as np
 import nipype.pipeline.engine as pe
 from ephypype.interfaces.mne.preproc import CreateEp, PreprocFif, CompIca
-from ephypype.interfaces.mne.preproc import DefineEpochs
+from ephypype.interfaces.mne.preproc import DefineEpochs, DefineEvoked
 from ephypype.preproc import _preprocess_set_ica_comp_fif_to_ts
 
 
@@ -16,6 +16,8 @@ matplotlib.use('Agg')  # for testing don't use X server
 data_path = mne.datasets.testing.data_path()
 raw_fname = op.join(data_path, 'MEG', 'sample',
                     'sample_audvis_trunc_raw.fif')
+epo_fname = op.join(data_path, 'MEG', 'sample',
+                    'sample_audvis_trunc_raw-epo.fif')
 events_file = op.join(data_path, 'MEG', 'sample',
                       'sample_audvis_trunc_raw-eve.fif')
 
@@ -30,6 +32,20 @@ def test_epoching_node():
 
 
 @pytest.mark.usefixtures("change_wd")
+def test_define_eeg_epochs():
+    """Test epoching node"""
+    epoch_node = pe.Node(interface=DefineEpochs(), name='epoching')
+    epoch_node.inputs.events_file = events_file
+    epoch_node.inputs.events_id = {'eve': 1}
+    epoch_node.inputs.t_min = -0.1
+    epoch_node.inputs.t_max = 1.0
+    epoch_node.inputs.fif_file = raw_fname
+    epoch_node.inputs.data_type = 'eeg'
+    epoch_node.inputs.baseline = (None, 0)
+    epoch_node.run()
+
+
+@pytest.mark.usefixtures("change_wd")
 def test_define_epochs():
     """Test epoching node"""
     epoch_node = pe.Node(interface=DefineEpochs(), name='epoching')
@@ -38,9 +54,21 @@ def test_define_epochs():
     epoch_node.inputs.t_min = -0.1
     epoch_node.inputs.t_max = 1.0
     epoch_node.inputs.fif_file = raw_fname
+    epoch_node.inputs.data_type = 'meg'
+    epoch_node.inputs.baseline = (None, 0)
     epoch_node.run()
 
 
+def test_compute_evoked():
+    """Test evoked node"""
+    evoked_node = pe.Node(interface=DefineEvoked(), name='evoked')
+
+    evoked_node.inputs.fif_file = epo_fname
+    evoked_node.inputs.events_id = {'aud_l': 1, 'aud_r': 2}
+
+    evoked_node.run()
+    
+    
 def test_preprocess_fif():
     """Test filter and downsample raw data."""
 
@@ -71,7 +99,7 @@ def test_compute_ica():
     """Test compute ICA on raw data."""
 
     ecg_ch_name = 'ECG'
-    eog_ch_name = 'HEOG, VEOG'
+    eog_ch_name = ['HEOG, VEOG']
     variance = 0.5
     reject = dict(mag=5e-12, grad=5000e-13)
 
@@ -88,7 +116,7 @@ def test_compute_ica():
     ica_node.inputs.raw_fif_file = segment_raw_fname
     ica_node.inputs.ecg_ch_name = ecg_ch_name
     ica_node.inputs.eog_ch_name = eog_ch_name
-    ica_node.inputs.n_components = variance
+    ica_node.inputs.variance = variance
     ica_node.inputs.reject = reject
 
     ica_node.run()
@@ -107,7 +135,7 @@ def test_set_IC_components():
     """Test compute ICA on raw data."""
 
     ecg_ch_name = 'ECG'
-    eog_ch_name = 'HEOG, VEOG'
+    eog_ch_name = ['HEOG, VEOG']
     variance = 0.5
     reject = dict(mag=5e-12, grad=5000e-13)
 
@@ -124,7 +152,7 @@ def test_set_IC_components():
     ica_node.inputs.raw_fif_file = segment_raw_fname
     ica_node.inputs.ecg_ch_name = ecg_ch_name
     ica_node.inputs.eog_ch_name = eog_ch_name
-    ica_node.inputs.n_components = variance
+    ica_node.inputs.variance = variance
     ica_node.inputs.reject = reject
 
     ica_node.run()

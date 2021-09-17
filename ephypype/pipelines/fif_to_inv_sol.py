@@ -93,7 +93,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline.base_dir = main_path
 
     inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
-                                                  'events_file',
                                                   'trans_file']),
                         name='inputnode')
 
