@@ -123,7 +123,7 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
                            mandatory=True)
     l_freq = traits.Float(desc='lower bound for filtering')
     h_freq = traits.Float(None, desc='upper bound for filtering', mandatory=False)
-    data_type = traits.String(desc='data type')
+    data_type = traits.String('fif', desc='data type', usedefault=True)
     montage = traits.String(desc='EEG layout')
     misc = traits.String(desc='EEG misc channels')
     bipolar = traits.Dict(desc='set EEG bipolar channels')

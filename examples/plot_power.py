@@ -147,7 +147,7 @@ main_workflow.run(plugin='MultiProc', plugin_args={'n_procs': NJOBS})
 #   by the welch function of the scipy package.
 
 ##############################################################################
-'''
+
 from ephypype.gather import get_results  # noqa
 from visbrain.objects import SourceObj, SceneObj, ColorbarObj  # noqa
 from visbrain.utils import normalize  # noqa
@@ -184,4 +184,3 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
     sc.add_to_subplot(cbar, col=len(freq_bands), width_max=200)
 
 sc.preview()
-'''

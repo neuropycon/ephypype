@@ -164,7 +164,7 @@ main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 #   data, that could be provided by Freesurfer
 
 ##############################################################################
-'''
+
 import pickle  # noqa
 from ephypype.gather import get_results  # noqa
 from visbrain.objects import BrainObj, ColorbarObj, SceneObj  # noqa
@@ -219,4 +219,3 @@ for inverse_file, label_file in zip(time_series_files, label_files):
     sc.add_to_subplot(cbar, col=2, row_span=2)
 
 sc.preview()
-'''

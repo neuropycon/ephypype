@@ -304,20 +304,27 @@ def get_raw_sfreq(raw_fname):
     return data.info['sfreq']
 
 
-def _create_reject_dict(raw_info):
+def _create_reject_dict(raw_info, data_type='meg'):
     """Create reject dir."""
+    picks_eog, picks_eeg, picks_grad, picks_mag = [], [], [], []
     picks_eog = pick_types(raw_info, meg=False, ref_meg=False, eog=True)
-    picks_mag = pick_types(raw_info, meg='mag', ref_meg=False)
-    picks_grad = pick_types(raw_info, meg='grad', ref_meg=False)
+
+    if data_type == 'meg':
+        picks_mag = pick_types(raw_info, meg='mag', ref_meg=False)
+        picks_grad = pick_types(raw_info, meg='grad', ref_meg=False)
+    elif data_type == 'eeg':
+        picks_eeg = pick_types(raw_info, eeg=True)
 
     reject = dict()
-    if picks_mag.size != 0:
+    if len(picks_mag) > 0:
         reject['mag'] = 4e-12
-    if picks_grad.size != 0:
+    if len(picks_grad) > 0:
         reject['grad'] = 4000e-13
-    if picks_eog.size != 0:
+    if len(picks_eog) > 0:
         reject['eog'] = 150e-6
-
+    if len(picks_eeg) > 0:
+        reject['eeg'] = 150e-6
+    print(reject)
     return reject
 
 
@@ -467,7 +474,7 @@ def _create_epochs(fif_file, ep_length):
     reject = None
 
     raw = read_raw_fif(fif_file)
-    picks = pick_types(raw.info, ref_meg=False, eeg=False)
+    picks = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
     if raw.times[-1] >= ep_length:
         events = _create_events(raw, ep_length)
     else:
@@ -493,7 +500,7 @@ def _define_epochs(
     raw = read_raw_fif(fif_file, preload=True)
     raw.set_eeg_reference(ref_channels='average')
 
-    reject = _create_reject_dict(raw.info)
+    reject = _create_reject_dict(raw.info, data_type)
     if data_type == 'meg':
         picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
                            stim=True, exclude='bads')
