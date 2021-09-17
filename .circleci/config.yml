@@ -21,17 +21,13 @@ jobs:
                 name: Setup Python environment
                 command: |
                   pip install -U pip;
-                  pip install git+https://github.com/vispy/vispy.git;
-                  pip install pytest pytest-travis-fold;
-                  pip install mne nibabel pandas openpyxl tensorpac xlrd;
-                  pip install git+https://github.com/hbldh/lspopt.git#egg=lspopt;
+                  pip install --upgrade mne
                   pip install sphinx sphinx-gallery==0.4.0 sphinx_bootstrap_theme lxml;
                   pip install numpydoc;
                   pip install scikit-learn
                   pip install nipype
                   pip install h5py
                   pip install visbrain
-                  pip install PyQt5
                   python setup.py develop --user
             - run:
                 name: Build the documentation
