@@ -32,7 +32,7 @@ jobs:
                   pip install h5py
                   pip install visbrain
                   pip install PyQt5
-                  python setup.py develop
+                  python setup.py develop --user
             - run:
                 name: Build the documentation
                 command: |
