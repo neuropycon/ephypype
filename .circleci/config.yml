@@ -43,6 +43,7 @@ jobs:
                   pip install h5py
                   conda install graphviz pydot
                   pip install visbrain
+                  pip install PyQt5
                   python setup.py develop
             - run:
                 name: Build the documentation
