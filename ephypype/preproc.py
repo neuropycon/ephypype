@@ -498,8 +498,9 @@ def _define_epochs(
     Splitted epochs have a length ep_length with rejection criteria.
     """
     raw = read_raw_fif(fif_file, preload=True)
-    raw.set_eeg_reference(projection=True)
-
+    print(raw.info)
+    raw.set_eeg_reference(ref_channels='average', projection=True)
+    print(raw.info)
     reject = _create_reject_dict(raw.info, data_type)
     if data_type == 'meg':
         picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
@@ -530,6 +531,7 @@ def _define_epochs(
     # TODO -> decide where to save...
     savename = os.path.abspath(base + '-epo' + ext)
     # savename = os.path.join(data_path, base + '-epo' + ext)
+    print(epochs.info)
     epochs.save(savename, overwrite=True)
 
     return savename
