@@ -498,7 +498,7 @@ def _define_epochs(
     Splitted epochs have a length ep_length with rejection criteria.
     """
     raw = read_raw_fif(fif_file, preload=True)
-    raw.set_eeg_reference(ref_channels='average')
+    raw.set_eeg_reference(projection=True)
 
     reject = _create_reject_dict(raw.info, data_type)
     if data_type == 'meg':
@@ -522,7 +522,6 @@ def _define_epochs(
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
                     picks=picks, baseline=baseline, reject=reject,
                     decim=decim, preload=True)
-
     epochs.drop_bad(reject=reject)
 
     good_events_file = os.path.join(data_path, 'good_events.txt')
@@ -532,6 +531,7 @@ def _define_epochs(
     savename = os.path.abspath(base + '-epo' + ext)
     # savename = os.path.join(data_path, base + '-epo' + ext)
     epochs.save(savename, overwrite=True)
+
     return savename
 
 

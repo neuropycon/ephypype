@@ -300,17 +300,23 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
                                    inv_method, pick_ori=pick_ori)
 
     elif is_ave:
+        if events_id != condition and condition:
+            events_name = condition
+        else:
+            events_name = events_id
+
         stc = list()
-        for evo in evokeds:
-            print(evo.comment)
+        for evo, cond_name in zip(evokeds, events_name):
+            print(evo.comment, cond_name)
             stc_evo = apply_inverse(evo, inverse_operator, lambda2,
                                     inv_method, pick_ori=pick_ori)
-            print(('\n*** STC for event %s ***\n' % evo.comment))
+            print(('\n*** STC for event %s ***\n' % cond_name))
             print('***')
             print(('stc dim ' + str(stc_evo.shape)))
             print('***')
 
-            stc_evo_file = op.join(subj_path, basename + '-%s' % evo.comment)
+            stc_evo_file = op.join(subj_path, basename + '-%s' % cond_name)
+            print(stc_evo_file)
             stc_evo.save(stc_evo_file)
 
             stc.append(stc_evo)
