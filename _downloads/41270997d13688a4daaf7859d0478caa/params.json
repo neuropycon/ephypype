@@ -1,0 +1,54 @@
+{
+    "general":
+    {
+        "NJOBS": 1,
+        "subject_ids": ["sub-0003"],
+        "session_ids": ["ses-0001"],
+        "data_type": "fif",
+        "subjects_dir": "FSF"
+    },
+    "preprocessing":
+    {
+        "l_freq": 0.1,
+        "h_freq": 150,
+        "down_sfreq": 300,
+        "ECG_ch_name": "ECG",
+        "EoG_ch_name": ["HEOG, VEOG"],
+        "variance": 0.95,
+        "reject": {
+            "mag": 5e-12,
+            "grad": 5000e-13
+            }
+    },
+    "connectivity":
+    {
+        "freq_band_names": ["alpha", "beta"],
+        "freq_bands": [[8, 12], [13, 29]],
+        "method": "coh",
+        "epoch_window_length": 3.0
+    },
+    "inverse":
+    {
+        "spacing": "oct-6",
+        "snr": 1.0,
+        "img_method": "MNE",
+        "method": "LCMV",
+        "parcellation": "aparc",
+        "noise_cov_fname": "*noise*.ds"
+    },
+    "power":
+    {
+        "freq_band_names": ["theta", "alpha", "beta"],
+        "freq_bands": [[3, 6], [8, 13], [13, 30]],
+        "method": "welch",
+        "is_epoched": false,
+        "fmin": 0.1,
+        "fmax": 150
+    },
+    "tfr":
+    {
+        "fieldtrip_path": "/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/",
+        "channels_name": "{'RAM*', 'RHH*', 'RTH*', 'ROC*', 'LAM*', 'LHH*', 'LTH*'}",
+        "refmethod": "bipolar"
+    }   
+}

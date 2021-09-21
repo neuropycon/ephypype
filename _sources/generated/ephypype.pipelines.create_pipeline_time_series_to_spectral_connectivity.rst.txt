@@ -1,4 +1,4 @@
-ephypype.pipelines.create\_pipeline\_time\_series\_to\_spectral\_connectivity
+﻿ephypype.pipelines.create\_pipeline\_time\_series\_to\_spectral\_connectivity
 =============================================================================
 
 .. currentmodule:: ephypype.pipelines

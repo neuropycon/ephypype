@@ -1,6 +1,0 @@
-ephypype.nodes.utils.create\_datagrabber
-========================================
-
-.. currentmodule:: ephypype.nodes.utils
-
-.. autofunction:: create_datagrabber

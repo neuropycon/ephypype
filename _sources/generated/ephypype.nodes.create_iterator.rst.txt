@@ -1,0 +1,6 @@
+﻿ephypype.nodes.create\_iterator
+===============================
+
+.. currentmodule:: ephypype.nodes
+
+.. autofunction:: create_iterator

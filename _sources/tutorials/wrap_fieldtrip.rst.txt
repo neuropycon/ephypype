@@ -29,7 +29,7 @@ This example script creates an Interface wrapping a function of |FieldTrip| to a
     :depth: 2
 
     
-.. _interface:
+.. _interface_ft:
 
 Define Interface
 ----------------

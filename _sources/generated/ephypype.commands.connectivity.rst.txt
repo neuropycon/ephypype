@@ -1,4 +1,4 @@
-ephypype.commands.connectivity
+﻿ephypype.commands.connectivity
 ==============================
 
 .. currentmodule:: ephypype.commands

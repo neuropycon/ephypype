@@ -1,4 +1,4 @@
-ephypype.commands.multiscale
+﻿ephypype.commands.multiscale
 ============================
 
 .. currentmodule:: ephypype.commands

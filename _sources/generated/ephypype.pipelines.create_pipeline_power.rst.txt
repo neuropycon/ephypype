@@ -1,4 +1,4 @@
-ephypype.pipelines.create\_pipeline\_power
+﻿ephypype.pipelines.create\_pipeline\_power
 ==========================================
 
 .. currentmodule:: ephypype.pipelines

@@ -1,0 +1,46 @@
+﻿ephypype.nodes.Reference
+========================
+
+.. currentmodule:: ephypype.nodes
+
+.. autoclass:: Reference
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Reference.__init__
+      ~Reference.aggregate_outputs
+      ~Reference.help
+      ~Reference.load_inputs_from_json
+      ~Reference.raise_exception
+      ~Reference.run
+      ~Reference.save_inputs_to_json
+      ~Reference.set_default_matlab_cmd
+      ~Reference.set_default_mfile
+      ~Reference.set_default_paths
+      ~Reference.set_default_terminal_output
+      ~Reference.version_from_command
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Reference.always_run
+      ~Reference.can_resume
+      ~Reference.cmd
+      ~Reference.cmdline
+      ~Reference.references_
+      ~Reference.resource_monitor
+      ~Reference.terminal_output
+      ~Reference.version
+   
+   

@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>How to build a Workflow &#8212; ephypype 0.0.7 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
 
@@ -114,52 +118,53 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="how-to-build-a-workflow">
+  <section id="how-to-build-a-workflow">
 <span id="howto"></span><h1>How to build a Workflow<a class="headerlink" href="#how-to-build-a-workflow" title="Permalink to this headline">¶</a></h1>
 <p>The following section is a brief introduction on how to build a Workflow by using NeuroPycon package.</p>
 <p>This example script allows to construct a pipeline to compute Power Spectral Density (PSD) in sensor space
 (see <a class="reference internal" href="../auto_examples/plot_power.html#power"><span class="std std-ref">Compute PSD on sensor space</span></a> Example).</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This section is based on the <a href="https://miykael.github.io/nipype_tutorial/" target="_blank">Nipype Tutorial</a></p>
+<p class="admonition-title">Note</p>
+<p>This section is based on the <a href="https://miykael.github.io/nipype_tutorial/" target="_blank">Nipype Tutorial</a></p>
 </div>
 <div class="contents local topic" id="main-steps">
-<p class="topic-title first">Main steps</p>
+<p class="topic-title">Main steps</p>
 <ul class="simple">
-<li><a class="reference internal" href="#import-modules" id="id5">Import modules</a></li>
-<li><a class="reference internal" href="#define-data-and-variables" id="id6">Define data and variables</a></li>
-<li><a class="reference internal" href="#specify-nodes" id="id7">Specify Nodes</a><ul>
-<li><a class="reference internal" href="#infosource" id="id8">Infosource</a></li>
-<li><a class="reference internal" href="#datagrabber" id="id9">DataGrabber</a></li>
-<li><a class="reference internal" href="#pipeline" id="id10">Pipeline</a></li>
+<li><p><a class="reference internal" href="#import-modules" id="id5">Import modules</a></p></li>
+<li><p><a class="reference internal" href="#define-data-and-variables" id="id6">Define data and variables</a></p></li>
+<li><p><a class="reference internal" href="#specify-nodes" id="id7">Specify Nodes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#infosource" id="id8">Infosource</a></p></li>
+<li><p><a class="reference internal" href="#datagrabber" id="id9">DataGrabber</a></p></li>
+<li><p><a class="reference internal" href="#pipeline" id="id10">Pipeline</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#specify-workflows-and-connect-nodes" id="id11">Specify Workflows and Connect Nodes</a></li>
-<li><a class="reference internal" href="#run-workflow" id="id12">Run Workflow</a></li>
+<li><p><a class="reference internal" href="#specify-workflows-and-connect-nodes" id="id11">Specify Workflows and Connect Nodes</a></p></li>
+<li><p><a class="reference internal" href="#run-workflow" id="id12">Run Workflow</a></p></li>
 </ul>
 </div>
-<div class="section" id="import-modules">
+<section id="import-modules">
 <span id="modules"></span><h2><a class="toc-backref" href="#id5">Import modules</a><a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to import the modules we need in the script. We import mainly from nipype and ephypype packages.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
 <span class="kn">import</span> <span class="nn">ephypype</span>
-<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="k">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
-<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="k">import</span> <span class="n">fetch_omega_dataset</span>
-<span class="kn">from</span> <span class="nn">ephypype.pipelines.power</span> <span class="k">import</span> <span class="n">create_pipeline_power</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
+<span class="kn">from</span> <span class="nn">ephypype.datasets</span> <span class="kn">import</span> <span class="n">fetch_omega_dataset</span>
+<span class="kn">from</span> <span class="nn">ephypype.pipelines.power</span> <span class="kn">import</span> <span class="n">create_pipeline_power</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="define-data-and-variables">
+</section>
+<section id="define-data-and-variables">
 <span id="variables"></span><h2><a class="toc-backref" href="#id6">Define data and variables</a><a class="headerlink" href="#define-data-and-variables" title="Permalink to this headline">¶</a></h2>
 <p>Let us fetch the data first (it is around 675 MB download) and specify some variables that are specific for the data analysis (the main directories where the data are stored,
 the list of subjects and sessions, …)</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_omega_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 
 <span class="n">subject_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sub-0003&#39;</span><span class="p">]</span>
@@ -178,8 +183,8 @@ in a <a class="reference download external" download="" href="https://github.com
 <span class="n">power_method</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="specify-nodes">
+</section>
+<section id="specify-nodes">
 <h2><a class="toc-backref" href="#id7">Specify Nodes</a><a class="headerlink" href="#specify-nodes" title="Permalink to this headline">¶</a></h2>
 <p>Before to create a workflow we have to create the nodes that define the workflow itself. A <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">Node</a> is an object that can encapsulate
 either an <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_interfaces.html" target="_blank">Interface</a> to an external tool or a <strong>function</strong> defined by the user. A node can also encapsulate an another <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a>.</p>
@@ -187,51 +192,51 @@ either an <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_int
 and define the stream of input and output between them.
 In this example the main Nodes are</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">infosource</span></code> is an IdentityInterface Node that just distributes values (see <a class="reference internal" href="#infosource"><span class="std std-ref">Infosource</span></a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">datasource</span></code> is a DataGrabber Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs (see <a class="reference internal" href="#datagrabber"><span class="std std-ref">DataGrabber</span></a>)</li>
-<li><code class="docutils literal notranslate"><span class="pre">power_pipeline</span></code> is a Node containing the pipeline created by <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power">create_pipeline_power</a>  (see <a class="reference internal" href="#inputnode"><span class="std std-ref">Pipeline</span></a>)</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">infosource</span></code> is an IdentityInterface Node that just distributes values (see <a class="reference internal" href="#infosource"><span class="std std-ref">Infosource</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datasource</span></code> is a DataGrabber Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs (see <a class="reference internal" href="#datagrabber"><span class="std std-ref">DataGrabber</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">power_pipeline</span></code> is a Node containing the pipeline created by <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power">create_pipeline_power</a>  (see <a class="reference internal" href="#inputnode"><span class="std std-ref">Pipeline</span></a>)</p></li>
 </ul>
-<div class="section" id="infosource">
+<section id="infosource">
 <span id="id1"></span><h3><a class="toc-backref" href="#id8">Infosource</a><a class="headerlink" href="#infosource" title="Permalink to this headline">¶</a></h3>
 <p>The Infosource Node allows to distributes values: when we need to feed the different subject names into the workflow
 we only need a Node that can receive the input and distribute those inputs to the workflow. The ephypype function
 <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_iterator.html#ephypype.nodes.utils.create_iterator">create_iterator</a> creates this Infosource Node.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">subject_ids</span><span class="p">,</span> <span class="n">session_ids</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The input fields of infosource node (i.e. <code class="docutils literal notranslate"><span class="pre">subject_id</span></code>, <code class="docutils literal notranslate"><span class="pre">session_id</span></code> ) are defined as iterables.
 Iterables are very important for the repeated execution of a workflow with slightly changed parameters.
 Indeed, Iterables are used to feed the different subject names into the workflow, and this leads to create
 as many execution workflows as subjects. And depending on your system, all of those workflows could be executed in parallel.</p>
-</div>
-<div class="section" id="datagrabber">
+</section>
+<section id="datagrabber">
 <span id="id2"></span><h3><a class="toc-backref" href="#id9">DataGrabber</a><a class="headerlink" href="#datagrabber" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">DataGrabber</span> <span class="pre">Interface</span></code> allows to define flexible search patterns which can be parameterized by user
 defined inputs (such as subject ID, session, etc.).
 In this example we parameterize the pattern search with <code class="docutils literal notranslate"><span class="pre">subject_id</span></code> and <code class="docutils literal notranslate"><span class="pre">session_id</span></code>. The ephypype function
 <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_datagrabber.html#ephypype.nodes.utils.create_datagrabber">create_datagrabber</a> creates a node to grab data using DataGrabber in Nipype.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*0_60*ica.fif&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;*</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">/meg/</span><span class="si">%s</span><span class="s1">*rest*0_60*ica.fif&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="pipeline">
+</section>
+<section id="pipeline">
 <span id="inputnode"></span><h3><a class="toc-backref" href="#id10">Pipeline</a><a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Each pipeline provided by NeuroPycon requires two different kind of inputs:</p>
 <ul class="simple">
-<li>inputs of the pipeline</li>
-<li><strong>inputnode</strong>: these particular inputs are defined after the creation of the pipeline; an inputnode of a pipeline is defined by an output of a previous Node</li>
+<li><p>inputs of the pipeline</p></li>
+<li><p><strong>inputnode</strong>: these particular inputs are defined after the creation of the pipeline; an inputnode of a pipeline is defined by an output of a previous Node</p></li>
 </ul>
 <p>For example, looking at the definition of <a class="reference external" href="https://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power">create_pipeline_power</a>  module
 <code class="docutils literal notranslate"><span class="pre">main_path</span></code>, <code class="docutils literal notranslate"><span class="pre">freq_bands</span></code> are inputs of the pipeline while <code class="docutils literal notranslate"><span class="pre">fif_file</span></code> is an inputnode. In the next section <a class="reference internal" href="#workflow"><span class="std std-ref">Specify Workflows and Connect Nodes</span></a> we’ll see how to specify this inputnode.</p>
 <p>To create the pipeline node we pass the input to the <code class="docutils literal notranslate"><span class="pre">create_pipeline_power</span></code> function:</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">power_workflow</span> <span class="o">=</span> <span class="n">create_pipeline_power</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="n">fmax</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">power_method</span><span class="p">,</span> <span class="n">is_epoched</span><span class="o">=</span><span class="n">is_epoched</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">power_workflow</span> <span class="o">=</span> <span class="n">create_pipeline_power</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">freq_bands</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="n">fmax</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">power_method</span><span class="p">,</span> <span class="n">is_epoched</span><span class="o">=</span><span class="n">is_epoched</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="specify-workflows-and-connect-nodes">
+</section>
+</section>
+<section id="specify-workflows-and-connect-nodes">
 <span id="workflow"></span><h2><a class="toc-backref" href="#id11">Specify Workflows and Connect Nodes</a><a class="headerlink" href="#specify-workflows-and-connect-nodes" title="Permalink to this headline">¶</a></h2>
 <p>The purpose of Workflow is to guide the sequential execution of Nodes: we create a main Workflow to connect
 the different Nodes and define the data flow from the outputs of one Node
@@ -256,8 +261,8 @@ So, these two nodes taken together can grab data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">power_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.fif_file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="run-workflow">
+</section>
+<section id="run-workflow">
 <h2><a class="toc-backref" href="#id12">Run Workflow</a><a class="headerlink" href="#run-workflow" title="Permalink to this headline">¶</a></h2>
 <p>After we have specified all the nodes and connections of the workflow, the last step is to run it
 by calling the <code class="docutils literal notranslate"><span class="pre">run()</span></code> method.
@@ -266,21 +271,23 @@ by calling <code class="docutils literal notranslate"><span class="pre">write_gr
 <p>If we rerun the workflow, only the nodes whose inputs have changed since the last run
 will be executed again.  If not, it will simply return cached results.
 This is achieved by recording a hash of the inputs.</p>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># run pipeline:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># run pipeline:</span>
 
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;MultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
-<div class="figure align-center" id="id4">
+<figure class="align-center" id="id4">
 <span id="wf-graph"></span><a class="reference internal image-reference" href="../_images/graph.png"><img alt="../_images/graph.png" src="../_images/graph.png" style="width: 252.0px; height: 374.25px;" /></a>
-<p class="caption"><span class="caption-text">Workflow graph</span></p>
-</div>
-<p><strong>Download</strong> Json parameters file: <code class="xref download docutils literal notranslate"><span class="pre">params_power.json</span></code></p>
-<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/3a49b205ea6bfe6d7db2a201eb59c779/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">plot_power.py</span></code></a></p>
-</div>
-</div>
+<figcaption>
+<p><span class="caption-text">Workflow graph</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><strong>Download</strong> Json parameters file: <a class="reference download internal" download="" href="../_downloads/41270997d13688a4daaf7859d0478caa/params.json"><code class="xref download docutils literal notranslate"><span class="pre">params.json</span></code></a></p>
+<p><strong>Download</strong> Python source code: <a class="reference download internal" download="" href="../_downloads/9e95aa781d816fc8f1de894c35527b97/plot_power.py"><code class="xref download docutils literal notranslate"><span class="pre">plot_power.py</span></code></a></p>
+</section>
+</section>
 
 
     </div>
@@ -294,8 +301,8 @@ This is achieved by recording a hash of the inputs.</p>
       
     </p>
     <p>
-        &copy; Copyright 2020, Neuropycon Developers. Last updated on 2020-04-09.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-21.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
 </footer>

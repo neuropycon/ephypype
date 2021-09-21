@@ -1,4 +1,4 @@
-ephypype.pipelines.create\_pipeline\_preproc\_meeg
+﻿ephypype.pipelines.create\_pipeline\_preproc\_meeg
 ==================================================
 
 .. currentmodule:: ephypype.pipelines
