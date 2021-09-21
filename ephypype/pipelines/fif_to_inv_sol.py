@@ -21,7 +21,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           is_epoched=False,
                                           events_id={},
                                           condition=None,
-                                          events_file='',
                                           decim=1,
                                           t_min=None, t_max=None,
                                           is_evoked=False,
@@ -93,7 +92,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline.base_dir = main_path
 
     inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
-                                                  'trans_file']),
+                                                  'trans_file',
+                                                  'events_file']),
                         name='inputnode')
 
     # Lead Field computation Node
