@@ -41,7 +41,9 @@ def create_iterator(fields, field_values):
 
 
 def create_datagrabber(data_path, template_path, template_args,
-                       infields=['subject_id', 'session_id']):
+                       field_template = None,
+                       infields=['subject_id', 'session_id'],
+                       outfields=['raw_file']):
     """Create node to grab data using DataGrabber in Nipype.
 
     Parameters
@@ -64,13 +66,18 @@ def create_datagrabber(data_path, template_path, template_args,
     """
 
     datasource = pe.Node(interface=nio.DataGrabber(infields=infields,
-                                                   outfields=['raw_file']),
+                                                   outfields=outfields),
                          name='datasource')
 
     datasource.inputs.base_directory = data_path
     datasource.inputs.template = template_path
 
-    datasource.inputs.template_args = dict(raw_file=template_args)
+    if field_template:
+        datasource.inputs.field_template = field_template
+    if type(template_args) == list:
+        datasource.inputs.template_args = dict(raw_file=template_args)
+    elif type(template_args) == dict:
+        datasource.inputs.template_args = template_args
 
     datasource.inputs.sort_filelist = True
 
