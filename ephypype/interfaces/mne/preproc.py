@@ -273,9 +273,10 @@ class DefineEpochsInputSpec(BaseInterfaceInputSpec):
     t_max = traits.Float(None, desc='end time after event', mandatory=False)
     decim = traits.Int(1, desc='Factor by which to downsample the data',
                        mandatory=False, usedefault=True)
-    data_type = traits.String('', exists=True, desc='data type',
-                              mandatory=False)
-    baseline = traits.Tuple((None, 0), desc='baseline', mandatory=False)
+    data_type = traits.String('meg', exists=True, desc='data type',
+                              mandatory=False, usedefault=True)
+    baseline = traits.Tuple((None, 0), desc='baseline', mandatory=False,
+                            usedefault=True)
 
 
 class DefineEpochsOutputSpec(TraitedSpec):

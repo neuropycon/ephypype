@@ -498,9 +498,8 @@ def _define_epochs(
     Splitted epochs have a length ep_length with rejection criteria.
     """
     raw = read_raw_fif(fif_file, preload=True)
-    print(raw.info)
     raw.set_eeg_reference(ref_channels='average', projection=True)
-    print(raw.info)
+
     reject = _create_reject_dict(raw.info, data_type)
     if data_type == 'meg':
         picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
