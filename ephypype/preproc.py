@@ -114,7 +114,7 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
 
     # if we just have exclude channels we jump these steps
     n_max_ecg = 3
-    n_max_eog = 2
+    n_max_eog = 3
 
     # check if ecg_ch_name is in the raw channels
     if ecg_ch_name in raw.info['ch_names']:
@@ -321,7 +321,7 @@ def _create_reject_dict(raw_info, data_type='meg'):
     if len(picks_grad) > 0:
         reject['grad'] = 4000e-13
     if len(picks_eog) > 0:
-        reject['eog'] = 150e-6
+        reject['eog'] = 250e-6
     if len(picks_eeg) > 0:
         reject['eeg'] = 150e-6
     print(reject)
@@ -520,10 +520,13 @@ def _define_epochs(
     # TODO -> use autoreject ?
     # reject_tmax = 0.8  # duration we really care about
     epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
-                    picks=picks, baseline=baseline, reject=reject,
-                    decim=decim, preload=True)
+                    picks=picks, baseline=baseline, decim=decim, preload=True)
     epochs.drop_bad(reject=reject)
+    fig = epochs.plot_drop_log(show=False)
+    fig_fpath = os.path.abspath(base + '-epo-dropped.jpg')
 
+    fig.savefig(fig_fpath, facecolor='black')
+    
     good_events_file = os.path.join(data_path, 'good_events.txt')
     np.savetxt(good_events_file, epochs.events)
 

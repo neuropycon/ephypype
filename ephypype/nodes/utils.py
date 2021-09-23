@@ -51,13 +51,23 @@ def create_datagrabber(data_path, template_path, template_args,
     data_path : str
         The base directory for the input data.
     template_path : str
-        Input filename string (relative to base directory)
+        Input filename string (relative to base directory) 
         along with string formatters (only %s allowed for now) and
-        wildcard characters.
+        wildcard characters. Use it when outfields=['raw_file'].|
         E.g., '\\*%s/%s/meg/%s\\*rest\\*raw.fif'
+    field_template : dict
+        Input filename string (relative to base directory) 
+        along with string formatters (only %s allowed for now) and
+        wildcard characters for each element of outfields.
+        E.g., '\\*%s/%s/meg/%s\\*rest\\*raw.fif'
+        If use field_template set template_path='*'
     template_args : list of str
         The arguments for the templates. Can be either 'subject_id'
         or 'session_id'
+    infields : list
+        Indicates the input fields to be used in template, field_template
+    outfields : list
+        Indicates output fields to be dynamically created
 
     Returns
     -------

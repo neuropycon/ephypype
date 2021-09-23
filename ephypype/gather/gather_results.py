@@ -54,7 +54,6 @@ def get_results(workflow_path, workflow_name, pipeline=None):
         matrices : list of str
             List of path of results
     """
-
     if pipeline == 'connectivity':
         result_file = '*.npy'
         label_file = None
@@ -79,6 +78,11 @@ def get_results(workflow_path, workflow_name, pipeline=None):
         result_file = '*-tfr.h5'
         label_file = None
         node_path = op.join(workflow_path, workflow_name, '*', '*')
+
+    elif pipeline == 'compute_evoked':
+        result_file = '*-ave.fif'
+        label_file = None
+        node_path = op.join(workflow_path, workflow_name, '*', '*', '*')
 
     results_files = _get_list(node_path, result_file)
 
