@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ephypype.nodes.utils &#8212; ephypype 0.0.7 documentation</title>
+    <title>ephypype.nodes.utils &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           Ephypype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.7</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -48,6 +48,7 @@
                 <li><a href="../../../auto_examples/index.html">Gallery</a></li>
                 <li><a href="../../../api.html">API</a></li>
                 <li><a href="../../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_workshop/index.html">Workshop</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -144,7 +145,9 @@
 
 
 <div class="viewcode-block" id="create_datagrabber"><a class="viewcode-back" href="../../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber">[docs]</a><span class="k">def</span> <span class="nf">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">,</span>
-                       <span class="n">infields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">]):</span>
+                       <span class="n">field_template</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                       <span class="n">infields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
+                       <span class="n">outfields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">]):</span>
     <span class="sd">&quot;&quot;&quot;Create node to grab data using DataGrabber in Nipype.</span>
 
 <span class="sd">    Parameters</span>
@@ -152,13 +155,23 @@
 <span class="sd">    data_path : str</span>
 <span class="sd">        The base directory for the input data.</span>
 <span class="sd">    template_path : str</span>
-<span class="sd">        Input filename string (relative to base directory)</span>
+<span class="sd">        Input filename string (relative to base directory) </span>
 <span class="sd">        along with string formatters (only %s allowed for now) and</span>
-<span class="sd">        wildcard characters.</span>
+<span class="sd">        wildcard characters. Use it when outfields=[&#39;raw_file&#39;].|</span>
 <span class="sd">        E.g., &#39;\\*%s/%s/meg/%s\\*rest\\*raw.fif&#39;</span>
+<span class="sd">    field_template : dict</span>
+<span class="sd">        Input filename string (relative to base directory) </span>
+<span class="sd">        along with string formatters (only %s allowed for now) and</span>
+<span class="sd">        wildcard characters for each element of outfields.</span>
+<span class="sd">        E.g., &#39;\\*%s/%s/meg/%s\\*rest\\*raw.fif&#39;</span>
+<span class="sd">        If use field_template set template_path=&#39;*&#39;</span>
 <span class="sd">    template_args : list of str</span>
 <span class="sd">        The arguments for the templates. Can be either &#39;subject_id&#39;</span>
 <span class="sd">        or &#39;session_id&#39;</span>
+<span class="sd">    infields : list</span>
+<span class="sd">        Indicates the input fields to be used in template, field_template</span>
+<span class="sd">    outfields : list</span>
+<span class="sd">        Indicates output fields to be dynamically created</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -167,13 +180,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">datasource</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">nio</span><span class="o">.</span><span class="n">DataGrabber</span><span class="p">(</span><span class="n">infields</span><span class="o">=</span><span class="n">infields</span><span class="p">,</span>
-                                                   <span class="n">outfields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">]),</span>
+                                                   <span class="n">outfields</span><span class="o">=</span><span class="n">outfields</span><span class="p">),</span>
                          <span class="n">name</span><span class="o">=</span><span class="s1">&#39;datasource&#39;</span><span class="p">)</span>
 
     <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">base_directory</span> <span class="o">=</span> <span class="n">data_path</span>
     <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">template_path</span>
 
-    <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">raw_file</span><span class="o">=</span><span class="n">template_args</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">field_template</span><span class="p">:</span>
+        <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">field_template</span> <span class="o">=</span> <span class="n">field_template</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">template_args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">raw_file</span><span class="o">=</span><span class="n">template_args</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">template_args</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">template_args</span> <span class="o">=</span> <span class="n">template_args</span>
 
     <span class="n">datasource</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sort_filelist</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -223,7 +241,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-21.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>

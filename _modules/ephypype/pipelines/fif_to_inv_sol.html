@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ephypype.pipelines.fif_to_inv_sol &#8212; ephypype 0.0.7 documentation</title>
+    <title>ephypype.pipelines.fif_to_inv_sol &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
@@ -39,7 +39,7 @@
         </button>
         <a class="navbar-brand" href="../../../index.html">
           Ephypype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.7</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -48,6 +48,7 @@
                 <li><a href="../../../auto_examples/index.html">Gallery</a></li>
                 <li><a href="../../../api.html">API</a></li>
                 <li><a href="../../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../auto_workshop/index.html">Workshop</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -124,7 +125,6 @@
                                           <span class="n">is_epoched</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                           <span class="n">events_id</span><span class="o">=</span><span class="p">{},</span>
                                           <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                          <span class="n">events_file</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                                           <span class="n">decim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                           <span class="n">t_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                           <span class="n">is_evoked</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -196,7 +196,8 @@
     <span class="n">pipeline</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">main_path</span>
 
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sbj_id&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;trans_file&#39;</span><span class="p">]),</span>
+                                                  <span class="s1">&#39;trans_file&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;events_file&#39;</span><span class="p">]),</span>
                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># Lead Field computation Node</span>
@@ -282,11 +283,13 @@
                                             <span class="n">parc</span><span class="o">=</span><span class="s1">&#39;aparc&#39;</span><span class="p">,</span>
                                             <span class="n">aseg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                             <span class="n">aseg_labels</span><span class="o">=</span><span class="p">[],</span>
-                                            <span class="n">noise_cov_fname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                                             <span class="n">all_src_space</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                             <span class="n">ROIs_mean</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                             <span class="n">save_mixed_src_space</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                            <span class="n">is_fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+                                            <span class="n">is_fixed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">noise_cov_fname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                            <span class="n">events_id</span><span class="o">=</span><span class="p">{},</span>
+                                            <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Source reconstruction pipeline.</span>
 
 <span class="sd">    Parameters</span>
@@ -335,7 +338,7 @@
     <span class="n">pipeline</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">main_path</span>
 
     <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sbj_id&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;trans_file&#39;</span><span class="p">]),</span>
+                                                  <span class="s1">&#39;trans_file&#39;</span><span class="p">,</span> <span class="s1">&#39;cov_filename&#39;</span><span class="p">]),</span>
                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># Lead Field computation Node</span>
@@ -352,14 +355,18 @@
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">,</span> <span class="n">LF_computation</span><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">)</span>
 
     <span class="c1"># Noise Covariance Matrix Node</span>
-    <span class="n">create_noise_cov</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">NoiseCovariance</span><span class="p">(),</span>
-                               <span class="n">name</span><span class="o">=</span><span class="s2">&quot;create_noise_cov&quot;</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    create_noise_cov = pe.Node(interface=NoiseCovariance(),</span>
+<span class="sd">                               name=&quot;create_noise_cov&quot;)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;******************** </span><span class="si">{}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">noise_cov_fname</span><span class="p">)</span>
-    <span class="n">create_noise_cov</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cov_fname_in</span> <span class="o">=</span> <span class="n">noise_cov_fname</span>
-
-    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="n">create_noise_cov</span><span class="p">,</span> <span class="s1">&#39;raw_filename&#39;</span><span class="p">)</span>
-
+<span class="sd">    </span>
+<span class="sd">    print(&#39;******************** {}&#39;, noise_cov_fname)</span>
+<span class="sd">    create_noise_cov.inputs.cov_fname_in = noise_cov_fname</span>
+<span class="sd">    create_noise_cov.inputs.is_epoched = True</span>
+<span class="sd">    create_noise_cov.inputs.is_evoked = True</span>
+<span class="sd">    </span>
+<span class="sd">    pipeline.connect(inputnode, &#39;raw&#39;, create_noise_cov, &#39;raw_filename&#39;)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># Inverse Solution Node</span>
     <span class="n">inv_solution</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">InverseSolution</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inv_solution&#39;</span><span class="p">)</span>
 
@@ -375,13 +382,16 @@
 
     <span class="n">inv_solution</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">all_src_space</span> <span class="o">=</span> <span class="n">all_src_space</span>
     <span class="n">inv_solution</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ROIs_mean</span> <span class="o">=</span> <span class="n">ROIs_mean</span>
+    
+    <span class="n">inv_solution</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">events_id</span> <span class="o">=</span> <span class="n">events_id</span>
+    <span class="n">inv_solution</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">condition</span>
 
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;sbj_id&#39;</span><span class="p">,</span> <span class="n">inv_solution</span><span class="p">,</span> <span class="s1">&#39;sbj_id&#39;</span><span class="p">)</span>
 
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="n">inv_solution</span><span class="p">,</span> <span class="s1">&#39;raw_filename&#39;</span><span class="p">)</span>
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">LF_computation</span><span class="p">,</span> <span class="s1">&#39;fwd_filename&#39;</span><span class="p">,</span>
                      <span class="n">inv_solution</span><span class="p">,</span> <span class="s1">&#39;fwd_filename&#39;</span><span class="p">)</span>
-    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">create_noise_cov</span><span class="p">,</span> <span class="s1">&#39;cov_fname_out&#39;</span><span class="p">,</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;cov_filename&#39;</span><span class="p">,</span>
                      <span class="n">inv_solution</span><span class="p">,</span> <span class="s1">&#39;cov_filename&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pipeline</span>
@@ -398,7 +408,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-21.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>

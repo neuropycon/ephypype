@@ -29,7 +29,6 @@ from ephypype.datasets import fetch_omega_dataset
 
 ###############################################################################
 # Let us fetch the data first. It is around 675 MB download.
-
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_omega_dataset(base_path)
 

@@ -5,18 +5,18 @@
 
 Computation times
 =================
-**01:01.946** total execution time for **auto_examples** files:
+**01:01.874** total execution time for **auto_examples** files:
 
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_connectivity.py` (``plot_connectivity.py``)   | 00:22.978 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_connectivity.py` (``plot_connectivity.py``)   | 00:23.306 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_inverse_LCMV.py` (``plot_inverse_LCMV.py``)   | 00:11.528 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_inverse.py` (``plot_inverse.py``)             | 00:11.418 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_inverse.py` (``plot_inverse.py``)             | 00:10.767 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_inverse_LCMV.py` (``plot_inverse_LCMV.py``)   | 00:10.628 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_preprocessing.py` (``plot_preprocessing.py``) | 00:08.424 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_preprocessing.py` (``plot_preprocessing.py``) | 00:08.524 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_power.py` (``plot_power.py``)                 | 00:08.248 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_power.py` (``plot_power.py``)                 | 00:07.999 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_auto_examples_run_fieldtrip_IF.py` (``run_fieldtrip_IF.py``)     | 00:00.000 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Workshop at CuttingEEG &#8212; ephypype 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
+                <li><a href="#">Workshop</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a></a><ul>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#install-ephypype">Install ephypype</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sample-data">Sample data</a><ul>
+<li><a class="reference internal" href="#freesurfer">Freesurfer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#notebooks">Notebooks</a><ul>
+<li><a class="reference internal" href="#erp-core-dataset">ERP CORE dataset</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/auto_workshop/index.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="workshop-at-cuttingeeg">
+<span id="general-workshop"></span><span id="sphx-glr-auto-workshop"></span><h1>Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a><a class="headerlink" href="#workshop-at-cuttingeeg" title="Permalink to this headline">¶</a></h1>
+<p>In this hands-on session we will describe the philosophy, architecture and functionalities of NeuroPycon and provide illustrative examples through interactive notebooks.</p>
+<p>We will show how to use NeuroPycon pipeline to analyze EEG (MEG) data with a focus on automatic artifact removal by ICA, ERP components computation and (if times allows) source reconstruction from MEG data.</p>
+<p>Basic knowledge of (or a keen interest in) <strong>Python</strong> is required. Furthermore, we suggest the following lectures:</p>
+<ul class="simple">
+<li><p><a href="https://www.frontiersin.org/articles/10.3389/fninf.2011.00013/full" target="_blank">Gorgolewski</a> et al. (2011) Front. Neuroinform. 5:13</p></li>
+<li><p><a href="https://www.frontiersin.org/articles/10.3389/fnins.2013.00267/full" target="_blank">Gramfort</a> et al. (2013), Front. Neurosci. 7:267</p></li>
+<li><p><a href="https://www.sciencedirect.com/science/article/pii/S1053811920305061" target="_blank">Meunier, Pascarella</a> et al. (2020), Neuroimage</p></li>
+</ul>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>We recommend to install neuropycon and the related software (MNE-python, Freesurfer) before the workshop.</p>
+<p>First, we recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>. The last version of MNE-python relies on python 3.9.</p>
+<p>Alternativaly, you can create an enviroment by Anaconda and install the packages contained in <code class="xref download docutils literal notranslate"><span class="pre">requirements</span></code> file, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -n cuttingeeg <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+$ pip install -r requirements.txt
+$ pip install jupyter
+</pre></div>
+</div>
+<section id="install-ephypype">
+<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this headline">¶</a></h3>
+<p>To install ephypype package, download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/neuropycon/ephypype.git
+$ <span class="nb">cd</span> ephypype
+$ python setup.py develop
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sample-data">
+<h2>Sample data<a class="headerlink" href="#sample-data" title="Permalink to this headline">¶</a></h2>
+<p>During the workshop we use some sample datasets that will be shared on <a href="https://zenodo.org/communities/cuttingeeg" target="_blank">zenodo</a></p>
+<section id="freesurfer">
+<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Download Freesurfer software:</p></li>
+</ol>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall</a></p>
+<ol class="arabic simple" start="2">
+<li><p>Follow the Installation instructions</p></li>
+</ol>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall</a></p>
+</section>
+</section>
+<section id="notebooks">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div><dl class="field-list simple" id="sphx-glr-auto-workshop-eeg">
+<dt class="field-odd">orphan</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<section id="erp-core-dataset">
+<h3>ERP CORE dataset<a class="headerlink" href="#erp-core-dataset" title="Permalink to this headline">¶</a></h3>
+<p>These examples demonstrate how to process 1 participant from the <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a> dataset. It shows how to obtain N170 component from a face perception task by <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a> pipelines.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP"><figure class="align-default" id="id1">
+<img alt="02. Compute ERP" src="../_images/sphx_glr_plot_ERP_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="eeg/plot_ERP.html#sphx-glr-auto-workshop-eeg-plot-erp-py"><span class="std std-ref">02. Compute ERP</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;https://neuropycon.github.io/ephypype/auto_examples/plot_preprocessing.html#sphx-g..."><figure class="align-default" id="id2">
+<img alt="01. Preprocess EEG data" src="../_images/sphx_glr_plot_eeg_preprocessing_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="eeg/plot_eeg_preprocessing.html#sphx-glr-auto-workshop-eeg-plot-eeg-preprocessing-py"><span class="std std-ref">01. Preprocess EEG data</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/699892c65b566abb918af588d621cdbd/auto_workshop_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_workshop_python.zip</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/9e3ff6892e9780084953b839739be791/auto_workshop_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">auto_workshop_jupyter.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-24.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

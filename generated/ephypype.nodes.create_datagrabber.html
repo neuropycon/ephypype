@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>ephypype.nodes.create_datagrabber &#8212; ephypype 0.0.7 documentation</title>
+    <title>ephypype.nodes.create_datagrabber &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
@@ -40,7 +40,7 @@
         </button>
         <a class="navbar-brand" href="../index.html">
           Ephypype</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.0.7</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -49,6 +49,7 @@
                 <li><a href="../auto_examples/index.html">Gallery</a></li>
                 <li><a href="../api.html">API</a></li>
                 <li><a href="../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_workshop/index.html">Workshop</a></li>
                 <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
             
             
@@ -112,20 +113,30 @@
 <h1>ephypype.nodes.create_datagrabber<a class="headerlink" href="#ephypype-nodes-create-datagrabber" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="ephypype.nodes.create_datagrabber">
-<span class="sig-prename descclassname"><span class="pre">ephypype.nodes.</span></span><span class="sig-name descname"><span class="pre">create_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['subject_id',</span> <span class="pre">'session_id']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/nodes/utils.html#create_datagrabber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ephypype.nodes.create_datagrabber" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ephypype.nodes.</span></span><span class="sig-name descname"><span class="pre">create_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_template</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['subject_id',</span> <span class="pre">'session_id']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['raw_file']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/nodes/utils.html#create_datagrabber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ephypype.nodes.create_datagrabber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create node to grab data using DataGrabber in Nipype.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>data_path</strong><span class="classifier">str</span></dt><dd><p>The base directory for the input data.</p>
 </dd>
-<dt><strong>template_path</strong><span class="classifier">str</span></dt><dd><p>Input filename string (relative to base directory)
+<dt><strong>template_path</strong><span class="classifier">str</span></dt><dd><p>Input filename string (relative to base directory) 
 along with string formatters (only %s allowed for now) and
-wildcard characters.
+wildcard characters. Use it when outfields=[‘raw_file’].|
 E.g., ‘*%s/%s/meg/%s*rest*raw.fif’</p>
+</dd>
+<dt><strong>field_template</strong><span class="classifier">dict</span></dt><dd><p>Input filename string (relative to base directory) 
+along with string formatters (only %s allowed for now) and
+wildcard characters for each element of outfields.
+E.g., ‘*%s/%s/meg/%s*rest*raw.fif’
+If use field_template set template_path=’*’</p>
 </dd>
 <dt><strong>template_args</strong><span class="classifier">list of str</span></dt><dd><p>The arguments for the templates. Can be either ‘subject_id’
 or ‘session_id’</p>
+</dd>
+<dt><strong>infields</strong><span class="classifier">list</span></dt><dd><p>Indicates the input fields to be used in template, field_template</p>
+</dd>
+<dt><strong>outfields</strong><span class="classifier">list</span></dt><dd><p>Indicates output fields to be dynamically created</p>
 </dd>
 </dl>
 </dd>
@@ -152,7 +163,7 @@ or ‘session_id’</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-21.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-24.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>

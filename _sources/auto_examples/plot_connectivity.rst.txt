@@ -396,7 +396,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f083d4f9b10>
+    <networkx.classes.digraph.DiGraph object at 0x7f688ead2710>
 
 
 
@@ -479,7 +479,7 @@ to perform graph analysis on the computed connectivity matrix.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  22.978 seconds)
+   **Total running time of the script:** ( 0 minutes  23.306 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_connectivity.py:

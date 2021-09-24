@@ -1,0 +1,201 @@
+:orphan:
+
+
+
+.. _sphx_glr_auto_workshop:
+
+.. _general_workshop:
+
+
+Workshop at |CuttingEEG|
+========================
+
+In this hands-on session we will describe the philosophy, architecture and functionalities of NeuroPycon and provide illustrative examples through interactive notebooks.
+
+We will show how to use NeuroPycon pipeline to analyze EEG (MEG) data with a focus on automatic artifact removal by ICA, ERP components computation and (if times allows) source reconstruction from MEG data.
+
+Basic knowledge of (or a keen interest in) **Python** is required. Furthermore, we suggest the following lectures:
+
+* |Gorgolewski| et al. (2011) Front. Neuroinform. 5:13
+* |Gramfort| et al. (2013), Front. Neurosci. 7:267
+* |Meunier_Pascarella| et al. (2020), Neuroimage 
+
+.. |CuttingEEG| raw:: html
+
+   <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a>
+   
+.. |Gorgolewski| raw:: html
+
+   <a href="https://www.frontiersin.org/articles/10.3389/fninf.2011.00013/full" target="_blank">Gorgolewski</a>
+
+.. |Gramfort| raw:: html
+
+   <a href="https://www.frontiersin.org/articles/10.3389/fnins.2013.00267/full" target="_blank">Gramfort</a>
+
+.. |Meunier_Pascarella| raw:: html
+
+   <a href="https://www.sciencedirect.com/science/article/pii/S1053811920305061" target="_blank">Meunier, Pascarella</a>
+
+   
+
+Installation
+------------
+We recommend to install neuropycon and the related software (MNE-python, Freesurfer) before the workshop. 
+
+First, we recommend to install MNE python by following the |installation instructions|. The last version of MNE-python relies on python 3.9.
+
+.. |installation instructions| raw:: html
+
+   <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>
+   
+
+Alternativaly, you can create an enviroment by Anaconda and install the packages contained in :download:`requirements <./plot_ERPcore_preproc.ipynb>` file, e.g.
+
+.. code-block:: bash
+
+        $ conda create -n cuttingeeg python=3.7
+        $ pip install -r requirements.txt
+        $ pip install jupyter
+
+
+   
+Install ephypype
+^^^^^^^^^^^^^^^^
+To install ephypype package, download from |github| the last version and install it:
+
+.. code-block:: bash
+
+        $ git clone https://github.com/neuropycon/ephypype.git
+        $ cd ephypype
+        $ python setup.py develop
+
+.. |github| raw:: html
+
+   <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a>
+   
+   
+Sample data
+-----------
+During the workshop we use some sample datasets that will be shared on |zenodo|
+
+
+.. |zenodo| raw:: html
+
+   <a href="https://zenodo.org/communities/cuttingeeg" target="_blank">zenodo</a>
+
+Freesurfer
+^^^^^^^^^^
+
+1. Download Freesurfer software:
+
+https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall
+
+2. Follow the Installation instructions
+
+https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall
+   
+   
+Notebooks
+---------
+   
+.. toctree::
+    :maxdepth: 1
+    
+
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_auto_workshop_eeg:
+
+:orphan:
+
+ERP CORE dataset
+^^^^^^^^^^^^^^^^
+
+These examples demonstrate how to process 1 participant from the |ERP_CORE| dataset. It shows how to obtain N170 component from a face perception task by |NeuroPycon| pipelines.
+
+.. |ERP_CORE| raw:: html
+        
+        <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a>
+
+.. |NeuroPycon| raw:: html
+        
+        <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a>
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP">
+
+.. only:: html
+
+ .. figure:: /auto_workshop/eeg/images/thumb/sphx_glr_plot_ERP_thumb.png
+     :alt: 02. Compute ERP
+
+     :ref:`sphx_glr_auto_workshop_eeg_plot_ERP.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_workshop/eeg/plot_ERP
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;https://neuropycon.github.io/ephypype/auto_examples/plot_preprocessing.html#sphx-g...">
+
+.. only:: html
+
+ .. figure:: /auto_workshop/eeg/images/thumb/sphx_glr_plot_eeg_preprocessing_thumb.png
+     :alt: 01. Preprocess EEG data
+
+     :ref:`sphx_glr_auto_workshop_eeg_plot_eeg_preprocessing.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_workshop/eeg/plot_eeg_preprocessing
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-gallery
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+    :download:`Download all examples in Python source code: auto_workshop_python.zip </auto_workshop/auto_workshop_python.zip>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+    :download:`Download all examples in Jupyter notebooks: auto_workshop_jupyter.zip </auto_workshop/auto_workshop_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
