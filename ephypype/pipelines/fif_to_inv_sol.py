@@ -21,7 +21,6 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
                                           is_epoched=False,
                                           events_id={},
                                           condition=None,
-                                          events_file='',
                                           decim=1,
                                           t_min=None, t_max=None,
                                           is_evoked=False,
@@ -93,7 +92,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     pipeline.base_dir = main_path
 
     inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
-                                                  'trans_file']),
+                                                  'trans_file',
+                                                  'events_file']),
                         name='inputnode')
 
     # Lead Field computation Node
@@ -179,11 +179,13 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
                                             parc='aparc',
                                             aseg=False,
                                             aseg_labels=[],
-                                            noise_cov_fname='',
                                             all_src_space=False,
                                             ROIs_mean=True,
                                             save_mixed_src_space=False,
-                                            is_fixed=False):
+                                            is_fixed=False,
+                                            noise_cov_fname='',
+                                            events_id={},
+                                            condition=None):
     """Source reconstruction pipeline.
 
     Parameters
@@ -232,7 +234,7 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
     pipeline.base_dir = main_path
 
     inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
-                                                  'trans_file']),
+                                                  'trans_file', 'cov_filename']),
                         name='inputnode')
 
     # Lead Field computation Node
@@ -249,14 +251,18 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
     pipeline.connect(inputnode, 'trans_file', LF_computation, 'trans_file')
 
     # Noise Covariance Matrix Node
+    '''
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
+    
     print('******************** {}', noise_cov_fname)
     create_noise_cov.inputs.cov_fname_in = noise_cov_fname
-
+    create_noise_cov.inputs.is_epoched = True
+    create_noise_cov.inputs.is_evoked = True
+    
     pipeline.connect(inputnode, 'raw', create_noise_cov, 'raw_filename')
-
+    '''
     # Inverse Solution Node
     inv_solution = pe.Node(interface=InverseSolution(), name='inv_solution')
 
@@ -272,13 +278,16 @@ def create_pipeline_evoked_inverse_solution(main_path, subjects_dir,
 
     inv_solution.inputs.all_src_space = all_src_space
     inv_solution.inputs.ROIs_mean = ROIs_mean
+    
+    inv_solution.inputs.events_id = events_id
+    inv_solution.inputs.condition = condition
 
     pipeline.connect(inputnode, 'sbj_id', inv_solution, 'sbj_id')
 
     pipeline.connect(inputnode, 'raw', inv_solution, 'raw_filename')
     pipeline.connect(LF_computation, 'fwd_filename',
                      inv_solution, 'fwd_filename')
-    pipeline.connect(create_noise_cov, 'cov_fname_out',
+    pipeline.connect(inputnode, 'cov_filename',
                      inv_solution, 'cov_filename')
 
     return pipeline

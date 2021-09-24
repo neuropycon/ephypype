@@ -41,7 +41,9 @@ def create_iterator(fields, field_values):
 
 
 def create_datagrabber(data_path, template_path, template_args,
-                       infields=['subject_id', 'session_id']):
+                       field_template = None,
+                       infields=['subject_id', 'session_id'],
+                       outfields=['raw_file']):
     """Create node to grab data using DataGrabber in Nipype.
 
     Parameters
@@ -49,13 +51,23 @@ def create_datagrabber(data_path, template_path, template_args,
     data_path : str
         The base directory for the input data.
     template_path : str
-        Input filename string (relative to base directory)
+        Input filename string (relative to base directory) 
         along with string formatters (only %s allowed for now) and
-        wildcard characters.
+        wildcard characters. Use it when outfields=['raw_file'].|
         E.g., '\\*%s/%s/meg/%s\\*rest\\*raw.fif'
+    field_template : dict
+        Input filename string (relative to base directory) 
+        along with string formatters (only %s allowed for now) and
+        wildcard characters for each element of outfields.
+        E.g., '\\*%s/%s/meg/%s\\*rest\\*raw.fif'
+        If use field_template set template_path='*'
     template_args : list of str
         The arguments for the templates. Can be either 'subject_id'
         or 'session_id'
+    infields : list
+        Indicates the input fields to be used in template, field_template
+    outfields : list
+        Indicates output fields to be dynamically created
 
     Returns
     -------
@@ -64,13 +76,18 @@ def create_datagrabber(data_path, template_path, template_args,
     """
 
     datasource = pe.Node(interface=nio.DataGrabber(infields=infields,
-                                                   outfields=['raw_file']),
+                                                   outfields=outfields),
                          name='datasource')
 
     datasource.inputs.base_directory = data_path
     datasource.inputs.template = template_path
 
-    datasource.inputs.template_args = dict(raw_file=template_args)
+    if field_template:
+        datasource.inputs.field_template = field_template
+    if type(template_args) == list:
+        datasource.inputs.template_args = dict(raw_file=template_args)
+    elif type(template_args) == dict:
+        datasource.inputs.template_args = template_args
 
     datasource.inputs.sort_filelist = True
 

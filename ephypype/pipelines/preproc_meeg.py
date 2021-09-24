@@ -264,7 +264,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
 
 
 def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
-                           events_id={}, condition=None, events_file='',
+                           events_id={}, condition=None,
                            decim=1, t_min=None, t_max=None, baseline=None,
                            data_type='meg'):
     """ERP reconstruction pipeline.
@@ -301,7 +301,7 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw']),
+    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'events_file']),
                         name='inputnode')
 
     # Create epochs based on events_id
@@ -311,13 +311,14 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
     define_epochs.inputs.t_min = t_min
     define_epochs.inputs.t_max = t_max
     define_epochs.inputs.decim = decim
-    define_epochs.inputs.events_file = events_file
+    # define_epochs.inputs.events_file = events_file
     define_epochs.inputs.data_type = data_type
 
     if baseline:
         define_epochs.inputs.baseline = baseline
         
     pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
+    pipeline.connect(inputnode, 'events_file', define_epochs, 'events_file')
 
     compute_evoked = pe.Node(interface=DefineEvoked(), name='compute_evoked')
     compute_evoked.inputs.events_id = events_id

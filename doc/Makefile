@@ -42,6 +42,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
+	rm -rf auto_workshop/
 	rm -rf generated/*
 	rm -rf modules/*
 

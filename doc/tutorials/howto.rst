@@ -156,7 +156,7 @@ DataGrabber
 The ``DataGrabber Interface`` allows to define flexible search patterns which can be parameterized by user
 defined inputs (such as subject ID, session, etc.).
 In this example we parameterize the pattern search with ``subject_id`` and ``session_id``. The ephypype function
-`create_datagrabber <https://neuropycon.github.io/ephypype/generated/ephypype.nodes.utils.create_datagrabber.html#ephypype.nodes.utils.create_datagrabber>`_ creates a node to grab data using DataGrabber in Nipype.
+`create_datagrabber <https://neuropycon.github.io/ephypype/generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber>`_ creates a node to grab data using DataGrabber in Nipype.
 
 .. code:: python
 
