@@ -94,7 +94,7 @@ Installation
 
 ephypype works with **python3**
 
-* mne>0.14
+* mne>0.19
 * nipype
 * h5py
 
@@ -104,7 +104,7 @@ We also recommend to install MNE python by following the |installation instructi
 
 .. |installation instructions| raw:: html
 
-   <a href="http://martinos.org/mne/dev/install_mne_python.html#check-your-installation" target="_blank">MNE python installation instructions</a>
+   <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>
 
 
 Install ephypype
@@ -113,6 +113,7 @@ Install ephypype
 .. code-block:: bash
 
    $ pip install ephypype
+   $ pip install jupyter
     
 
 Freesurfer

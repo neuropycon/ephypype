@@ -1,0 +1,43 @@
+{
+    "general":
+    {
+        "NJOBS": 2,
+        "subject_ids": ["016"],
+        "session_ids": ["N170"],
+        "data_path" : "/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE",
+        "data_type": "eeg"
+    },
+    "preprocessing":
+    {
+        "l_freq": 0.1,
+        "h_freq": 150,
+        "down_sfreq": 256,
+        "EoG_ch_name": ["HEOG", "VEOG"],
+        "bipolar": {
+            "HEOG": ["HEOG_left", "HEOG_right"], 
+            "VEOG": ["VEOG_lower", "Fp2"]
+            },
+        "ch_new_names": {
+            "FP1": "Fp1",
+            "FP2": "Fp2"
+            },
+        "montage": "standard_1005",
+        "n_components": 28,
+        "reject": {
+            "eeg": 350e-6,
+            "eog": 500e-6
+            }
+    },
+    "ERP":
+    {
+        "events_id": {
+           "faces": 1,
+           "car": 2
+            },
+        "condition": ["faces", "car"],
+        "events_file": "*_filt_ica-eve.fif",
+        "tmin": -0.2,
+        "tmax": 0.8,
+        "baseline": [null, 0]
+    }
+}
