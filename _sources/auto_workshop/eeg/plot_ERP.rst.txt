@@ -30,14 +30,40 @@ extract_events Node.
 The evoked datasets are created by averaging the different conditions specified
 in json file. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-32
+.. GENERATED FROM PYTHON SOURCE LINES 14-19
 
 .. code-block:: default
 
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
     # License: BSD (3-clause)
 
-    # sphinx_gallery_thumbnail_number = 1
+    # sphinx_gallery_thumbnail_number = 2
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 20-32
+
+Import modules
+^^^^^^^^^^^^^^
+The first step is to import the modules we need in the script. We import
+mainly from |nipype| and |ephypype| packages.
+
+.. |nipype| raw:: html
+
+   <a href="https://nipype.readthedocs.io/en/latest/#" target="_blank">nipype</a>
+
+.. |ephypype| raw:: html
+
+   <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a>
+
+.. GENERATED FROM PYTHON SOURCE LINES 32-45
+
+.. code-block:: default
 
 
     import os.path as op
@@ -59,22 +85,42 @@ in json file.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Let us fetch the data first. It is around 90 MB download.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-118
+.. GENERATED FROM PYTHON SOURCE LINES 47-50
 
 .. code-block:: default
 
     base_path = op.join(op.dirname(ephypype.__file__), '..', 'doc/workshop')
     data_path = fetch_erpcore_dataset(base_path)
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 51-58
+
+Define data and variables
+^^^^^^^^^^^^^^^^^^^^^^^^^
+Let us specify the variables that are specific for the data analysis (the
+main directories where the data are stored, the list of subjects and
+sessions, ...) and the variable specific for the particular pipeline
+(events_id, baseline, ...) in a 
+:download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+
+.. GENERATED FROM PYTHON SOURCE LINES 58-79
+
+.. code-block:: default
+
+
     # Read experiment params as json
     params = json.load(open("params.json"))
-
-    pprint.pprint({'parameters': params})
-    print(params["general"])
+    pprint.pprint({'parameters': params["general"]})
 
     data_type = params["general"]["data_type"]
     subject_ids = params["general"]["subject_ids"]
@@ -92,16 +138,54 @@ Let us fetch the data first. It is around 90 MB download.
     t_max = params[ERP_str]['tmax']
 
 
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    {'parameters': {'NJOBS': 2,
+                    'data_path': '/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE',
+                    'data_type': 'eeg',
+                    'session_ids': ['N170'],
+                    'subject_ids': ['016']}}
+    {'ERP': {'baseline': [None, 0],
+             'condition': ['faces', 'car'],
+             'events_file': '*_filt_ica-eve.fif',
+             'events_id': {'car': 2, 'faces': 1},
+             'tmax': 0.8,
+             'tmin': -0.2}}
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 80-88
+
+.. extract_events:
+
+Extract events
+^^^^^^^^^^^^^^
+The first Node of the workflow extract events from the raw data. The events
+are extracted using the function `events_from_annotations <https://mne.tools/stable/generated/mne.events_from_annotations.html>`_
+of `MNE-python >https://mne.tools/stable/index.html>`_ on raw data.
+The events are saved in the Node directory.
+
+.. GENERATED FROM PYTHON SOURCE LINES 88-137
+
+.. code-block:: default
+
     def get_events(raw_ica, subject):
         '''
-        The events are extracted from annotation. The events are saved
-        to the Node directory.
-        We take the ica file from the
-        preprocessing workflow directory, i.e. the cleaned raw data.
+        First, we get the ica file from the preprocessing workflow directory, i.e.
+        the cleaned raw data. The events are extracted from raw annotation and are
+        saved in the Node directory. 
         '''
         print(subject, raw_ica)
         import mne
-        import numpy as np
 
         rename_events = {
             '201': 'response/correct',
@@ -130,20 +214,13 @@ Let us fetch the data first. It is around 90 MB download.
         faces = list()
         car = list()
         for key in event_dict.keys():
-    
             if rename_events[key] == 'stimulus/car/normal':
                 car.append(event_dict[key])
             elif rename_events[key] == 'stimulus/face/normal':
                 faces.append(event_dict[key])
-        print(faces)
-        print(car)
+
         merged_events = mne.merge_events(events_from_annot, faces, 1)
-        merged_events = mne.merge_events(merged_events, car, 2)
-        print(events_from_annot[:10])
-        print(merged_events[:10])
-        print(np.sum(merged_events[:,2]==1))
-        print(np.sum(merged_events[:,2]==2))
-        
+        merged_events = mne.merge_events(merged_events, car, 2)        
 
         event_file = raw_ica.replace('.fif', '-eve.fif')
         mne.write_events(event_file, merged_events)
@@ -155,63 +232,26 @@ Let us fetch the data first. It is around 90 MB download.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    {'parameters': {'ERP': {'baseline': [None, 0],
-                            'condition': ['faces', 'car'],
-                            'events_file': '*_filt_ica-eve.fif',
-                            'events_id': {'car': 2, 'faces': 1},
-                            'tmax': 0.8,
-                            'tmin': -0.2},
-                    'general': {'NJOBS': 2,
-                                'data_path': '/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE',
-                                'data_type': 'eeg',
-                                'session_ids': ['N170'],
-                                'subject_ids': ['016']},
-                    'preprocessing': {'EoG_ch_name': ['HEOG', 'VEOG'],
-                                      'bipolar': {'HEOG': ['HEOG_left',
-                                                           'HEOG_right'],
-                                                  'VEOG': ['VEOG_lower', 'Fp2']},
-                                      'ch_new_names': {'FP1': 'Fp1', 'FP2': 'Fp2'},
-                                      'down_sfreq': 256,
-                                      'h_freq': 150,
-                                      'l_freq': 0.1,
-                                      'montage': 'standard_1005',
-                                      'n_components': 28,
-                                      'reject': {'eeg': 0.00035, 'eog': 0.0005}}}}
-    {'NJOBS': 2, 'subject_ids': ['016'], 'session_ids': ['N170'], 'data_path': '/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE', 'data_type': 'eeg'}
-    {'ERP': {'baseline': [None, 0],
-             'condition': ['faces', 'car'],
-             'events_file': '*_filt_ica-eve.fif',
-             'events_id': {'car': 2, 'faces': 1},
-             'tmax': 0.8,
-             'tmin': -0.2}}
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 138-149
 
+Specify Nodes
+^^^^^^^^^^^^^
+Before to create a workflow we have to create the `nodes <https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html>`_
+that define the workflow itself. In this example the main Nodes are
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-123
+* ``infosource`` is a Node that just distributes values
+* ``datasource`` is a `DataGrabber <https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber>`_ 
+Node that allows the user to define flexible search patterns which can be
+parameterized by user defined inputs 
+* ``extract_events`` is a Node containing the function :ref:`extract_events`
+* ``ERP_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_evoked`
 
-Defining pipeline to compute inverse solution
-##############################################################################
- Then, we create our workflow and specify the `base_dir` which tells
- nipype the directory in which to store the outputs.
-
-.. GENERATED FROM PYTHON SOURCE LINES 123-163
+.. GENERATED FROM PYTHON SOURCE LINES 149-176
 
 .. code-block:: default
 
-
-
-    # workflow directory within the `base_dir`
-    ERP_pipeline_name = ERP_str + '_workflow'
-
-    main_workflow = pe.Workflow(name=ERP_pipeline_name)
-    main_workflow.base_dir = data_path
 
     # We create a node to pass input filenames to DataGrabber from nipype
     infosource = create_iterator(['subject_id', 'session_id'],
@@ -221,51 +261,61 @@ Defining pipeline to compute inverse solution
     # the values in the infosource node
     ica_dir = op.join(
             data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
-
-
     template_path = "_session_id_%s_subject_id_%s/ica/sub-%s_ses-%s_*filt_ica.fif"
     template_args = [['session_id', 'subject_id', 'subject_id', 'session_id']]
     datasource = create_datagrabber(ica_dir, template_path, template_args)
 
-
-    # We connect the output of infosource node to the one of datasource.
-    # So, these two nodes taken together can grab data.
-    main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
-    main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
-
-    # We define the Node that encapsulates run_events_concatenate function
+    # Then, we define the Node that encapsulates run_events_concatenate function
     extract_events = pe.Node(
         Function(input_names=['raw_ica', 'subject'],
                  output_names=['event_file'],
                  function=get_events),
         name='extract_events')
 
-    main_workflow.connect(datasource, 'raw_file',
-                          extract_events, 'raw_ica')
-    main_workflow.connect(infosource, 'subject_id',
-                          extract_events, 'subject')
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 164-166
-
-Ephypype creates for us a pipeline to compute evoked data which can be
-connected to these nodes we created.
-
-.. GENERATED FROM PYTHON SOURCE LINES 166-178
-
-.. code-block:: default
-
+    # Finally, we create the ephypype pipeline computing evoked data which can be
+    # connected to these nodes we created.
     ERP_workflow = create_pipeline_evoked(
             data_path, data_type=data_type, pipeline_name="ERP_pipeline",
             events_id=events_id, baseline=baseline,
             condition=condition, t_min=t_min, t_max=t_max)
 
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 177-181
+
+Specify Workflows and Connect Nodes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Now, we create our workflow and specify the `base_dir` which tells
+nipype the directory in which to store the outputs.
+
+.. GENERATED FROM PYTHON SOURCE LINES 181-208
+
+.. code-block:: default
+
+
+    # workflow directory within the `base_dir`
+    ERP_pipeline_name = ERP_str + '_workflow'
+
+    main_workflow = pe.Workflow(name=ERP_pipeline_name)
+    main_workflow.base_dir = data_path
+
+    # We then connect the output of infosource node to the one of datasource.
+    # So, these two nodes taken together can grab data.
+    main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
+    main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
+
+    # We connect the output of ``infosource`` and ``datasource`` to the input
+    # of ``extract_events`` node
+    main_workflow.connect(datasource, 'raw_file', extract_events, 'raw_ica')
+    main_workflow.connect(infosource, 'subject_id', extract_events, 'subject')
+
+    # Finally, we connect the output of ``infosource``, ``datasource`` and 
+    # ``extract_events`` nodes to the input of ``ERP_pipeline`` node.
     main_workflow.connect(infosource, 'subject_id',
                           ERP_workflow, 'inputnode.sbj_id')
     main_workflow.connect(datasource, 'raw_file',
@@ -280,20 +330,22 @@ connected to these nodes we created.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-180
 
-To do so, we first write the workflow graph (optional)
+.. GENERATED FROM PYTHON SOURCE LINES 209-215
 
-.. GENERATED FROM PYTHON SOURCE LINES 180-186
+Run workflow
+^^^^^^^^^^^^
+After we have specified all the nodes and connections of the workflow, the
+last step is to run it by calling the ``run`` method. It’s also possible to
+generate static graph representing nodes and connections between them by
+calling ``write_graph`` method.
+
+.. GENERATED FROM PYTHON SOURCE LINES 215-217
 
 .. code-block:: default
 
-    main_workflow.write_graph(graph2use='colored')  # colored
+    main_workflow.write_graph(graph2use='colored')  # optional
 
-    # Finally, we are now ready to execute our workflow.
-    main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-    # Run workflow locally on 1 CPU
-    main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
 
 
@@ -305,14 +357,150 @@ To do so, we first write the workflow graph (optional)
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7efc7e334e10>
+    '/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/graph.png'
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 218-220
+
+Take a moment to pause and notice how the connections
+here correspond to how we connected the nodes.
+
+.. GENERATED FROM PYTHON SOURCE LINES 220-227
+
+.. code-block:: default
+
+
+    import matplotlib.pyplot as plt  # noqa
+    img = plt.imread(op.join(data_path, ERP_pipeline_name, 'graph.png'))
+    plt.figure(figsize=(6, 6))
+    plt.imshow(img)
+    plt.axis('off')
+
+
+
+
+.. image:: /auto_workshop/eeg/images/sphx_glr_plot_ERP_001.png
+    :alt: plot ERP
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    (-0.5, 438.5, 594.5, -0.5)
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 228-229
+
+Finally, we are now ready to execute our workflow.
+
+.. GENERATED FROM PYTHON SOURCE LINES 229-234
+
+.. code-block:: default
+
+    main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
+    # Run workflow locally on 1 CPU
+    main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <networkx.classes.digraph.DiGraph object at 0x7f804787a750>
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 235-237
+
+Plot results
+^^^^^^^^^^^^
+
+.. GENERATED FROM PYTHON SOURCE LINES 237-262
+
+.. code-block:: default
+
+    import mne
+    import matplotlib.pyplot as plt
+    from ephypype.gather import get_results
+
+    evoked_files, _ = get_results(main_workflow.base_dir,
+                               main_workflow.name, pipeline='compute_evoked')
+
+    for evoked_file in evoked_files:
+        print(f'*** {evoked_file} ***\n')
+    
+        ave = mne.read_evokeds(evoked_file)
+        faces, car = ave[0], ave[1]
+        
+        gfp_faces = faces.data.std(axis=0, ddof=0)
+        gfp_car = car.data.std(axis=0, ddof=0)
+
+        # compare conditions
+        contrast = mne.combine_evoked([faces, car], weights=[1, -1])
+        gfp_contrast = contrast.data.std(axis=0, ddof=0)
+
+        # Reproducing the MNE-Python plot style seen above
+        fig, ax = plt.subplots()
+        ax.plot(faces.times, gfp_faces * 1e6, color='blue')
+        ax.plot(car.times, gfp_car * 1e6, color='orange')
+        ax.plot(contrast.times, gfp_contrast * 1e6, color='green')
+        fig.show()
+
+
+.. image:: /auto_workshop/eeg/images/sphx_glr_plot_ERP_002.png
+    :alt: plot ERP
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    *** /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ***
+
+    Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ...
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 29) active
+        Found the data of interest:
+            t =    -200.20 ...     799.80 ms (faces)
+            0 CTF compensation matrices available
+            nave = 70 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    Loaded Evoked data is baseline-corrected (baseline: [-0.200195, 0] sec)
+        Read a total of 1 projection items:
+            Average EEG reference (1 x 29) active
+        Found the data of interest:
+            t =    -200.20 ...     799.80 ms (car)
+            0 CTF compensation matrices available
+            nave = 76 - aspect type = 100
+    Projections have already been applied. Setting proj attribute to True.
+    Loaded Evoked data is baseline-corrected (baseline: [-0.200195, 0] sec)
+    /home/pasca/anaconda3/envs/cuttingeeg/lib/python3.7/site-packages/matplotlib/figure.py:457: UserWarning: matplotlib is currently using a non-GUI backend, so cannot show the figure
+      "matplotlib is currently using a non-GUI backend, "
+
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.424 seconds)
+   **Total running time of the script:** ( 0 minutes  8.814 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_eeg_plot_ERP.py:

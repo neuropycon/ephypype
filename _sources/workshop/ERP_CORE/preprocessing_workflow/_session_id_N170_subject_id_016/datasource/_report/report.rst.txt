@@ -47,7 +47,7 @@ Runtime info
 ------------
 
 
-* duration : 0.001197
+* duration : 0.001528
 * hostname : pasca-XPS-13-9360
 * prev_wd : /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg
 * working_dir : /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/_session_id_N170_subject_id_016/datasource
@@ -139,7 +139,7 @@ Environment
 * MNI_DIR : /usr/local/freesurfer/mni
 * MNI_PERL5LIB : /usr/local/freesurfer/mni/share/perl5
 * NIPYPE_NO_ET : 1
-* OLDPWD : /home/pasca/Tools/python/packages/neuropycon/ephypype
+* OLDPWD : /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg
 * OS : Linux
 * PAM_KWALLET5_LOGIN : /tmp/kwallet5_pasca.socket
 * PATH : /home/pasca/anaconda3/envs/cuttingeeg/bin:/home/pasca/anaconda3/condabin:/usr/local/MNE-2.7.0-3106-Linux-x86_64/bin:/usr/local/freesurfer/bin:/usr/local/freesurfer/fsfast/bin:/usr/local/freesurfer/tktools:/usr/local/fsl/bin:/usr/local/freesurfer/mni/bin:/home/pasca/anaconda2/bin:/home/pasca/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/pasca/Tools/software/radatools-4.1-linux64/Network_Tools:/home/pasca/Tools/software/radatools-4.1-linux64/Network_Properties:/home/pasca/Tools/software/radatools-4.1-linux64/Communities_Detection:/home/pasca/Tools/software/radatools-4.1-linux64/Communities_Tools

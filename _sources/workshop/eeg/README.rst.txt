@@ -1,4 +1,5 @@
-:orphan:
+.. _erpcore:
+
 
 ERP CORE dataset
 ^^^^^^^^^^^^^^^^

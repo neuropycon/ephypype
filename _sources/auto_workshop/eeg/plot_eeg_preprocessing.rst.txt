@@ -39,7 +39,7 @@ and/or fine-tune the correction in each subject.
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
     # License: BSD (3-clause)
 
-    # sphinx_gallery_thumbnail_number = 1
+    # sphinx_gallery_thumbnail_number = 2
 
 
 
@@ -87,12 +87,11 @@ mainly from |nipype| and |ephypype| packages.
 
 .. GENERATED FROM PYTHON SOURCE LINES 47-48
 
-Let us fetch the data first. It is around 675 MB download.
+Let us fetch the data first. It is around 90 MB download.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-53
+.. GENERATED FROM PYTHON SOURCE LINES 48-52
 
 .. code-block:: default
-
 
     import ephypype
     base_path = op.join(op.dirname(ephypype.__file__), '..', 'doc/workshop')
@@ -105,7 +104,7 @@ Let us fetch the data first. It is around 675 MB download.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-61
+.. GENERATED FROM PYTHON SOURCE LINES 53-60
 
 Define data and variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,9 +112,9 @@ Let us specify the variables that are specific for the data analysis (the
 main directories where the data are stored, the list of subjects and
 sessions, ...) and the variable specific for the particular pipeline
 (downsampling frequency, EOG channels, cut-off frequencies, ...) in a 
-:download:`json <params.json>` file 
+:download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-72
+.. GENERATED FROM PYTHON SOURCE LINES 60-71
 
 .. code-block:: default
 
@@ -149,11 +148,11 @@ sessions, ...) and the variable specific for the particular pipeline
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-74
+.. GENERATED FROM PYTHON SOURCE LINES 72-73
 
 Read the parameters for preprocessing from a json file and print it
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-86
+.. GENERATED FROM PYTHON SOURCE LINES 73-85
 
 .. code-block:: default
 
@@ -193,7 +192,7 @@ Read the parameters for preprocessing from a json file and print it
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-103
+.. GENERATED FROM PYTHON SOURCE LINES 86-102
 
 Specify Nodes
 ^^^^^^^^^^^^^
@@ -206,13 +205,13 @@ workflow itself. In this example the main Nodes are
 
 * ``infosource`` is a Node that just distributes values
 * ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
-* ``preproc`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
+* ``preproc_eeg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
 
 .. |DataGrabber| raw:: html
 
    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber" target="_blank">DataGrabber</a>
 
-.. GENERATED FROM PYTHON SOURCE LINES 105-113
+.. GENERATED FROM PYTHON SOURCE LINES 104-112
 
 .. _infosourcenode:
 
@@ -223,7 +222,7 @@ Node that allows to distributes values: when we need to feed the different
 subject names into the workflow we only need a Node that can receive the input
 and distribute those inputs to the workflow. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-116
+.. GENERATED FROM PYTHON SOURCE LINES 112-115
 
 .. code-block:: default
 
@@ -237,7 +236,7 @@ and distribute those inputs to the workflow.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-127
+.. GENERATED FROM PYTHON SOURCE LINES 116-126
 
 .. _datagrabbernode:
 
@@ -250,7 +249,7 @@ by user defined inputs (such as subject ID, session, etc.). In this example
 we parameterize the pattern search with subject_id and session_id.
 The template_args in this node iterate upon the values in the infosource node.
 
-.. GENERATED FROM PYTHON SOURCE LINES 127-131
+.. GENERATED FROM PYTHON SOURCE LINES 126-130
 
 .. code-block:: default
 
@@ -265,7 +264,7 @@ The template_args in this node iterate upon the values in the infosource node.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 132-140
+.. GENERATED FROM PYTHON SOURCE LINES 131-139
 
 .. _pipnode:
 
@@ -276,7 +275,7 @@ created. The preprocessing pipeline is implemented by the function
 :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` thus to
 instantiate this pipeline node, we import it and pass our parameters to it
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-146
+.. GENERATED FROM PYTHON SOURCE LINES 139-145
 
 .. code-block:: default
 
@@ -301,14 +300,14 @@ instantiate this pipeline node, we import it and pass our parameters to it
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-151
+.. GENERATED FROM PYTHON SOURCE LINES 146-150
 
 Specify Workflows and Connect Nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Now, we create our workflow and specify the `base_dir` which tells nipype the
 directory in which to store the outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-158
+.. GENERATED FROM PYTHON SOURCE LINES 150-157
 
 .. code-block:: default
 
@@ -326,13 +325,13 @@ directory in which to store the outputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-162
+.. GENERATED FROM PYTHON SOURCE LINES 158-161
 
 We then connect the nodes two at a time. First, we connect the two outputs
 (subject_id and session_id) of the :ref:`infosourcenode` node to the
 :ref:`datagrabbernode` node. So, these two nodes taken together can grab data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 162-166
+.. GENERATED FROM PYTHON SOURCE LINES 161-165
 
 .. code-block:: default
 
@@ -347,12 +346,12 @@ We then connect the nodes two at a time. First, we connect the two outputs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 167-169
+.. GENERATED FROM PYTHON SOURCE LINES 166-168
 
 Similarly, for the inputnode of the :ref:`pipnode`. Things will become
 clearer in a moment when we plot the graph of the workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 169-175
+.. GENERATED FROM PYTHON SOURCE LINES 168-174
 
 .. code-block:: default
 
@@ -369,7 +368,7 @@ clearer in a moment when we plot the graph of the workflow.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 176-182
+.. GENERATED FROM PYTHON SOURCE LINES 175-181
 
 Run workflow
 ^^^^^^^^^^^^
@@ -378,12 +377,12 @@ last step is to run it by calling the ``run`` method. It’s also possible to
 generate static graph representing nodes and connections between them by
 calling ``write_graph`` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-185
+.. GENERATED FROM PYTHON SOURCE LINES 181-184
 
 .. code-block:: default
 
 
-    main_workflow.write_graph(graph2use='colored')  # colored
+    main_workflow.write_graph(graph2use='colored')  # optional
 
 
 
@@ -400,12 +399,12 @@ calling ``write_graph`` method.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-188
+.. GENERATED FROM PYTHON SOURCE LINES 185-187
 
 Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-195
+.. GENERATED FROM PYTHON SOURCE LINES 187-194
 
 .. code-block:: default
 
@@ -435,11 +434,11 @@ here correspond to how we connected the nodes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-197
+.. GENERATED FROM PYTHON SOURCE LINES 195-196
 
 Finally, we are now ready to execute our workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-202
+.. GENERATED FROM PYTHON SOURCE LINES 196-201
 
 .. code-block:: default
 
@@ -459,11 +458,11 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f01f0ca1050>
+    <networkx.classes.digraph.DiGraph object at 0x7f6a89a6f990>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 203-208
+.. GENERATED FROM PYTHON SOURCE LINES 202-207
 
 The output is the preprocessed data stored in the workflow directory
 defined by `base_dir`.
@@ -471,7 +470,7 @@ defined by `base_dir`.
 It’s a good rule to inspect the report file saved in the same dir to look at
 the excluded ICA components. 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-223
+.. GENERATED FROM PYTHON SOURCE LINES 207-222
 
 .. code-block:: default
 
@@ -523,11 +522,11 @@ the excluded ICA components.
 
     *** /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif ***
     Opening raw data file /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif...
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:217: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:216: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
       raw = mne.io.read_raw_fif(raw_file)
         Range : 0 ... 646143 =      0.000 ...   630.999 secs
     Ready.
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:218: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:217: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
       ica = mne.preprocessing.read_ica(ica_file)
     Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif ...
     Now restoring ICA solution ...
@@ -558,7 +557,7 @@ the excluded ICA components.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.227 seconds)
+   **Total running time of the script:** ( 0 minutes  9.205 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_eeg_plot_eeg_preprocessing.py:

@@ -17,7 +17,7 @@ and/or fine-tune the correction in each subject.
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 # License: BSD (3-clause)
 
-# sphinx_gallery_thumbnail_number = 1
+# sphinx_gallery_thumbnail_number = 2
 
 ###############################################################################
 # Import modules
@@ -44,8 +44,7 @@ from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg
 from ephypype.datasets import fetch_erpcore_dataset
 
 ###############################################################################
-# Let us fetch the data first. It is around 675 MB download.
-
+# Let us fetch the data first. It is around 90 MB download.
 import ephypype
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'doc/workshop')
 data_path = fetch_erpcore_dataset(base_path)
@@ -57,7 +56,7 @@ data_path = fetch_erpcore_dataset(base_path)
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variable specific for the particular pipeline
 # (downsampling frequency, EOG channels, cut-off frequencies, ...) in a 
-# :download:`json <params.json>` file 
+# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
 
 # Read experiment params as json
 params = json.load(open("params.json"))
@@ -95,7 +94,7 @@ reject = params["preprocessing"]['reject']
 #
 # * ``infosource`` is a Node that just distributes values
 # * ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
-# * ``preproc`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
+# * ``preproc_eeg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
 # 
 # .. |DataGrabber| raw:: html
 #
@@ -180,7 +179,7 @@ main_workflow.connect(datasource, 'raw_file',
 # generate static graph representing nodes and connections between them by
 # calling ``write_graph`` method.
 
-main_workflow.write_graph(graph2use='colored')  # colored
+main_workflow.write_graph(graph2use='colored')  # optional
 
 ###############################################################################
 # Take a moment to pause and notice how the connections
