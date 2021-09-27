@@ -14,8 +14,10 @@ Pipelines (:py:mod:`ephypype.pipelines`):
    :toctree: generated/
 
    create_pipeline_preproc_meeg
+   create_pipeline_evoked
    create_pipeline_power
    create_pipeline_source_reconstruction
+   create_pipeline_evoked_inverse_solution
    create_pipeline_time_series_to_spectral_connectivity
 
 Nodes (:py:mod:`ephypype.nodes`):

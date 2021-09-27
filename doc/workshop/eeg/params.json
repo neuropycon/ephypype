@@ -4,7 +4,7 @@
         "NJOBS": 2,
         "subject_ids": ["016"],
         "session_ids": ["N170"],
-        "data_path" : "/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE",
+        "data_path" : "",
         "data_type": "eeg"
     },
     "preprocessing":
