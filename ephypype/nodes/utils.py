@@ -65,7 +65,7 @@ def create_datagrabber(data_path, template_path, template_args,
         The arguments for the templates. Can be either 'subject_id'
         or 'session_id'
     infields : list
-        Indicates the input fields to be used in template, field_template
+        Indicates the input fields to be used in template_path, field_template
     outfields : list
         Indicates output fields to be dynamically created
 

@@ -78,7 +78,7 @@ t_max = params[ERP_str]['tmax']
 
 ###############################################################################
 # .. extract_events:
-# 
+#
 # Extract events
 # ^^^^^^^^^^^^^^
 # The first Node of the workflow extract events from the raw data. The events
@@ -89,7 +89,7 @@ def get_events(raw_ica, subject):
     '''
     First, we get the ica file from the preprocessing workflow directory, i.e.
     the cleaned raw data. The events are extracted from raw annotation and are
-    saved in the Node directory. 
+    saved in the Node directory.
     '''
     print(subject, raw_ica)
     import mne
@@ -98,10 +98,10 @@ def get_events(raw_ica, subject):
         '201': 'response/correct',
         '202': 'response/error'
     }
-    
-    for i in range(1, 180+1):
+
+    for i in range(1, 180 + 1):
         orig_name = f'{i}'
-        
+
         if 1 <= i <= 40:
             new_name = 'stimulus/face/normal'
         elif 41 <= i <= 80:
@@ -116,8 +116,8 @@ def get_events(raw_ica, subject):
         rename_events[orig_name] = new_name
 
     raw = mne.io.read_raw_fif(raw_ica, preload=True)
-    events_from_annot, event_dict  = mne.events_from_annotations(raw)
-    
+    events_from_annot, event_dict = mne.events_from_annotations(raw)
+
     faces = list()
     car = list()
     for key in event_dict.keys():
@@ -127,19 +127,19 @@ def get_events(raw_ica, subject):
             faces.append(event_dict[key])
 
     merged_events = mne.merge_events(events_from_annot, faces, 1)
-    merged_events = mne.merge_events(merged_events, car, 2)        
+    merged_events = mne.merge_events(merged_events, car, 2)
 
     event_file = raw_ica.replace('.fif', '-eve.fif')
     mne.write_events(event_file, merged_events)
 
     return event_file
-    
+
 ###############################################################################
 # Specify Nodes
 # ^^^^^^^^^^^^^
 # Before to create a workflow we have to create the `nodes <https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html>`_
 # that define the workflow itself. In this example the main Nodes are
-#  
+#
 # * ``infosource`` is a Node that just distributes values
 # * ``datasource`` is a `DataGrabber <https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber>`_ 
 # Node that allows the user to define flexible search patterns which can be
@@ -154,7 +154,7 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # and a node to grab data. The template_args in this node iterate upon
 # the values in the infosource node
 ica_dir = op.join(
-        data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
+    data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
 template_path = "_session_id_%s_subject_id_%s/ica/sub-%s_ses-%s_*filt_ica.fif"
 template_args = [['session_id', 'subject_id', 'subject_id', 'session_id']]
 datasource = create_datagrabber(ica_dir, template_path, template_args)
@@ -169,9 +169,9 @@ extract_events = pe.Node(
 # Finally, we create the ephypype pipeline computing evoked data which can be
 # connected to these nodes we created.
 ERP_workflow = create_pipeline_evoked(
-        data_path, data_type=data_type, pipeline_name="ERP_pipeline",
-        events_id=events_id, baseline=baseline,
-        condition=condition, t_min=t_min, t_max=t_max)
+    data_path, data_type=data_type, pipeline_name="ERP_pipeline",
+    events_id=events_id, baseline=baseline,
+    condition=condition, t_min=t_min, t_max=t_max)
 
 ###############################################################################
 # Specify Workflows and Connect Nodes
@@ -195,7 +195,7 @@ main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 main_workflow.connect(datasource, 'raw_file', extract_events, 'raw_ica')
 main_workflow.connect(infosource, 'subject_id', extract_events, 'subject')
 
-# Finally, we connect the output of ``infosource``, ``datasource`` and 
+# Finally, we connect the output of ``infosource``, ``datasource`` and
 # ``extract_events`` nodes to the input of ``ERP_pipeline`` node.
 main_workflow.connect(infosource, 'subject_id',
                       ERP_workflow, 'inputnode.sbj_id')
@@ -234,19 +234,19 @@ main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 ###############################################################################
 # Plot results
 # ^^^^^^^^^^^^
-import mne
+import mne  
 import matplotlib.pyplot as plt
 from ephypype.gather import get_results
 
 evoked_files, _ = get_results(main_workflow.base_dir,
-                           main_workflow.name, pipeline='compute_evoked')
+                              main_workflow.name, pipeline='compute_evoked')
 
 for evoked_file in evoked_files:
     print(f'*** {evoked_file} ***\n')
-    
+
     ave = mne.read_evokeds(evoked_file)
     faces, car = ave[0], ave[1]
-        
+
     gfp_faces = faces.data.std(axis=0, ddof=0)
     gfp_car = car.data.std(axis=0, ddof=0)
 

@@ -41,7 +41,7 @@ def _preprocess_fif(
             for ch in misc:
                 raw.set_channel_types({ch: 'misc'})
         # channels = eog_ch.replace(' ', '').split(',')
-        
+
         try:
             montage = read_custom_montage(montage)
         except:
@@ -51,7 +51,7 @@ def _preprocess_fif(
                 raw.rename_channels(ch_new_names)
             montage = make_standard_montage(montage)
         raw.set_montage(montage, on_missing='ignore')
-        
+
         if bipolar:
             for key in bipolar.keys():
                 raw = set_bipolar_reference(
@@ -89,7 +89,7 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
         select_sensors = pick_types(raw.info, eeg=True, exclude='bads')
     else:
         select_sensors = pick_types(
-                raw.info, meg=True, ref_meg=False, exclude='bads')
+            raw.info, meg=True, ref_meg=False, exclude='bads')
 
     # 1) Fit ICA model using the FastICA algorithm
     # Other available choices are `infomax` or `extended-infomax`

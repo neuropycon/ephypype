@@ -56,7 +56,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     pipeline_name: str (default 'preproc_meeg')
         name of the pipeline
     data_type: str (default 'fif')
-        data type: 'fif' or 'ds'
+        data type: MEG ('fif', 'ds') or EEG ('eeg') data
     l_freq: float (default 1)
         low cut-off frequency in Hz
     h_freq: float (default 150)
@@ -267,7 +267,7 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
                            events_id={}, condition=None,
                            decim=1, t_min=None, t_max=None, baseline=None,
                            data_type='meg'):
-    """ERP reconstruction pipeline.
+    """ERP pipeline.
 
     Parameters
     ----------
