@@ -139,7 +139,6 @@ def get_events(raw_ica, subject):
 
     return event_file
 
-
 ###############################################################################
 # Specify Nodes
 # ^^^^^^^^^^^^^
@@ -161,6 +160,7 @@ infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
 ###############################################################################
+
 # ``datasource`` node to grab data. The ``template_args`` in this node iterate
 # upon the values in the infosource node
 ica_dir = op.join(
@@ -174,7 +174,7 @@ datasource = create_datagrabber(ica_dir, template_path, template_args)
 #
 # Extract events Node
 # """""""""""""""""""
-# Then, we define the Node that encapsulates ``get_events`` function.
+# Then, we define the Node that encapsulates ``get_events`` function
 extract_events = pe.Node(
     Function(input_names=['raw_ica', 'subject'],
              output_names=['event_file'],
