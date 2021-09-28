@@ -4,12 +4,12 @@
         "NJOBS": 1,
         "subject_ids": ["sub-01"],
         "session_ids": ["01", "02"],
-        "data_path": "/media/pasca/pasca_media/data/cuttingeeg/ds000117/derivatives/meg_derivatives/",
+        "data_path": "/media/pasca/pasca_media/data/cuttingeeg/zenodo/ds000117/derivatives/meg_derivatives/",
         "data_type": "fif",
         "nb_fsaverage_vertices": 10242,
         "smooth": 10,
         "conditions": ["famous", "scrambled", "unfamiliar"],
-        "subjects_dir": "/media/pasca/pasca_media/data/cuttingeeg/ds000117/FSF"
+        "subjects_dir": "/media/pasca/pasca_media/data/cuttingeeg/zenodo/ds000117/FSF"
     },
     "preprocessing":
     {
