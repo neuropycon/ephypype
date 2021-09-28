@@ -5,6 +5,9 @@
 import os
 from setuptools import setup, find_packages
 
+required_packages=[
+    "nipype", "networkx>=2.0", "numpy", "mne", "pybids", "h5py","scikit-learn", "matplotlib", "mne-bids"]
+
 VERSION = None
 with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
     for line in (line.strip() for line in fid):
@@ -42,9 +45,9 @@ if __name__ == "__main__":
         download_url=DOWNLOAD_URL,
         long_description=open('README.rst').read(),
         long_description_content_type='text/markdown',
-
-    entry_points='''
-        [console_scripts]
-        neuropycon=ephypype.commands.neuropycon:cli
-    '''
+        entry_points='''
+            [console_scripts]
+            neuropycon=ephypype.commands.neuropycon:cli
+            ''',
+        install_requires= required_packages
     )
