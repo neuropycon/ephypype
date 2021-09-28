@@ -1,5 +1,5 @@
 """
-.. _preproc_eeg:
+.. _compute_ica:
 
 =======================
 01. Preprocess EEG data
@@ -205,7 +205,7 @@ main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 # The output is the preprocessed data stored in the workflow directory
 # defined by ``base_dir``. Here we find the folder
 # ``preprocessing_workflow`` where all the results of each iteration are
-# sorted by nodes. The cleaned data will be used in :ref:`compute_erp`.
+# sorted by nodes. The cleaned data will be used in :ref:`compute_perp`.
 #
 # It’s a good rule to inspect the report file saved in the ``ica`` dir to look
 # at the excluded ICA components.

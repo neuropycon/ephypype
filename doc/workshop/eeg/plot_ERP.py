@@ -1,5 +1,5 @@
 """
-.. _compute_erp:
+.. _compute_perp:
 
 ===============
 02. Compute ERP
@@ -68,6 +68,7 @@ data_type = params["general"]["data_type"]
 subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
+# data_path = params["general"]["data_path"]
 
 # ERP params
 ERP_str = 'ERP'
@@ -138,9 +139,11 @@ def get_events(raw_ica, subject):
 
     return event_file
 
+
 ###############################################################################
 # Specify Nodes
 # ^^^^^^^^^^^^^
+# 
 # Before to create a workflow we have to create the `nodes <https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html>`_
 # that define the workflow itself. In this example the main Nodes are
 #
@@ -149,6 +152,7 @@ def get_events(raw_ica, subject):
 # * ``extract_events`` is a Node containing the function :ref:`extract_events`
 # * ``ERP_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_evoked`
 #
+
 ###############################################################################
 # Infosource and Datasource
 # """""""""""""""""""""""""
@@ -156,6 +160,7 @@ def get_events(raw_ica, subject):
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
+###############################################################################
 # ``datasource`` node to grab data. The ``template_args`` in this node iterate
 # upon the values in the infosource node
 ica_dir = op.join(
@@ -169,7 +174,7 @@ datasource = create_datagrabber(ica_dir, template_path, template_args)
 #
 # Extract events Node
 # """""""""""""""""""
-# Then, we define the Node that encapsulates ``get_events`` function
+# Then, we define the Node that encapsulates ``get_events`` function.
 extract_events = pe.Node(
     Function(input_names=['raw_ica', 'subject'],
              output_names=['event_file'],
@@ -274,4 +279,5 @@ for evoked_file in evoked_files:
     ax.plot(faces.times, gfp_faces * 1e6, color='blue')
     ax.plot(car.times, gfp_car * 1e6, color='orange')
     ax.plot(contrast.times, gfp_contrast * 1e6, color='green')
+    ax.legend(['Faces', 'Car', 'Contrast'])
     fig.show()
