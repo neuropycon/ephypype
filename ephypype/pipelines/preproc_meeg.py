@@ -267,7 +267,9 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
                            events_id={}, condition=None,
                            decim=1, t_min=None, t_max=None, baseline=None,
                            data_type='meg'):
-    """ERP pipeline.
+    """Evoked pipeline.
+
+    Compute time-locked event-related fields/potentials.
 
     Parameters
     ----------
@@ -287,6 +289,12 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
     is_evoked: bool (default False)
         if True the raw data will be averaged according to the events
         contained in the dict events_id
+    decim: int
+        factor by which to downsample the data
+    baseline: tuple
+        baseline
+    data_type: str
+        'meg' or 'eeg'
 
     raw (inputnode): str
         path to raw data in fif format
@@ -301,8 +309,9 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
     pipeline = pe.Workflow(name=pipeline_name)
     pipeline.base_dir = main_path
 
-    inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw', 'events_file']),
-                        name='inputnode')
+    inputnode = pe.Node(IdentityInterface(
+        fields=['sbj_id', 'raw', 'events_file']),
+        name='inputnode')
 
     # Create epochs based on events_id
     assert events_id != {}
@@ -316,7 +325,7 @@ def create_pipeline_evoked(main_path, pipeline_name='ERP_pipeline',
 
     if baseline:
         define_epochs.inputs.baseline = baseline
-        
+
     pipeline.connect(inputnode, 'raw', define_epochs, 'fif_file')
     pipeline.connect(inputnode, 'events_file', define_epochs, 'events_file')
 

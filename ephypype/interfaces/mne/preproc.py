@@ -97,8 +97,8 @@ class CompIca(BaseInterface):
 
         n_components = variance if variance else n_components
         ica_output = _compute_ica(
-                fif_file, raw_fif_file, data_type, ecg_ch_name,
-                eog_ch_name, n_components, reject)
+            fif_file, raw_fif_file, data_type, ecg_ch_name,
+            eog_ch_name, n_components, reject)
         self.ica_file = ica_output[0]
         self.ica_sol_file = ica_output[1]
         self.ica_ts_file = ica_output[2]
@@ -122,7 +122,8 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
                            desc='raw meg data in fif format',
                            mandatory=True)
     l_freq = traits.Float(desc='lower bound for filtering')
-    h_freq = traits.Float(None, desc='upper bound for filtering', mandatory=False)
+    h_freq = traits.Float(
+        None, desc='upper bound for filtering', mandatory=False)
     data_type = traits.String('fif', desc='data type', usedefault=True)
     montage = traits.String(desc='EEG layout')
     misc = traits.String(desc='EEG misc channels')
@@ -166,8 +167,7 @@ class PreprocFif(BaseInterface):
         rename channels
     eog : list
         eog channel names
-    
-        
+
     Outputs
     -------
     fif_file : str
@@ -193,11 +193,11 @@ class PreprocFif(BaseInterface):
         else:
             montage, misc, bipolar, EoG_ch_name = None, None, None, None
             ch_new_names = None
-            
+
         result_fif = _preprocess_fif(
-                fif_file, data_type, l_freq=l_freq, h_freq=h_freq,
-                down_sfreq=down_sfreq, montage=montage, misc=misc,
-                eog_ch=EoG_ch_name, bipolar=bipolar, ch_new_names=ch_new_names)
+            fif_file, data_type, l_freq=l_freq, h_freq=h_freq,
+            down_sfreq=down_sfreq, montage=montage, misc=misc,
+            eog_ch=EoG_ch_name, bipolar=bipolar, ch_new_names=ch_new_names)
 
         self.fif_file = result_fif
         return runtime

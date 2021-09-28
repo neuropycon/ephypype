@@ -38,7 +38,6 @@
             "scrambled/long": 19
             },
         "condition": ["face/famous", "scrambled", "face/unfamiliar"],
-        "events_file": "*_sss_filt_dsamp_ica-raw-eve.fif",
         "tmin": -0.2,
         "tmax": 1.0,
         "trans_fname": "*-trans.fif",
