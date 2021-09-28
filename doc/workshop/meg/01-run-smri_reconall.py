@@ -8,12 +8,13 @@
 The solution of MEG inverse problem requires knowledge of the lead field
 matrix. A cortical segmentation of the anatomical MRI is necessary to generate
 the source space, where the neural activity will be estimated.
-A Boundary Element Model (BEM) which uses the segmented surfaces is used to
+A `Boundary Element Model <https://mne.tools/stable/auto_tutorials/forward/30_forward.html?highlight=bem>`_
+(BEM) which uses the segmented surfaces is used to
 construct the lead field matrix. To perform the cortical segmentation we
 provide a workflow based on nipype Interface wrapping the
 `recon-all <https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all>`_ command of
-Freesurfer. The output of recon-all node is used as input of another node that
-creates the BEM surfaces using the FreeSurfer watershed algorithm .
+Freesurfer. The output of :ref:`reconallnode` node is used as input of another node that
+creates the BEM surfaces using the FreeSurfer watershed algorithm.
 
 .. warning:: Make sure that Freesurfer is properly configured before
     running this script.
@@ -34,20 +35,17 @@ from nipype.interfaces.utility import Function
 from ephypype.nodes import create_iterator, create_datagrabber
 from ephypype.compute_fwd_problem import _create_bem_sol
 
-rel_path = op.split(os.path.realpath(__file__))[0]
-print('relative path : {}'.format(rel_path))
-
 ###############################################################################
 # Define data and variables
 # ^^^^^^^^^^^^^^^^^^^^^^^^^
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variable specific for the particular pipeline
-# (MRI path, Freesurfer fir, ...) in a *json* file
+# (MRI path, Freesurfer fir, ...) in a
 # :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/meg/params.json>` file 
 
 # Read experiment params as json
-params = json.load(open(os.path.join(rel_path, "params.json")))
+params = json.load(open("params.json"))
 pprint.pprint({'parameters': params["general"]})
 
 subjects_dir = params["general"]["subjects_dir"]
@@ -65,32 +63,62 @@ if not os.environ.get('FREESURFER_HOME'):
 os.environ["SUBJECTS_DIR"] = subjects_dir
 print('SUBJECTS_DIR %s ' % os.environ["SUBJECTS_DIR"])
 
-# workflow directory within the `base_dir`
-freesurfer_workflow_name = 'FS_workflow'
-main_workflow = pe.Workflow(name=freesurfer_workflow_name)
-main_workflow.base_dir = subjects_dir
 
-# (1) we create a node to pass input filenames to DataGrabber from nipype
-#     iterate over subjects
+###############################################################################
+# Specify Nodes
+# ^^^^^^^^^^^^^
+# Infosource and Datasource
+# """""""""""""""""""""""""
+# We create a node to pass input filenames and a node to grab data. The
+# ``template_args`` in this ``datasource`` node iterate upon
+# the values in the ``infosource`` node.
+# Here we define an input field for ``create_datagrabber`` called
+# ``subject_id``. This is then used to set the template (see %s in the
+# template). We look for .nii files located in the ``ses-mri/anat`` folder of
+# the subject
+
 infosource = create_iterator(['subject_id'], [subject_ids])
 
-# and a node to grab data. The template_args in this node iterate upon
-# the values in the infosource node
-# Here we define an input field for datagrabber called subject_id.
-# This is then used to set the template (see %s in the template).
-# we look for .nii files
 template_path = '../%s/ses-mri/anat/%s*T1w.nii.gz'
 template_args = [['subject_id', 'subject_id']]
 infields = ['subject_id']
 datasource = create_datagrabber(data_path, template_path, template_args,
                                 infields=infields)
 
-# (2) ReconAll Node to generate surfaces and parcellations of structural
-#     data from anatomical images of a subject.
+###############################################################################
+# .. _reconallnode:
+#
+# ReconAll Node
+# """""""""""""
+# ``recon_all`` node calls the nipype Interface wrapping the recon-all function
+# of Freesurfer that generates surfaces and parcellations of structural
+# data from anatomical images of a subject.
 recon_all = pe.Node(interface=ReconAll(), infields=['T1_files'],
                     name='recon_all')
 recon_all.inputs.subjects_dir = subjects_dir
 recon_all.inputs.directive = 'all'
+
+###############################################################################
+# .. _bemnode:
+#
+# BEM Node
+# """"""""
+# We define a node wrapping an ephypype function calling
+# `make_watershed_bem <https://mne.tools/stable/generated/mne.bem.make_watershed_bem.html?highlight=make_watershed_bem#mne.bem.make_watershed_bem>`_
+# of MNE Python package for BEM generation
+bem_generation = pe.Node(interface=Function(
+    input_names=['subjects_dir', 'sbj_id'], output_names=['sbj_id'],
+    function=_create_bem_sol), name='call_mne_watershed_bem')
+bem_generation.inputs.subjects_dir = subjects_dir
+
+###############################################################################
+# .. _main_wf:
+#
+# Create workflows
+# ^^^^^^^^^^^^^^^^
+# First, we create a workflow containing the :ref:`reconallnode` ans specify the
+# connections between all nodes (``infosource``, ``datasource`` and
+# ``recon_all``)
 
 # reconall_workflow will be a node of the main workflow
 reconall_workflow_name = 'segmentation_workflow'
@@ -101,22 +129,33 @@ reconall_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
 reconall_workflow.connect(infosource, 'subject_id', recon_all, 'subject_id')
 reconall_workflow.connect(datasource, 'raw_file', recon_all, 'T1_files')
 
-# (3) BEM generation by make_watershed_bem of MNE Python package
-bem_generation = pe.Node(interface=Function(
-    input_names=['subjects_dir', 'sbj_id'], output_names=['sbj_id'],
-    function=_create_bem_sol), name='call_mne_watershed_bem')
-bem_generation.inputs.subjects_dir = subjects_dir
+###############################################################################
+# Then, we create the main workflow where we will connect the output of
+# ``reconall_workflow`` to the input of ``bem_generation`` node
+freesurfer_workflow_name = 'FS_workflow'
+main_workflow = pe.Workflow(name=freesurfer_workflow_name)
+main_workflow.base_dir = subjects_dir
+
 
 main_workflow.connect(reconall_workflow, 'recon_all.subject_id',
                       bem_generation, 'sbj_id')
 
 ###############################################################################
+# Run workflow
+# ^^^^^^^^^^^^
 # Execute the pipeline
 # The code above sets up all the necessary data structures and the connectivity
 # between the processes, but does not generate any output. To actually run the
-# analysis on the data the ``nipype.pipeline.engine.Pipeline.Run``
+# analysis on the data the :func:`~nipype.pipeline.engine.Pipeline.Run`
 # function needs to be called.
 
 main_workflow.write_graph(graph2use='colored')
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
+
+###############################################################################
+# Results
+# ^^^^^^^
+# The output of this workflow is the cortical segmentation of the
+# structural data that we find in the ``subjects_dir`` and will be used in
+# :ref:`plot_events_inverse`

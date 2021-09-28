@@ -5,7 +5,10 @@
 04. Plot contrast
 =================
 
-Grand-average group contrasts for dSPM
+Group average of dSPM solutions obtained by :ref:`plot_events_inverse` for the
+contrast between both types of faces together and scrambled at 170 ms
+poststimulus. The image was produced by subtracting normalized solutions of
+faces to the ones of scrambled.
 """
 import os
 import json
@@ -35,7 +38,6 @@ print("data_path : %s" % data_path)
 subjects_dir = op.join(data_path, params["general"]["subjects_dir"])
 
 # TODO: if you ran 02 and 03 separately set this path
-
 morph_stc_path = \
     op.join(data_path, 'source_dsamp_full_reconstruction_dSPM_aparc',
             '_subject_id_{sbj}', 'morph_stc')
@@ -61,7 +63,7 @@ for cond in conditions:
 
         out_path = morph_stc_path.format(sbj=subject)
         stc = mne.read_source_estimate(
-                    op.join(out_path, 'mne_dSPM_inverse_morph-%s' % (cond)))
+            op.join(out_path, 'mne_dSPM_inverse_morph-%s' % (cond)))
         stcs.append(stc)
 
     data = np.average([np.abs(s.data) for s in stcs], axis=0)
@@ -70,17 +72,18 @@ for cond in conditions:
     del stcs
     stc_condition.append(stc)
 
-data = stc_condition[0].data/np.max(stc_condition[0].data) + \
-        stc_condition[2].data/np.max(stc_condition[2].data) - \
-        stc_condition[1].data/np.max(stc_condition[1].data)
+data = stc_condition[0].data / np.max(stc_condition[0].data) + \
+    stc_condition[2].data / np.max(stc_condition[2].data) - \
+    stc_condition[1].data / np.max(stc_condition[1].data)
 data = np.abs(data)
 stc_contrast = mne.SourceEstimate(
-        data, stc_condition[0].vertices, stc_condition[0].tmin,
-        stc_condition[0].tstep, 'fsaverage')
+    data, stc_condition[0].vertices, stc_condition[0].tmin,
+    stc_condition[0].tstep, 'fsaverage')
 # stc_contrast.save(op.join(fig_path, 'stc_dspm_difference_norm'))
 
 lims = (0.25, 0.75, 1)
 clim = dict(kind='value', lims=lims)
+# TODO use auto with py39
 brain_dspm = stc_contrast.plot(
     views=['ven'], hemi='both', subject='fsaverage', subjects_dir=subjects_dir,
     initial_time=0.17, time_unit='s', background='w',

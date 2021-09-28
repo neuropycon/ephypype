@@ -50,9 +50,9 @@ data_path = fetch_erpcore_dataset(base_path)
 # ^^^^^^^^^^^^^^^^^^^^^^^^^
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
-# sessions, ...) and the variable specific for the particular pipeline
+# sessions, ...) and the variables specific for the particular pipeline
 # (downsampling frequency, EOG channels, cut-off frequencies, ...) in a
-# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file.
 
 # Read experiment params as json
 params = json.load(open("params.json"))
@@ -65,7 +65,7 @@ session_ids = params["general"]["session_ids"]
 # data_path = params["general"]["data_path"]
 
 ###############################################################################
-# Read the parameters for preprocessing from a json file and print it
+# Read the parameters for preprocessing from the json file and print it
 pprint.pprint({'preprocessing parameters': params["preprocessing"]})
 
 l_freq = params["preprocessing"]['l_freq']
@@ -81,9 +81,13 @@ reject = params["preprocessing"]['reject']
 ###############################################################################
 # Specify Nodes
 # ^^^^^^^^^^^^^
-# Before to create a workflow we have to create the |nodes| that define the
+# Before to create a |workflow| we have to create the |nodes| that define the
 # workflow itself. In this example the main Nodes are
 #
+# .. |workflow| raw:: html
+#
+#     <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a>
+# 
 # .. |nodes| raw:: html
 #
 #    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">nodes</a>
@@ -102,8 +106,8 @@ reject = params["preprocessing"]['reject']
 # Infosource
 # """"""""""
 # The ephypype function :func:`~ephypype.nodes.create_iterator` creates the
-# Infosource Node that allows to distributes values: when we need to feed the
-# different subject names into the workflow we only need a Node that can
+# ``infosource`` node that allows to distributes values: when we need to feed
+# the different subject names into the workflow we only need a Node that can
 # receive the input and distribute those inputs to the workflow.
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
@@ -118,9 +122,9 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # creates a node to grab data using |DataGrabber| in Nipype. The DataGrabber
 # Interface allows to define flexible search patterns which can be
 # parameterized by user defined inputs (such as subject ID, session, etc.).
-# In this example we parameterize the pattern search with subject_id and
-# session_id. The template_args in this node iterate upon the values in the
-# infosource node.
+# In this example we parameterize the pattern search with ``subject_id`` and
+# ``session_id``. The ``template_args`` in this node iterate upon the values in
+# the ``infosource`` node.
 template_path = 'sub-%s/ses-%s/eeg/sub-%s*ses-%s*.set'
 template_args = [['subject_id', 'session_id', 'subject_id', 'session_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
@@ -128,8 +132,8 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 ###############################################################################
 # .. _pipnode:
 #
-# Pipeline
-# """"""""
+# Preprocessing pipeline
+# """"""""""""""""""""""
 # Ephypype creates for us a pipeline which can be connected to these nodes we
 # created. The preprocessing pipeline is implemented by the function
 # :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` thus to
@@ -143,10 +147,9 @@ preproc_workflow = create_pipeline_preproc_meeg(
 ###############################################################################
 # Specify Workflows and Connect Nodes
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# Now, we create our workflow and specify the `base_dir` which tells nipype the
-# directory in which to store the outputs.
+# Now, we create our workflow and specify the ``base_dir`` which tells nipype
+# the directory in which to store the outputs.
 
-# workflow directory within the `base_dir`
 preproc_pipeline_name = 'preprocessing_workflow'
 
 main_workflow = pe.Workflow(name=preproc_pipeline_name)
@@ -154,7 +157,7 @@ main_workflow.base_dir = data_path
 
 ###############################################################################
 # We then connect the nodes two at a time. First, we connect the two outputs
-# (subject_id and session_id) of the :ref:`infosourcenode` node to the
+# (``subject_id`` and ``session_id``) of the :ref:`infosourcenode` node to the
 # :ref:`datagrabbernode` node. So, these two nodes taken together can grab data
 
 main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
@@ -197,11 +200,15 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
 ###############################################################################
+# Results
+# ^^^^^^^
 # The output is the preprocessed data stored in the workflow directory
-# defined by `base_dir`.
+# defined by ``base_dir``. Here we find the folder
+# ``preprocessing_workflow`` where all the results of each iteration are
+# sorted by nodes. The cleaned data will be used in :ref:`compute_erp`.
 #
-# It’s a good rule to inspect the report file saved in the same dir to look at
-# the excluded ICA components.
+# It’s a good rule to inspect the report file saved in the ``ica`` dir to look
+# at the excluded ICA components.
 
 import mne  # noqa
 from ephypype.gather import get_results # noqa

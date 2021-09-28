@@ -1,7 +1,7 @@
 {
     "general":
     {
-        "NJOBS": 2,
+        "NJOBS": 1,
         "subject_ids": ["016"],
         "session_ids": ["N170"],
         "data_path" : "",

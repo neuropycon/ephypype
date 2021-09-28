@@ -4,23 +4,32 @@
 ============================
 03. Compute inverse solution
 ============================
-This workflow mainly call the :ref:`inverse solution pipeline <source_reconstruction>`
+This workflow mainly call the
+:ref:`inverse solution pipeline <source_reconstruction>`
 performing source reconstruction starting from raw data specified by the user.
-The first Node of the workflow (concat_event Node) extract the events from
-stimulus channel 'STI101'. The events are saved in the Node directory.
-For each subject, the different run are also concatenated in one single raw
-file and saved in concat_event Node directory. The input of this node are the
-different run taken from the preprocessing workflow directory, i.e. the cleaned
-raw data. In the inv_sol_pipeline the raw data are epoched accordingly to
-events specified in json file and created in concat_event Node.
+The first node of the workflow (:ref:`concat_event`) extracts the events from
+stimulus channel ``STI101``. The events are saved in the :ref:`concat_event`
+directory. For each subject, the different run are also concatenated in
+one single raw file and saved in :ref:`concat_event` directory.
+The input of this node are the different run taken from the
+preprocessing workflow directory, i.e. the cleaned
+raw data created by :ref:`preproc_meg`.
+
+In the :ref:`inv_solution_node` the raw data are epoched accordingly to
+events specified in ``json`` file and created in :ref:`concat_event`.
 The evoked datasets are created by averaging the different conditions specified
-in json file. Finally the source estimates obtained by the inverse solution
-pipeline are morphed to the ``fsaverage`` brain in the morph_stc Node.
+in ``json file``. Finally the source estimates obtained by the
+:ref:`inv_solution_node` are morphed to the ``fsaverage`` brain in the
+:ref:`morphing_node`.
 
 .. warning:: Before running this pipeline, the coregistration between the MRI
     and MEG device needs to be performed.
 """
 
+
+###############################################################################
+# Import modules
+# ^^^^^^^^^^^^^^
 import os.path as op
 import json
 import pprint  # noqa
@@ -32,18 +41,24 @@ from ephypype.nodes import create_iterator, create_datagrabber
 from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruction  # noqa
 
 
-# Read experiment params as json
+###############################################################################
+# Define data and variables
+# ^^^^^^^^^^^^^^^^^^^^^^^^^
+# Let us specify the variables that are specific for the data analysis (the
+# main directories where the data are stored, the list of subjects and
+# sessions, ...) and the variable specific for the particular pipeline
+# (events_id, inverse method, ...) in a
+# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+
 params = json.load(open("params.json"))
 
-pprint.pprint({'parameters': params})
-print(params["general"])
-
+pprint.pprint({'parameters': params["general"]})
 data_type = params["general"]["data_type"]
 subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
 conditions = params["general"]["conditions"]
-
+subjects_dir = params["general"]["subjects_dir"]
 
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]
@@ -51,14 +66,10 @@ else:
     data_path = op.expanduser("~")
 print("data_path : %s" % data_path)
 
-subjects_dir = op.join(data_path, params["general"]["subjects_dir"])
-
 # source reconstruction
 pprint.pprint({'inverse parameters': params["inverse"]})
-
 events_id = params["inverse"]['events_id']
 condition = params["inverse"]['condition']
-events_file = params["inverse"]['events_file']
 t_min = params["inverse"]['tmin']
 t_max = params["inverse"]['tmax']
 spacing = params["inverse"]['spacing']  # oct-6
@@ -70,9 +81,13 @@ trans_fname = op.join(data_path, params["inverse"]['trans_fname'])
 
 
 ###############################################################################
-# Function to extract events from the stimulus channel
-###############################################################################
-
+# Define functions
+# ^^^^^^^^^^^^^^^^
+# Hwew we define two different functions that will be encapsulated in two
+# different nodes (:ref:`concat_event` and :ref:`morphing_node`).
+# The ``run_events_concatenate`` function extracts events from the stimulus
+# channel while ``compute_morph_stc`` morph the source estimates obtained by
+# the :ref:`inv_solution_node` into the ``fsaverage`` brain.
 def run_events_concatenate(list_ica_files, subject):
     '''
     The events are extracted from stim channel 'STI101'. The events are saved
@@ -137,8 +152,6 @@ def run_events_concatenate(list_ica_files, subject):
 
 
 ###############################################################################
-# Group average on source level
-###############################################################################
 def compute_morph_stc(subject, conditions, cond_files, subjects_dir):
     import os.path as op
     import mne
@@ -168,25 +181,18 @@ def show_files(files):
     print(files)
     return files
 
+
 ###############################################################################
-# Defining pipeline to compute inverse solution
-###############################################################################
-# Then, we create our workflow and specify the `base_dir` which tells
-# nipype the directory in which to store the outputs.
-
-
-# workflow directory within the `base_dir`
-src_reconstruction_pipeline_name = 'source_dsamp_full_reconstruction_' + \
-    inv_method + '_' + parc.replace('.', '')
-
-main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)
-main_workflow.base_dir = data_path
-
-# We create a node to pass input filenames to DataGrabber from nipype
+# Specify Nodes
+# ^^^^^^^^^^^^^
+# Infosource and Datasource
+# """""""""""""""""""""""""
+# We create an ``infosurce`` node to pass input filenames to
 infosource = create_iterator(['subject_id'], [subject_ids])
 
-# and a node to grab data. The template_args in this node iterate upon
-# the values in the infosource node
+###############################################################################
+# the ``datasource`` node to grab data. The ``template_args`` in this node
+# iterate upon the value in the infosource node
 ica_dir = op.join(
         data_path, 'preprocessing_dsamp_workflow', 'preproc_meg_dsamp_pipeline')  # noqa
 
@@ -200,65 +206,116 @@ template_args = dict(
     raw_file=[['subject_id', 'subject_id']],
     trans_file=[['subject_id', 'subject_id', "-trans"]])
 
-
 datasource = create_datagrabber(ica_dir, template_path, template_args,
                                 field_template=field_template,
                                 infields=['subject_id'],
                                 outfields=['raw_file', 'trans_file'])
 
-# We connect the output of infosource node to the one of datasource.
-# So, these two nodes taken together can grab data.
-main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
-
-# We define the Node that encapsulates run_events_concatenate function
+###############################################################################
+# .. _concat_event:
+#
+# Event Node
+# """"""""""
+# We define the Node that encapsulates ``run_events_concatenate`` function
 concat_event = pe.Node(
     Function(input_names=['list_ica_files', 'subject'],
              output_names=['raw_file', 'event_file', 'fname_events_files'],
              function=run_events_concatenate),
     name='concat_event')
 
-# and its connections to the other nodes
-main_workflow.connect(datasource, ('raw_file', show_files),
-                      concat_event, 'list_ica_files')
-main_workflow.connect(infosource, 'subject_id', concat_event, 'subject')
-
 ###############################################################################
+# .. _inv_solution_node:
+#
+# Inverse solution Node
+# """""""""""""""""""""
 # Ephypype creates for us a pipeline to compute inverse solution which can be
-# connected to these nodes we created.
+# connected to the other nodes we created.
+# The inverse solution pipeline is implemented by the function
+# :func:`~ephypype.pipelines.preproc_meeg.create_pipeline_source_reconstruction`,
+# thus to instantiate this pipeline node, we pass our parameters to it.
+# Since we want to do source estimation in three different conditions
+# (famous faces, unfamiliar faces and scrambled), we provide all information
+# related to the events in the ``json`` file where we also specify as inverse
+# method dSPM th
 inv_sol_workflow = create_pipeline_source_reconstruction(
     data_path, subjects_dir, spacing=spacing, inv_method=inv_method,
     is_epoched=True, is_evoked=True, events_id=events_id, condition=condition,
     t_min=t_min, t_max=t_max, all_src_space=True, parc=parc, snr=snr)
 
-main_workflow.connect(infosource, ('subject_id', show_files),
-                      inv_sol_workflow, 'inputnode.sbj_id')
-main_workflow.connect(concat_event, ('raw_file', show_files),
-                      inv_sol_workflow, 'inputnode.raw')
-main_workflow.connect(concat_event, ('event_file', show_files),
-                      inv_sol_workflow, 'inputnode.events_file')
-main_workflow.connect(datasource, 'trans_file',
-                      inv_sol_workflow, 'inputnode.trans_file')
-
-# We define the Node that encapsulates compute_morph_stc function
+###############################################################################
+# .. _morphing_node:
+#
+# Morphing Node
+# """""""""""""
+# The last Node we define encapsulates ``compute_morph_stc`` function.
 morph_stc = pe.Node(
     Function(input_names=['subject', 'conditions', 'cond_files', 'subjects_dir'],  # noqa
              output_names=['stc_morphed_files'],
              function=compute_morph_stc),
     name="morph_stc")
 
-# and its connections to the other nodes
-main_workflow.connect(infosource, 'subject_id', morph_stc, 'subject')
-main_workflow.connect(inv_sol_workflow, 'inv_solution.stc_files',
-                      morph_stc, 'cond_files')
-
 morph_stc.inputs.conditions = conditions
 morph_stc.inputs.subjects_dir = subjects_dir
 
 ###############################################################################
-# To do so, we first write the workflow graph (optional)
+# Create workflow
+# ^^^^^^^^^^^^^^^
+# Then, we can create our workflow and specify the ``base_dir`` which tells
+# nipype the directory in which to store the outputs.
+
+src_reconstruction_pipeline_name = 'source_dsamp_full_reconstruction_' + \
+    inv_method + '_' + parc.replace('.', '')
+
+main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)
+main_workflow.base_dir = data_path
+
+###############################################################################
+# Connect Nodes
+# ^^^^^^^^^^^^^
+# Finally, we connect the nodes two at a time. First, we connect the
+# output (``subject_id``) of the ``infosource`` node to the input of
+# ``datasource`` node. So, these two nodes taken together can grab data.
+main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
+
+###############################################################################
+# Now we connect their outputs to the input of and their connections to the
+# input (``list_ica_files``, ``subject``) of :ref:`concat_event`.
+main_workflow.connect(datasource, ('raw_file', show_files),
+                      concat_event, 'list_ica_files')
+main_workflow.connect(infosource, 'subject_id', concat_event, 'subject')
+
+###############################################################################
+# The output of ``infosource``, ``datasource`` and ``concat_event`` are the
+# inputs of ``inv_sol_workflow``, thus we connect these nodes two at time.
+main_workflow.connect(infosource, ('subject_id', show_files),
+                      inv_sol_workflow, 'inputnode.sbj_id')
+main_workflow.connect(datasource, 'trans_file',
+                      inv_sol_workflow, 'inputnode.trans_file')
+main_workflow.connect(concat_event, ('raw_file', show_files),
+                      inv_sol_workflow, 'inputnode.raw')
+main_workflow.connect(concat_event, ('event_file', show_files),
+                      inv_sol_workflow, 'inputnode.events_file')
+
+###############################################################################
+# Finally, we connect ``infosource`` and ``inv_sol_workflow`` to
+# ``morph_stc``.
+main_workflow.connect(infosource, 'subject_id', morph_stc, 'subject')
+main_workflow.connect(inv_sol_workflow, 'inv_solution.stc_files',
+                      morph_stc, 'cond_files')
+
+###############################################################################
+# Run workflow
+# ^^^^^^^^^^^^
+# Now, we are now ready to execute our workflow.
 main_workflow.write_graph(graph2use='colored')  # colored
 
-# Finally, we are now ready to execute our workflow.
 main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
-# Run workflow locally on 1 CPU
 main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
+
+###############################################################################
+# Results
+# ^^^^^^^
+# The output are the reconstructed neural time series morphed to the standard
+# FreeSurfer average subject named fsaverage.The output is stored in the
+# workflow dir defined by ``base_dir``. To plot the estimated source timeseries
+# we can use :ref:`plot_stc`.

@@ -1,16 +1,20 @@
 """
+.. _compute_erp:
+
 ===============
 02. Compute ERP
 ===============
-This workflow mainly call the ephypype pipeline computing N170 component
-from raw data specified by the user. The first Node of the workflow
-(extract_events Node) extract the events from raw data. The events are saved
-in the Node directory.
-In the ERP_pipeline the raw data are epoched accordingly to events extracted in
-extract_events Node.
+This workflow mainly call the
+:func:`ephypype pipeline <ephypype.pipelines.create_pipeline_evoked>`
+computing N170 component from cleaned EEG data. The first Node of the workflow
+(:ref:`extract_events_node` Node) extracts the events from raw data. The events
+are saved in the Node directory.
+In the :ref:`ERP_pipeline` the raw data are epoched accordingly to events
+extracted in :ref:`extract_events` Node.
 The evoked datasets are created by averaging the different conditions specified
-in json file. 
+in ``json`` file.
 """
+
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 # License: BSD (3-clause)
 
@@ -77,13 +81,13 @@ t_max = params[ERP_str]['tmax']
 
 
 ###############################################################################
-# .. extract_events:
+# .. _extract_events:
 #
 # Extract events
 # ^^^^^^^^^^^^^^
 # The first Node of the workflow extract events from the raw data. The events
 # are extracted using the function `events_from_annotations <https://mne.tools/stable/generated/mne.events_from_annotations.html>`_
-# of `MNE-python >https://mne.tools/stable/index.html>`_ on raw data.
+# of `MNE-python <https://mne.tools/stable/index.html>`_ on raw data.
 # The events are saved in the Node directory.
 def get_events(raw_ica, subject):
     '''
@@ -141,31 +145,42 @@ def get_events(raw_ica, subject):
 # that define the workflow itself. In this example the main Nodes are
 #
 # * ``infosource`` is a Node that just distributes values
-# * ``datasource`` is a `DataGrabber <https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber>`_ 
-# Node that allows the user to define flexible search patterns which can be
-# parameterized by user defined inputs 
+# * ``datasource`` is a DataGrabber Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
 # * ``extract_events`` is a Node containing the function :ref:`extract_events`
 # * ``ERP_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_evoked`
-
-# We create a node to pass input filenames to DataGrabber from nipype
+#
+###############################################################################
+# Infosource and Datasource
+# """""""""""""""""""""""""
+# We create a node to pass input filenames to
 infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
-# and a node to grab data. The template_args in this node iterate upon
-# the values in the infosource node
+# ``datasource`` node to grab data. The ``template_args`` in this node iterate
+# upon the values in the infosource node
 ica_dir = op.join(
     data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
 template_path = "_session_id_%s_subject_id_%s/ica/sub-%s_ses-%s_*filt_ica.fif"
 template_args = [['session_id', 'subject_id', 'subject_id', 'session_id']]
 datasource = create_datagrabber(ica_dir, template_path, template_args)
 
-# Then, we define the Node that encapsulates run_events_concatenate function
+###############################################################################
+# .. _extract_events_node:
+#
+# Extract events Node
+# """""""""""""""""""
+# Then, we define the Node that encapsulates ``get_events`` function
 extract_events = pe.Node(
     Function(input_names=['raw_ica', 'subject'],
              output_names=['event_file'],
              function=get_events),
     name='extract_events')
 
+###############################################################################
+# .. _ERP_pipeline:
+#
+# ERP Node
+# """"""""
 # Finally, we create the ephypype pipeline computing evoked data which can be
 # connected to these nodes we created.
 ERP_workflow = create_pipeline_evoked(
@@ -176,25 +191,27 @@ ERP_workflow = create_pipeline_evoked(
 ###############################################################################
 # Specify Workflows and Connect Nodes
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# Now, we create our workflow and specify the `base_dir` which tells
+# Now, we create our workflow and specify the ``base_dir`` which tells
 # nipype the directory in which to store the outputs.
 
-# workflow directory within the `base_dir`
 ERP_pipeline_name = ERP_str + '_workflow'
 
 main_workflow = pe.Workflow(name=ERP_pipeline_name)
 main_workflow.base_dir = data_path
 
-# We then connect the output of infosource node to the one of datasource.
-# So, these two nodes taken together can grab data.
+###############################################################################
+# We then connect the output of ``infosource`` node to the one of
+# ``datasource``. So, these two nodes taken together can grab data.
 main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
 main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 
+###############################################################################
 # We connect the output of ``infosource`` and ``datasource`` to the input
 # of ``extract_events`` node
 main_workflow.connect(datasource, 'raw_file', extract_events, 'raw_ica')
 main_workflow.connect(infosource, 'subject_id', extract_events, 'subject')
 
+###############################################################################
 # Finally, we connect the output of ``infosource``, ``datasource`` and
 # ``extract_events`` nodes to the input of ``ERP_pipeline`` node.
 main_workflow.connect(infosource, 'subject_id',
@@ -203,7 +220,6 @@ main_workflow.connect(datasource, 'raw_file',
                       ERP_workflow, 'inputnode.raw')
 main_workflow.connect(extract_events, 'event_file',
                       ERP_workflow, 'inputnode.events_file')
-
 
 ###############################################################################
 # Run workflow
@@ -230,13 +246,12 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 # Run workflow locally on 1 CPU
 main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
-
 ###############################################################################
 # Plot results
 # ^^^^^^^^^^^^
-import mne  
-import matplotlib.pyplot as plt
-from ephypype.gather import get_results
+import mne  # noqa
+import matplotlib.pyplot as plt  # noqa
+from ephypype.gather import get_results  # noqa
 
 evoked_files, _ = get_results(main_workflow.base_dir,
                               main_workflow.name, pipeline='compute_evoked')
