@@ -194,6 +194,7 @@ texinfo_documents = [
 
 intersphinx_mapping = {'python': ('https://docs.python.org/', None),
                        'mne': ('http://martinos.org/mne/stable/', None),
+                       'nipype': ('https://nipype.readthedocs.io/en/latest/', None)
                        }
 
 ##############################################################################

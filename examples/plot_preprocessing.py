@@ -96,8 +96,8 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 #
 # In particular, the two nodes are:
 #
-# * :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
-# * :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
+# * :class:`~ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
+# * :class:`~ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
 from ephypype.pipelines import create_pipeline_preproc_meeg  # noqa
 preproc_workflow = create_pipeline_preproc_meeg(

@@ -1,0 +1,49 @@
+{
+    "general":
+    {
+        "NJOBS": 1,
+        "subject_ids": ["sub-01"],
+        "session_ids": ["01", "02"],
+        "data_path": "/media/pasca/pasca_media/data/cuttingeeg/zenodo/ds000117/derivatives/meg_derivatives/",
+        "data_type": "fif",
+        "nb_fsaverage_vertices": 10242,
+        "smooth": 10,
+        "conditions": ["famous", "scrambled", "unfamiliar"],
+        "subjects_dir": "/media/pasca/pasca_media/data/cuttingeeg/zenodo/ds000117/FSF"
+    },
+    "preprocessing":
+    {
+        "l_freq": 0.1,
+        "h_freq": 40,
+        "down_sfreq": 300,
+        "ECG_ch_name": "EEG063",
+        "EoG_ch_name": ["EEG061", "EEG062"],
+        "variance": 0.999,
+        "reject": {
+            "mag": 4e-12,
+            "grad": 4000e-13
+            }
+    },
+    "inverse":
+    {
+        "events_id": {
+            "face/famous/first": 5,
+            "face/famous/immediate": 6,
+            "face/famous/long": 7,
+            "face/unfamiliar/first": 13,
+            "face/unfamiliar/immediate": 14,
+            "face/unfamiliar/long": 15,
+            "scrambled/first": 17,
+            "scrambled/immediate": 18,
+            "scrambled/long": 19
+            },
+        "condition": ["face/famous", "scrambled", "face/unfamiliar"],
+        "tmin": -0.2,
+        "tmax": 1.0,
+        "trans_fname": "*-trans.fif",
+        "spacing": "oct-6",
+        "snr": 3.0,
+        "method": "dSPM",
+        "parcellation": "aparc"
+    }
+}
