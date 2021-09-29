@@ -1,0 +1,6 @@
+﻿ephypype.pipelines.create\_pipeline\_evoked\_inverse\_solution
+==============================================================
+
+.. currentmodule:: ephypype.pipelines
+
+.. autofunction:: create_pipeline_evoked_inverse_solution

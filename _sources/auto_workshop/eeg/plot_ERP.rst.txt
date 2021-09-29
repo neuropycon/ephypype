@@ -18,21 +18,25 @@
 .. _sphx_glr_auto_workshop_eeg_plot_ERP.py:
 
 
+.. _compute_perp:
+
 ===============
 02. Compute ERP
 ===============
-This workflow mainly call the ephypype pipeline computing N170 component
-from raw data specified by the user. The first Node of the workflow
-(extract_events Node) extract the events from raw data. The events are saved
-in the Node directory.
-In the ERP_pipeline the raw data are epoched accordingly to events extracted in
-extract_events Node.
+This workflow mainly call the
+:func:`ephypype pipeline <ephypype.pipelines.create_pipeline_evoked>`
+computing N170 component from cleaned EEG data. The first Node of the workflow
+(:ref:`extract_events_node` Node) extracts the events from raw data. The events
+are saved in the Node directory.
+In the :ref:`ERP_pipeline` the raw data are epoched accordingly to events
+extracted in :ref:`extract_events` Node.
 The evoked datasets are created by averaging the different conditions specified
-in json file. 
+in ``json`` file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-19
+.. GENERATED FROM PYTHON SOURCE LINES 17-23
 
 .. code-block:: default
+
 
     # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
     # License: BSD (3-clause)
@@ -46,7 +50,7 @@ in json file.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-32
+.. GENERATED FROM PYTHON SOURCE LINES 24-36
 
 Import modules
 ^^^^^^^^^^^^^^
@@ -61,7 +65,7 @@ mainly from |nipype| and |ephypype| packages.
 
    <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a>
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-45
+.. GENERATED FROM PYTHON SOURCE LINES 36-49
 
 .. code-block:: default
 
@@ -85,11 +89,11 @@ mainly from |nipype| and |ephypype| packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Let us fetch the data first. It is around 90 MB download.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-54
 
 .. code-block:: default
 
@@ -103,7 +107,7 @@ Let us fetch the data first. It is around 90 MB download.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-58
+.. GENERATED FROM PYTHON SOURCE LINES 55-62
 
 Define data and variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,7 +117,7 @@ sessions, ...) and the variable specific for the particular pipeline
 (events_id, baseline, ...) in a 
 :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-79
+.. GENERATED FROM PYTHON SOURCE LINES 62-84
 
 .. code-block:: default
 
@@ -126,6 +130,7 @@ sessions, ...) and the variable specific for the particular pipeline
     subject_ids = params["general"]["subject_ids"]
     NJOBS = params["general"]["NJOBS"]
     session_ids = params["general"]["session_ids"]
+    # data_path = params["general"]["data_path"]
 
     # ERP params
     ERP_str = 'ERP'
@@ -148,8 +153,8 @@ sessions, ...) and the variable specific for the particular pipeline
 
  .. code-block:: none
 
-    {'parameters': {'NJOBS': 2,
-                    'data_path': '/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE',
+    {'parameters': {'NJOBS': 1,
+                    'data_path': '/media/pasca/pasca_media/data/cuttingeeg/zenodo/ERP_CORE',
                     'data_type': 'eeg',
                     'session_ids': ['N170'],
                     'subject_ids': ['016']}}
@@ -163,18 +168,18 @@ sessions, ...) and the variable specific for the particular pipeline
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-93
 
-.. extract_events:
+.. _extract_events:
 
 Extract events
 ^^^^^^^^^^^^^^
 The first Node of the workflow extract events from the raw data. The events
 are extracted using the function `events_from_annotations <https://mne.tools/stable/generated/mne.events_from_annotations.html>`_
-of `MNE-python >https://mne.tools/stable/index.html>`_ on raw data.
+of `MNE-python <https://mne.tools/stable/index.html>`_ on raw data.
 The events are saved in the Node directory.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-137
+.. GENERATED FROM PYTHON SOURCE LINES 93-142
 
 .. code-block:: default
 
@@ -182,7 +187,7 @@ The events are saved in the Node directory.
         '''
         First, we get the ica file from the preprocessing workflow directory, i.e.
         the cleaned raw data. The events are extracted from raw annotation and are
-        saved in the Node directory. 
+        saved in the Node directory.
         '''
         print(subject, raw_ica)
         import mne
@@ -191,10 +196,10 @@ The events are saved in the Node directory.
             '201': 'response/correct',
             '202': 'response/error'
         }
-    
-        for i in range(1, 180+1):
+
+        for i in range(1, 180 + 1):
             orig_name = f'{i}'
-        
+
             if 1 <= i <= 40:
                 new_name = 'stimulus/face/normal'
             elif 41 <= i <= 80:
@@ -209,8 +214,8 @@ The events are saved in the Node directory.
             rename_events[orig_name] = new_name
 
         raw = mne.io.read_raw_fif(raw_ica, preload=True)
-        events_from_annot, event_dict  = mne.events_from_annotations(raw)
-    
+        events_from_annot, event_dict = mne.events_from_annotations(raw)
+
         faces = list()
         car = list()
         for key in event_dict.keys():
@@ -220,13 +225,12 @@ The events are saved in the Node directory.
                 faces.append(event_dict[key])
 
         merged_events = mne.merge_events(events_from_annot, faces, 1)
-        merged_events = mne.merge_events(merged_events, car, 2)        
+        merged_events = mne.merge_events(merged_events, car, 2)
 
         event_file = raw_ica.replace('.fif', '-eve.fif')
         mne.write_events(event_file, merged_events)
 
         return event_file
-    
 
 
 
@@ -234,50 +238,103 @@ The events are saved in the Node directory.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-149
+
+.. GENERATED FROM PYTHON SOURCE LINES 143-154
 
 Specify Nodes
 ^^^^^^^^^^^^^
+
 Before to create a workflow we have to create the `nodes <https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html>`_
 that define the workflow itself. In this example the main Nodes are
 
 * ``infosource`` is a Node that just distributes values
-* ``datasource`` is a `DataGrabber <https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber>`_ 
-Node that allows the user to define flexible search patterns which can be
-parameterized by user defined inputs 
+* ``datasource`` is a DataGrabber Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
 * ``extract_events`` is a Node containing the function :ref:`extract_events`
 * ``ERP_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_evoked`
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-176
+
+.. GENERATED FROM PYTHON SOURCE LINES 156-159
+
+Infosource and Datasource
+"""""""""""""""""""""""""
+We create a node to pass input filenames to
+
+.. GENERATED FROM PYTHON SOURCE LINES 159-162
+
+.. code-block:: default
+
+    infosource = create_iterator(['subject_id', 'session_id'],
+                                 [subject_ids, session_ids])
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 163-172
 
 .. code-block:: default
 
 
-    # We create a node to pass input filenames to DataGrabber from nipype
-    infosource = create_iterator(['subject_id', 'session_id'],
-                                 [subject_ids, session_ids])
-
-    # and a node to grab data. The template_args in this node iterate upon
-    # the values in the infosource node
+    # ``datasource`` node to grab data. The ``template_args`` in this node iterate
+    # upon the values in the infosource node
     ica_dir = op.join(
-            data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
+        data_path, 'preprocessing_workflow', 'preproc_eeg_pipeline')
     template_path = "_session_id_%s_subject_id_%s/ica/sub-%s_ses-%s_*filt_ica.fif"
     template_args = [['session_id', 'subject_id', 'subject_id', 'session_id']]
     datasource = create_datagrabber(ica_dir, template_path, template_args)
 
-    # Then, we define the Node that encapsulates run_events_concatenate function
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 173-178
+
+.. _extract_events_node:
+
+Extract events Node
+"""""""""""""""""""
+Then, we define the Node that encapsulates ``get_events`` function
+
+.. GENERATED FROM PYTHON SOURCE LINES 178-184
+
+.. code-block:: default
+
     extract_events = pe.Node(
         Function(input_names=['raw_ica', 'subject'],
                  output_names=['event_file'],
                  function=get_events),
         name='extract_events')
 
-    # Finally, we create the ephypype pipeline computing evoked data which can be
-    # connected to these nodes we created.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 185-191
+
+.. _ERP_pipeline:
+
+ERP Node
+""""""""
+Finally, we create the ephypype pipeline computing evoked data which can be
+connected to these nodes we created.
+
+.. GENERATED FROM PYTHON SOURCE LINES 191-196
+
+.. code-block:: default
+
     ERP_workflow = create_pipeline_evoked(
-            data_path, data_type=data_type, pipeline_name="ERP_pipeline",
-            events_id=events_id, baseline=baseline,
-            condition=condition, t_min=t_min, t_max=t_max)
+        data_path, data_type=data_type, pipeline_name="ERP_pipeline",
+        events_id=events_id, baseline=baseline,
+        condition=condition, t_min=t_min, t_max=t_max)
 
 
 
@@ -286,36 +343,77 @@ parameterized by user defined inputs
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-181
+.. GENERATED FROM PYTHON SOURCE LINES 197-201
 
 Specify Workflows and Connect Nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Now, we create our workflow and specify the `base_dir` which tells
+Now, we create our workflow and specify the ``base_dir`` which tells
 nipype the directory in which to store the outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-208
+.. GENERATED FROM PYTHON SOURCE LINES 201-207
 
 .. code-block:: default
 
 
-    # workflow directory within the `base_dir`
     ERP_pipeline_name = ERP_str + '_workflow'
 
     main_workflow = pe.Workflow(name=ERP_pipeline_name)
     main_workflow.base_dir = data_path
 
-    # We then connect the output of infosource node to the one of datasource.
-    # So, these two nodes taken together can grab data.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 208-210
+
+We then connect the output of ``infosource`` node to the one of
+``datasource``. So, these two nodes taken together can grab data.
+
+.. GENERATED FROM PYTHON SOURCE LINES 210-213
+
+.. code-block:: default
+
     main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
     main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 
-    # We connect the output of ``infosource`` and ``datasource`` to the input
-    # of ``extract_events`` node
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 214-216
+
+We connect the output of ``infosource`` and ``datasource`` to the input
+of ``extract_events`` node
+
+.. GENERATED FROM PYTHON SOURCE LINES 216-219
+
+.. code-block:: default
+
     main_workflow.connect(datasource, 'raw_file', extract_events, 'raw_ica')
     main_workflow.connect(infosource, 'subject_id', extract_events, 'subject')
 
-    # Finally, we connect the output of ``infosource``, ``datasource`` and 
-    # ``extract_events`` nodes to the input of ``ERP_pipeline`` node.
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 220-222
+
+Finally, we connect the output of ``infosource``, ``datasource`` and
+``extract_events`` nodes to the input of ``ERP_pipeline`` node.
+
+.. GENERATED FROM PYTHON SOURCE LINES 222-229
+
+.. code-block:: default
+
     main_workflow.connect(infosource, 'subject_id',
                           ERP_workflow, 'inputnode.sbj_id')
     main_workflow.connect(datasource, 'raw_file',
@@ -330,8 +428,7 @@ nipype the directory in which to store the outputs.
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 209-215
+.. GENERATED FROM PYTHON SOURCE LINES 230-236
 
 Run workflow
 ^^^^^^^^^^^^
@@ -340,7 +437,7 @@ last step is to run it by calling the ``run`` method. It’s also possible to
 generate static graph representing nodes and connections between them by
 calling ``write_graph`` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-217
+.. GENERATED FROM PYTHON SOURCE LINES 236-238
 
 .. code-block:: default
 
@@ -361,12 +458,12 @@ calling ``write_graph`` method.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 218-220
+.. GENERATED FROM PYTHON SOURCE LINES 239-241
 
 Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-227
+.. GENERATED FROM PYTHON SOURCE LINES 241-248
 
 .. code-block:: default
 
@@ -396,18 +493,17 @@ here correspond to how we connected the nodes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-229
+.. GENERATED FROM PYTHON SOURCE LINES 249-250
 
 Finally, we are now ready to execute our workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 229-234
+.. GENERATED FROM PYTHON SOURCE LINES 250-254
 
 .. code-block:: default
 
     main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
     # Run workflow locally on 1 CPU
     main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
-
 
 
 
@@ -420,32 +516,32 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f804787a750>
+    <networkx.classes.digraph.DiGraph object at 0x7fa13d2fe690>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-237
+.. GENERATED FROM PYTHON SOURCE LINES 255-257
 
 Plot results
 ^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 237-262
+.. GENERATED FROM PYTHON SOURCE LINES 257-284
 
 .. code-block:: default
 
-    import mne
-    import matplotlib.pyplot as plt
-    from ephypype.gather import get_results
+    import mne  # noqa
+    import matplotlib.pyplot as plt  # noqa
+    from ephypype.gather import get_results  # noqa
 
     evoked_files, _ = get_results(main_workflow.base_dir,
-                               main_workflow.name, pipeline='compute_evoked')
+                                  main_workflow.name, pipeline='compute_evoked')
 
     for evoked_file in evoked_files:
         print(f'*** {evoked_file} ***\n')
-    
+
         ave = mne.read_evokeds(evoked_file)
         faces, car = ave[0], ave[1]
-        
+
         gfp_faces = faces.data.std(axis=0, ddof=0)
         gfp_car = car.data.std(axis=0, ddof=0)
 
@@ -458,7 +554,9 @@ Plot results
         ax.plot(faces.times, gfp_faces * 1e6, color='blue')
         ax.plot(car.times, gfp_car * 1e6, color='orange')
         ax.plot(contrast.times, gfp_contrast * 1e6, color='green')
+        ax.legend(['Faces', 'Car', 'Contrast'])
         fig.show()
+
 
 
 .. image:: /auto_workshop/eeg/images/sphx_glr_plot_ERP_002.png
@@ -500,7 +598,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.814 seconds)
+   **Total running time of the script:** ( 0 minutes  8.491 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_eeg_plot_ERP.py:

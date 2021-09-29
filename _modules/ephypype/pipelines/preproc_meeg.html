@@ -160,7 +160,7 @@
 <span class="sd">    pipeline_name: str (default &#39;preproc_meeg&#39;)</span>
 <span class="sd">        name of the pipeline</span>
 <span class="sd">    data_type: str (default &#39;fif&#39;)</span>
-<span class="sd">        data type: &#39;fif&#39; or &#39;ds&#39;</span>
+<span class="sd">        data type: MEG (&#39;fif&#39;, &#39;ds&#39;) or EEG (&#39;eeg&#39;) data</span>
 <span class="sd">    l_freq: float (default 1)</span>
 <span class="sd">        low cut-off frequency in Hz</span>
 <span class="sd">    h_freq: float (default 150)</span>
@@ -367,11 +367,13 @@
     <span class="k">return</span> <span class="n">pipeline</span></div>
 
 
-<span class="k">def</span> <span class="nf">create_pipeline_evoked</span><span class="p">(</span><span class="n">main_path</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s1">&#39;ERP_pipeline&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="create_pipeline_evoked"><a class="viewcode-back" href="../../../generated/ephypype.pipelines.create_pipeline_evoked.html#ephypype.pipelines.create_pipeline_evoked">[docs]</a><span class="k">def</span> <span class="nf">create_pipeline_evoked</span><span class="p">(</span><span class="n">main_path</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s1">&#39;ERP_pipeline&#39;</span><span class="p">,</span>
                            <span class="n">events_id</span><span class="o">=</span><span class="p">{},</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">decim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">t_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">baseline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;meg&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;ERP reconstruction pipeline.</span>
+    <span class="sd">&quot;&quot;&quot;Evoked pipeline.</span>
+
+<span class="sd">    Compute time-locked event-related fields/potentials.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -391,6 +393,12 @@
 <span class="sd">    is_evoked: bool (default False)</span>
 <span class="sd">        if True the raw data will be averaged according to the events</span>
 <span class="sd">        contained in the dict events_id</span>
+<span class="sd">    decim: int</span>
+<span class="sd">        factor by which to downsample the data</span>
+<span class="sd">    baseline: tuple</span>
+<span class="sd">        baseline</span>
+<span class="sd">    data_type: str</span>
+<span class="sd">        &#39;meg&#39; or &#39;eeg&#39;</span>
 
 <span class="sd">    raw (inputnode): str</span>
 <span class="sd">        path to raw data in fif format</span>
@@ -405,8 +413,9 @@
     <span class="n">pipeline</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">pipeline_name</span><span class="p">)</span>
     <span class="n">pipeline</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">main_path</span>
 
-    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sbj_id&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;events_file&#39;</span><span class="p">]),</span>
-                        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">IdentityInterface</span><span class="p">(</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sbj_id&#39;</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="s1">&#39;events_file&#39;</span><span class="p">]),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
 
     <span class="c1"># Create epochs based on events_id</span>
     <span class="k">assert</span> <span class="n">events_id</span> <span class="o">!=</span> <span class="p">{}</span>
@@ -420,7 +429,7 @@
 
     <span class="k">if</span> <span class="n">baseline</span><span class="p">:</span>
         <span class="n">define_epochs</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">baseline</span> <span class="o">=</span> <span class="n">baseline</span>
-        
+
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="n">define_epochs</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;events_file&#39;</span><span class="p">,</span> <span class="n">define_epochs</span><span class="p">,</span> <span class="s1">&#39;events_file&#39;</span><span class="p">)</span>
 
@@ -431,7 +440,7 @@
     <span class="n">pipeline</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">define_epochs</span><span class="p">,</span> <span class="s1">&#39;epo_fif_file&#39;</span><span class="p">,</span>
                      <span class="n">compute_evoked</span><span class="p">,</span> <span class="s1">&#39;fif_file&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pipeline</span>
+    <span class="k">return</span> <span class="n">pipeline</span></div>
 </pre></div>
 
     </div>
@@ -445,7 +454,7 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-24.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>

@@ -79,11 +79,12 @@
 <li><a class="reference internal" href="#specify-nodes">Specify Nodes</a><ul>
 <li><a class="reference internal" href="#infosource">Infosource</a></li>
 <li><a class="reference internal" href="#datagrabber">DataGrabber</a></li>
-<li><a class="reference internal" href="#pipeline">Pipeline</a></li>
+<li><a class="reference internal" href="#preprocessing-pipeline">Preprocessing pipeline</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#specify-workflows-and-connect-nodes">Specify Workflows and Connect Nodes</a></li>
 <li><a class="reference internal" href="#run-workflow">Run workflow</a></li>
+<li><a class="reference internal" href="#results">Results</a></li>
 </ul>
 </li>
 </ul>
@@ -127,9 +128,9 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="preprocess-eeg-data">
-<span id="preproc-eeg"></span><span id="sphx-glr-auto-workshop-eeg-plot-eeg-preprocessing-py"></span><h1>01. Preprocess EEG data<a class="headerlink" href="#preprocess-eeg-data" title="Permalink to this headline">¶</a></h1>
-<p>The <a href="https://neuropycon.github.io/ephypype/auto_examples/plot_preprocessing.html#sphx-glr-auto-examples-plot-preprocessing-py" target="_blank">preprocessing pipeline</a> pipeline runs the ICA algorithm for an
-automatic removal of eyes and heart related artefacts.
+<span id="compute-ica"></span><span id="sphx-glr-auto-workshop-eeg-plot-eeg-preprocessing-py"></span><h1>01. Preprocess EEG data<a class="headerlink" href="#preprocess-eeg-data" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="../../auto_examples/plot_preprocessing.html#preproc-meeg"><span class="std std-ref">preprocessing pipeline</span></a> pipeline runs the ICA
+algorithm for an automatic removal of eyes and heart related artefacts.
 A report is automatically generated and can be used to correct
 and/or fine-tune the correction in each subject.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
@@ -164,9 +165,9 @@ mainly from <a href="https://nipype.readthedocs.io/en/latest/#" target="_blank">
 <h2>Define data and variables<a class="headerlink" href="#define-data-and-variables" title="Permalink to this headline">¶</a></h2>
 <p>Let us specify the variables that are specific for the data analysis (the
 main directories where the data are stored, the list of subjects and
-sessions, …) and the variable specific for the particular pipeline
+sessions, …) and the variables specific for the particular pipeline
 (downsampling frequency, EOG channels, cut-off frequencies, …) in a
-<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file</p>
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read experiment params as json</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/json.html#json.load" title="json.load" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
 <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;general parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s1">&#39;general&#39;</span><span class="p">]})</span>
@@ -179,14 +180,14 @@ sessions, …) and the variable specific for the particular pipeline
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;general parameters&#39;: {&#39;NJOBS&#39;: 2,
-                        &#39;data_path&#39;: &#39;/media/pasca/pasca_media/eeg/cuttingeeg/ERP_CORE&#39;,
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;general parameters&#39;: {&#39;NJOBS&#39;: 1,
+                        &#39;data_path&#39;: &#39;/media/pasca/pasca_media/data/cuttingeeg/zenodo/ERP_CORE&#39;,
                         &#39;data_type&#39;: &#39;eeg&#39;,
                         &#39;session_ids&#39;: [&#39;N170&#39;],
                         &#39;subject_ids&#39;: [&#39;016&#39;]}}
 </pre></div>
 </div>
-<p>Read the parameters for preprocessing from a json file and print it</p>
+<p>Read the parameters for preprocessing from the json file and print it</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;preprocessing parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">]})</span>
 
 <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;l_freq&#39;</span><span class="p">]</span>
@@ -216,7 +217,7 @@ sessions, …) and the variable specific for the particular pipeline
 </section>
 <section id="specify-nodes">
 <h2>Specify Nodes<a class="headerlink" href="#specify-nodes" title="Permalink to this headline">¶</a></h2>
-<p>Before to create a workflow we have to create the <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">nodes</a> that define the
+<p>Before to create a <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_workflow.html" target="_blank">workflow</a> we have to create the <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">nodes</a> that define the
 workflow itself. In this example the main Nodes are</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">infosource</span></code> is a Node that just distributes values</p></li>
@@ -225,36 +226,38 @@ workflow itself. In this example the main Nodes are</p>
 </ul>
 <section id="infosource">
 <span id="infosourcenode"></span><h3>Infosource<a class="headerlink" href="#infosource" title="Permalink to this headline">¶</a></h3>
-<p>The ephypype function <a class="reference internal" href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_iterator()</span></code></a> creates the Infosource
-Node that allows to distributes values: when we need to feed the different
-subject names into the workflow we only need a Node that can receive the input
-and distribute those inputs to the workflow.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
+<p>The ephypype function <a class="reference internal" href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_iterator()</span></code></a> creates the
+<code class="docutils literal notranslate"><span class="pre">infosource</span></code> node that allows to distributes values: when we need to feed
+the different subject names into the workflow we only need a Node that can
+receive the input and distribute those inputs to the workflow.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">],</span>
                              <span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject_ids</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">session_ids</span></a><span class="p">])</span>
 </pre></div>
 </div>
 </section>
 <section id="datagrabber">
 <span id="datagrabbernode"></span><h3>DataGrabber<a class="headerlink" href="#datagrabber" title="Permalink to this headline">¶</a></h3>
-<p>Then we create a node to grab data. The ephypype function <a class="reference internal" href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_datagrabber()</span></code></a>
+<p>Then we create a node to grab data. The ephypype function
+<a class="reference internal" href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_datagrabber()</span></code></a>
 creates a node to grab data using <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber" target="_blank">DataGrabber</a> in Nipype. The DataGrabber
-Interface allows to define flexible search patterns which can be parameterized
-by user defined inputs (such as subject ID, session, etc.). In this example
-we parameterize the pattern search with subject_id and session_id.
-The template_args in this node iterate upon the values in the infosource node.</p>
+Interface allows to define flexible search patterns which can be
+parameterized by user defined inputs (such as subject ID, session, etc.).
+In this example we parameterize the pattern search with <code class="docutils literal notranslate"><span class="pre">subject_id</span></code> and
+<code class="docutils literal notranslate"><span class="pre">session_id</span></code>. The <code class="docutils literal notranslate"><span class="pre">template_args</span></code> in this node iterate upon the values in
+the <code class="docutils literal notranslate"><span class="pre">infosource</span></code> node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_path</span></a> <span class="o">=</span> <span class="s1">&#39;sub-</span><span class="si">%s</span><span class="s1">/ses-</span><span class="si">%s</span><span class="s1">/eeg/sub-</span><span class="si">%s</span><span class="s1">*ses-</span><span class="si">%s</span><span class="s1">*.set&#39;</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_args</span></a> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">]]</span>
-<span class="n">datasource</span> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_args</span></a><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_args</span></a><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pipeline">
-<span id="pipnode"></span><h3>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h3>
+<section id="preprocessing-pipeline">
+<span id="pipnode"></span><h3>Preprocessing pipeline<a class="headerlink" href="#preprocessing-pipeline" title="Permalink to this headline">¶</a></h3>
 <p>Ephypype creates for us a pipeline which can be connected to these nodes we
 created. The preprocessing pipeline is implemented by the function
 <a class="reference internal" href="../../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_pipeline_preproc_meeg()</span></code></a> thus to
 instantiate this pipeline node, we import it and pass our parameters to it</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">preproc_workflow</span> <span class="o">=</span> <a href="../../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_preproc_meeg</span></a><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a> <span class="o">=</span> <a href="../../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_preproc_meeg</span></a><span class="p">(</span>
     <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;preproc_eeg_pipeline&quot;</span><span class="p">,</span>
     <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_freq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_freq</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_components</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_components</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reject</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reject</span></a><span class="p">,</span>
     <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EoG_ch_name</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EoG_ch_name</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_type</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_type</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">montage</span></a><span class="p">,</span>
@@ -269,28 +272,27 @@ instantiate this pipeline node, we import it and pass our parameters to it</p>
 </section>
 <section id="specify-workflows-and-connect-nodes">
 <h2>Specify Workflows and Connect Nodes<a class="headerlink" href="#specify-workflows-and-connect-nodes" title="Permalink to this headline">¶</a></h2>
-<p>Now, we create our workflow and specify the <cite>base_dir</cite> which tells nipype the
-directory in which to store the outputs.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
-<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_pipeline_name</span></a> <span class="o">=</span> <span class="s1">&#39;preprocessing_workflow&#39;</span>
+<p>Now, we create our workflow and specify the <code class="docutils literal notranslate"><span class="pre">base_dir</span></code> which tells nipype
+the directory in which to store the outputs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_pipeline_name</span></a> <span class="o">=</span> <span class="s1">&#39;preprocessing_workflow&#39;</span>
 
-<span class="n">main_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_pipeline_name</span></a><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span></a> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span></a><span class="p">(</span><span class="n">name</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_pipeline_name</span></a><span class="p">)</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a>
 </pre></div>
 </div>
 <p>We then connect the nodes two at a time. First, we connect the two outputs
-(subject_id and session_id) of the <a class="reference internal" href="#infosourcenode"><span class="std std-ref">Infosource</span></a> node to the
-<a class="reference internal" href="#datagrabbernode"><span class="std std-ref">DataGrabber</span></a> node. So, these two nodes taken together can grab data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
+(<code class="docutils literal notranslate"><span class="pre">subject_id</span></code> and <code class="docutils literal notranslate"><span class="pre">session_id</span></code>) of the <a class="reference internal" href="#infosourcenode"><span class="std std-ref">Infosource</span></a> node to the
+<a class="reference internal" href="#datagrabbernode"><span class="std std-ref">DataGrabber</span></a> node. So, these two nodes taken together can grab data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">,</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;session_id&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Similarly, for the inputnode of the <a class="reference internal" href="#pipnode"><span class="std std-ref">Pipeline</span></a>. Things will become
+<p>Similarly, for the inputnode of the <a class="reference internal" href="#pipnode"><span class="std std-ref">Preprocessing pipeline</span></a>. Things will become
 clearer in a moment when we plot the graph of the workflow.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">infosource</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
-                      <span class="n">preproc_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.subject_id&#39;</span><span class="p">)</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">datasource</span><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
-                      <span class="n">preproc_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.raw_file&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.subject_id&#39;</span><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.raw_file&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -300,7 +302,7 @@ clearer in a moment when we plot the graph of the workflow.</p>
 last step is to run it by calling the <code class="docutils literal notranslate"><span class="pre">run</span></code> method. It’s also possible to
 generate static graph representing nodes and connections between them by
 calling <code class="docutils literal notranslate"><span class="pre">write_graph</span></code> method.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># optional</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.write_graph" title="nipype.pipeline.engine.workflows.Workflow.write_graph" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span></a><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># optional</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -325,22 +327,27 @@ here correspond to how we connected the nodes.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span></a><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
 
 <span class="c1"># Run workflow locally on 1 CPU</span>
-<span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;LegacyMultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NJOBS</span></a><span class="p">})</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.run" title="nipype.pipeline.engine.workflows.Workflow.run" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span></a><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;LegacyMultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NJOBS</span></a><span class="p">})</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;networkx.classes.digraph.DiGraph object at 0x7f6a89a6f990&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;networkx.classes.digraph.DiGraph object at 0x7fa13a8e2890&gt;
 </pre></div>
 </div>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
 <p>The output is the preprocessed data stored in the workflow directory
-defined by <cite>base_dir</cite>.</p>
-<p>It’s a good rule to inspect the report file saved in the same dir to look at
-the excluded ICA components.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>
-<span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_results</span>
+defined by <code class="docutils literal notranslate"><span class="pre">base_dir</span></code>. Here we find the folder
+<code class="docutils literal notranslate"><span class="pre">preprocessing_workflow</span></code> where all the results of each iteration are
+sorted by nodes. The cleaned data will be used in <a class="reference internal" href="plot_ERP.html#compute-perp"><span class="std std-ref">02. Compute ERP</span></a>.</p>
+<p>It’s a good rule to inspect the report file saved in the <code class="docutils literal notranslate"><span class="pre">ica</span></code> dir to look
+at the excluded ICA components.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mne</span>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.gather</span> <span class="kn">import</span> <span class="n">get_results</span> <span class="c1"># noqa</span>
 
 <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ica_files</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_files</span></a> <span class="o">=</span> <span class="n">get_results</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span></a><span class="p">,</span>
-                                   <span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
+                                   <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.base.html#nipype.pipeline.engine.base.EngineBase.name" title="nipype.pipeline.engine.base.EngineBase.name" class="sphx-glr-backref-module-nipype-pipeline-engine-base sphx-glr-backref-type-py-property"><span class="n">main_workflow</span><span class="o">.</span><span class="n">name</span></a><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;ica&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ica_file</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ica_files</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_files</span></a><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*** </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="si">}</span><span class="s1"> ***&#39;</span><span class="p">)</span>
@@ -357,17 +364,17 @@ the excluded ICA components.</p>
 </li>
 <li><img alt="ICA007, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_eeg_preprocessing_003.png" />
 </li>
-<li><img alt="ICA021, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_eeg_preprocessing_004.png" />
+<li><img alt="ICA020, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %" class="sphx-glr-multi-img" src="../../_images/sphx_glr_plot_eeg_preprocessing_004.png" />
 </li>
 </ul>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif ***
 Opening raw data file /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif...
-/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:216: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
+/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:221: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
   raw = mne.io.read_raw_fif(raw_file)
     Range : 0 ... 646143 =      0.000 ...   630.999 secs
 Ready.
-/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:217: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
+/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/eeg/plot_eeg_preprocessing.py:222: RuntimeWarning: This filename (/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
   ica = mne.preprocessing.read_ica(ica_file)
 Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/preprocessing_workflow/preproc_eeg_pipeline/_session_id_N170_subject_id_016/ica/sub-016_ses-N170_task-N170_eeg_filt_ica_solution.fif ...
 Now restoring ICA solution ...
@@ -393,7 +400,7 @@ No baseline correction applied
 0 bad epochs dropped
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  9.205 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.320 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-workshop-eeg-plot-eeg-preprocessing-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/393c6c391ab917db2c8d6e6f47229f6f/plot_eeg_preprocessing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_eeg_preprocessing.py</span></code></a></p>
@@ -418,7 +425,7 @@ No baseline correction applied
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-25.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>

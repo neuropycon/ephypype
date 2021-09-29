@@ -92,8 +92,11 @@ https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall
 Notebooks
 ---------
    
-.. toctree::
-    :maxdepth: 1
+.. contents:: Contents
+   :local:
+   :depth: 3
+    
+    
     
 
 

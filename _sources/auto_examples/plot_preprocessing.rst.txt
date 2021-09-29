@@ -121,7 +121,7 @@ file and print it
                                'subject_ids': ['sub-0003'],
                                'subjects_dir': 'FSF'}}
     {'preprocessing parameters': {'ECG_ch_name': 'ECG',
-                                  'EoG_ch_name': ['HEOG, VEOG'],
+                                  'EoG_ch_name': ['HEOG', 'VEOG'],
                                   'down_sfreq': 300,
                                   'h_freq': 150,
                                   'l_freq': 0.1,
@@ -211,8 +211,8 @@ Python functions performing the decomposition of the MEG/EEG signal using an
 
 In particular, the two nodes are:
 
-* :class:`ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
-* :class:`ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
+* :class:`~ephypype.interfaces.mne.preproc.PreprocFif` performs filtering on the raw data
+* :class:`~ephypype.interfaces.mne.preproc.CompIca` computes ICA solution on raw fif data
 
 .. GENERATED FROM PYTHON SOURCE LINES 101-108
 
@@ -369,7 +369,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f02f267a290>
+    <networkx.classes.digraph.DiGraph object at 0x7fa14a9f40d0>
 
 
 
@@ -412,13 +412,31 @@ with different flag parameters.
     *
 
       .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_003.png
-          :alt: ICA015, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+          :alt: ICA017, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
           :class: sphx-glr-multi-img
 
     *
 
       .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
           :alt: ICA022, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
+          :alt: ICA007, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
+          :alt: ICA023, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+          :class: sphx-glr-multi-img
+
+    *
+
+      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_007.png
+          :alt: ICA027, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
           :class: sphx-glr-multi-img
 
 
@@ -459,6 +477,24 @@ with different flag parameters.
     No baseline correction applied
     0 projection items activated
     0 bad epochs dropped
+    Not setting metadata
+    Not setting metadata
+    30 matching events found
+    No baseline correction applied
+    0 projection items activated
+    0 bad epochs dropped
+    Not setting metadata
+    Not setting metadata
+    30 matching events found
+    No baseline correction applied
+    0 projection items activated
+    0 bad epochs dropped
+    Not setting metadata
+    Not setting metadata
+    30 matching events found
+    No baseline correction applied
+    0 projection items activated
+    0 bad epochs dropped
 
 
 
@@ -466,7 +502,7 @@ with different flag parameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.617 seconds)
+   **Total running time of the script:** ( 0 minutes  10.049 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:

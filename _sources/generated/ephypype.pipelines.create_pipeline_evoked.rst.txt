@@ -1,0 +1,6 @@
+﻿ephypype.pipelines.create\_pipeline\_evoked
+===========================================
+
+.. currentmodule:: ephypype.pipelines
+
+.. autofunction:: create_pipeline_evoked

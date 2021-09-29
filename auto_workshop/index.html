@@ -86,6 +86,9 @@
 <li><a class="reference internal" href="#erp-core-dataset">ERP CORE dataset</a><ul>
 </ul>
 </li>
+<li><a class="reference internal" href="#face-dataset">FACE dataset</a><ul>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -172,10 +175,15 @@ $ python setup.py develop
 </section>
 <section id="notebooks">
 <h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
+<div class="contents local topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#erp-core-dataset" id="id7">ERP CORE dataset</a></p></li>
+<li><p><a class="reference internal" href="#face-dataset" id="id8">FACE dataset</a></p></li>
+</ul>
 </div>
 <div class="sphx-glr-clear"></div><section id="erp-core-dataset">
-<span id="erpcore"></span><span id="sphx-glr-auto-workshop-eeg"></span><h3>ERP CORE dataset<a class="headerlink" href="#erp-core-dataset" title="Permalink to this headline">¶</a></h3>
+<span id="erpcore"></span><span id="sphx-glr-auto-workshop-eeg"></span><h3><a class="toc-backref" href="#id7">ERP CORE dataset</a><a class="headerlink" href="#erp-core-dataset" title="Permalink to this headline">¶</a></h3>
 <p>These examples demonstrate how to process 1 participant from the <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a> dataset. It shows how to obtain N170 component from a face perception task by <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a> pipelines.</p>
 <div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP"><figure class="align-default" id="id1">
 <img alt="02. Compute ERP" src="../_images/sphx_glr_plot_ERP_thumb.png" />
@@ -185,10 +193,50 @@ $ python setup.py develop
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;https://neuropycon.github.io/ephypype/auto_examples/plot_preprocessing.html#sphx-g..."><figure class="align-default" id="id2">
+<div class="sphx-glr-thumbcontainer" tooltip="01. Preprocess EEG data"><figure class="align-default" id="id2">
 <img alt="01. Preprocess EEG data" src="../_images/sphx_glr_plot_eeg_preprocessing_thumb.png" />
 <figcaption>
 <p><span class="caption-text"><a class="reference internal" href="eeg/plot_eeg_preprocessing.html#sphx-glr-auto-workshop-eeg-plot-eeg-preprocessing-py"><span class="std std-ref">01. Preprocess EEG data</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div></section>
+<section id="face-dataset">
+<span id="facedataset"></span><span id="sphx-glr-auto-workshop-meg"></span><h3><a class="toc-backref" href="#id8">FACE dataset</a><a class="headerlink" href="#face-dataset" title="Permalink to this headline">¶</a></h3>
+<p>These examples demonstrate how to process 1 participant of the <a href="https://openneuro.org/datasets/ds000117/versions/1.0.4" target="_blank">FACE</a> dataset from        <a href="https://www.nature.com/articles/sdata20151" target="_blank">Wakeman and
+Henson (2015)</a>. The data consist of simultaneous MEG/EEG recordings
+from 19 healthy participants performing a visual recognition task. Subjects were presented images of famous, unfamiliar and scrambled faces.
+Each subject participated in 6 runs, each 7.5 min in duration.</p>
+<p>Here, we focus only on MEG data and use <a class="reference internal" href="../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_pipeline_preproc_meeg()</span></code></a> to preprocess the MEG raw data and <a class="reference internal" href="../generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_pipeline_source_reconstruction()</span></code></a> to perform source reconstruction of time-locked event-related fields.</p>
+<div class="sphx-glr-thumbcontainer" tooltip="The solution of MEG inverse problem requires knowledge of the lead field matrix. A cortical seg..."><figure class="align-default" id="id3">
+<img alt="01. Freesurfer anatomical pipeline" src="../_images/sphx_glr_01-run-smri_reconall_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="meg/01-run-smri_reconall.html#sphx-glr-auto-workshop-meg-01-run-smri-reconall-py"><span class="std std-ref">01. Freesurfer anatomical pipeline</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="02. Preprocess MEG data"><figure class="align-default" id="id4">
+<img alt="02. Preprocess MEG data" src="../_images/sphx_glr_02-plot_meg_preprocessing_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="meg/02-plot_meg_preprocessing.html#sphx-glr-auto-workshop-meg-02-plot-meg-preprocessing-py"><span class="std std-ref">02. Preprocess MEG data</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="In the inv_solution_node the raw data are epoched accordingly to events specified in json file ..."><figure class="align-default" id="id5">
+<img alt="03. Compute inverse solution" src="../_images/sphx_glr_03-plot_events_inverse_stc_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="meg/03-plot_events_inverse_stc.html#sphx-glr-auto-workshop-meg-03-plot-events-inverse-stc-py"><span class="std std-ref">03. Compute inverse solution</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Group average of dSPM solutions obtained by plot_events_inverse for the contrast between both t..."><figure class="align-default" id="id6">
+<img alt="04. Plot contrast" src="../_images/sphx_glr_04-plot_stc_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="meg/04-plot_stc.html#sphx-glr-auto-workshop-meg-04-plot-stc-py"><span class="std std-ref">04. Plot contrast</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
@@ -218,7 +266,7 @@ $ python setup.py develop
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-25.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-29.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
