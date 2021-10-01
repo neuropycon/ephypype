@@ -55,7 +55,14 @@ Alternativaly, you can create an enviroment by Anaconda and install the packages
    
 Install ephypype
 ^^^^^^^^^^^^^^^^
-To install ephypype package, download from |github| the last version and install it:
+
+To install ephypype package, you can use the Pypi version
+
+.. code-block:: bash
+
+        $ pip install ephypype==0.3.dev0
+
+You can also download from |github| the last version and install it:
 
 .. code-block:: bash
 

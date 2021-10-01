@@ -34,7 +34,9 @@ in ``json`` file.
 #
 #    <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a>
 
+import os
 import os.path as op
+
 import json
 import pprint  # noqa
 import ephypype
@@ -48,7 +50,17 @@ from ephypype.datasets import fetch_erpcore_dataset
 
 ###############################################################################
 # Let us fetch the data first. It is around 90 MB download.
-base_path = op.join(op.dirname(ephypype.__file__), '..', 'doc/workshop')
+import ephypype
+home_dir = op.expanduser("~")
+
+base_path = op.join(home_dir, 'workshop')
+
+try:
+    os.mkdir(base_path)
+
+except OSError:
+    print("directory {} already exists".format(base_path))
+
 data_path = fetch_erpcore_dataset(base_path)
 
 ###############################################################################
@@ -59,6 +71,7 @@ data_path = fetch_erpcore_dataset(base_path)
 # sessions, ...) and the variable specific for the particular pipeline
 # (events_id, baseline, ...) in a 
 # :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+# (if it is does work, try to go on the github page, and right-click "Save As" on the Raw button)
 
 # Read experiment params as json
 params = json.load(open("params.json"))
