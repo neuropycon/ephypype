@@ -65,12 +65,14 @@ mainly from |nipype| and |ephypype| packages.
 
    <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a>
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-49
+.. GENERATED FROM PYTHON SOURCE LINES 36-51
 
 .. code-block:: default
 
 
+    import os
     import os.path as op
+
     import json
     import pprint  # noqa
     import ephypype
@@ -89,25 +91,43 @@ mainly from |nipype| and |ephypype| packages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Let us fetch the data first. It is around 90 MB download.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-54
+.. GENERATED FROM PYTHON SOURCE LINES 53-66
 
 .. code-block:: default
 
-    base_path = op.join(op.dirname(ephypype.__file__), '..', 'doc/workshop')
+    import ephypype
+    home_dir = op.expanduser("~")
+
+    base_path = op.join(home_dir, 'workshop')
+
+    try:
+        os.mkdir(base_path)
+
+    except OSError:
+        print("directory {} already exists".format(base_path))
+
     data_path = fetch_erpcore_dataset(base_path)
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    directory /home/pasca/workshop already exists
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-62
+
+.. GENERATED FROM PYTHON SOURCE LINES 67-75
 
 Define data and variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,8 +136,9 @@ main directories where the data are stored, the list of subjects and
 sessions, ...) and the variable specific for the particular pipeline
 (events_id, baseline, ...) in a 
 :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+(if it is does work, try to go on the github page, and right-click "Save As" on the Raw button)
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-84
+.. GENERATED FROM PYTHON SOURCE LINES 75-97
 
 .. code-block:: default
 
@@ -154,7 +175,7 @@ sessions, ...) and the variable specific for the particular pipeline
  .. code-block:: none
 
     {'parameters': {'NJOBS': 1,
-                    'data_path': '/media/pasca/pasca_media/data/cuttingeeg/zenodo/ERP_CORE',
+                    'data_path': '',
                     'data_type': 'eeg',
                     'session_ids': ['N170'],
                     'subject_ids': ['016']}}
@@ -168,7 +189,7 @@ sessions, ...) and the variable specific for the particular pipeline
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-93
+.. GENERATED FROM PYTHON SOURCE LINES 98-106
 
 .. _extract_events:
 
@@ -179,7 +200,7 @@ are extracted using the function `events_from_annotations <https://mne.tools/sta
 of `MNE-python <https://mne.tools/stable/index.html>`_ on raw data.
 The events are saved in the Node directory.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-142
+.. GENERATED FROM PYTHON SOURCE LINES 106-155
 
 .. code-block:: default
 
@@ -239,7 +260,7 @@ The events are saved in the Node directory.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 143-154
+.. GENERATED FROM PYTHON SOURCE LINES 156-167
 
 Specify Nodes
 ^^^^^^^^^^^^^
@@ -253,13 +274,13 @@ that define the workflow itself. In this example the main Nodes are
 * ``ERP_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_evoked`
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 156-159
+.. GENERATED FROM PYTHON SOURCE LINES 169-172
 
 Infosource and Datasource
 """""""""""""""""""""""""
 We create a node to pass input filenames to
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-162
+.. GENERATED FROM PYTHON SOURCE LINES 172-175
 
 .. code-block:: default
 
@@ -273,7 +294,7 @@ We create a node to pass input filenames to
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 163-172
+.. GENERATED FROM PYTHON SOURCE LINES 176-185
 
 .. code-block:: default
 
@@ -293,7 +314,7 @@ We create a node to pass input filenames to
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-178
+.. GENERATED FROM PYTHON SOURCE LINES 186-191
 
 .. _extract_events_node:
 
@@ -301,7 +322,7 @@ Extract events Node
 """""""""""""""""""
 Then, we define the Node that encapsulates ``get_events`` function
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-184
+.. GENERATED FROM PYTHON SOURCE LINES 191-197
 
 .. code-block:: default
 
@@ -318,7 +339,7 @@ Then, we define the Node that encapsulates ``get_events`` function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-191
+.. GENERATED FROM PYTHON SOURCE LINES 198-204
 
 .. _ERP_pipeline:
 
@@ -327,7 +348,7 @@ ERP Node
 Finally, we create the ephypype pipeline computing evoked data which can be
 connected to these nodes we created.
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-196
+.. GENERATED FROM PYTHON SOURCE LINES 204-209
 
 .. code-block:: default
 
@@ -343,14 +364,14 @@ connected to these nodes we created.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 197-201
+.. GENERATED FROM PYTHON SOURCE LINES 210-214
 
 Specify Workflows and Connect Nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Now, we create our workflow and specify the ``base_dir`` which tells
 nipype the directory in which to store the outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 201-207
+.. GENERATED FROM PYTHON SOURCE LINES 214-220
 
 .. code-block:: default
 
@@ -367,12 +388,12 @@ nipype the directory in which to store the outputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 208-210
+.. GENERATED FROM PYTHON SOURCE LINES 221-223
 
 We then connect the output of ``infosource`` node to the one of
 ``datasource``. So, these two nodes taken together can grab data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 210-213
+.. GENERATED FROM PYTHON SOURCE LINES 223-226
 
 .. code-block:: default
 
@@ -386,12 +407,12 @@ We then connect the output of ``infosource`` node to the one of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 214-216
+.. GENERATED FROM PYTHON SOURCE LINES 227-229
 
 We connect the output of ``infosource`` and ``datasource`` to the input
 of ``extract_events`` node
 
-.. GENERATED FROM PYTHON SOURCE LINES 216-219
+.. GENERATED FROM PYTHON SOURCE LINES 229-232
 
 .. code-block:: default
 
@@ -405,12 +426,12 @@ of ``extract_events`` node
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-222
+.. GENERATED FROM PYTHON SOURCE LINES 233-235
 
 Finally, we connect the output of ``infosource``, ``datasource`` and
 ``extract_events`` nodes to the input of ``ERP_pipeline`` node.
 
-.. GENERATED FROM PYTHON SOURCE LINES 222-229
+.. GENERATED FROM PYTHON SOURCE LINES 235-242
 
 .. code-block:: default
 
@@ -428,7 +449,7 @@ Finally, we connect the output of ``infosource``, ``datasource`` and
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 230-236
+.. GENERATED FROM PYTHON SOURCE LINES 243-249
 
 Run workflow
 ^^^^^^^^^^^^
@@ -437,7 +458,7 @@ last step is to run it by calling the ``run`` method. It’s also possible to
 generate static graph representing nodes and connections between them by
 calling ``write_graph`` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-238
+.. GENERATED FROM PYTHON SOURCE LINES 249-251
 
 .. code-block:: default
 
@@ -454,16 +475,16 @@ calling ``write_graph`` method.
  .. code-block:: none
 
 
-    '/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/graph.png'
+    '/home/pasca/workshop/ERP_CORE/ERP_workflow/graph.png'
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 239-241
+.. GENERATED FROM PYTHON SOURCE LINES 252-254
 
 Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-248
+.. GENERATED FROM PYTHON SOURCE LINES 254-261
 
 .. code-block:: default
 
@@ -493,11 +514,11 @@ here correspond to how we connected the nodes.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 249-250
+.. GENERATED FROM PYTHON SOURCE LINES 262-263
 
 Finally, we are now ready to execute our workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 250-254
+.. GENERATED FROM PYTHON SOURCE LINES 263-267
 
 .. code-block:: default
 
@@ -516,16 +537,16 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7fa13d2fe690>
+    <networkx.classes.digraph.DiGraph object at 0x7f72aec2ae50>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 255-257
+.. GENERATED FROM PYTHON SOURCE LINES 268-270
 
 Plot results
 ^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 257-284
+.. GENERATED FROM PYTHON SOURCE LINES 270-297
 
 .. code-block:: default
 
@@ -570,9 +591,9 @@ Plot results
 
  .. code-block:: none
 
-    *** /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ***
+    *** /home/pasca/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ***
 
-    Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ...
+    Reading /home/pasca/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ...
         Read a total of 1 projection items:
             Average EEG reference (1 x 29) active
         Found the data of interest:
@@ -598,7 +619,7 @@ Plot results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.491 seconds)
+   **Total running time of the script:** ( 0 minutes  10.639 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_eeg_plot_ERP.py:

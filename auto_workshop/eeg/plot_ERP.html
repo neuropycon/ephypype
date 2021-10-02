@@ -149,7 +149,9 @@ in <code class="docutils literal notranslate"><span class="pre">json</span></cod
 <h2>Import modules<a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h2>
 <p>The first step is to import the modules we need in the script. We import
 mainly from <a href="https://nipype.readthedocs.io/en/latest/#" target="_blank">nipype</a> and <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a> packages.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">ephypype</span>
@@ -163,8 +165,22 @@ mainly from <a href="https://nipype.readthedocs.io/en/latest/#" target="_blank">
 </pre></div>
 </div>
 <p>Let us fetch the data first. It is around 90 MB download.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.dirname" title="os.path.dirname" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">dirname</span></a><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;doc/workshop&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ephypype</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">home_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.expanduser" title="os.path.expanduser" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">expanduser</span></a><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">home_dir</span></a><span class="p">,</span> <span class="s1">&#39;workshop&#39;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/os.html#os.mkdir" title="os.mkdir" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">mkdir</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_path</span></a><span class="p">)</span>
+
+<span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;directory </span><span class="si">{}</span><span class="s2"> already exists&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_path</span></a><span class="p">))</span>
+
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <span class="n">fetch_erpcore_dataset</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base_path</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>directory /home/pasca/workshop already exists
 </pre></div>
 </div>
 </section>
@@ -174,7 +190,8 @@ mainly from <a href="https://nipype.readthedocs.io/en/latest/#" target="_blank">
 main directories where the data are stored, the list of subjects and
 sessions, …) and the variable specific for the particular pipeline
 (events_id, baseline, …) in a
-<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file</p>
+<a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file
+(if it is does work, try to go on the github page, and right-click “Save As” on the Raw button)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read experiment params as json</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/json.html#json.load" title="json.load" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
 <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]})</span>
@@ -198,7 +215,7 @@ sessions, …) and the variable specific for the particular pipeline
 </div>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;parameters&#39;: {&#39;NJOBS&#39;: 1,
-                &#39;data_path&#39;: &#39;/media/pasca/pasca_media/data/cuttingeeg/zenodo/ERP_CORE&#39;,
+                &#39;data_path&#39;: &#39;&#39;,
                 &#39;data_type&#39;: &#39;eeg&#39;,
                 &#39;session_ids&#39;: [&#39;N170&#39;],
                 &#39;subject_ids&#39;: [&#39;016&#39;]}}
@@ -361,7 +378,7 @@ calling <code class="docutils literal notranslate"><span class="pre">write_graph
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;/home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/graph.png&#39;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;/home/pasca/workshop/ERP_CORE/ERP_workflow/graph.png&#39;
 </pre></div>
 </div>
 <p>Take a moment to pause and notice how the connections
@@ -385,7 +402,7 @@ here correspond to how we connected the nodes.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;networkx.classes.digraph.DiGraph object at 0x7fa13d2fe690&gt;
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;networkx.classes.digraph.DiGraph object at 0x7f72aec2ae50&gt;
 </pre></div>
 </div>
 </section>
@@ -422,9 +439,9 @@ here correspond to how we connected the nodes.</p>
 </div>
 <img alt="plot ERP" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_ERP_002.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ***
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** /home/pasca/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ***
 
-Reading /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ...
+Reading /home/pasca/workshop/ERP_CORE/ERP_workflow/ERP_pipeline/_session_id_N170_subject_id_016/compute_evoked/sub-016_ses-N170_task-N170_eeg_filt_ica-ave.fif ...
     Read a total of 1 projection items:
         Average EEG reference (1 x 29) active
     Found the data of interest:
@@ -445,7 +462,7 @@ Loaded Evoked data is baseline-corrected (baseline: [-0.200195, 0] sec)
   &quot;matplotlib is currently using a non-GUI backend, &quot;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  8.491 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  10.639 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-workshop-eeg-plot-erp-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/612c5a4656c826c8e4fd9354815b34ea/plot_ERP.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_ERP.py</span></code></a></p>
@@ -470,7 +487,7 @@ Loaded Evoked data is baseline-corrected (baseline: [-0.200195, 0] sec)
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-09-29.<br/>
+        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
     </p>
   </div>
