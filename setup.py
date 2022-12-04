@@ -6,7 +6,7 @@ import os
 from setuptools import setup, find_packages
 
 required_packages=[
-    "nipype", "networkx>=2.0", "numpy", "mne", "pybids", "h5py","scikit-learn", "matplotlib", "mne-bids"]
+    "nipype", "networkx>=2.0", "numpy", "mne==0.24.0", "pybids", "h5py","scikit-learn", "matplotlib", "mne-bids"]
 
 VERSION = None
 with open(os.path.join('ephypype', '__init__.py'), 'r') as fid:
