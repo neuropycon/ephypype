@@ -5,7 +5,8 @@ import numpy as np
 import itertools as iter
 from itertools import combinations
 
-from mne.viz import circular_layout, plot_connectivity_circle
+from mne_connectivity.viz import plot_connectivity_circle
+from mne.viz import circular_layout
 
 
 def _atoi(text):

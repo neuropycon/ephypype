@@ -362,12 +362,12 @@ def _generate_report(raw, ica, subj_name, basename,
         # plot ECG sources + selection
         fig_ecg_src = ica.plot_sources(ecg_evoked, show=is_show)
         fig = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
-        report.add_figs_to_section(fig,
-                                   captions=['Scores of ICs related to ECG',
-                                             'Time Series plots of ICs (ECG)',
-                                             'TopoMap of ICs (ECG)',
-                                             'Time-locked ECG sources'],
-                                             section='ICA - ECG')
+        report.add_figure(fig,
+                          title=['Scores of ICs related to ECG',
+                                 'Time Series plots of ICs (ECG)',
+                                 'TopoMap of ICs (ECG)',
+                                 'Time-locked ECG sources'],
+                          section='ICA - ECG')
     # -------------------- end generate report for ECG ---------------------- #
 
     # -------------------------- Generate report for EoG -------------------- #
@@ -376,9 +376,9 @@ def _generate_report(raw, ica, subj_name, basename,
         fig_eog_scores = ica.plot_scores(eog_scores, exclude=eog_inds,
                                          title=ica_title % 'eog', show=is_show)
 
-        report.add_figs_to_section(fig_eog_scores,
-                                   captions=['Scores of ICs related to EOG'],
-                                   section='ICA - EOG')
+        report.add_figure(fig_eog_scores,
+                          title=['Scores of ICs related to EOG'],
+                          section='ICA - EOG')
 
         n_eogs = np.shape(eog_scores)
         if len(n_eogs) > 1:
@@ -391,9 +391,9 @@ def _generate_report(raw, ica, subj_name, basename,
                                                    colorbar=True, show=is_show)
 
                 fig = [fig_eog_comp]
-                report.add_figs_to_section(fig,
-                                           captions=['Scores of EoG ICs'],
-                                           section='ICA - EOG')
+                report.add_figure(fig,
+                                  title=['Scores of EoG ICs'],
+                                  section='ICA - EOG')
         else:
             show_picks = np.abs(eog_scores).argsort()[::-1][:5]
             fig_eog_comp = ica.plot_components(show_picks,
@@ -401,26 +401,27 @@ def _generate_report(raw, ica, subj_name, basename,
                                                colorbar=True, show=is_show)
 
             fig = [fig_eog_comp]
-            report.add_figs_to_section(fig, captions=['TopoMap of ICs (EOG)'],
+            report.add_figure(fig, title=['TopoMap of ICs (EOG)'],
                                        section='ICA - EOG')
 
         fig_eog_src = ica.plot_sources(eog_evoked,
                                        show=is_show)
 
         fig = [fig_eog_src]
-        report.add_figs_to_section(fig, captions=['Time-locked EOG sources'],
+        report.add_figure(fig, title=['Time-locked EOG sources'],
                                    section='ICA - EOG')
     # ----------------- end generate report for EoG ---------- #
     ic_nums = list(range(ica.n_components_))
     fig = ica.plot_components(picks=ic_nums, show=False)
-    report.add_figs_to_section(fig, captions=['All IC topographies'],
+    report.add_figure(fig, title=['All IC topographies'],
                                section='ICA - muscles')
 
     fig = ica.plot_sources(raw, start=0, stop=None, show=False,
                            title='All IC time series')
-    report.add_figs_to_section(fig, captions=['All IC time series'],
+    report.add_figure(fig, title=['All IC time series'],
                                section='ICA - muscles')
 
+    '''
     psds_fig = []
     captions_psd = []
     ica_src = ica.get_sources(raw)
@@ -440,8 +441,9 @@ def _generate_report(raw, ica, subj_name, basename,
         psds_fig.append(f)
         captions_psd.append('IC #' + str(i_ic))
 
-    report.add_figs_to_section(figs=psds_fig, captions=captions_psd,
-                               section='ICA - muscles')
+    report.add_figure(figs=psds_fig, title=captions_psd,
+                      section='ICA - muscles')
+    '''
 
     report_filename = os.path.join(basename + "-report.html")
     print(('******* ' + report_filename))
