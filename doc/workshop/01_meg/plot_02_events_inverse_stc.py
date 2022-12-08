@@ -201,9 +201,9 @@ infosource = create_iterator(['subject_id'], [subject_ids])
 ###############################################################################
 # the ``datasource`` node to grab data. The ``template_args`` in this node
 # iterate upon the value in the infosource node
-wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
+preproc_wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
     else 'preprocessing_dsamp_workflow'
-ica_dir = op.join(data_path, wf_name, 'preproc_meg_dsamp_pipeline')
+ica_dir = op.join(data_path, preproc_wf_name, 'preproc_meg_dsamp_pipeline')
 
 trans_file = '../../%s/ses-meg/meg_short/%s%s.fif' if is_short else \
     '../../%s/ses-meg/meg/%s%s.fif'

@@ -8,7 +8,7 @@
         "data_type": "fif",
         "conditions": ["famous", "scrambled", "unfamiliar"],
         "subjects_dir": "/home/pasca/Science/workshop/PracticalMEEG/ds000117/FSF",
-        "short": true
+        "short": false
     },
     "preprocessing":
     {

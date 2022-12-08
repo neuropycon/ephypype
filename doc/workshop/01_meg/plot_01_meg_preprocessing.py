@@ -163,9 +163,10 @@ preproc_workflow = create_pipeline_preproc_meeg(
 # Now, we create our workflow and specify the ``base_dir`` which tells nipype
 # the directory in which to store the outputs.
 
-preproc_pipeline_name = 'preprocessing_dsamp_short_workflow'
+preproc_wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
+    else 'preprocessing_dsamp_workflow'
 
-main_workflow = pe.Workflow(name=preproc_pipeline_name)
+main_workflow = pe.Workflow(name=preproc_wf_name)
 main_workflow.base_dir = data_path
 
 ###############################################################################
@@ -201,7 +202,7 @@ main_workflow.write_graph(graph2use='colored')  # optional
 # here correspond to how we connected the nodes.
 
 import matplotlib.pyplot as plt  # noqa
-img = plt.imread(op.join(data_path, preproc_pipeline_name, 'graph.png'))
+img = plt.imread(op.join(data_path, preproc_wf_name, 'graph.png'))
 plt.figure(figsize=(6, 6))
 plt.imshow(img)
 plt.axis('off')
