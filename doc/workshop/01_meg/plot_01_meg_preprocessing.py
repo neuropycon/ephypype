@@ -1,15 +1,15 @@
 """
-.. _compute_ica:
+.. _preproc_meg:
 
 =======================
-01. Preprocess EEG data
+02. Preprocess MEG data
 =======================
-The :ref:`preprocessing pipeline <preproc_meeg>` pipeline runs the ICA
-algorithm for an automatic removal of eyes and heart related artefacts.
-A report is automatically generated and can be used to correct
-and/or fine-tune the correction in each subject.
-
+The :ref:`preprocessing pipeline <preproc_meeg>` runs the ICA algorithm for an
+automatic removal of eyes and heart related artefacts.
+A report is automatically generated and can be used to correct and/or fine-tune
+the correction in each subject.
 """
+
 # Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
 # License: BSD (3-clause)
 
@@ -30,29 +30,14 @@ and/or fine-tune the correction in each subject.
 #    <a href="https://neuropycon.github.io/ephypype/index.html#ephypype target="_blank">ephypype</a>
 
 import json
-import pprint  # noqa
-import os
+import pprint
+
 import os.path as op
 import nipype.pipeline.engine as pe
 
 from ephypype.nodes import create_iterator, create_datagrabber
-from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg
-from ephypype.datasets import fetch_erpcore_dataset
+from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
 
-###############################################################################
-# Let us fetch the data first. It is around 90 MB download.
-import ephypype
-home_dir = op.expanduser("~")
-
-base_path = op.join(home_dir, 'workshop')
-
-try:
-    os.mkdir(base_path)
-
-except OSError:
-    print("directory {} already exists".format(base_path))
-
-data_path = fetch_erpcore_dataset(base_path)
 
 ###############################################################################
 # Define data and variables
@@ -60,33 +45,45 @@ data_path = fetch_erpcore_dataset(base_path)
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variables specific for the particular pipeline
-# (downsampling frequency, EOG channels, cut-off frequencies, ...) in a
-# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file.
+# (downsampling frequency, EOG and ECG channels, cut-off frequencies, ...) in a
+# |params.json| file
 # (if it is does work, try to go on the github page, and right-click "Save As" on the Raw button)
+#
+#.. |params.json| replace::
+#   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
 # Read experiment params as json
 params = json.load(open("params.json"))
-pprint.pprint({'general parameters': params['general']})
+pprint.pprint({'parameters': params["general"]})
 
 data_type = params["general"]["data_type"]
 subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
-# data_path = params["general"]["data_path"]
+
+is_short = params["general"]["short"]
+
+if "data_path" in params["general"].keys():
+    data_path = params["general"]["data_path"]
+else:
+    data_path = op.expanduser("~")
+print("data_path : %s" % data_path)
 
 ###############################################################################
-# Read the parameters for preprocessing from the json file and print it
+# Then, we read the parameters for preprocessing from the json file and print
+# it. In the json file we set : the names of EoG and ECG channels, the
+# filter settings, the downsampling frequency, the number of ICA components
+# specified as a fraction of explained variance (0.999) and a reject
+# dictionary to exclude time segments
 pprint.pprint({'preprocessing parameters': params["preprocessing"]})
 
 l_freq = params["preprocessing"]['l_freq']
 h_freq = params["preprocessing"]['h_freq']
-down_sfreq = params["preprocessing"]['down_sfreq']
+ECG_ch_name = params["preprocessing"]['ECG_ch_name']
 EoG_ch_name = params["preprocessing"]['EoG_ch_name']
-ch_new_names = params["preprocessing"]['ch_new_names']
-bipolar = params["preprocessing"]['bipolar']
-montage = params["preprocessing"]['montage']
-n_components = params["preprocessing"]['n_components']
+variance = params["preprocessing"]['variance']
 reject = params["preprocessing"]['reject']
+down_sfreq = params["preprocessing"]['down_sfreq']
 
 ###############################################################################
 # Specify Nodes
@@ -104,14 +101,14 @@ reject = params["preprocessing"]['reject']
 #
 # * ``infosource`` is a Node that just distributes values
 # * ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
-# * ``preproc_eeg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
+# * ``preproc_meg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
 # 
 # .. |DataGrabber| raw:: html
 #
 #    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber" target="_blank">DataGrabber</a>
 
 ###############################################################################
-# .. _infosourcenode:
+# .. _meg_infosourcenode:
 #
 # Infosource
 # """"""""""
@@ -123,36 +120,42 @@ infosource = create_iterator(['subject_id', 'session_id'],
                              [subject_ids, session_ids])
 
 ###############################################################################
-# .. _datagrabbernode:
+# .. _meg_datagrabbernode:
 #
 # DataGrabber
 # """""""""""
-# Then we create a node to grab data. The ephypype function
+# Then we create the ``datasource`` node to grab data. The ephypype function
 # :func:`~ephypype.nodes.create_datagrabber`
 # creates a node to grab data using |DataGrabber| in Nipype. The DataGrabber
 # Interface allows to define flexible search patterns which can be
 # parameterized by user defined inputs (such as subject ID, session, etc.).
 # In this example we parameterize the pattern search with ``subject_id`` and
-# ``session_id``. The ``template_args`` in this node iterate upon the values in
-# the ``infosource`` node.
-template_path = 'sub-%s/ses-%s/eeg/sub-%s*ses-%s*.set'
-template_args = [['subject_id', 'session_id', 'subject_id', 'session_id']]
+# ``session_id``. The ``template_args`` in this node iterates upon the values
+# in the ``infosource`` node.
+# We look for MEG data contained in ``ses-meg/meg`` folder.
+
+if is_short:
+    template_path = '%s/ses-meg/meg_short/*%s*run*%s*sss*.fif'
+else:
+    template_path = '%s/ses-meg/meg/*%s*run*%s*sss*.fif'
+template_args = [['subject_id', 'subject_id', 'session_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
 ###############################################################################
-# .. _pipnode:
+# .. _preproc_meg_node:
 #
-# Preprocessing pipeline
-# """"""""""""""""""""""
-# Ephypype creates for us a pipeline which can be connected to these nodes we
-# created. The preprocessing pipeline is implemented by the function
-# :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` thus to
-# instantiate this pipeline node, we import it and pass our parameters to it
+# Preprocessing Node
+# """"""""""""""""""
+# Ephypype creates for us a pipeline which can be connected to these
+# nodes we created. The preprocessing pipeline is implemented by the function
+# :func:`~ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg`, thus
+# to instantiate this pipeline node, we pass our parameters to it.
+
 preproc_workflow = create_pipeline_preproc_meeg(
-    data_path, pipeline_name="preproc_eeg_pipeline",
-    l_freq=l_freq, h_freq=h_freq, n_components=n_components, reject=reject,
-    EoG_ch_name=EoG_ch_name, data_type=data_type, montage=montage,
-    bipolar=bipolar, ch_new_names=ch_new_names)
+    data_path, pipeline_name="preproc_meg_dsamp_pipeline",
+    l_freq=l_freq, h_freq=h_freq,
+    variance=variance, ECG_ch_name=ECG_ch_name, EoG_ch_name=EoG_ch_name,
+    data_type=data_type, down_sfreq=down_sfreq)
 
 ###############################################################################
 # Specify Workflows and Connect Nodes
@@ -160,22 +163,23 @@ preproc_workflow = create_pipeline_preproc_meeg(
 # Now, we create our workflow and specify the ``base_dir`` which tells nipype
 # the directory in which to store the outputs.
 
-preproc_pipeline_name = 'preprocessing_workflow'
+preproc_pipeline_name = 'preprocessing_dsamp_short_workflow'
 
 main_workflow = pe.Workflow(name=preproc_pipeline_name)
 main_workflow.base_dir = data_path
 
 ###############################################################################
 # We then connect the nodes two at a time. First, we connect the two outputs
-# (``subject_id`` and ``session_id``) of the :ref:`infosourcenode` node to the
-# :ref:`datagrabbernode` node. So, these two nodes taken together can grab data
+# (``subject_id`` and ``session_id``) of the :ref:`meg_infosourcenode` node to
+# the :ref:`meg_datagrabbernode` node. So, these two nodes taken together can
+# grab data
 
 main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
 
 ###############################################################################
-# Similarly, for the inputnode of the :ref:`pipnode`. Things will become
-# clearer in a moment when we plot the graph of the workflow.
+# Similarly, for the inputnode of the :ref:`preproc_meg_node`. Things will
+# become clearer in a moment when we plot the graph of the workflow.
 
 main_workflow.connect(infosource, 'subject_id',
                       preproc_workflow, 'inputnode.subject_id')
@@ -214,11 +218,14 @@ main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 # ^^^^^^^
 # The output is the preprocessed data stored in the workflow directory
 # defined by ``base_dir``. Here we find the folder
-# ``preprocessing_workflow`` where all the results of each iteration are
-# sorted by nodes. The cleaned data will be used in :ref:`compute_perp`.
+# ``preprocessing_dsamp_workflow`` where all the results of each iteration are
+# sorted by nodes. The cleaned data will be used in :ref:`plot_events_inverse`.
 #
 # It’s a good rule to inspect the report file saved in the ``ica`` dir to look
 # at the excluded ICA components.
+#
+# .. note:: You could use this :download:`notebook <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/ipynb_preprocessing.ipynb>`
+#       to better inspect your ICs
 
 import mne  # noqa
 from ephypype.gather import get_results # noqa
