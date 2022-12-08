@@ -26,6 +26,10 @@ in ``json file``. Finally the source estimates obtained by the
     and MEG device needs to be performed.
 """
 
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+# License: BSD (3-clause)
+
+# sphinx_gallery_thumbnail_number = 1
 
 ###############################################################################
 # Import modules
@@ -47,8 +51,10 @@ from ephypype.pipelines.fif_to_inv_sol import create_pipeline_source_reconstruct
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variable specific for the particular pipeline
-# (events_id, inverse method, ...) in a
-# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/eeg/params.json>` file 
+# (events_id, inverse method, ...) in a |params.json| file
+#
+#.. |params.json| replace::
+#   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
 params = json.load(open("params.json"))
 
@@ -59,6 +65,8 @@ NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
 conditions = params["general"]["conditions"]
 subjects_dir = params["general"]["subjects_dir"]
+
+is_short = params["general"]["short"]
 
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]
@@ -83,7 +91,7 @@ trans_fname = op.join(data_path, params["inverse"]['trans_fname'])
 ###############################################################################
 # Define functions
 # ^^^^^^^^^^^^^^^^
-# Hwew we define two different functions that will be encapsulated in two
+# Here we define two different functions that will be encapsulated in two
 # different nodes (:ref:`concat_event` and :ref:`morphing_node`).
 # The ``run_events_concatenate`` function extracts events from the stimulus
 # channel while ``compute_morph_stc`` morph the source estimates obtained by
@@ -156,7 +164,7 @@ def compute_morph_stc(subject, conditions, cond_files, subjects_dir):
     import os.path as op
     import mne
 
-    print("processing subject: %s" % subject)
+    print(f"processing subject: {subject}")
 
     # Morph STCs
     stc_morphed_files = []
@@ -193,14 +201,16 @@ infosource = create_iterator(['subject_id'], [subject_ids])
 ###############################################################################
 # the ``datasource`` node to grab data. The ``template_args`` in this node
 # iterate upon the value in the infosource node
-ica_dir = op.join(
-        data_path, 'preprocessing_dsamp_workflow', 'preproc_meg_dsamp_pipeline')  # noqa
+wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
+    else 'preprocessing_dsamp_workflow'
+ica_dir = op.join(data_path, wf_name, 'preproc_meg_dsamp_pipeline')
 
-
+trans_file = '../../%s/ses-meg/meg_short/%s%s.fif' if is_short else \
+    '../../%s/ses-meg/meg/%s%s.fif'
 template_path = '*'
 field_template = dict(
         raw_file="_session_id_*_subject_id_%s/ica/%s*ses*_*filt*ica.fif",  # noqa
-        trans_file='../../%s/ses-meg/meg/%s%s.fif')
+        trans_file=trans_file)
 
 template_args = dict(
     raw_file=[['subject_id', 'subject_id']],
@@ -262,8 +272,10 @@ morph_stc.inputs.subjects_dir = subjects_dir
 # ^^^^^^^^^^^^^^^
 # Then, we can create our workflow and specify the ``base_dir`` which tells
 # nipype the directory in which to store the outputs.
+src_estimation_wf_name = 'source_dsamp_short_reconstruction_' if is_short \
+    else 'source_dsamp_full_reconstruction_'
 
-src_reconstruction_pipeline_name = 'source_dsamp_full_reconstruction_' + \
+src_reconstruction_pipeline_name = src_estimation_wf_name + \
     inv_method + '_' + parc.replace('.', '')
 
 main_workflow = pe.Workflow(name=src_reconstruction_pipeline_name)

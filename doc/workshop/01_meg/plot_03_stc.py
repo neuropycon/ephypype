@@ -10,12 +10,17 @@ contrast between both types of faces together and scrambled at 170 ms
 poststimulus. The image was produced by subtracting normalized solutions of
 faces to the ones of scrambled.
 """
+
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+# License: BSD (3-clause)
+
+# sphinx_gallery_thumbnail_number = 1
+
 import os
 import json
 import pprint
 import os.path as op
 import numpy as np
-from mayavi import mlab
 import mne
 
 
@@ -29,6 +34,8 @@ NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
 conditions = params["general"]["conditions"]
 
+is_short = params["general"]["short"]
+
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]
 else:
@@ -37,18 +44,12 @@ print("data_path : %s" % data_path)
 
 subjects_dir = op.join(data_path, params["general"]["subjects_dir"])
 
-# TODO: if you ran 02 and 03 separately set this path
+src_estimation_wf_name = 'source_dsamp_short_reconstruction_dSPM_aparc' \
+    if is_short else 'source_dsamp_full_reconstruction_dSPM_aparc'
 morph_stc_path = \
-    op.join(data_path, 'source_dsamp_full_reconstruction_dSPM_aparc',
+    op.join(data_path, src_estimation_wf_name,
             '_subject_id_{sbj}', 'morph_stc')
-'''
-# if you ran 02-03 together set this path
-morph_stc_path = \
-    op.join(data_path, 'preprocessing_full_inverse/full_inv_pipeline',
-            '_subject_id_{sbj}', 'morph_stc')
-'''
 
-# os.environ['ETS_TOOLKIT'] = 'qt4'
 os.environ['QT_API'] = 'pyqt5'
 
 fig_path = op.join(data_path, 'figures')
@@ -83,11 +84,20 @@ stc_contrast = mne.SourceEstimate(
 
 lims = (0.25, 0.75, 1)
 clim = dict(kind='value', lims=lims)
-# TODO use auto with py39
+
+
 brain_dspm = stc_contrast.plot(
     views=['ven'], hemi='both', subject='fsaverage', subjects_dir=subjects_dir,
     initial_time=0.17, time_unit='s', background='w',
-    clim=clim, foreground='k', backend='mayavi')
-
-mlab.view(90, 180, roll=180, focalpoint=(0., 15., 0.), distance=500)
-brain_dspm.save_image(op.join(fig_path, 'dspm-contrast'))
+    clim=clim, foreground='k', backend='auto')
+brain_dspm.save_image(op.join(fig_path, 'dspm-contrast.png'))
+'''
+brain_dspm = stc_contrast.plot(
+    views='ven', hemi='lh', subject='fsaverage', subjects_dir=subjects_dir,
+    initial_time=0.17, time_unit='s', background='w',
+    clim=clim, foreground='k', backend='matplotlib')
+'''
+# %%
+# .. image:: ../../img/dspm-contrast.png
+#    :width: 50%
+#    :align: center

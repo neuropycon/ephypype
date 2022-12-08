@@ -54,7 +54,8 @@ def _create_bem_sol(subjects_dir, sbj_id):
         print(('\n*** BEM solution file {} written ***\n'.format(bem_fname)))
 
         # Add BEM figures to a Report
-        report.add_bem_to_section(subject=sbj_id, subjects_dir=subjects_dir)
+        report.add_bem(
+            subject=sbj_id, subjects_dir=subjects_dir, title='BEM_report')
         report_filename = op.join(bem_dir, "BEM_report.html")
         print(('\n*** REPORT file {} written ***\n'.format(report_filename)))
         print(report_filename)

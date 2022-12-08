@@ -41,7 +41,7 @@ def create_iterator(fields, field_values):
 
 
 def create_datagrabber(data_path, template_path, template_args,
-                       field_template = None,
+                       field_template=None,
                        infields=['subject_id', 'session_id'],
                        outfields=['raw_file']):
     """Create node to grab data using DataGrabber in Nipype.

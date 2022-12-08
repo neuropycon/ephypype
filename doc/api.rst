@@ -53,4 +53,3 @@ Utils (:py:mod:`ephypype.nodes`):
 
    create_iterator
    create_datagrabber
-   Reference
