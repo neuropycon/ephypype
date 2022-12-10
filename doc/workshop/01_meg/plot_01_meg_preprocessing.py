@@ -99,9 +99,9 @@ down_sfreq = params["preprocessing"]['down_sfreq']
 #
 #    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">nodes</a>
 #
-# * ``infosource`` is a Node that just distributes values
-# * ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs 
-# * ``preproc_meg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
+# * ``infosource`` is a Node that just distributes values (:ref:`meg_infosourcenode`)
+# * ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs (:ref:`meg_datagrabbernode`) 
+# * ``preproc_meg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` (:ref:`preproc_meg_node`)
 # 
 # .. |DataGrabber| raw:: html
 #
@@ -129,6 +129,7 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # creates a node to grab data using |DataGrabber| in Nipype. The DataGrabber
 # Interface allows to define flexible search patterns which can be
 # parameterized by user defined inputs (such as subject ID, session, etc.).
+#
 # In this example we parameterize the pattern search with ``subject_id`` and
 # ``session_id``. The ``template_args`` in this node iterates upon the values
 # in the ``infosource`` node.
@@ -148,8 +149,19 @@ datasource = create_datagrabber(data_path, template_path, template_args)
 # """"""""""""""""""
 # Ephypype creates for us a pipeline which can be connected to these
 # nodes we created. The preprocessing pipeline is implemented by the function
-# :func:`~ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg`, thus
+# :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`, thus
 # to instantiate this pipeline node, we pass our parameters to it.
+#
+# Each pipeline provided by NeuroPycon requires two different kind of inputs:
+#
+# * inputs of the pipeline
+# * **inputnode**: particular inputs defined after the creation of the pipeline;
+#   an inputnode of a pipeline is defined by an output of a previous Node
+#
+# For example, looking at the definition of :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
+# we have the input of the pipeline (e.g., ``main_path``, ``lfreq``) and the 
+# inputnode ``raw_file`` and ``subject_id``. 
+# In the next section :ref:`workflow_meg` we'll see how to specify these inputnode.
 
 preproc_workflow = create_pipeline_preproc_meeg(
     data_path, pipeline_name="preproc_meg_dsamp_pipeline",
@@ -158,10 +170,12 @@ preproc_workflow = create_pipeline_preproc_meeg(
     data_type=data_type, down_sfreq=down_sfreq)
 
 ###############################################################################
+# .. _workflow_meg:
+#    
 # Specify Workflows and Connect Nodes
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# Now, we create our workflow and specify the ``base_dir`` which tells nipype
-# the directory in which to store the outputs.
+# Now, we create our main workflow and specify the ``base_dir`` which tells
+# nipype the directory in which to store the outputs.
 
 preproc_wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
     else 'preprocessing_dsamp_workflow'
@@ -173,7 +187,7 @@ main_workflow.base_dir = data_path
 # We then connect the nodes two at a time. First, we connect the two outputs
 # (``subject_id`` and ``session_id``) of the :ref:`meg_infosourcenode` node to
 # the :ref:`meg_datagrabbernode` node. So, these two nodes taken together can
-# grab data
+# grab data.
 
 main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
 main_workflow.connect(infosource, 'session_id', datasource, 'session_id')
@@ -199,13 +213,20 @@ main_workflow.write_graph(graph2use='colored')  # optional
 
 ###############################################################################
 # Take a moment to pause and notice how the connections
-# here correspond to how we connected the nodes.
+# here correspond to how we connected the nodes. In other words, the
+# connections we specified created the workflow: the nodes and the dependencies
+# between them are represented as a graph, in this way it is easy to see which
+# nodes are executed and in which order.
 
 import matplotlib.pyplot as plt  # noqa
 img = plt.imread(op.join(data_path, preproc_wf_name, 'graph.png'))
 plt.figure(figsize=(6, 6))
 plt.imshow(img)
 plt.axis('off')
+
+# %% 
+# .. note:: We have to connect the output and input fields of each node to the
+#       output and input fields of another node.
 
 ###############################################################################
 # Finally, we are now ready to execute our workflow.
@@ -214,7 +235,12 @@ main_workflow.config['execution'] = {'remove_unnecessary_outputs': 'false'}
 # Run workflow locally on 1 CPU
 main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
-###############################################################################
+# %%
+# .. note::  If we rerun the workflow, only the nodes whose inputs have changed
+#       since the last run will be executed again. If not, it will simply
+#       return cached results. This is achieved by recording a hash of the inputs.
+
+# %%
 # Results
 # ^^^^^^^
 # The output is the preprocessed data stored in the workflow directory

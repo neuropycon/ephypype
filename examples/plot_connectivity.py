@@ -202,23 +202,25 @@ for nf, (connect_file, channel_coo_file, channel_name_file) in \
     names = names if with_text else None
     radius = connect.sum(1)
     clim = (thresh, connect.max())
+    cmap = 'plasma'
+    txtcolor = 'white'
 
     # With text :
     c_obj = ConnectObj('c', xyz, connect,
                        color_by='count',
                        clim=clim, dynamic=(0., 1.),
-                       dynamic_order=3, antialias=True, cmap='inferno',
+                       dynamic_order=3, antialias=True, cmap=cmap,
                        line_width=4.)
     s_obj = SourceObj('s', xyz, data=radius, radius_min=5, radius_max=15,
-                      text=names, text_size=10, text_color='white',
+                      text=names, text_size=10, text_color=txtcolor,
                       text_translate=(0., 0., 0.))
-    s_obj.color_sources(data=radius, cmap='inferno')
-    cbar = ColorbarObj(c_obj, txtcolor='white', txtsz=15,
+    s_obj.color_sources(data=radius, cmap=cmap)
+    cbar = ColorbarObj(c_obj, txtcolor=txtcolor, txtsz=15,
                        cblabel='Connectivity', cbtxtsz=20)
     band = _parse_string(connect_file, freq_band_names)
     title = 'Connectivity on {} band'.format(band)
     sc.add_to_subplot(c_obj, title=title, title_size=14, title_bold=True,
-                      title_color='white', row=nf)
+                      title_color=txtcolor, row=nf)
     sc.add_to_subplot(s_obj, rotate='top', zoom=.5, use_this_cam=True, row=nf)
     sc.add_to_subplot(cbar, col=1, width_max=200, row=nf)
 
