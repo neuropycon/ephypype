@@ -90,7 +90,7 @@ During the workshop we use some sample datasets that will be shared on |zenodo|
 
 .. |zenodo| raw:: html
 
-   <a href="https://zenodo.org/communities/cuttingeeg" target="_blank">zenodo</a>
+   <a href="https://doi.org/10.5281/zenodo.7424167" target="_blank">zenodo</a>
 
 Freesurfer
 ^^^^^^^^^^
