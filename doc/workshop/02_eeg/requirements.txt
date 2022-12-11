@@ -37,7 +37,7 @@ imageio-ffmpeg==0.4.5
 imagesize==1.2.0
 importlib-metadata==4.8.1
 importlib-resources==5.2.2
-ipython==7.27.0
+ipython==7.31.1
 isodate==0.6.0
 jedi==0.18.0
 Jinja2==3.0.1
