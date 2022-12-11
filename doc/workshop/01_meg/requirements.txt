@@ -17,7 +17,7 @@ bids-validator==1.9.10.dev0
 bleach==5.0.1
 brotlipy==0.7.0
 cached-property==1.5.2
-certifi==2022.9.24
+certifi==2022.12.7
 cffi==1.15.1
 cftime==1.6.2
 charset-normalizer==2.1.1
