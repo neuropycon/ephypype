@@ -34,11 +34,7 @@ Requirements
 
 ephypype works with **python3**
 
-* mne>0.14
-* nipype
-* h5py
-
-These dependencies are automatically installed during ephypype installation (see :ref:`ephy_install`). 
+The dependencies (mne, nipype) are automatically installed during ephypype installation (see :ref:`ephy_install`). 
 
 We also recommend to install MNE python by following the `installation instructions <http://martinos.org/mne/dev/install_mne_python.html#check-your-installation>`_
 
@@ -52,7 +48,15 @@ To install ephypype, use the following command:
 
 .. code-block:: bash
 
-    $ pip install -r requirements.txt https://api.github.com/repos/neuropycon/ephypype/zipball/master
+    $ pip install ephypype
+    
+or alternatively, you can download from github the last version and install it:
+
+.. code-block:: bash
+
+    $ git clone https://github.com/neuropycon/ephypype.git
+    $ cd ephypype
+    $ python setup.py develop
 
 
 .. comment: 
