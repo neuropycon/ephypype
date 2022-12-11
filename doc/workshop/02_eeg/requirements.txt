@@ -6,7 +6,7 @@ backcall==0.2.0
 bctpy==0.5.2
 brotlipy==0.7.0
 cached-property==1.5.2
-certifi==2021.5.30
+certifi==2022.12.7
 cffi==1.14.6
 cftime==1.5.0
 chardet==4.0.0
