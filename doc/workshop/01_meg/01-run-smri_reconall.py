@@ -5,6 +5,10 @@
 01. Freesurfer anatomical pipeline
 ==================================
 
+This workflow runs the `Nipype <http://nipype.readthedocs.io/en/latest/#>`_
+Interface wrapping the `recon-all <https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all>`_
+command of Freesurfer.
+
 The solution of MEG inverse problem requires knowledge of the lead field
 matrix. A cortical segmentation of the anatomical MRI is necessary to generate
 the source space, where the neural activity will be estimated.
@@ -16,9 +20,17 @@ provide a workflow based on nipype Interface wrapping the
 Freesurfer. The output of :ref:`reconallnode` node is used as input of another node that
 creates the BEM surfaces using the FreeSurfer watershed algorithm.
 
+The workflow generates an HTML report displaying the BEM surfaces as
+colored contours overlaid on the T1 MRI images to verify that the surfaces do not intersect.
+
 .. warning:: Make sure that Freesurfer is properly configured before
     running this script.
 """
+
+# Authors: Annalisa Pascarella <a.pascarella@iac.cnr.it>
+# License: BSD (3-clause)
+
+# sphinx_gallery_thumbnail_number = 1
 
 ###############################################################################
 # Import modules
@@ -41,8 +53,10 @@ from ephypype.compute_fwd_problem import _create_bem_sol
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variable specific for the particular pipeline
-# (MRI path, Freesurfer fir, ...) in a
-# :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/meg/params.json>` file 
+# (MRI path, Freesurfer fir, ...) in a |params.json| file
+#
+# .. |params.json| replace::
+#   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
 # Read experiment params as json
 params = json.load(open("params.json"))
@@ -61,7 +75,7 @@ else:
 if not os.environ.get('FREESURFER_HOME'):
     raise RuntimeError('FREESURFER_HOME environment variable not set')
 os.environ["SUBJECTS_DIR"] = subjects_dir
-print('SUBJECTS_DIR %s ' % os.environ["SUBJECTS_DIR"])
+print(f'SUBJECTS_DIR {os.environ["SUBJECTS_DIR"]} ')
 
 
 ###############################################################################
@@ -159,3 +173,11 @@ main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 # The output of this workflow is the cortical segmentation of the
 # structural data that we find in the ``subjects_dir`` and will be used in
 # :ref:`plot_events_inverse`
+#
+# .. note:: The main advantage to use this workflow lies in the parallel
+#       processing provided by nipype engine, that allows segmenting the 19 MRI
+#       data in less than two days while processing a single MRI generally
+#       takes one day.
+# .. image:: ../../img/graph_FS.png
+#    :width: 50%
+#    :align: center

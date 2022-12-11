@@ -30,9 +30,15 @@ from ephypype.datasets import fetch_ieeg_dataset
 base_path = op.join(op.dirname(ephypype.__file__), '..', 'examples')
 data_path = fetch_ieeg_dataset(base_path)
 
-ft_path = '/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/'
-refmethod = 'bipolar'
-channels_name = '{\'RAM*\', \'RHH*\', \'RTH*\', \'ROC*\', \'LAM*\',\'LHH*\', \'LTH*\'}'  # noqa
+import json  # noqa
+import pprint  # noqa
+params = json.load(open("params.json"))
+pprint.pprint({'time frequency parameters': params["tfr"]})
+ft_path = params["tfr"]['fieldtrip_path']
+refmethod = params["tfr"]['refmethod']
+channels_name = params["tfr"]['channels_name']
+
+# channels_name = '{\'RAM*\', \'RHH*\', \'RTH*\', \'ROC*\', \'LAM*\',\'LHH*\', \'LTH*\'}'  # noqa
 
 # Now we call the interface Reference to apply a bipolar montage to sEEG data
 reference_if = Reference()

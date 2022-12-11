@@ -12,8 +12,9 @@ from scipy.io import savemat
 from nipype.utils.filemanip import split_filename
 
 from mne import read_epochs
-from mne.connectivity import spectral_connectivity
-from mne.viz import circular_layout, plot_connectivity_circle
+from mne_connectivity import spectral_connectivity_epochs
+from mne_connectivity.viz import plot_connectivity_circle
+from mne.viz import circular_layout
 from mne.time_frequency import tfr_morlet, write_tfrs
 
 
@@ -33,24 +34,25 @@ def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
     if mode == 'multitaper':
         if gathering_method == "mean":
-            con_matrix, _, _, _, _ = spectral_connectivity(
+            conn = spectral_connectivity_epochs(
                 data, method=con_method, sfreq=sfreq, fmin=fmin,
                 fmax=fmax, faverage=True, tmin=None, mode='multitaper',
                 mt_adaptive=False, n_jobs=1)
 
-            con_matrix = np.array(con_matrix[:, :, 0])
+            con_matrix = conn.get_data(output='dense')[:, :, 0]
 
         elif gathering_method == "max":
-            con_matrix, _, _, _, _ = spectral_connectivity(
+            con_matrix = spectral_connectivity_epochs(
                 data, method=con_method, sfreq=sfreq, fmin=fmin,
                 fmax=fmax, faverage=False, tmin=None, mode='multitaper',
                 mt_adaptive=False, n_jobs=1)
 
-            con_matrix = np.amax(con_matrix, axis=2)
+            con_matrix = np.amax(
+                conn.get_data(output='dense')[:, :, 0], axis=2)
 
         elif gathering_method == "none":
 
-            con_matrix, _, _, _, _ = spectral_connectivity(
+            con_matrix = spectral_connectivity_epochs(
                 data, method=con_method, sfreq=sfreq, fmin=fmin,
                 fmax=fmax, faverage=False, tmin=None, mode='multitaper',
                 mt_adaptive=False, n_jobs=1)
@@ -65,12 +67,13 @@ def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
 
         print(data)
 
-        con_matrix, _, _, _, _ = spectral_connectivity(
+        con_matrix = spectral_connectivity_epochs(
             data, method=con_method, sfreq=sfreq, faverage=True,
             tmin=None, mode='cwt_morlet', cwt_frequencies=frequencies,
             cwt_n_cycles=n_cycles, n_jobs=1)
 
-        con_matrix = np.mean(np.array(con_matrix[:, :, 0, :]), axis=2)
+        con_matrix = np.mean(
+            conn.get_data(output='dense')[:, :, 0, :], axis=2)
     else:
         raise ValueError('Time-frequency transformation mode is not set')
 

@@ -39,7 +39,7 @@ def fetch_ieeg_dataset(base_path):
         os.makedirs(data_path)
     target = os.path.join(data_path, 'SubjectUCI29_data.mat')
     if not os.path.exists(target):
-        _fetch_file(src_url, target)
+        _fetch_file(src_url, target, timeout=60)
         print('Downloading files ...')
     return os.path.abspath(data_path)
 

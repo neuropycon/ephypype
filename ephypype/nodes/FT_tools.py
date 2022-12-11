@@ -21,14 +21,12 @@ class ReferenceOutputSpec(TraitedSpec):
 
 
 class Reference(MatlabCommand):
-    """
-    Description:
+    """Description:
 
     Apply the specified reference
 
     Inputs
     ------
-
     data_file : str
         data structure .mat (matlab format)
 
@@ -46,7 +44,6 @@ class Reference(MatlabCommand):
 
     Outputs
     -------
-
     matlab_output : str
         file path of new FieldTrip data structure
 

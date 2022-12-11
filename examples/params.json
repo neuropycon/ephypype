@@ -47,7 +47,7 @@
     },
     "tfr":
     {
-        "fieldtrip_path": "/usr/local/MATLAB/R2018a/toolbox/MEEG/fieldtrip-20200327/",
+        "fieldtrip_path": "/home/pasca/Tools/software/fieldtrip/",
         "channels_name": "{'RAM*', 'RHH*', 'RTH*', 'ROC*', 'LAM*', 'LHH*', 'LTH*'}",
         "refmethod": "bipolar"
     }   
