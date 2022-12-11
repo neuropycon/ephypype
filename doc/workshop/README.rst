@@ -64,7 +64,13 @@ Install ephypype
 
             $ pip install ephypype==0.3.dev0
 
-To install ephypype package, you can download from |github| the last version and install it:
+To install ephypype package, you can use the Pypi version 
+
+.. code-block:: bash
+
+        $ pip install ephypype
+
+or alternatively, you can download from |github| the last version and install it:
 
 .. code-block:: bash
 
