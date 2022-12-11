@@ -5,4 +5,4 @@ from . import datasets
 from .gather import (gather_conmats, gather_results)
 from .datasets import fetch_omega_dataset, fetch_ieeg_dataset
 
-__version__ = '0.4dev'
+__version__ = '0.5'
