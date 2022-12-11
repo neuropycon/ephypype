@@ -82,6 +82,10 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
         path to raw data in fif format
     sbj_id (inputnode): str
         subject id
+    trans_file (inputnode): str
+        path to coregistration file
+    events_file (inputnode): str
+        path to events file if is_evoked = True
 
     Returns
     -------

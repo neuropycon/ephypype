@@ -93,7 +93,7 @@ datasource.inputs.sort_filelist = True
 # Ephypype creates for us a pipeline which can be connected to these
 # nodes we created. The inverse solution pipeline is implemented by the
 # function
-# :func:`ephypype.pipelines.preproc_meeg.create_pipeline_source_reconstruction`
+# :func:`ephypype.pipelines.create_pipeline_source_reconstruction`
 # thus to instantiate the inverse pipeline node, we import it and pass our
 # parameters to it.
 # The inverse pipeline contains three nodes that wrap the MNE Python functions

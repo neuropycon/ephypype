@@ -93,7 +93,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     subject_id (inputnode): str
         subject id
 
-    Outputs
+    Returns
     -------
     pipeline : instance of Workflow
     """

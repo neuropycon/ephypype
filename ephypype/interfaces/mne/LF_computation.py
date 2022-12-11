@@ -43,8 +43,8 @@ class LFComputationConnOutputSpec(TraitedSpec):
 class LFComputation(BaseInterface):
     """Compute the Lead Field matrix using MNE Python functions.
 
-    Inputs
-    ------
+    Parameters
+    ----------
     sbj_id : str
         subject name
     subjects_dir : str
@@ -61,7 +61,7 @@ class LFComputation(BaseInterface):
     save_mixed_src_space: bool (default False)
         if True save the mixed src space
 
-    Outputs
+    Returns
     -------
        fwd_filename : str
            Filename of the Lead Field matrix

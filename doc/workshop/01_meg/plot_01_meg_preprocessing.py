@@ -49,7 +49,7 @@ from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
 # |params.json| file
 # (if it is does work, try to go on the github page, and right-click "Save As" on the Raw button)
 #
-#.. |params.json| replace::
+# .. |params.json| replace::
 #   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
 # Read experiment params as json
@@ -61,7 +61,7 @@ subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
 
-is_short = params["general"]["short"]
+is_short = params["general"]["short"]  # to analyze a segment of data
 
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]

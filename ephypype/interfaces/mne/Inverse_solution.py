@@ -78,8 +78,8 @@ class InverseSolution(BaseInterface):
     This class is considering N_r regions in source space based on a FreeSurfer
     cortical parcellation.
 
-    Inputs
-    ------
+    Parameters
+    ----------
         sbj_id : str
             Subject name
         subjects_dir : str
@@ -124,7 +124,7 @@ class InverseSolution(BaseInterface):
         ROIs_mean: bool
             If True we compute the mean of estimated time series on ROIs
 
-    Outputs
+    Returns
     -------
         ts_file : str
             Name of the .npy file with the estimated source time series
@@ -227,8 +227,8 @@ class NoiseCovarianceConnOutputSpec(TraitedSpec):
 class NoiseCovariance(BaseInterface):
     """Compute the noise covariance matrix.
 
-    Inputs
-    ------
+    Parameters
+    ----------
     raw_filename : str
         Filename of the raw data
     cov_fname_in : str
@@ -244,7 +244,7 @@ class NoiseCovariance(BaseInterface):
     tmax : float
         End time after event
 
-    Outputs
+    Returns
     -------
        cov_fname_out : str
            Filename of the noise covariance matrix

@@ -55,7 +55,7 @@ from ephypype.compute_fwd_problem import _create_bem_sol
 # sessions, ...) and the variable specific for the particular pipeline
 # (MRI path, Freesurfer fir, ...) in a |params.json| file
 #
-#.. |params.json| replace::
+# .. |params.json| replace::
 #   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
 # Read experiment params as json

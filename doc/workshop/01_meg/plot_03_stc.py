@@ -34,7 +34,7 @@ NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
 conditions = params["general"]["conditions"]
 
-is_short = params["general"]["short"]
+is_short = params["general"]["short"]  # # to analyze a segment of data
 
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]
