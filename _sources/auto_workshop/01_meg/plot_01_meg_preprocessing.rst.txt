@@ -474,7 +474,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f9d11816b00>
+    <networkx.classes.digraph.DiGraph object at 0x7feb6f36cf10>
 
 
 
@@ -527,14 +527,14 @@ at the excluded ICA components.
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_002.png
-         :alt: ICA024 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA027 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_002.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_003.png
-         :alt: ICA014 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA017 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_003.png
          :class: sphx-glr-multi-img
 
@@ -548,35 +548,35 @@ at the excluded ICA components.
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_005.png
-         :alt: ICA025 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA023 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_005.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_006.png
-         :alt: ICA013 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA024 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_006.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_007.png
-         :alt: ICA020 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA027 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_007.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_008.png
-         :alt: ICA024 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA022 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_008.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_009.png
-         :alt: ICA011 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA010 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_009.png
          :class: sphx-glr-multi-img
 
@@ -664,7 +664,7 @@ at the excluded ICA components.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.440 seconds)
+   **Total running time of the script:** ( 0 minutes  17.303 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_01_meg_plot_01_meg_preprocessing.py:

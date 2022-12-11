@@ -369,7 +369,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7f9d30a37c40>
+    <networkx.classes.digraph.DiGraph object at 0x7feb8e4b3f10>
 
 
 
@@ -456,7 +456,7 @@ the Connectivity pipeline.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.018 seconds)
+   **Total running time of the script:** ( 0 minutes  10.026 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_inverse.py:

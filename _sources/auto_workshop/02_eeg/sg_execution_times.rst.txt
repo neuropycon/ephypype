@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**00:17.953** total execution time for **auto_workshop_02_eeg** files:
+**00:17.758** total execution time for **auto_workshop_02_eeg** files:
 
 +------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_workshop_02_eeg_plot_eeg_preprocessing.py` (``plot_eeg_preprocessing.py``) | 00:09.378 | 0.0 MB |
+| :ref:`sphx_glr_auto_workshop_02_eeg_plot_eeg_preprocessing.py` (``plot_eeg_preprocessing.py``) | 00:09.191 | 0.0 MB |
 +------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_workshop_02_eeg_plot_ERP.py` (``plot_ERP.py``)                             | 00:08.575 | 0.0 MB |
+| :ref:`sphx_glr_auto_workshop_02_eeg_plot_ERP.py` (``plot_ERP.py``)                             | 00:08.567 | 0.0 MB |
 +------------------------------------------------------------------------------------------------+-----------+--------+
