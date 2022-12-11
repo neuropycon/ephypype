@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ephypype.interfaces.mne.Inverse_solution &#8212; ephypype 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../../auto_workshop/index.html">Workshop</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for ephypype.interfaces.mne.Inverse_solution</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Inverse problem Interfaces.&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># License: BSD (3-clause)</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+
+<span class="kn">from</span> <span class="nn">nipype.utils.filemanip</span> <span class="kn">import</span> <span class="n">split_filename</span> <span class="k">as</span> <span class="n">split_f</span>
+
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">BaseInterface</span><span class="p">,</span> <span class="n">BaseInterfaceInputSpec</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">TraitedSpec</span>
+
+<span class="kn">from</span> <span class="nn">...compute_inv_problem</span> <span class="kn">import</span> <span class="n">_compute_inverse_solution</span><span class="p">,</span> <span class="n">compute_noise_cov</span>
+<span class="kn">from</span> <span class="nn">...compute_inv_problem</span> <span class="kn">import</span> <span class="n">_compute_LCMV_inverse_solution</span>
+<span class="kn">from</span> <span class="nn">mne</span> <span class="kn">import</span> <span class="n">compute_covariance</span>
+<span class="kn">from</span> <span class="nn">mne</span> <span class="kn">import</span> <span class="n">write_cov</span><span class="p">,</span> <span class="n">read_epochs</span>
+
+
+<span class="k">class</span> <span class="nc">InverseSolutionConnInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Input specification for InverseSolution.&quot;&quot;&quot;</span>
+
+    <span class="n">sbj_id</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;subject id&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subjects_dir</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Directory</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Freesurfer main directory&#39;</span><span class="p">,</span>  <span class="c1"># noqa</span>
+                                    <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">raw_filename</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;raw filename&#39;</span><span class="p">,</span>
+                               <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cov_filename</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Noise Covariance matrix&#39;</span><span class="p">,</span>
+                               <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">fwd_filename</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;LF matrix&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">is_epoched</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                             <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true raw data will be epoched&#39;</span><span class="p">,</span>
+                             <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">is_fixed</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true we use fixed orientation&#39;</span><span class="p">,</span>
+                           <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">events_id</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Dict</span><span class="p">({},</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;the id of all events to consider.&#39;</span><span class="p">,</span>
+                            <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">condition</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of conditions&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">t_min</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;start time before event&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">t_max</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;end time after event&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">is_evoked</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true if we want to create evoked data&#39;</span><span class="p">,</span>
+                            <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">is_ave</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true if we have already evoked data&#39;</span><span class="p">,</span>
+                         <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">inv_method</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;MNE&#39;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;possible inverse methods are </span><span class="se">\</span>
+<span class="s1">                               sLORETA, MNE, dSPM&#39;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">snr</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;use smaller SNR for </span><span class="se">\</span>
+<span class="s1">                       raw data&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parc</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="s1">&#39;aparc&#39;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                         <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;the parcellation to use: aparc vs aparc.a2009s&#39;</span><span class="p">,</span>
+                         <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">aseg</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true sub structures will be considered&#39;</span><span class="p">,</span>
+                       <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">aseg_labels</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of substructures in the src space&#39;</span><span class="p">,</span>
+                              <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">all_src_space</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true compute inverse on all </span><span class="se">\</span>
+<span class="s1">                                source space&#39;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ROIs_mean</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true compute mean on ROIs&#39;</span><span class="p">,</span>
+                            <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">InverseSolutionConnOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Output specification for InverseSolution.&quot;&quot;&quot;</span>
+
+    <span class="n">ts_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;source reconstruction in .npy format&#39;</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;labels file in pickle format&#39;</span><span class="p">)</span>
+    <span class="n">label_names</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;labels name file in txt format&#39;</span><span class="p">)</span>
+    <span class="n">label_coords</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;labels coords file in txt format&#39;</span><span class="p">)</span>
+    <span class="n">stc_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of stc files&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="InverseSolution"><a class="viewcode-back" href="../../../../generated/ephypype.interfaces.mne.InverseSolution.html#ephypype.interfaces.mne.InverseSolution">[docs]</a><span class="k">class</span> <span class="nc">InverseSolution</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the inverse solution on raw or epoch data.</span>
+
+<span class="sd">    This class is considering N_r regions in source space based on a FreeSurfer</span>
+<span class="sd">    cortical parcellation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        sbj_id : str</span>
+<span class="sd">            Subject name</span>
+<span class="sd">        subjects_dir : str</span>
+<span class="sd">            Freesurfer directory</span>
+<span class="sd">        raw_filename : str</span>
+<span class="sd">            Filename of the raw data</span>
+<span class="sd">        cov_filename : str</span>
+<span class="sd">            Filename of the noise covariance matrix</span>
+<span class="sd">        fwd_filename : str</span>
+<span class="sd">            Filename of the forward operator</span>
+<span class="sd">        is_epoched : bool</span>
+<span class="sd">            If True and events_id = None the input data are epoch data</span>
+<span class="sd">            in the format -epo.fif</span>
+<span class="sd">            if True and events_id is not None, the raw data are epoched</span>
+<span class="sd">            according to events_id and t_min and t_max values</span>
+<span class="sd">        events_id: dict</span>
+<span class="sd">            The dict of events</span>
+<span class="sd">        condition: list</span>
+<span class="sd">            List of events</span>
+<span class="sd">        t_min, t_max: int (defualt None)</span>
+<span class="sd">            Define the time interval in which to epoch the raw data</span>
+<span class="sd">        is_evoked: bool</span>
+<span class="sd">            If True the raw data will be averaged according to the events</span>
+<span class="sd">            contained in the dict events_id</span>
+<span class="sd">        is_ave: bool</span>
+<span class="sd">            If True the input data is an evoked dataset</span>
+<span class="sd">        is_fixed : bool</span>
+<span class="sd">            If True we use fixed orientation</span>
+<span class="sd">        inv_method : str</span>
+<span class="sd">            The inverse method to use; possible choices: MNE, dSPM, sLORETA</span>
+<span class="sd">        snr : float</span>
+<span class="sd">            The SNR value used to define the regularization parameter</span>
+<span class="sd">        parc: str</span>
+<span class="sd">            The parcellation defining the ROIs atlas in the source space</span>
+<span class="sd">        aseg: bool</span>
+<span class="sd">            If True a mixed source space will be created and the sub cortical</span>
+<span class="sd">            regions defined in aseg_labels will be added to the source space</span>
+<span class="sd">        aseg_labels: list</span>
+<span class="sd">            List of substructures we want to include in the mixed source space</span>
+<span class="sd">        all_src_space: bool</span>
+<span class="sd">            If True we compute the inverse for all points of the s0urce space</span>
+<span class="sd">        ROIs_mean: bool</span>
+<span class="sd">            If True we compute the mean of estimated time series on ROIs</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        ts_file : str</span>
+<span class="sd">            Name of the .npy file with the estimated source time series</span>
+<span class="sd">        labels : str</span>
+<span class="sd">            Labels file in pickle format</span>
+<span class="sd">        label_names : str</span>
+<span class="sd">            Name of the .txt file with labels name</span>
+<span class="sd">        label_coords : str</span>
+<span class="sd">            Name of the .txt file with labels coordinates</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">InverseSolutionConnInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">InverseSolutionConnOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">sbj_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sbj_id</span>
+        <span class="n">subjects_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">subjects_dir</span>
+        <span class="n">raw_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">raw_filename</span>
+        <span class="n">cov_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cov_filename</span>
+        <span class="n">fwd_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">fwd_filename</span>
+        <span class="n">is_epoched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_epoched</span>
+        <span class="n">is_fixed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_fixed</span>
+        <span class="n">events_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">events_id</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">condition</span>
+        <span class="n">t_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">t_min</span>
+        <span class="n">t_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">t_max</span>
+        <span class="n">is_evoked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_evoked</span>
+        <span class="n">is_ave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_ave</span>
+        <span class="n">inv_method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">inv_method</span>
+        <span class="n">snr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">snr</span>
+        <span class="n">parc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">parc</span>
+        <span class="n">aseg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">aseg</span>
+        <span class="n">aseg_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">aseg_labels</span>
+        <span class="n">all_src_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">all_src_space</span>
+        <span class="n">ROIs_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ROIs_mean</span>
+
+        <span class="k">if</span> <span class="n">inv_method</span> <span class="o">!=</span> <span class="s1">&#39;LCMV&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_names</span><span class="p">,</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">label_coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stc_files</span> <span class="o">=</span> \
+                <span class="n">_compute_inverse_solution</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span>
+                                          <span class="n">fwd_filename</span><span class="p">,</span> <span class="n">cov_filename</span><span class="p">,</span>
+                                          <span class="n">is_epoched</span><span class="o">=</span><span class="n">is_epoched</span><span class="p">,</span>
+                                          <span class="n">events_id</span><span class="o">=</span><span class="n">events_id</span><span class="p">,</span>
+                                          <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span> <span class="n">is_ave</span><span class="o">=</span><span class="n">is_ave</span><span class="p">,</span>
+                                          <span class="n">t_min</span><span class="o">=</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="n">t_max</span><span class="p">,</span>
+                                          <span class="n">is_evoked</span><span class="o">=</span><span class="n">is_evoked</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="n">snr</span><span class="p">,</span>
+                                          <span class="n">inv_method</span><span class="o">=</span><span class="n">inv_method</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="n">parc</span><span class="p">,</span>
+                                          <span class="n">aseg</span><span class="o">=</span><span class="n">aseg</span><span class="p">,</span> <span class="n">aseg_labels</span><span class="o">=</span><span class="n">aseg_labels</span><span class="p">,</span>
+                                          <span class="n">all_src_space</span><span class="o">=</span><span class="n">all_src_space</span><span class="p">,</span>
+                                          <span class="n">ROIs_mean</span><span class="o">=</span><span class="n">ROIs_mean</span><span class="p">,</span>
+                                          <span class="n">is_fixed</span><span class="o">=</span><span class="n">is_fixed</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_names</span><span class="p">,</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">label_coords</span> <span class="o">=</span> \
+                <span class="n">_compute_LCMV_inverse_solution</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span>
+                                               <span class="n">subjects_dir</span><span class="p">,</span>
+                                               <span class="n">fwd_filename</span><span class="p">,</span> <span class="n">cov_filename</span><span class="p">,</span>
+                                               <span class="n">parc</span><span class="o">=</span><span class="n">parc</span><span class="p">,</span>
+                                               <span class="n">all_src_space</span><span class="o">=</span><span class="n">all_src_space</span><span class="p">,</span>
+                                               <span class="n">ROIs_mean</span><span class="o">=</span><span class="n">ROIs_mean</span><span class="p">,</span>
+                                               <span class="n">is_fixed</span><span class="o">=</span><span class="n">is_fixed</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stc_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;ts_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ts_file</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;label_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_names</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;label_coords&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_coords</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;stc_files&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stc_files</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+
+<span class="k">class</span> <span class="nc">NoiseCovarianceConnInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Input specification for NoiseCovariance.&quot;&quot;&quot;</span>
+
+    <span class="n">cov_fname_in</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;file name for Noise </span><span class="se">\</span>
+<span class="s1">                               Covariance Matrix&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">raw_filename</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;raw data filename&#39;</span><span class="p">)</span>
+    <span class="n">is_epoched</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;true if we want to epoch the data&#39;</span><span class="p">,</span>
+                             <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">is_evoked</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;true if we want to analyze evoked data&#39;</span><span class="p">,</span>
+                            <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NoiseCovarianceConnOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Output specification for NoiseCovariance.&quot;&quot;&quot;</span>
+
+    <span class="n">cov_fname_out</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Noise covariances matrix&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="NoiseCovariance"><a class="viewcode-back" href="../../../../generated/ephypype.interfaces.mne.NoiseCovariance.html#ephypype.interfaces.mne.NoiseCovariance">[docs]</a><span class="k">class</span> <span class="nc">NoiseCovariance</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the noise covariance matrix.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    raw_filename : str</span>
+<span class="sd">        Filename of the raw data</span>
+<span class="sd">    cov_fname_in : str</span>
+<span class="sd">        Filename of the noise covariance matrix</span>
+<span class="sd">    is_epoched : bool</span>
+<span class="sd">        True if we want to epoch the data</span>
+<span class="sd">    is_evoked : bool</span>
+<span class="sd">        True if we want to analyze evoked data</span>
+<span class="sd">    events_id : dict</span>
+<span class="sd">        The id of all events to consider</span>
+<span class="sd">    t_min : float</span>
+<span class="sd">        start time before event</span>
+<span class="sd">    tmax : float</span>
+<span class="sd">        End time after event</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">       cov_fname_out : str</span>
+<span class="sd">           Filename of the noise covariance matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">NoiseCovarianceConnInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">NoiseCovarianceConnOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">raw_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">raw_filename</span>
+        <span class="n">cov_fname_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">cov_fname_in</span>
+        <span class="n">is_epoched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_epoched</span>
+        <span class="n">is_evoked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">is_evoked</span>
+
+        <span class="n">data_path</span><span class="p">,</span> <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_f</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">)</span>
+
+        <span class="c1"># self.cov_fname_out = op.join(data_path, &#39;%s-cov.fif&#39; % basename)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-cov.fif&#39;</span> <span class="o">%</span> <span class="n">basename</span><span class="p">)</span>
+
+        <span class="c1"># Check if a noise cov matrix was already computed</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">cov_fname_in</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">is_epoched</span> <span class="ow">and</span> <span class="n">is_evoked</span><span class="p">:</span>
+                <span class="n">epochs</span> <span class="o">=</span> <span class="n">read_epochs</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span><span class="p">):</span>
+                    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** COMPUTE COV FROM EPOCHS ***</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span><span class="p">))</span>
+                    <span class="c1"># make sure cv is deterministic</span>
+                    <span class="c1"># cv = KFold(3, random_state=42)</span>
+                    <span class="n">noise_cov</span> <span class="o">=</span> <span class="n">compute_covariance</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                   <span class="n">method</span><span class="o">=</span><span class="s1">&#39;shrunk&#39;</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                    <span class="n">write_cov</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** NOISE cov file </span><span class="si">%s</span><span class="s1"> exists!!! </span><span class="se">\n</span><span class="s1">&#39;</span>
+                           <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Compute noise cov matrix from empty room data</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span> <span class="o">=</span> <span class="n">compute_noise_cov</span><span class="p">(</span>
+                    <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">cov_fname_in</span><span class="p">),</span> <span class="n">raw_filename</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> *** NOISE cov file </span><span class="si">{}</span><span class="s1"> exists!!! </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span>
+                   <span class="nb">format</span><span class="p">(</span><span class="n">cov_fname_in</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span> <span class="o">=</span> <span class="n">cov_fname_in</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;cov_fname_out&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cov_fname_out</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-10.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Workshop at CuttingEEG &#8212; ephypype 0.2 documentation</title>
+    <title>Workshop &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -73,7 +75,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a></a><ul>
+<li><a class="reference internal" href="#">Workshop</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#install-ephypype">Install ephypype</a></li>
 </ul>
@@ -120,10 +122,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="workshop-at-cuttingeeg">
-<span id="general-workshop"></span><h1>Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a><a class="headerlink" href="#workshop-at-cuttingeeg" title="Permalink to this headline">¶</a></h1>
+  <section id="workshop">
+<h1>Workshop<a class="headerlink" href="#workshop" title="Permalink to this heading">¶</a></h1>
 <p>In this hands-on session we will describe the philosophy, architecture and functionalities of NeuroPycon and provide illustrative examples through interactive notebooks.</p>
-<p>We will show how to use NeuroPycon pipeline to analyze EEG (MEG) data with a focus on automatic artifact removal by ICA, ERP components computation and (if times allows) source reconstruction from MEG data.</p>
+<p>We will show how to use NeuroPycon pipeline to analyze MEG data (<a class="reference internal" href="../auto_workshop/01_meg/index.html#sphx-glr-auto-workshop-01-meg"><span class="std std-ref">FACE dataset</span></a>) with a focus on automatic artifact removal by ICA and and source reconstruction.</p>
+<p>In the past edition of <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a> we showed how to use NeuroPycon pipeline to analyze EEG data (<a class="reference internal" href="../auto_workshop/02_eeg/index.html#sphx-glr-auto-workshop-02-eeg"><span class="std std-ref">ERP CORE dataset</span></a>) with a focus on automatic artifact removal by ICA and and ERP components computation.</p>
 <p>Basic knowledge of (or a keen interest in) <strong>Python</strong> is required. Furthermore, we suggest the following lectures:</p>
 <ul class="simple">
 <li><p><a href="https://www.frontiersin.org/articles/10.3389/fninf.2011.00013/full" target="_blank">Gorgolewski</a> et al. (2011) Front. Neuroinform. 5:13</p></li>
@@ -131,22 +134,18 @@
 <li><p><a href="https://www.sciencedirect.com/science/article/pii/S1053811920305061" target="_blank">Meunier, Pascarella</a> et al. (2020), Neuroimage</p></li>
 </ul>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <p>We recommend to install neuropycon and the related software (MNE-python, Freesurfer) before the workshop.</p>
-<p>First, we recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>. The last version of MNE-python relies on python 3.9.</p>
-<p>Alternativaly, you can create an enviroment by Anaconda and install the packages contained in <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/requirements.txt"><code class="xref download docutils literal notranslate"><span class="pre">requirements</span></code></a> file, e.g.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -n cuttingeeg <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+<p>First, we recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>. The last version of MNE-python relies on python 3.10.</p>
+<p>Alternativaly, you can create an enviroment by Anaconda or Mamba and install the packages contained in <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/requirements.txt"><code class="xref download docutils literal notranslate"><span class="pre">requirements</span></code></a> file, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -n practicalmeeg <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
 $ pip install -r requirements.txt
 $ pip install jupyter
 </pre></div>
 </div>
 <section id="install-ephypype">
-<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this headline">¶</a></h3>
-<p>To install ephypype package, you can use the Pypi version</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install <span class="nv">ephypype</span><span class="o">==</span><span class="m">0</span>.3.dev0
-</pre></div>
-</div>
-<p>You can also download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
+<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this heading">¶</a></h3>
+<p>To install ephypype package, you can download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/neuropycon/ephypype.git
 $ <span class="nb">cd</span> ephypype
 $ python setup.py develop
@@ -155,10 +154,10 @@ $ python setup.py develop
 </section>
 </section>
 <section id="sample-data">
-<h2>Sample data<a class="headerlink" href="#sample-data" title="Permalink to this headline">¶</a></h2>
+<h2>Sample data<a class="headerlink" href="#sample-data" title="Permalink to this heading">¶</a></h2>
 <p>During the workshop we use some sample datasets that will be shared on <a href="https://zenodo.org/communities/cuttingeeg" target="_blank">zenodo</a></p>
 <section id="freesurfer">
-<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this headline">¶</a></h3>
+<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Download Freesurfer software:</p></li>
 </ol>
@@ -170,7 +169,7 @@ $ python setup.py develop
 </section>
 </section>
 <section id="notebooks">
-<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -186,8 +185,8 @@ $ python setup.py develop
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>

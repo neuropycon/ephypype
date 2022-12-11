@@ -1,0 +1,36 @@
+﻿ephypype.interfaces.mne.InverseSolution
+=======================================
+
+.. currentmodule:: ephypype.interfaces.mne
+
+.. autoclass:: InverseSolution
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~InverseSolution.__init__
+      ~InverseSolution.aggregate_outputs
+      ~InverseSolution.help
+      ~InverseSolution.load_inputs_from_json
+      ~InverseSolution.run
+      ~InverseSolution.save_inputs_to_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~InverseSolution.always_run
+      ~InverseSolution.can_resume
+      ~InverseSolution.resource_monitor
+      ~InverseSolution.version
+   
+   

@@ -110,8 +110,6 @@ file and print it
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     {'experiment parameters': {'NJOBS': 1,
@@ -222,8 +220,6 @@ Welch's method and multitapers respectively.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     *** main_path -> /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
@@ -290,8 +286,6 @@ To do so, we first write the workflow graph (optional)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -318,19 +312,18 @@ here correspond to how we connected the nodes.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_power_001.png
-    :alt: plot power
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_power_001.png
+   :alt: plot power
+   :srcset: /auto_examples/images/sphx_glr_plot_power_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    (-0.5, 335.5, 498.5, -0.5)
+    (-0.5, 404.5, 498.5, -0.5)
 
 
 
@@ -354,12 +347,10 @@ Finally, we are now ready to execute our workflow.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7effcbc8ded0>
+    <networkx.classes.digraph.DiGraph object at 0x7f9d1e99df60>
 
 
 
@@ -374,7 +365,7 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
   and its Node :class:`ephypype.interfaces.mne.power.Power` compute the PSD
   by the welch function of the scipy package.
 
-.. GENERATED FROM PYTHON SOURCE LINES 150-187
+.. GENERATED FROM PYTHON SOURCE LINES 150-189
 
 .. code-block:: default
 
@@ -397,6 +388,8 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
         xyz = np.genfromtxt(channel_coo_file, dtype=float)
         freq_bands = np.asarray(freq_bands)
         clim = (psds.min(), psds.max())
+        cmap = 'cool'
+        txtcolor = 'white'
 
         # Find indices of frequencies :
         idx_fplt = np.abs((freqs.reshape(1, 1, -1) -
@@ -407,10 +400,10 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
         for num, (fb, fbn, psd, rx) in enumerate(zip(freq_bands, freq_band_names,
                                                      psdf, radius)):
             s_obj = SourceObj('s', xyz, data=psd, radius_min=rx[0], radius_max=rx[1])  # noqa
-            s_obj.color_sources(data=psd, cmap='cool', clim=clim)
+            s_obj.color_sources(data=psd, cmap=cmap, clim=clim)
             sc.add_to_subplot(s_obj, col=num, title=str(fb) + ' - ' + fbn,
-                              title_color='white', rotate='top', zoom=.6)
-        cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=15,
+                              title_color=txtcolor, rotate='top', zoom=.6)
+        cbar = ColorbarObj(s_obj, txtcolor=txtcolor, cblabel='PSD', txtsz=15,
                            cbtxtsz=20)
         sc.add_to_subplot(cbar, col=len(freq_bands), width_max=200)
 
@@ -418,9 +411,10 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_power_002.png
-    :alt: plot power
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_power_002.png
+   :alt: plot power
+   :srcset: /auto_examples/images/sphx_glr_plot_power_002.png
+   :class: sphx-glr-single-img
 
 
 
@@ -429,28 +423,23 @@ The outputs are the **psd tensor and frequencies in .npz format** and the
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.970 seconds)
+   **Total running time of the script:** ( 0 minutes  7.432 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_power.py:
 
+.. only:: html
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: plot_power.py <plot_power.py>`
 
-     :download:`Download Python source code: plot_power.py <plot_power.py>`
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_power.ipynb <plot_power.ipynb>`
+      :download:`Download Jupyter notebook: plot_power.ipynb <plot_power.ipynb>`
 
 
 .. only:: html

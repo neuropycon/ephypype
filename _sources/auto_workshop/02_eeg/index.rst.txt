@@ -1,0 +1,72 @@
+
+
+.. _sphx_glr_auto_workshop_02_eeg:
+
+
+
+
+ERP CORE dataset
+^^^^^^^^^^^^^^^^
+
+These examples demonstrate how to process 1 participant from the |ERP_CORE| dataset. It shows how to obtain N170 component from a face perception task by |NeuroPycon| pipelines.
+
+.. |ERP_CORE| raw:: html
+        
+        <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a>
+
+.. |NeuroPycon| raw:: html
+        
+        <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a>
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP">
+
+.. only:: html
+
+  .. image:: /auto_workshop/02_eeg/images/thumb/sphx_glr_plot_ERP_thumb.png
+    :alt: 02. Compute ERP
+
+  :ref:`sphx_glr_auto_workshop_02_eeg_plot_ERP.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">02. Compute ERP</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="01. Preprocess EEG data">
+
+.. only:: html
+
+  .. image:: /auto_workshop/02_eeg/images/thumb/sphx_glr_plot_eeg_preprocessing_thumb.png
+    :alt: 01. Preprocess EEG data
+
+  :ref:`sphx_glr_auto_workshop_02_eeg_plot_eeg_preprocessing.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">01. Preprocess EEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_workshop/02_eeg/plot_ERP
+   /auto_workshop/02_eeg/plot_eeg_preprocessing
+

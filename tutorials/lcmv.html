@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>How to add MNE function to ephypype &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -115,20 +117,20 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="how-to-add-mne-function-to-ephypype">
-<span id="lcmv"></span><h1>How to add MNE function to ephypype<a class="headerlink" href="#how-to-add-mne-function-to-ephypype" title="Permalink to this headline">¶</a></h1>
+<span id="lcmv"></span><h1>How to add MNE function to ephypype<a class="headerlink" href="#how-to-add-mne-function-to-ephypype" title="Permalink to this heading">¶</a></h1>
 <p>The following section is a brief introduction on how to add to <strong>ephypype</strong> a new pipeline based on an algorithm already implemented in the software wrapped by NeuroPycon (e.g. MNE python, radatools).</p>
 <p>Here, we add a source reconstruction pipeline using a Linear Constrained Minimum Variance (LCMV) beamformer (Van Veen et al., 1997) as inverse method (see <a class="reference internal" href="../auto_examples/plot_inverse_LCMV.html#lcmv-source-reconstruction"><span class="std std-ref">Compute LCMV inverse solution</span></a> Section).
 This will lead to modify only the ephypype package by writing very few lines of code (almost 10).</p>
-<div class="contents local topic" id="main-steps">
+<nav class="contents local" id="main-steps">
 <p class="topic-title">Main steps</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#pipeline-input" id="id1">Pipeline Input</a></p></li>
 <li><p><a class="reference internal" href="#modify-interface" id="id2">Modify Interface</a></p></li>
 <li><p><a class="reference internal" href="#add-function" id="id3">Add Function</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="pipeline-input">
-<span id="pipeline"></span><h2><a class="toc-backref" href="#id1">Pipeline Input</a><a class="headerlink" href="#pipeline-input" title="Permalink to this headline">¶</a></h2>
+<span id="pipeline"></span><h2><a class="toc-backref" href="#id1" role="doc-backlink">Pipeline Input</a><a class="headerlink" href="#pipeline-input" title="Permalink to this heading">¶</a></h2>
 <p>We can use the same example script of the <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/plot_inverse.py"><code class="xref download docutils literal notranslate"><span class="pre">inverse</span> <span class="pre">solution</span> <span class="pre">pipeline</span></code></a>.
 The only thing to change is the <code class="docutils literal notranslate"><span class="pre">method</span></code> parameter in the <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/blob/master/examples/params_LCMV_inverse.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -142,7 +144,7 @@ The only thing to change is the <code class="docutils literal notranslate"><span
 </div>
 </section>
 <section id="modify-interface">
-<span id="interface"></span><h2><a class="toc-backref" href="#id2">Modify Interface</a><a class="headerlink" href="#modify-interface" title="Permalink to this headline">¶</a></h2>
+<span id="interface"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Modify Interface</a><a class="headerlink" href="#modify-interface" title="Permalink to this heading">¶</a></h2>
 <p>Now, we modify the <code class="docutils literal notranslate"><span class="pre">_run_interface</span></code> method of the <a class="reference external" href="https://github.com/neuropycon/ephypype/blob/master/ephypype/interfaces/mne/Inverse_solution.py">Inverse_solution</a>  Interface
 by adding the new function <code class="docutils literal notranslate"><span class="pre">_compute_LCMV_inverse_solution</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">ts_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_coords</span> <span class="o">=</span> \
@@ -152,7 +154,7 @@ by adding the new function <code class="docutils literal notranslate"><span clas
 </div>
 </section>
 <section id="add-function">
-<span id="function"></span><h2><a class="toc-backref" href="#id3">Add Function</a><a class="headerlink" href="#add-function" title="Permalink to this headline">¶</a></h2>
+<span id="function"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Add Function</a><a class="headerlink" href="#add-function" title="Permalink to this heading">¶</a></h2>
 <p>Finally, we include in the module <a class="reference external" href="https://github.com/neuropycon/ephypype/blob/master/ephypype/compute_inv_problem.py">compute_inv_problem.py</a> the new function
 <code class="docutils literal notranslate"><span class="pre">_compute_LCMV_inverse_solution</span></code> that calls the MNE python functions (<a href="https://mne.tools/stable/generated/mne.beamformer.make_lcmv.html?highlight=make_lcmv#mne.beamformer.make_lcmv" target="_blank">make_lcmv</a>, <a href="https://mne.tools/stable/generated/mne.beamformer.apply_lcmv_raw.html?highlight=apply_lcmv_raw#mne.beamformer.apply_lcmv_raw" target="_blank">apply_lcmv_raw</a>) we have to use to reconstruct the neural activity by an LCMV beamformer starting from raw data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="k">def</span> <span class="nf">_compute_LCMV_inverse_solution</span><span class="p">(</span><span class="n">raw_filename</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">fwd_filename</span><span class="p">,</span> <span class="n">cov_fname</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="s1">&#39;aparc&#39;</span><span class="p">,</span>
@@ -238,8 +240,8 @@ by adding the new function <code class="docutils literal notranslate"><span clas
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>

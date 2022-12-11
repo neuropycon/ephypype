@@ -22,10 +22,15 @@ Pipelines (:py:mod:`ephypype.pipelines`):
 
 Nodes (:py:mod:`ephypype.nodes`):
 
-.. currentmodule:: ephypype.pipelines
+.. currentmodule:: ephypype.interfaces.mne
 
 .. autosummary::
    :toctree: generated/
+   
+   LFComputation
+   NoiseCovariance
+   InverseSolution
+
 
 CLI commands (:py:mod:`ephypype.commands.neuropycon`):
 
@@ -53,4 +58,3 @@ Utils (:py:mod:`ephypype.nodes`):
 
    create_iterator
    create_datagrabber
-   Reference

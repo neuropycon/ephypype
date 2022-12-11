@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>API Documentation &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -112,49 +114,46 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="api-documentation">
-<span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this heading">¶</a></h1>
 <p>Pipelines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">ephypype.pipelines</span></code>):</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_preproc_meeg</span></code></a>(main_path[, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_preproc_meeg</span></code></a>(main_path[, ...])</p></td>
 <td><p>Preprocessing pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_evoked.html#ephypype.pipelines.create_pipeline_evoked" title="ephypype.pipelines.create_pipeline_evoked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_evoked</span></code></a>(main_path[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_evoked.html#ephypype.pipelines.create_pipeline_evoked" title="ephypype.pipelines.create_pipeline_evoked"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_evoked</span></code></a>(main_path[, ...])</p></td>
 <td><p>Evoked pipeline.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power" title="ephypype.pipelines.create_pipeline_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_power</span></code></a>(main_path, freq_bands)</p></td>
 <td><p>Power pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_source_reconstruction</span></code></a>(…[, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_source_reconstruction</span></code></a>(...[, ...])</p></td>
 <td><p>Source reconstruction pipeline.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_evoked_inverse_solution.html#ephypype.pipelines.create_pipeline_evoked_inverse_solution" title="ephypype.pipelines.create_pipeline_evoked_inverse_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_evoked_inverse_solution</span></code></a>(…)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_evoked_inverse_solution.html#ephypype.pipelines.create_pipeline_evoked_inverse_solution" title="ephypype.pipelines.create_pipeline_evoked_inverse_solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_evoked_inverse_solution</span></code></a>(...)</p></td>
 <td><p>Source reconstruction pipeline.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_time_series_to_spectral_connectivity</span></code></a>(…)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity.html#ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity" title="ephypype.pipelines.create_pipeline_time_series_to_spectral_connectivity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_pipeline_time_series_to_spectral_connectivity</span></code></a>(...)</p></td>
 <td><p>Connectivity pipeline.</p></td>
 </tr>
 </tbody>
 </table>
 <p>Nodes (<code class="xref py py-mod docutils literal notranslate"><span class="pre">ephypype.nodes</span></code>):</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.interfaces.mne.LFComputation.html#ephypype.interfaces.mne.LFComputation" title="ephypype.interfaces.mne.LFComputation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LFComputation</span></code></a>([from_file, resource_monitor, ...])</p></td>
+<td><p>Compute the Lead Field matrix using MNE Python functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.interfaces.mne.NoiseCovariance.html#ephypype.interfaces.mne.NoiseCovariance" title="ephypype.interfaces.mne.NoiseCovariance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoiseCovariance</span></code></a>([from_file, ...])</p></td>
+<td><p>Compute the noise covariance matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.interfaces.mne.InverseSolution.html#ephypype.interfaces.mne.InverseSolution" title="ephypype.interfaces.mne.InverseSolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverseSolution</span></code></a>([from_file, ...])</p></td>
+<td><p>Compute the inverse solution on raw or epoch data.</p></td>
+</tr>
 </tbody>
 </table>
 <p>CLI commands (<code class="xref py py-mod docutils literal notranslate"><span class="pre">ephypype.commands.neuropycon</span></code>):</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.commands.connectivity.html#ephypype.commands.connectivity" title="ephypype.commands.connectivity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity</span></code></a></p></td>
 <td><p>Compute spectral connectivity</p></td>
@@ -177,7 +176,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.commands.preproc.html#ephypype.commands.preproc" title="ephypype.commands.preproc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preproc</span></code></a></p></td>
 <td><p>Filter and downsample data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.commands.process_pipeline.html#ephypype.commands.process_pipeline" title="ephypype.commands.process_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_pipeline</span></code></a>(nodes, ncpu, plugin, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.commands.process_pipeline.html#ephypype.commands.process_pipeline" title="ephypype.commands.process_pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_pipeline</span></code></a>(nodes, ncpu, plugin, ...)</p></td>
 <td><p>Create main workflow</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.commands.psd.html#ephypype.commands.psd" title="ephypype.commands.psd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">psd</span></code></a></p></td>
@@ -186,20 +185,13 @@
 </tbody>
 </table>
 <p>Utils (<code class="xref py py-mod docutils literal notranslate"><span class="pre">ephypype.nodes</span></code>):</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_iterator</span></code></a>(fields, field_values)</p></td>
 <td><p>Create node to iterate on fields.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_datagrabber</span></code></a>(data_path, template_path, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_datagrabber</span></code></a>(data_path, template_path, ...)</p></td>
 <td><p>Create node to grab data using DataGrabber in Nipype.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/ephypype.nodes.Reference.html#ephypype.nodes.Reference" title="ephypype.nodes.Reference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reference</span></code></a>([matlab_cmd])</p></td>
-<td><p>Description:</p></td>
 </tr>
 </tbody>
 </table>
@@ -217,8 +209,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>

@@ -110,8 +110,6 @@ file and print it
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     {'experiment parameters': {'NJOBS': 1,
@@ -207,7 +205,7 @@ the values in the infosource node
 Ephypype creates for us a pipeline which can be connected to these
 nodes we created. The inverse solution pipeline is implemented by the
 function
-:func:`ephypype.pipelines.preproc_meeg.create_pipeline_source_reconstruction`
+:func:`ephypype.pipelines.create_pipeline_source_reconstruction`
 thus to instantiate the inverse pipeline node, we import it and pass our
 parameters to it.
 The inverse pipeline contains three nodes that wrap the MNE Python functions
@@ -237,8 +235,6 @@ In particular, the three nodes are:
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -309,8 +305,6 @@ To do so, we first write the workflow graph (optional)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -337,19 +331,18 @@ here correspond to how we connected the nodes.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_001.png
-    :alt: plot inverse
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_inverse_001.png
+   :alt: plot inverse
+   :srcset: /auto_examples/images/sphx_glr_plot_inverse_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    (-0.5, 608.5, 498.5, -0.5)
+    (-0.5, 724.5, 498.5, -0.5)
 
 
 
@@ -373,12 +366,10 @@ Finally, we are now ready to execute our workflow.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7effcfe94190>
+    <networkx.classes.digraph.DiGraph object at 0x7f9d30a37c40>
 
 
 
@@ -406,7 +397,7 @@ the Connectivity pipeline.
 
     time_pts = 30
 
-    sc = SceneObj(size=(800, 500), bgcolor=(0, 0, 0))
+    sc = SceneObj(size=(600, 500), bgcolor=(0, 0, 0))
     lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
     rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
     cmap = 'bwr'
@@ -453,9 +444,10 @@ the Connectivity pipeline.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_002.png
-    :alt: plot inverse
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_inverse_002.png
+   :alt: plot inverse
+   :srcset: /auto_examples/images/sphx_glr_plot_inverse_002.png
+   :class: sphx-glr-single-img
 
 
 
@@ -464,28 +456,23 @@ the Connectivity pipeline.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.667 seconds)
+   **Total running time of the script:** ( 0 minutes  10.018 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_inverse.py:
 
+.. only:: html
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: plot_inverse.py <plot_inverse.py>`
 
-     :download:`Download Python source code: plot_inverse.py <plot_inverse.py>`
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_inverse.ipynb <plot_inverse.ipynb>`
+      :download:`Download Jupyter notebook: plot_inverse.ipynb <plot_inverse.ipynb>`
 
 
 .. only:: html

@@ -176,7 +176,7 @@ time_series_files, label_files = get_results(main_workflow.base_dir,
 
 time_pts = 30
 
-sc = SceneObj(size=(800, 500), bgcolor=(0, 0, 0))
+sc = SceneObj(size=(600, 500), bgcolor=(0, 0, 0))
 lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
 rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
 cmap = 'bwr'

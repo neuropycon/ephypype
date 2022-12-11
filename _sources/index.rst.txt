@@ -92,15 +92,9 @@ The ephypype package provides the following **pipelines**:
 Installation
 =============
 
-ephypype works with **python3**
+To install the ephypype package, we recommend you first install MNE python by following the |installation instructions|. 
 
-* mne>0.19
-* nipype
-* h5py
-
-These dependencies are automatically installed during ephypype installation.
-
-We also recommend to install MNE python by following the |installation instructions|.
+The dependencies (mne, nipype, h5py) are automatically installed during ephypype installation.
 
 .. |installation instructions| raw:: html
 
@@ -109,12 +103,28 @@ We also recommend to install MNE python by following the |installation instructi
 
 Install ephypype
 ^^^^^^^^^^^^^^^^
+Then, to install ephypype package, you can use the Pypi version
 
 .. code-block:: bash
 
    $ pip install ephypype
    $ pip install jupyter
     
+or alternatively, you can download from |github| the last version and install it:
+
+.. code-block:: bash
+
+        $ git clone https://github.com/neuropycon/ephypype.git
+        $ cd ephypype
+        $ python setup.py develop
+
+.. |github| raw:: html
+
+   <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a>
+   
+   
+
+.. note:: ephypype works with **python3**
 
 Freesurfer
 ^^^^^^^^^^

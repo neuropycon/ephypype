@@ -166,6 +166,8 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
     xyz = np.genfromtxt(channel_coo_file, dtype=float)
     freq_bands = np.asarray(freq_bands)
     clim = (psds.min(), psds.max())
+    cmap = 'cool'
+    txtcolor = 'white'
 
     # Find indices of frequencies :
     idx_fplt = np.abs((freqs.reshape(1, 1, -1) -
@@ -176,10 +178,10 @@ for psd_file, channel_coo_file in zip(psd_files, channel_coo_files):
     for num, (fb, fbn, psd, rx) in enumerate(zip(freq_bands, freq_band_names,
                                                  psdf, radius)):
         s_obj = SourceObj('s', xyz, data=psd, radius_min=rx[0], radius_max=rx[1])  # noqa
-        s_obj.color_sources(data=psd, cmap='cool', clim=clim)
+        s_obj.color_sources(data=psd, cmap=cmap, clim=clim)
         sc.add_to_subplot(s_obj, col=num, title=str(fb) + ' - ' + fbn,
-                          title_color='white', rotate='top', zoom=.6)
-    cbar = ColorbarObj(s_obj, txtcolor='white', cblabel='PSD', txtsz=15,
+                          title_color=txtcolor, rotate='top', zoom=.6)
+    cbar = ColorbarObj(s_obj, txtcolor=txtcolor, cblabel='PSD', txtsz=15,
                        cbtxtsz=20)
     sc.add_to_subplot(cbar, col=len(freq_bands), width_max=200)
 

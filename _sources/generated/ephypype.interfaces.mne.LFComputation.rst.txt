@@ -1,0 +1,36 @@
+﻿ephypype.interfaces.mne.LFComputation
+=====================================
+
+.. currentmodule:: ephypype.interfaces.mne
+
+.. autoclass:: LFComputation
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~LFComputation.__init__
+      ~LFComputation.aggregate_outputs
+      ~LFComputation.help
+      ~LFComputation.load_inputs_from_json
+      ~LFComputation.run
+      ~LFComputation.save_inputs_to_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~LFComputation.always_run
+      ~LFComputation.can_resume
+      ~LFComputation.resource_monitor
+      ~LFComputation.version
+   
+   

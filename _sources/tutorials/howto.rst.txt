@@ -70,19 +70,19 @@ the list of subjects and sessions, ...)
 
     
 Now we define some variables specific for the pipelines we use (frequency band of interest, method to compute the PSD, ...).
-in a :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params_power.json>` file and load it in the script. 
+in a :download:`json <https://github.com/neuropycon/ephypype/blob/master/examples/params.json>` file and load it in the script. 
 
 .. code-block:: python
     :emphasize-lines: 1
 
-    data = json.load(open("params_power.json"))
+    params = json.load(open("params.json"))
 
-    freq_band_names = data['freq_band_names']
-    freq_bands = data['freq_bands']
-    is_epoched = data['is_epoched']
-    fmin = data['fmin']
-    fmax = data['fmax']
-    power_method = data['method']
+    freq_band_names = params["power"]['freq_band_names']
+    freq_bands = params["power"]['freq_bands']
+    is_epoched = params["power"]['is_epoched']
+    fmin = params["power"]['fmin']
+    fmax = params["power"]['fmax']
+    power_method = params["power"]['method']
 
 Specify Nodes
 -------------
@@ -176,7 +176,7 @@ Each pipeline provided by NeuroPycon requires two different kind of inputs:
 * inputs of the pipeline
 * **inputnode**: these particular inputs are defined after the creation of the pipeline; an inputnode of a pipeline is defined by an output of a previous Node
 
-For example, looking at the definition of `create_pipeline_power <https://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power>`_  module
+For example, looking at the definition of `create_pipeline_power <https://neuropycon.github.io/ephypype/generated/ephypype.pipelines.create_pipeline_power.html#ephypype.pipelines.create_pipeline_power>`_
 ``main_path``, ``freq_bands`` are inputs of the pipeline while ``fif_file`` is an inputnode. In the next section :ref:`workflow` we'll see how to specify this inputnode.
 
 To create the pipeline node we pass the input to the ``create_pipeline_power`` function:
@@ -215,6 +215,7 @@ Then,  we connect the nodes two at a time. First, we connect the two outputs (su
 So, these two nodes taken together can grab data.
 
 .. code-block:: python
+   :emphasize-lines: 1-2
       
     main_workflow.connect(infosource, 'subject_id', datasource, 'subject_id')
     main_workflow.connect(infosource, 'session_id', datasource, 'session_id')

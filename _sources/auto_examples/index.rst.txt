@@ -1,9 +1,5 @@
 :orphan:
 
-
-
-.. _sphx_glr_auto_examples:
-
 .. _general_examples:
 
 Examples Gallery
@@ -18,14 +14,127 @@ Examples Gallery
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="The **input** data should be a time series matrix in **npy** or **mat** format.">
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_connectivity_thumb.png
-     :alt: Compute connectivity on sensor space
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_connectivity_thumb.png
+    :alt: Compute connectivity on sensor space
 
-     :ref:`sphx_glr_auto_examples_plot_connectivity.py`
+  :ref:`sphx_glr_auto_examples_plot_connectivity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute connectivity on sensor space</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Compute inverse solution">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_inverse_thumb.png
+    :alt: Compute inverse solution
+
+  :ref:`sphx_glr_auto_examples_plot_inverse.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute inverse solution</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Compute LCMV inverse solution">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_inverse_LCMV_thumb.png
+    :alt: Compute LCMV inverse solution
+
+  :ref:`sphx_glr_auto_examples_plot_inverse_LCMV.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute LCMV inverse solution</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The input data shoud be in **fif** or **numpy** format.">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_power_thumb.png
+    :alt: Compute PSD on sensor space
+
+  :ref:`sphx_glr_auto_examples_plot_power.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Compute PSD on sensor space</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The **input** data can be in **ds** or **fif** format.">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_plot_preprocessing_thumb.png
+    :alt: Preprocess MEG data
+
+  :ref:`sphx_glr_auto_examples_plot_preprocessing.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Preprocess MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_IF_thumb.png
+    :alt: Apply bipolar montage to depth electrodes
+
+  :ref:`sphx_glr_auto_examples_run_fieldtrip_IF.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Apply bipolar montage to depth electrodes</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
+
+.. only:: html
+
+  .. image:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_wf_thumb.png
+    :alt: Time-frequency analysis on sEEG data
+
+  :ref:`sphx_glr_auto_examples_run_fieldtrip_wf.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Time-frequency analysis on sEEG data</div>
+    </div>
+
 
 .. raw:: html
 
@@ -36,153 +145,25 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_connectivity
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Compute inverse solution">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_inverse_thumb.png
-     :alt: Compute inverse solution
-
-     :ref:`sphx_glr_auto_examples_plot_inverse.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
    /auto_examples/plot_inverse
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Compute LCMV inverse solution">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_inverse_LCMV_thumb.png
-     :alt: Compute LCMV inverse solution
-
-     :ref:`sphx_glr_auto_examples_plot_inverse_LCMV.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
    /auto_examples/plot_inverse_LCMV
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The input data shoud be in **fif** or **numpy** format.">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_power_thumb.png
-     :alt: Compute PSD on sensor space
-
-     :ref:`sphx_glr_auto_examples_plot_power.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
    /auto_examples/plot_power
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The **input** data can be in **ds** or **fif** format.">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_preprocessing_thumb.png
-     :alt: Preprocess MEG data
-
-     :ref:`sphx_glr_auto_examples_plot_preprocessing.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
    /auto_examples/plot_preprocessing
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
-
-.. only:: html
-
- .. figure:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_IF_thumb.png
-     :alt: Apply bipolar montage to depth electrodes
-
-     :ref:`sphx_glr_auto_examples_run_fieldtrip_IF.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
    /auto_examples/run_fieldtrip_IF
+   /auto_examples/run_fieldtrip_wf
 
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="    &lt;a href=&quot;http://www.fieldtriptoolbox.org/&quot; target=&quot;_blank&quot;&gt;FieldTrip&lt;/a&gt;">
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_run_fieldtrip_wf_thumb.png
-     :alt: Time-frequency analysis on sEEG data
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
 
-     :ref:`sphx_glr_auto_examples_run_fieldtrip_wf.py`
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-.. raw:: html
+      :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
 
-    </div>
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-.. toctree::
-   :hidden:
-
-   /auto_examples/run_fieldtrip_wf
-.. raw:: html
-
-    <div class="sphx-glr-clear"></div>
-
-
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-    :download:`Download all examples in Python source code: auto_examples_python.zip </auto_examples/auto_examples_python.zip>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
+      :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip </auto_examples/auto_examples_jupyter.zip>`
 
 
 .. only:: html

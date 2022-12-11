@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>ephypype.interfaces.mne.LFComputation &#8212; ephypype 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../auto_workshop/index.html">Workshop</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">ephypype.interfaces.mne.LFComputation</a><ul>
+<li><a class="reference internal" href="#ephypype.interfaces.mne.LFComputation"><code class="docutils literal notranslate"><span class="pre">LFComputation</span></code></a><ul>
+<li><a class="reference internal" href="#ephypype.interfaces.mne.LFComputation.__init__"><code class="docutils literal notranslate"><span class="pre">LFComputation.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../_sources/generated/ephypype.interfaces.mne.LFComputation.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <section id="ephypype-interfaces-mne-lfcomputation">
+<h1>ephypype.interfaces.mne.LFComputation<a class="headerlink" href="#ephypype-interfaces-mne-lfcomputation" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="ephypype.interfaces.mne.LFComputation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ephypype.interfaces.mne.</span></span><span class="sig-name descname"><span class="pre">LFComputation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_monitor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ephypype/interfaces/mne/LF_computation.html#LFComputation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ephypype.interfaces.mne.LFComputation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the Lead Field matrix using MNE Python functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sbj_id</strong><span class="classifier">str</span></dt><dd><p>subject name</p>
+</dd>
+<dt><strong>subjects_dir</strong><span class="classifier">str</span></dt><dd><p>Freesurfer directory</p>
+</dd>
+<dt><strong>raw_filename</strong><span class="classifier">str</span></dt><dd><p>filename of the raw data</p>
+</dd>
+<dt><strong>spacing</strong><span class="classifier">str (default ‘ico-5’)</span></dt><dd><p>spacing to use to setup a source space</p>
+</dd>
+<dt><strong>aseg: bool (defualt False)</strong></dt><dd><p>if True a mixed source space will be created and the sub cortical
+regions defined in aseg_labels will be added to the source space</p>
+</dd>
+<dt><strong>aseg_labels: list (default [])</strong></dt><dd><p>list of substructures we want to include in the mixed source space</p>
+</dd>
+<dt><strong>save_mixed_src_space: bool (default False)</strong></dt><dd><p>if True save the mixed src space</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fwd_filename</strong><span class="classifier">str</span></dt><dd><p>Filename of the Lead Field matrix</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ephypype.interfaces.mne.LFComputation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_monitor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ephypype.interfaces.mne.LFComputation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses must implement __init__</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ephypype.interfaces.mne.LFComputation.__init__" title="ephypype.interfaces.mne.LFComputation.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([from_file, resource_monitor, ...])</p></td>
+<td><p>Subclasses must implement __init__</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_outputs</span></code>([runtime, needed_outputs])</p></td>
+<td><p>Collate expected outputs and apply output traits validation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">help</span></code>([returnhelp])</p></td>
+<td><p>Prints class help</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_inputs_from_json</span></code>(json_file[, overwrite])</p></td>
+<td><p>A convenient way to load pre-set inputs from a JSON file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([cwd, ignore_exception])</p></td>
+<td><p>Execute this interface.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_inputs_to_json</span></code>(json_file)</p></td>
+<td><p>A convenient way to save current inputs to a JSON file.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">always_run</span></code></p></td>
+<td><p>Should the interface be always run even if the inputs were not changed? Only applies to interfaces being run within a workflow context.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">can_resume</span></code></p></td>
+<td><p>Defines if the interface can reuse partial results after interruption.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resource_monitor</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">version</span></code></p></td>
+<td><p>interfaces should implement a version property</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

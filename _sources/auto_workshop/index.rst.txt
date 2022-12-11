@@ -1,18 +1,14 @@
 :orphan:
 
 
-
-.. _sphx_glr_auto_workshop:
-
-.. _general_workshop:
-
-
-Workshop at |CuttingEEG|
-========================
+Workshop
+========
 
 In this hands-on session we will describe the philosophy, architecture and functionalities of NeuroPycon and provide illustrative examples through interactive notebooks.
 
-We will show how to use NeuroPycon pipeline to analyze EEG (MEG) data with a focus on automatic artifact removal by ICA, ERP components computation and (if times allows) source reconstruction from MEG data.
+We will show how to use NeuroPycon pipeline to analyze MEG data (:ref:`sphx_glr_auto_workshop_01_meg`) with a focus on automatic artifact removal by ICA and and source reconstruction.
+
+In the past edition of |CuttingEEG| we showed how to use NeuroPycon pipeline to analyze EEG data (:ref:`sphx_glr_auto_workshop_02_eeg`) with a focus on automatic artifact removal by ICA and and ERP components computation.
 
 Basic knowledge of (or a keen interest in) **Python** is required. Furthermore, we suggest the following lectures:
 
@@ -36,24 +32,25 @@ Basic knowledge of (or a keen interest in) **Python** is required. Furthermore, 
 
    <a href="https://www.sciencedirect.com/science/article/pii/S1053811920305061" target="_blank">Meunier, Pascarella</a>
 
-   
+
+
 
 Installation
 ------------
 We recommend to install neuropycon and the related software (MNE-python, Freesurfer) before the workshop. 
 
-First, we recommend to install MNE python by following the |installation instructions|. The last version of MNE-python relies on python 3.9.
+First, we recommend to install MNE python by following the |installation instructions|. The last version of MNE-python relies on python 3.10.
 
 .. |installation instructions| raw:: html
 
    <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>
    
 
-Alternativaly, you can create an enviroment by Anaconda and install the packages contained in :download:`requirements <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/requirements.txt>` file, e.g.
+Alternativaly, you can create an enviroment by Anaconda or Mamba and install the packages contained in :download:`requirements <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/requirements.txt>` file, e.g.
 
 .. code-block:: bash
 
-        $ conda create -n cuttingeeg python=3.7
+        $ conda create -n practicalmeeg python=3.10
         $ pip install -r requirements.txt
         $ pip install jupyter
 
@@ -62,13 +59,14 @@ Alternativaly, you can create an enviroment by Anaconda and install the packages
 Install ephypype
 ^^^^^^^^^^^^^^^^
 
-To install ephypype package, you can use the Pypi version
+.. comment
+    To install ephypype package, you can use the Pypi version
 
-.. code-block:: bash
+    .. code-block:: bash
 
-        $ pip install ephypype==0.3.dev0
+            $ pip install ephypype==0.3.dev0
 
-You can also download from |github| the last version and install it:
+To install ephypype package, you can download from |github| the last version and install it:
 
 .. code-block:: bash
 
@@ -101,7 +99,8 @@ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall
 
 https://surfer.nmr.mgh.harvard.edu/fswiki/LinuxInstall
    
-   
+
+
 Notebooks
 ---------
    
@@ -115,15 +114,117 @@ Notebooks
 
 
 
+
 .. raw:: html
 
-    <div class="sphx-glr-clear"></div>
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    </div>
 
 
 
-.. _sphx_glr_auto_workshop_eeg:
 
-.. _erpcore:
+FACE dataset
+^^^^^^^^^^^^
+
+These examples demonstrate how to process 1 participant of the |FACE| dataset from |Wakeman_Henson|. The data consist of simultaneous MEG/EEG recordings
+from 19 healthy participants performing a visual recognition task. Subjects were presented images of famous, unfamiliar and scrambled faces.
+Each subject participated in 6 runs, each 7.5 min in duration.
+
+.. |FACE| raw:: html
+        
+        <a href="https://openneuro.org/datasets/ds000117/versions/1.0.4" target="_blank">FACE</a>
+
+.. |Wakeman_Henson| raw:: html
+        
+        <a href="https://www.nature.com/articles/sdata20151" target="_blank">Wakeman and
+ Henson (2015)</a>
+
+Here, we focus only on MEG data and use :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` to preprocess the MEG raw data and :func:`~ephypype.pipelines.create_pipeline_source_reconstruction` to perform source reconstruction of time-locked event-related fields.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This workflow runs the `Nipype &lt;http://nipype.readthedocs.io/en/latest/#&gt;`_ Interface wrapping ...">
+
+.. only:: html
+
+  .. image:: /auto_workshop/01_meg/images/thumb/sphx_glr_01-run-smri_reconall_thumb.png
+    :alt: 01. Freesurfer anatomical pipeline
+
+  :ref:`sphx_glr_auto_workshop_01_meg_01-run-smri_reconall.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">01. Freesurfer anatomical pipeline</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="02. Preprocess MEG data">
+
+.. only:: html
+
+  .. image:: /auto_workshop/01_meg/images/thumb/sphx_glr_plot_01_meg_preprocessing_thumb.png
+    :alt: 02. Preprocess MEG data
+
+  :ref:`sphx_glr_auto_workshop_01_meg_plot_01_meg_preprocessing.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">02. Preprocess MEG data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="The first node of the workflow (:ref:`concat_event`) **extracts the events** from stimulus chan...">
+
+.. only:: html
+
+  .. image:: /auto_workshop/01_meg/images/thumb/sphx_glr_plot_02_events_inverse_stc_thumb.png
+    :alt: 03. Compute inverse solution
+
+  :ref:`sphx_glr_auto_workshop_01_meg_plot_02_events_inverse_stc.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">03. Compute inverse solution</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Group average of dSPM solutions obtained by plot_events_inverse for the contrast between both t...">
+
+.. only:: html
+
+  .. image:: /auto_workshop/01_meg/images/thumb/sphx_glr_plot_03_stc_thumb.png
+    :alt: 04. Plot contrast
+
+  :ref:`sphx_glr_auto_workshop_01_meg_plot_03_stc.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">04. Plot contrast</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
 
 
 ERP CORE dataset
@@ -143,24 +244,25 @@ These examples demonstrate how to process 1 participant from the |ERP_CORE| data
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP">
 
 .. only:: html
 
- .. figure:: /auto_workshop/eeg/images/thumb/sphx_glr_plot_ERP_thumb.png
-     :alt: 02. Compute ERP
+  .. image:: /auto_workshop/02_eeg/images/thumb/sphx_glr_plot_ERP_thumb.png
+    :alt: 02. Compute ERP
 
-     :ref:`sphx_glr_auto_workshop_eeg_plot_ERP.py`
+  :ref:`sphx_glr_auto_workshop_02_eeg_plot_ERP.py`
 
 .. raw:: html
 
+      <div class="sphx-glr-thumbnail-title">02. Compute ERP</div>
     </div>
 
-
-.. toctree::
-   :hidden:
-
-   /auto_workshop/eeg/plot_ERP
 
 .. raw:: html
 
@@ -168,10 +270,16 @@ These examples demonstrate how to process 1 participant from the |ERP_CORE| data
 
 .. only:: html
 
- .. figure:: /auto_workshop/eeg/images/thumb/sphx_glr_plot_eeg_preprocessing_thumb.png
-     :alt: 01. Preprocess EEG data
+  .. image:: /auto_workshop/02_eeg/images/thumb/sphx_glr_plot_eeg_preprocessing_thumb.png
+    :alt: 01. Preprocess EEG data
 
-     :ref:`sphx_glr_auto_workshop_eeg_plot_eeg_preprocessing.py`
+  :ref:`sphx_glr_auto_workshop_02_eeg_plot_eeg_preprocessing.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">01. Preprocess EEG data</div>
+    </div>
+
 
 .. raw:: html
 
@@ -180,142 +288,23 @@ These examples demonstrate how to process 1 participant from the |ERP_CORE| data
 
 .. toctree::
    :hidden:
+   :includehidden:
 
-   /auto_workshop/eeg/plot_eeg_preprocessing
-.. raw:: html
+   /auto_workshop/01_meg/index.rst
+   /auto_workshop/02_eeg/index.rst
 
-    <div class="sphx-glr-clear"></div>
-
-
-
-.. _sphx_glr_auto_workshop_meg:
-
-.. _facedataset:
-
-
-FACE dataset
-^^^^^^^^^^^^
-
-These examples demonstrate how to process 1 participant of the |FACE| dataset from |Wakeman_Henson|. The data consist of simultaneous MEG/EEG recordings
-from 19 healthy participants performing a visual recognition task. Subjects were presented images of famous, unfamiliar and scrambled faces.
-Each subject participated in 6 runs, each 7.5 min in duration.
-
-.. |FACE| raw:: html
-        
-        <a href="https://openneuro.org/datasets/ds000117/versions/1.0.4" target="_blank">FACE</a>
-
-.. |Wakeman_Henson| raw:: html
-        
-        <a href="https://www.nature.com/articles/sdata20151" target="_blank">Wakeman and Henson (2015)</a>
-
-Here, we focus only on MEG data and use :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` to preprocess the MEG raw data and :func:`~ephypype.pipelines.create_pipeline_source_reconstruction` to perform source reconstruction of time-locked event-related fields.
-
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="The solution of MEG inverse problem requires knowledge of the lead field matrix. A cortical seg...">
 
 .. only:: html
 
- .. figure:: /auto_workshop/meg/images/thumb/sphx_glr_01-run-smri_reconall_thumb.png
-     :alt: 01. Freesurfer anatomical pipeline
+  .. container:: sphx-glr-footer sphx-glr-footer-gallery
 
-     :ref:`sphx_glr_auto_workshop_meg_01-run-smri_reconall.py`
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-.. raw:: html
+      :download:`Download all examples in Python source code: auto_workshop_python.zip </auto_workshop/auto_workshop_python.zip>`
 
-    </div>
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-.. toctree::
-   :hidden:
-
-   /auto_workshop/meg/01-run-smri_reconall
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="02. Preprocess MEG data">
-
-.. only:: html
-
- .. figure:: /auto_workshop/meg/images/thumb/sphx_glr_02-plot_meg_preprocessing_thumb.png
-     :alt: 02. Preprocess MEG data
-
-     :ref:`sphx_glr_auto_workshop_meg_02-plot_meg_preprocessing.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_workshop/meg/02-plot_meg_preprocessing
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="In the inv_solution_node the raw data are epoched accordingly to events specified in json file ...">
-
-.. only:: html
-
- .. figure:: /auto_workshop/meg/images/thumb/sphx_glr_03-plot_events_inverse_stc_thumb.png
-     :alt: 03. Compute inverse solution
-
-     :ref:`sphx_glr_auto_workshop_meg_03-plot_events_inverse_stc.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_workshop/meg/03-plot_events_inverse_stc
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Group average of dSPM solutions obtained by plot_events_inverse for the contrast between both t...">
-
-.. only:: html
-
- .. figure:: /auto_workshop/meg/images/thumb/sphx_glr_04-plot_stc_thumb.png
-     :alt: 04. Plot contrast
-
-     :ref:`sphx_glr_auto_workshop_meg_04-plot_stc.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /auto_workshop/meg/04-plot_stc
-.. raw:: html
-
-    <div class="sphx-glr-clear"></div>
-
-
-
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
-
-
-  .. container:: sphx-glr-download sphx-glr-download-python
-
-    :download:`Download all examples in Python source code: auto_workshop_python.zip </auto_workshop/auto_workshop_python.zip>`
-
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-    :download:`Download all examples in Jupyter notebooks: auto_workshop_jupyter.zip </auto_workshop/auto_workshop_jupyter.zip>`
+      :download:`Download all examples in Jupyter notebooks: auto_workshop_jupyter.zip </auto_workshop/auto_workshop_jupyter.zip>`
 
 
 .. only:: html

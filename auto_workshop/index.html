@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Workshop at CuttingEEG &#8212; ephypype 0.2 documentation</title>
+    <title>Workshop &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -73,7 +75,7 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a></a><ul>
+<li><a class="reference internal" href="#">Workshop</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
 <li><a class="reference internal" href="#install-ephypype">Install ephypype</a></li>
 </ul>
@@ -83,12 +85,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#notebooks">Notebooks</a><ul>
-<li><a class="reference internal" href="#erp-core-dataset">ERP CORE dataset</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#face-dataset">FACE dataset</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#face-dataset">FACE dataset</a></li>
+<li><a class="reference internal" href="#erp-core-dataset">ERP CORE dataset</a></li>
 </ul>
 </li>
 </ul>
@@ -128,10 +126,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <section id="workshop-at-cuttingeeg">
-<span id="general-workshop"></span><span id="sphx-glr-auto-workshop"></span><h1>Workshop at <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a><a class="headerlink" href="#workshop-at-cuttingeeg" title="Permalink to this headline">¶</a></h1>
+  <section id="workshop">
+<h1>Workshop<a class="headerlink" href="#workshop" title="Permalink to this heading">¶</a></h1>
 <p>In this hands-on session we will describe the philosophy, architecture and functionalities of NeuroPycon and provide illustrative examples through interactive notebooks.</p>
-<p>We will show how to use NeuroPycon pipeline to analyze EEG (MEG) data with a focus on automatic artifact removal by ICA, ERP components computation and (if times allows) source reconstruction from MEG data.</p>
+<p>We will show how to use NeuroPycon pipeline to analyze MEG data (<a class="reference internal" href="01_meg/index.html#sphx-glr-auto-workshop-01-meg"><span class="std std-ref">FACE dataset</span></a>) with a focus on automatic artifact removal by ICA and and source reconstruction.</p>
+<p>In the past edition of <a href="https://cuttingeeg2021.org/" target="_blank">CuttingEEG</a> we showed how to use NeuroPycon pipeline to analyze EEG data (<a class="reference internal" href="02_eeg/index.html#sphx-glr-auto-workshop-02-eeg"><span class="std std-ref">ERP CORE dataset</span></a>) with a focus on automatic artifact removal by ICA and and ERP components computation.</p>
 <p>Basic knowledge of (or a keen interest in) <strong>Python</strong> is required. Furthermore, we suggest the following lectures:</p>
 <ul class="simple">
 <li><p><a href="https://www.frontiersin.org/articles/10.3389/fninf.2011.00013/full" target="_blank">Gorgolewski</a> et al. (2011) Front. Neuroinform. 5:13</p></li>
@@ -139,22 +138,18 @@
 <li><p><a href="https://www.sciencedirect.com/science/article/pii/S1053811920305061" target="_blank">Meunier, Pascarella</a> et al. (2020), Neuroimage</p></li>
 </ul>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
 <p>We recommend to install neuropycon and the related software (MNE-python, Freesurfer) before the workshop.</p>
-<p>First, we recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>. The last version of MNE-python relies on python 3.9.</p>
-<p>Alternativaly, you can create an enviroment by Anaconda and install the packages contained in <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/requirements.txt"><code class="xref download docutils literal notranslate"><span class="pre">requirements</span></code></a> file, e.g.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -n cuttingeeg <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.7
+<p>First, we recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>. The last version of MNE-python relies on python 3.10.</p>
+<p>Alternativaly, you can create an enviroment by Anaconda or Mamba and install the packages contained in <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/requirements.txt"><code class="xref download docutils literal notranslate"><span class="pre">requirements</span></code></a> file, e.g.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda create -n practicalmeeg <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10
 $ pip install -r requirements.txt
 $ pip install jupyter
 </pre></div>
 </div>
 <section id="install-ephypype">
-<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this headline">¶</a></h3>
-<p>To install ephypype package, you can use the Pypi version</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install <span class="nv">ephypype</span><span class="o">==</span><span class="m">0</span>.3.dev0
-</pre></div>
-</div>
-<p>You can also download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
+<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this heading">¶</a></h3>
+<p>To install ephypype package, you can download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/neuropycon/ephypype.git
 $ <span class="nb">cd</span> ephypype
 $ python setup.py develop
@@ -163,10 +158,10 @@ $ python setup.py develop
 </section>
 </section>
 <section id="sample-data">
-<h2>Sample data<a class="headerlink" href="#sample-data" title="Permalink to this headline">¶</a></h2>
+<h2>Sample data<a class="headerlink" href="#sample-data" title="Permalink to this heading">¶</a></h2>
 <p>During the workshop we use some sample datasets that will be shared on <a href="https://zenodo.org/communities/cuttingeeg" target="_blank">zenodo</a></p>
 <section id="freesurfer">
-<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this headline">¶</a></h3>
+<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Download Freesurfer software:</p></li>
 </ol>
@@ -178,74 +173,46 @@ $ python setup.py develop
 </section>
 </section>
 <section id="notebooks">
-<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this headline">¶</a></h2>
-<div class="contents local topic" id="contents">
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this heading">¶</a></h2>
+<nav class="contents local" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#erp-core-dataset" id="id7">ERP CORE dataset</a></p></li>
-<li><p><a class="reference internal" href="#face-dataset" id="id8">FACE dataset</a></p></li>
+<li><p><a class="reference internal" href="#face-dataset" id="id1">FACE dataset</a></p></li>
+<li><p><a class="reference internal" href="#erp-core-dataset" id="id2">ERP CORE dataset</a></p></li>
 </ul>
-</div>
-<div class="sphx-glr-clear"></div><section id="erp-core-dataset">
-<span id="erpcore"></span><span id="sphx-glr-auto-workshop-eeg"></span><h3><a class="toc-backref" href="#id7">ERP CORE dataset</a><a class="headerlink" href="#erp-core-dataset" title="Permalink to this headline">¶</a></h3>
-<p>These examples demonstrate how to process 1 participant from the <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a> dataset. It shows how to obtain N170 component from a face perception task by <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a> pipelines.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP"><figure class="align-default" id="id1">
-<img alt="02. Compute ERP" src="../_images/sphx_glr_plot_ERP_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="eeg/plot_ERP.html#sphx-glr-auto-workshop-eeg-plot-erp-py"><span class="std std-ref">02. Compute ERP</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="01. Preprocess EEG data"><figure class="align-default" id="id2">
-<img alt="01. Preprocess EEG data" src="../_images/sphx_glr_plot_eeg_preprocessing_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="eeg/plot_eeg_preprocessing.html#sphx-glr-auto-workshop-eeg-plot-eeg-preprocessing-py"><span class="std std-ref">01. Preprocess EEG data</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-clear"></div></section>
-<section id="face-dataset">
-<span id="facedataset"></span><span id="sphx-glr-auto-workshop-meg"></span><h3><a class="toc-backref" href="#id8">FACE dataset</a><a class="headerlink" href="#face-dataset" title="Permalink to this headline">¶</a></h3>
+</nav>
+<div class="sphx-glr-thumbnails"></div><section id="face-dataset">
+<h3><a class="toc-backref" href="#id1" role="doc-backlink">FACE dataset</a><a class="headerlink" href="#face-dataset" title="Permalink to this heading">¶</a></h3>
 <p>These examples demonstrate how to process 1 participant of the <a href="https://openneuro.org/datasets/ds000117/versions/1.0.4" target="_blank">FACE</a> dataset from        <a href="https://www.nature.com/articles/sdata20151" target="_blank">Wakeman and
 Henson (2015)</a>. The data consist of simultaneous MEG/EEG recordings
 from 19 healthy participants performing a visual recognition task. Subjects were presented images of famous, unfamiliar and scrambled faces.
 Each subject participated in 6 runs, each 7.5 min in duration.</p>
 <p>Here, we focus only on MEG data and use <a class="reference internal" href="../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_pipeline_preproc_meeg()</span></code></a> to preprocess the MEG raw data and <a class="reference internal" href="../generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_pipeline_source_reconstruction()</span></code></a> to perform source reconstruction of time-locked event-related fields.</p>
-<div class="sphx-glr-thumbcontainer" tooltip="The solution of MEG inverse problem requires knowledge of the lead field matrix. A cortical seg..."><figure class="align-default" id="id3">
-<img alt="01. Freesurfer anatomical pipeline" src="../_images/sphx_glr_01-run-smri_reconall_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="meg/01-run-smri_reconall.html#sphx-glr-auto-workshop-meg-01-run-smri-reconall-py"><span class="std std-ref">01. Freesurfer anatomical pipeline</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This workflow runs the `Nipype &lt;http://nipype.readthedocs.io/en/latest/#&gt;`_ Interface wrapping ..."><img alt="01. Freesurfer anatomical pipeline" src="../_images/sphx_glr_01-run-smri_reconall_thumb.png" />
+<p><a class="reference internal" href="01_meg/01-run-smri_reconall.html#sphx-glr-auto-workshop-01-meg-01-run-smri-reconall-py"><span class="std std-ref">01. Freesurfer anatomical pipeline</span></a></p>
+  <div class="sphx-glr-thumbnail-title">01. Freesurfer anatomical pipeline</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="02. Preprocess MEG data"><img alt="02. Preprocess MEG data" src="../_images/sphx_glr_plot_01_meg_preprocessing_thumb.png" />
+<p><a class="reference internal" href="01_meg/plot_01_meg_preprocessing.html#sphx-glr-auto-workshop-01-meg-plot-01-meg-preprocessing-py"><span class="std std-ref">02. Preprocess MEG data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">02. Preprocess MEG data</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="The first node of the workflow (:ref:`concat_event`) **extracts the events** from stimulus chan..."><img alt="03. Compute inverse solution" src="../_images/sphx_glr_plot_02_events_inverse_stc_thumb.png" />
+<p><a class="reference internal" href="01_meg/plot_02_events_inverse_stc.html#sphx-glr-auto-workshop-01-meg-plot-02-events-inverse-stc-py"><span class="std std-ref">03. Compute inverse solution</span></a></p>
+  <div class="sphx-glr-thumbnail-title">03. Compute inverse solution</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Group average of dSPM solutions obtained by plot_events_inverse for the contrast between both t..."><img alt="04. Plot contrast" src="../_images/sphx_glr_plot_03_stc_thumb.png" />
+<p><a class="reference internal" href="01_meg/plot_03_stc.html#sphx-glr-auto-workshop-01-meg-plot-03-stc-py"><span class="std std-ref">04. Plot contrast</span></a></p>
+  <div class="sphx-glr-thumbnail-title">04. Plot contrast</div>
+</div></div></section>
+<section id="erp-core-dataset">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">ERP CORE dataset</a><a class="headerlink" href="#erp-core-dataset" title="Permalink to this heading">¶</a></h3>
+<p>These examples demonstrate how to process 1 participant from the <a href="https://erpinfo.org/erp-core" target="_blank">ERP CORE</a> dataset. It shows how to obtain N170 component from a face perception task by <a href="https://neuropycon.github.io/ephypype/index.html" target="_blank">NeuroPycon</a> pipelines.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="02. Compute ERP"><img alt="02. Compute ERP" src="../_images/sphx_glr_plot_ERP_thumb.png" />
+<p><a class="reference internal" href="02_eeg/plot_ERP.html#sphx-glr-auto-workshop-02-eeg-plot-erp-py"><span class="std std-ref">02. Compute ERP</span></a></p>
+  <div class="sphx-glr-thumbnail-title">02. Compute ERP</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="01. Preprocess EEG data"><img alt="01. Preprocess EEG data" src="../_images/sphx_glr_plot_eeg_preprocessing_thumb.png" />
+<p><a class="reference internal" href="02_eeg/plot_eeg_preprocessing.html#sphx-glr-auto-workshop-02-eeg-plot-eeg-preprocessing-py"><span class="std std-ref">01. Preprocess EEG data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">01. Preprocess EEG data</div>
+</div></div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="02. Preprocess MEG data"><figure class="align-default" id="id4">
-<img alt="02. Preprocess MEG data" src="../_images/sphx_glr_02-plot_meg_preprocessing_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="meg/02-plot_meg_preprocessing.html#sphx-glr-auto-workshop-meg-02-plot-meg-preprocessing-py"><span class="std std-ref">02. Preprocess MEG data</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="In the inv_solution_node the raw data are epoched accordingly to events specified in json file ..."><figure class="align-default" id="id5">
-<img alt="03. Compute inverse solution" src="../_images/sphx_glr_03-plot_events_inverse_stc_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="meg/03-plot_events_inverse_stc.html#sphx-glr-auto-workshop-meg-03-plot-events-inverse-stc-py"><span class="std std-ref">03. Compute inverse solution</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="Group average of dSPM solutions obtained by plot_events_inverse for the contrast between both t..."><figure class="align-default" id="id6">
-<img alt="04. Plot contrast" src="../_images/sphx_glr_04-plot_stc_thumb.png" />
-<figcaption>
-<p><span class="caption-text"><a class="reference internal" href="meg/04-plot_stc.html#sphx-glr-auto-workshop-meg-04-plot-stc-py"><span class="std std-ref">04. Plot contrast</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</figcaption>
-</figure>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/699892c65b566abb918af588d621cdbd/auto_workshop_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_workshop_python.zip</span></code></a></p>
 </div>
@@ -270,8 +237,8 @@ Each subject participated in 6 runs, each 7.5 min in duration.</p>
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>

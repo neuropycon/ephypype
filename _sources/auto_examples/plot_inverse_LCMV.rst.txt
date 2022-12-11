@@ -111,8 +111,6 @@ file and print it
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     {'experiment parameters': {'NJOBS': 1,
@@ -239,8 +237,6 @@ In particular, the three nodes are:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     ******************** {} *noise*.ds
@@ -310,8 +306,6 @@ To do so, we first write the workflow graph (optional)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -338,19 +332,18 @@ here correspond to how we connected the nodes.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_001.png
-    :alt: plot inverse LCMV
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_001.png
+   :alt: plot inverse LCMV
+   :srcset: /auto_examples/images/sphx_glr_plot_inverse_LCMV_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    (-0.5, 608.5, 498.5, -0.5)
+    (-0.5, 724.5, 498.5, -0.5)
 
 
 
@@ -374,12 +367,10 @@ Finally, we are now ready to execute our workflow.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7effca85a510>
+    <networkx.classes.digraph.DiGraph object at 0x7f9d1e029270>
 
 
 
@@ -407,7 +398,7 @@ the Connectivity pipeline.
 
     time_pts = 30
 
-    sc = SceneObj(size=(800, 500), bgcolor=(0, 0, 0))
+    sc = SceneObj(size=(600, 500), bgcolor=(0, 0, 0))
     lh_file = op.join(subjects_dir, 'fsaverage', 'label/lh.aparc.annot')
     rh_file = op.join(subjects_dir, 'fsaverage', 'label/rh.aparc.annot')
     cmap = 'bwr'
@@ -454,9 +445,10 @@ the Connectivity pipeline.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_002.png
-    :alt: plot inverse LCMV
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_inverse_LCMV_002.png
+   :alt: plot inverse LCMV
+   :srcset: /auto_examples/images/sphx_glr_plot_inverse_LCMV_002.png
+   :class: sphx-glr-single-img
 
 
 
@@ -465,28 +457,23 @@ the Connectivity pipeline.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.309 seconds)
+   **Total running time of the script:** ( 0 minutes  9.789 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_inverse_LCMV.py:
 
+.. only:: html
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: plot_inverse_LCMV.py <plot_inverse_LCMV.py>`
 
-     :download:`Download Python source code: plot_inverse_LCMV.py <plot_inverse_LCMV.py>`
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_inverse_LCMV.ipynb <plot_inverse_LCMV.ipynb>`
+      :download:`Download Jupyter notebook: plot_inverse_LCMV.ipynb <plot_inverse_LCMV.ipynb>`
 
 
 .. only:: html

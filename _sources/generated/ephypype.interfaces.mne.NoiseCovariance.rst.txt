@@ -1,0 +1,36 @@
+﻿ephypype.interfaces.mne.NoiseCovariance
+=======================================
+
+.. currentmodule:: ephypype.interfaces.mne
+
+.. autoclass:: NoiseCovariance
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~NoiseCovariance.__init__
+      ~NoiseCovariance.aggregate_outputs
+      ~NoiseCovariance.help
+      ~NoiseCovariance.load_inputs_from_json
+      ~NoiseCovariance.run
+      ~NoiseCovariance.save_inputs_to_json
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NoiseCovariance.always_run
+      ~NoiseCovariance.can_resume
+      ~NoiseCovariance.resource_monitor
+      ~NoiseCovariance.version
+   
+   

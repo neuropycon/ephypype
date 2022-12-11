@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ephypype.interfaces.mne.LF_computation &#8212; ephypype 0.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.2</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../../../api.html">API</a></li>
+                <li><a href="../../../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../../../../auto_workshop/index.html">Workshop</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for ephypype.interfaces.mne.LF_computation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;LF computation Interface.&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># License: BSD (3-clause)</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">BaseInterface</span><span class="p">,</span> <span class="n">BaseInterfaceInputSpec</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">traits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">TraitedSpec</span>
+
+<span class="kn">from</span> <span class="nn">...compute_fwd_problem</span> <span class="kn">import</span> <span class="n">_create_mixed_source_space</span>
+<span class="kn">from</span> <span class="nn">...compute_fwd_problem</span> <span class="kn">import</span> <span class="n">_create_bem_sol</span><span class="p">,</span> <span class="n">_create_src_space</span>
+<span class="kn">from</span> <span class="nn">...compute_fwd_problem</span> <span class="kn">import</span> <span class="n">_compute_fwd_sol</span>
+<span class="kn">from</span> <span class="nn">...compute_fwd_problem</span> <span class="kn">import</span> <span class="n">_get_fwd_filename</span>
+
+
+<span class="k">class</span> <span class="nc">LFComputationConnInputSpec</span><span class="p">(</span><span class="n">BaseInterfaceInputSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Input specification for LFComputation.&quot;&quot;&quot;</span>
+
+    <span class="n">sbj_id</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;subject id&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">subjects_dir</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;Freesurfer main directory&#39;</span><span class="p">,</span>
+                                 <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">raw_fname</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;raw file name&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">trans_file</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;trans file name&#39;</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;spacing to use to setup a source space&#39;</span><span class="p">,</span>
+                            <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">aseg</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true sub structures will be considered&#39;</span><span class="p">,</span>
+                       <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">aseg_labels</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s1">&#39;list of substructures in the src space&#39;</span><span class="p">,</span>
+                              <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">save_mixed_src_space</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;if true save src space&#39;</span><span class="p">,</span>
+                                       <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">LFComputationConnOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Output specification for LFComputation.&quot;&quot;&quot;</span>
+
+    <span class="n">fwd_filename</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;LF matrix&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LFComputation"><a class="viewcode-back" href="../../../../generated/ephypype.interfaces.mne.LFComputation.html#ephypype.interfaces.mne.LFComputation">[docs]</a><span class="k">class</span> <span class="nc">LFComputation</span><span class="p">(</span><span class="n">BaseInterface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the Lead Field matrix using MNE Python functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sbj_id : str</span>
+<span class="sd">        subject name</span>
+<span class="sd">    subjects_dir : str</span>
+<span class="sd">        Freesurfer directory</span>
+<span class="sd">    raw_filename : str</span>
+<span class="sd">        filename of the raw data</span>
+<span class="sd">    spacing : str (default &#39;ico-5&#39;)</span>
+<span class="sd">        spacing to use to setup a source space</span>
+<span class="sd">    aseg: bool (defualt False)</span>
+<span class="sd">        if True a mixed source space will be created and the sub cortical</span>
+<span class="sd">        regions defined in aseg_labels will be added to the source space</span>
+<span class="sd">    aseg_labels: list (default [])</span>
+<span class="sd">        list of substructures we want to include in the mixed source space</span>
+<span class="sd">    save_mixed_src_space: bool (default False)</span>
+<span class="sd">        if True save the mixed src space</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">       fwd_filename : str</span>
+<span class="sd">           Filename of the Lead Field matrix</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">LFComputationConnInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">LFComputationConnOutputSpec</span>
+
+    <span class="k">def</span> <span class="nf">_run_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">):</span>
+
+        <span class="n">sbj_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">sbj_id</span>
+        <span class="n">subjects_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">subjects_dir</span>
+        <span class="n">raw_fname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">raw_fname</span>
+        <span class="c1"># trans_fname = self.inputs.trans_fname</span>
+        <span class="n">trans_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">trans_file</span>
+        <span class="n">aseg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">aseg</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">spacing</span>
+        <span class="n">aseg_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">aseg_labels</span>
+        <span class="n">save_mixed_src_space</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">save_mixed_src_space</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span> <span class="o">=</span> <span class="n">_get_fwd_filename</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">aseg</span><span class="p">,</span>
+                                              <span class="n">spacing</span><span class="p">)</span>
+
+        <span class="c1"># check if we have just created the fwd matrix</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">op</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** Computing FWD matrix </span><span class="si">{}</span><span class="s1"> ***</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span><span class="p">))</span>
+            <span class="n">bem</span> <span class="o">=</span> <span class="n">_create_bem_sol</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">)</span>  <span class="c1"># bem solution</span>
+
+            <span class="n">src</span> <span class="o">=</span> <span class="n">_create_src_space</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">spacing</span><span class="p">)</span>  <span class="c1"># src space</span>
+
+            <span class="k">if</span> <span class="n">aseg</span><span class="p">:</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="n">_create_mixed_source_space</span><span class="p">(</span><span class="n">subjects_dir</span><span class="p">,</span> <span class="n">sbj_id</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span>
+                                                 <span class="n">aseg_labels</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span>
+                                                 <span class="n">save_mixed_src_space</span><span class="p">)</span>
+
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">src</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;nuse&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">)))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;src space contains </span><span class="si">{}</span><span class="s1"> spaces and </span><span class="si">{}</span><span class="s1"> vertices&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="n">n</span><span class="p">))</span>
+
+            <span class="n">_compute_fwd_sol</span><span class="p">(</span><span class="n">raw_fname</span><span class="p">,</span> <span class="n">trans_file</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">bem</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">*** FWD file </span><span class="si">{}</span><span class="s1"> exists!!!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">runtime</span>
+
+    <span class="k">def</span> <span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;fwd_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fwd_filename</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-10.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

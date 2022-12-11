@@ -111,8 +111,6 @@ file and print it
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     {'experiment parameters': {'NJOBS': 1,
@@ -231,8 +229,6 @@ In particular, the two nodes are:
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
     *** main_path -> /home/pasca/Tools/python/packages/neuropycon/ephypype/examples/sample_BIDS_omega ***
@@ -300,8 +296,6 @@ To do so, we first write the workflow graph (optional)
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
@@ -328,19 +322,18 @@ here correspond to how we connected the nodes.
 
 
 
-.. image:: /auto_examples/images/sphx_glr_plot_preprocessing_001.png
-    :alt: plot preprocessing
-    :class: sphx-glr-single-img
+.. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_001.png
+   :alt: plot preprocessing
+   :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_001.png
+   :class: sphx-glr-single-img
 
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    (-0.5, 277.5, 498.5, -0.5)
+    (-0.5, 336.5, 498.5, -0.5)
 
 
 
@@ -364,12 +357,10 @@ Finally, we are now ready to execute our workflow.
 
 .. rst-class:: sphx-glr-script-out
 
- Out:
-
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7effd2a65290>
+    <networkx.classes.digraph.DiGraph object at 0x7f9d1e12ada0>
 
 
 
@@ -405,44 +396,48 @@ with different flag parameters.
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_002.png
-          :alt: ICA010, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_002.png
+         :alt: ICA010, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_002.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_003.png
-          :alt: ICA017, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_003.png
+         :alt: ICA017, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_003.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
-          :alt: ICA022, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
+         :alt: ICA023, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_004.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
-          :alt: ICA007, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
+         :alt: ICA005, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_005.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
-          :alt: ICA023, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
+         :alt: ICA025, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_006.png
+         :class: sphx-glr-multi-img
 
     *
 
-      .. image:: /auto_examples/images/sphx_glr_plot_preprocessing_007.png
-          :alt: ICA027, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
-          :class: sphx-glr-multi-img
+      .. image-sg:: /auto_examples/images/sphx_glr_plot_preprocessing_007.png
+         :alt: ICA028, Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :srcset: /auto_examples/images/sphx_glr_plot_preprocessing_007.png
+         :class: sphx-glr-multi-img
 
 
 .. rst-class:: sphx-glr-script-out
-
- Out:
 
  .. code-block:: none
 
@@ -460,41 +455,29 @@ with different flag parameters.
     Ready.
         Using multitaper spectrum estimation with 7 DPSS windows
     Not setting metadata
+    30 matching events found
+    No baseline correction applied
+    0 projection items activated
     Not setting metadata
     30 matching events found
     No baseline correction applied
     0 projection items activated
-    0 bad epochs dropped
-    Not setting metadata
     Not setting metadata
     30 matching events found
     No baseline correction applied
     0 projection items activated
-    0 bad epochs dropped
-    Not setting metadata
     Not setting metadata
     30 matching events found
     No baseline correction applied
     0 projection items activated
-    0 bad epochs dropped
-    Not setting metadata
     Not setting metadata
     30 matching events found
     No baseline correction applied
     0 projection items activated
-    0 bad epochs dropped
-    Not setting metadata
     Not setting metadata
     30 matching events found
     No baseline correction applied
     0 projection items activated
-    0 bad epochs dropped
-    Not setting metadata
-    Not setting metadata
-    30 matching events found
-    No baseline correction applied
-    0 projection items activated
-    0 bad epochs dropped
 
 
 
@@ -502,28 +485,23 @@ with different flag parameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  10.775 seconds)
+   **Total running time of the script:** ( 0 minutes  9.197 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:
 
+.. only:: html
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-example
+  .. container:: sphx-glr-footer sphx-glr-footer-example
 
 
+    .. container:: sphx-glr-download sphx-glr-download-python
 
-  .. container:: sphx-glr-download sphx-glr-download-python
+      :download:`Download Python source code: plot_preprocessing.py <plot_preprocessing.py>`
 
-     :download:`Download Python source code: plot_preprocessing.py <plot_preprocessing.py>`
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
-
-  .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-     :download:`Download Jupyter notebook: plot_preprocessing.ipynb <plot_preprocessing.ipynb>`
+      :download:`Download Jupyter notebook: plot_preprocessing.ipynb <plot_preprocessing.ipynb>`
 
 
 .. only:: html

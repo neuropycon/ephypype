@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>Neuropycon &#8212; ephypype 0.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
-<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
-<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
-<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
+<script type="text/javascript" src="_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
 
   </head><body>
 
@@ -118,7 +120,7 @@
     <div class="body col-md-12 content" role="main">
       
   <section id="neuropycon">
-<span id="id1"></span><h1>Neuropycon<a class="headerlink" href="#neuropycon" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Neuropycon<a class="headerlink" href="#neuropycon" title="Permalink to this heading">¶</a></h1>
 <p>Neuropycon is an open-source multi-modal brain data analysis kit which provides <strong>Python-based
 pipelines</strong> for advanced multi-thread processing of fMRI, MEG and EEG data, with a focus on connectivity
 and graph analyses. Neuropycon is based on <a class="reference external" href="http://nipype.readthedocs.io/en/latest/#">Nipype</a>,
@@ -152,7 +154,7 @@ the functionality of the ephypype package  but will be expanded in the future.
 A detailed explanation of the command line interface operation principles and examples can be found <a class="reference internal" href="cli.html#neuropycon-cli"><span class="std std-ref">here</span></a>.</p>
 </section>
 <section id="ephypype">
-<span id="id2"></span><h1>ephypype<a class="headerlink" href="#ephypype" title="Permalink to this headline">¶</a></h1>
+<span id="id2"></span><h1>ephypype<a class="headerlink" href="#ephypype" title="Permalink to this heading">¶</a></h1>
 <p>The ephypype package includes pipelines for electrophysiology analysis.
 It’s based mainly on MNE-Python package, as well as more standard python libraries such as Numpy and Scipy.
 Current implementations allow for</p>
@@ -169,24 +171,29 @@ Current implementations allow for</p>
 <li><p>the <a class="reference internal" href="auto_examples/plot_connectivity.html#spectral-connectivity"><span class="std std-ref">connectivity pipeline</span></a> perform connectivity analysis in sensor or source space</p></li>
 </ul>
 <section id="installation">
-<span id="ephy-install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>ephypype works with <strong>python3</strong></p>
-<ul class="simple">
-<li><p>mne&gt;0.19</p></li>
-<li><p>nipype</p></li>
-<li><p>h5py</p></li>
-</ul>
-<p>These dependencies are automatically installed during ephypype installation.</p>
-<p>We also recommend to install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>.</p>
+<span id="ephy-install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>To install the ephypype package, we recommend you first install MNE python by following the <a href="https://mne.tools/stable/install/index.html" target="_blank">MNE python installation instructions</a>.</p>
+<p>The dependencies (mne, nipype, h5py) are automatically installed during ephypype installation.</p>
 <section id="install-ephypype">
-<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this headline">¶</a></h3>
+<h3>Install ephypype<a class="headerlink" href="#install-ephypype" title="Permalink to this heading">¶</a></h3>
+<p>Then, to install ephypype package, you can use the Pypi version</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install ephypype
 $ pip install jupyter
 </pre></div>
 </div>
+<p>or alternatively, you can download from <a href="https://github.com/neuropycon/ephypype" target="_blank">github</a> the last version and install it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/neuropycon/ephypype.git
+$ <span class="nb">cd</span> ephypype
+$ python setup.py develop
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ephypype works with <strong>python3</strong></p>
+</div>
 </section>
 <section id="freesurfer">
-<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this headline">¶</a></h3>
+<h3>Freesurfer<a class="headerlink" href="#freesurfer" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Download Freesurfer software:</p></li>
 </ol>
@@ -211,8 +218,8 @@ $ pip install jupyter
       
     </p>
     <p>
-        &copy; Copyright 2021, Neuropycon Developers. Last updated on 2021-10-02.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.1.2.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
 </footer>
