@@ -18,7 +18,7 @@ configobj==5.0.6
 cryptography==3.4.7
 cycler==0.10.0
 cytoolz==0.11.0
-dask==2021.9.0
+dask==2021.10.0
 decorator==5.0.9
 Deprecated==1.2.12
 dipy==1.4.1
