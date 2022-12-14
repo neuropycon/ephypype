@@ -68,6 +68,8 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
     variance: float (default 0.95)
         float between 0 and 1: the ICA components will be selected by the
         cumulative percentage of explained variance
+    n_components: int
+            number of ICA components
     ECG_ch_name: str (default '')
         the name of ECG channels
     EoG_ch_name: str (default '')

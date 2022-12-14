@@ -1,16 +1,21 @@
-.. _readme:
+neuropycon
+==========
 
-.. image:: https://travis-ci.org/neuropycon/ephypype.svg?branch=master
-    :target: https://travis-ci.org/neuropycon/ephypype
+   |CircleCI|_  |Codecov|_ |PyPI|_ |zenodo|_
 
-.. image:: https://codecov.io/gh/neuropycon/ephypype/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/neuropycon/ephypype
+.. |CircleCI| image:: https://circleci.com/gh/neuropycon/ephypype.svg?style=svg
+.. _CircleCI: https://circleci.com/gh/neuropycon/ephypype
 
-.. image:: https://circleci.com/gh/neuropycon/ephypype.svg?style=svg
-    :target: https://circleci.com/gh/neuropycon/ephypype
-    
-.. image:: https://zenodo.org/badge/92522975.svg
-   :target: https://zenodo.org/badge/latestdoi/92522975
+.. |zenodo| image:: https://zenodo.org/badge/92522975.svg
+.. _zenodo: https://zenodo.org/badge/latestdoi/92522975
+
+.. |Codecov| image:: https://codecov.io/gh/neuropycon/ephypype/branch/master/graph/badge.svg
+.. _Codecov: https://codecov.io/gh/neuropycon/ephypype
+
+.. |PyPI| image:: https://badge.fury.io/py/ephypype.svg
+.. _PyPI: https://badge.fury.io/py/ephypype
+
+
    
 README
 ******
