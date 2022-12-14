@@ -14,7 +14,9 @@ matrix. A cortical segmentation of the anatomical MRI is necessary to generate
 the source space, where the neural activity will be estimated.
 A `Boundary Element Model <https://mne.tools/stable/auto_tutorials/forward/30_forward.html?highlight=bem>`_
 (BEM) which uses the segmented surfaces is used to
-construct the lead field matrix. To perform the cortical segmentation we
+construct the lead field matrix. 
+
+To perform the **cortical segmentation** we
 provide a workflow based on nipype Interface wrapping the
 `recon-all <https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all>`_ command of
 Freesurfer. The output of :ref:`reconallnode` node is used as input of another node that
@@ -53,7 +55,7 @@ from ephypype.compute_fwd_problem import _create_bem_sol
 # Let us specify the variables that are specific for the data analysis (the
 # main directories where the data are stored, the list of subjects and
 # sessions, ...) and the variable specific for the particular pipeline
-# (MRI path, Freesurfer fir, ...) in a |params.json| file
+# (MRI path, Freesurfer fir, ...) in a |params.json| file.
 #
 # .. |params.json| replace::
 #   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
@@ -89,7 +91,7 @@ print(f'SUBJECTS_DIR {os.environ["SUBJECTS_DIR"]} ')
 # Here we define an input field for ``create_datagrabber`` called
 # ``subject_id``. This is then used to set the template (see %s in the
 # template). We look for .nii files located in the ``ses-mri/anat`` folder of
-# the subject
+# the subject.
 
 infosource = create_iterator(['subject_id'], [subject_ids])
 
@@ -117,7 +119,7 @@ recon_all.inputs.directive = 'all'
 #
 # BEM Node
 # """"""""
-# We define a node wrapping an ephypype function calling
+# Then, we define a node wrapping an ephypype function calling
 # `make_watershed_bem <https://mne.tools/stable/generated/mne.bem.make_watershed_bem.html?highlight=make_watershed_bem#mne.bem.make_watershed_bem>`_
 # of MNE Python package for BEM generation
 bem_generation = pe.Node(interface=Function(
@@ -130,9 +132,9 @@ bem_generation.inputs.subjects_dir = subjects_dir
 #
 # Create workflows
 # ^^^^^^^^^^^^^^^^
-# First, we create a workflow containing the :ref:`reconallnode` ans specify the
+# First, we create a workflow containing the :ref:`reconallnode` and specify the
 # connections between all nodes (``infosource``, ``datasource`` and
-# ``recon_all``)
+# ``recon_all``).
 
 # reconall_workflow will be a node of the main workflow
 reconall_workflow_name = 'segmentation_workflow'
@@ -145,7 +147,7 @@ reconall_workflow.connect(datasource, 'raw_file', recon_all, 'T1_files')
 
 ###############################################################################
 # Then, we create the main workflow where we will connect the output of
-# ``reconall_workflow`` to the input of ``bem_generation`` node
+# ``reconall_workflow`` to the input of ``bem_generation`` node.
 freesurfer_workflow_name = 'FS_workflow'
 main_workflow = pe.Workflow(name=freesurfer_workflow_name)
 main_workflow.base_dir = subjects_dir

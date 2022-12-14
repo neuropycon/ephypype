@@ -6,7 +6,6 @@
         "session_ids": ["01", "02"],
         "data_path": "/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives",
         "data_type": "fif",
-        "conditions": ["famous", "scrambled", "unfamiliar"],
         "subjects_dir": "/home/pasca/Science/workshop/PracticalMEEG/ds000117/FSF",
         "short": false
     },
@@ -37,6 +36,7 @@
             "scrambled/long": 19
             },
         "condition": ["face/famous", "scrambled", "face/unfamiliar"],
+        "new_name_condition": ["famous", "scrambled", "unfamiliar"],
         "tmin": -0.2,
         "tmax": 1.0,
         "trans_fname": "*-trans.fif",

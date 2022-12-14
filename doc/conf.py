@@ -50,11 +50,18 @@ extensions = [
     'numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
-    'sphinx_gallery.gen_gallery'
+    'sphinx_gallery.gen_gallery',
+    'sphinx_copybutton'
 ]
+
+# configure sphinx-copybutton
+copybutton_prompt_text = r">>> |\.\.\. |\$ "
+copybutton_prompt_is_regexp = True
 
 # generate autosummary even if no references
 autosummary_generate = True
+
+# configure numpydoc
 numpydoc_show_class_members = False 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -90,7 +97,7 @@ release = u'0.5'
 # for a list of supported languages.
 #
 # This is also used if you do content translation via gettext catalogs.
-# Usually you set "language" from the command line for these cases.
+# Usually you set 'language' from the command line for these cases.
 # language = None
 
 # List of patterns, relative to source directory, that match files and
@@ -119,21 +126,22 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 html_theme_options = {
     'navbar_title': 'Ephypype',
-    'bootswatch_theme': "flatly",
+    'bootswatch_theme': 'flatly',
     'navbar_sidebarrel': False,
-    'bootstrap_version': "3",
+    'bootstrap_version': '3',
     'navbar_links': [
-        ("Gallery", "auto_examples/index"),
-        ("API", "api"),
-        ("Tutorials", "tutorials/index"),
-        ("Workshop", "auto_workshop/index"),
-        ("Github", "https://github.com/neuropycon/ephypype", True),
+        ('Gallery', 'auto_examples/index'),
+        ('API', 'api'),
+        ('Tutorials', 'tutorials/index'),
+        ('Workshop', 'auto_workshop/index'),
+        ('Github', 'https://github.com/neuropycon/ephypype', True),
     ],
-    'bootswatch_theme': "united"}
+    'bootswatch_theme': 'united',
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
+# so a file named 'default.css' will overwrite the builtin 'default.css'.
 html_static_path = ['_static']
 
 
@@ -193,7 +201,7 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-intersphinx_mapping = {'python': ('https://docs.python.org/', None),
+intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
                        'mne': ('http://martinos.org/mne/stable/', None),
                        'nipype': ('https://nipype.readthedocs.io/en/latest/', None),
                        'mne-connectivity': ('https://mne.tools/mne-connectivity/stable', None)
@@ -213,7 +221,7 @@ sphinx_gallery_conf = {
     'within_subsection_order': FileNameSortKey,
     'reference_url': {
         'mne': 'http://mne-tools.github.io/stable/',
-        'numpy': 'https://numpy.org/doc/1.23/',
+        'numpy': 'https://numpy.org/devdocs/',
         'scipy': 'https://docs.scipy.org/doc/scipy/reference/',
         'nipype': 'https://nipype.readthedocs.io/en/latest/',
         'ephypype': None,
@@ -221,13 +229,13 @@ sphinx_gallery_conf = {
 }
    
 # {
-#  "nbsphinx-toctree": {
-#      "maxdepth": 1
+#  'nbsphinx-toctree': {
+#      'maxdepth': 1
 #  }
 #}
 # nbsphinx_execute = 'never'
-# gallery_conf["filename_pattern"] = '^((?!sgskip).)*$'
-# gallery_conf["ignore_pattern"]   = '__init__\\.py'
+# gallery_conf['filename_pattern'] = '^((?!sgskip).)*$'
+# gallery_conf['ignore_pattern']   = '__init__\\.py'
 
 
 import sys
