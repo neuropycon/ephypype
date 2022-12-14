@@ -23,7 +23,7 @@ The evoked datasets are created by averaging the different conditions specified
 in the ``json`` file. The estimated neural time series are reconstructed
 by the evoked data for each condition by **dSPM** inverse method.
 
-Finally the source estimates obtained by the
+Finally, the source estimates obtained by the
 :ref:`inv_solution_node` are morphed to the ``fsaverage`` brain in the
 :ref:`morphing_node`.
 
@@ -75,10 +75,9 @@ data_type = params["general"]["data_type"]
 subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
-conditions = params["general"]["conditions"]
 subjects_dir = params["general"]["subjects_dir"]
 
-is_short = params["general"]["short"]  # to analyze a segment of data
+is_short = params["general"]["short"]  # to analyze a shorter segment of data
 
 if "data_path" in params["general"].keys():
     data_path = params["general"]["data_path"]
@@ -90,6 +89,7 @@ print("data_path : %s" % data_path)
 pprint.pprint({'inverse parameters': params["inverse"]})
 events_id = params["inverse"]['events_id']
 condition = params["inverse"]['condition']
+new_name_condition = params["inverse"]["new_name_condition"]
 t_min = params["inverse"]['tmin']
 t_max = params["inverse"]['tmax']
 spacing = params["inverse"]['spacing']  # oct-6
@@ -106,7 +106,7 @@ trans_fname = op.join(data_path, params["inverse"]['trans_fname'])
 # Here we define two different functions that will be encapsulated in two
 # different nodes (:ref:`concat_event` and :ref:`morphing_node`).
 # The ``run_events_concatenate`` function extracts events from the stimulus
-# channel while ``compute_morph_stc`` morph the source estimates obtained by
+# channel while the ``compute_morph_stc`` morphs the source estimates obtained by
 # the :ref:`inv_solution_node` into the ``fsaverage`` brain.
 def run_events_concatenate(list_ica_files, subject):
     '''
@@ -219,7 +219,7 @@ ica_dir = op.join(data_path, preproc_wf_name, 'preproc_meg_dsamp_pipeline')
 # Here we want to grab both the raw MEG data and the coregistration file,
 # thus we have to specify the search patterns for ``raw_file`` and
 # ``trans_file`` which are parameterized with the values defined in
-# ``template_args``
+# ``template_args``.
 
 template_path = '*'
 
@@ -236,6 +236,9 @@ datasource = create_datagrabber(ica_dir, template_path, template_args,
                                 field_template=field_template,
                                 infields=['subject_id'],
                                 outfields=['raw_file', 'trans_file'])
+# %%
+# .. note:: :func:`~ephypype.nodes.create_datagrabber` is used with different
+#   input paramters respect to :ref:`preproc_meg`.
 
 # %%
 # .. _concat_event:
@@ -243,7 +246,7 @@ datasource = create_datagrabber(ica_dir, template_path, template_args,
 # Event Node
 # """"""""""
 # We define the Node that encapsulates ``run_events_concatenate`` function
-# (see :ref:`graph_inverse`) and specify the inputs and outputs of the function
+# (see :ref:`graph_inverse`) and specify the inputs and outputs of the function.
 concat_event = pe.Node(
     Function(input_names=['list_ica_files', 'subject'],
              output_names=['raw_file', 'event_file', 'fname_events_files'],
@@ -270,11 +273,11 @@ concat_event = pe.Node(
 # are:
 #
 # * :func:`~ephypype.interfaces.mne.LF_computation.LFComputation` compute the
-#   Lead Field matrix
+#   Lead Field matrix;
 # * :func:`~ephypype.interfaces.mne.Inverse_solution.NoiseCovariance` computes
-#   the noise covariance matrix
+#   the noise covariance matrix;
 # * :func:`~ephypype.interfaces.mne.Inverse_solution.InverseSolution` estimates
-#   the time series of the neural sources on a set of dipoles grid
+#   the time series of the neural sources on a set of dipoles grid.
 #
 # The **input node** (``raw``, ``sbj_id``, ``trans_file`` and ``events_file``)
 # will be specified once the different nodes are connected.
@@ -295,7 +298,7 @@ morph_stc = pe.Node(
              function=compute_morph_stc),
     name="morph_stc")
 
-morph_stc.inputs.conditions = conditions
+morph_stc.inputs.conditions = new_name_condition
 morph_stc.inputs.subjects_dir = subjects_dir
 
 ###############################################################################
@@ -321,7 +324,7 @@ main_workflow.base_dir = data_path
 main_workflow.connect(infosource, 'subject_id', datasource,  'subject_id')
 
 ###############################################################################
-# First, we connect their outputs to the input of 
+# We connect their outputs to the input of 
 # (``list_ica_files``, ``subject``) of :ref:`concat_event`.
 main_workflow.connect(datasource, ('raw_file', show_files),
                       concat_event, 'list_ica_files')
