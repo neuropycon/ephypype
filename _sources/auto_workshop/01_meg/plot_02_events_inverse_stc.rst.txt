@@ -42,7 +42,7 @@ The evoked datasets are created by averaging the different conditions specified
 in the ``json`` file. The estimated neural time series are reconstructed
 by the evoked data for each condition by **dSPM** inverse method.
 
-Finally the source estimates obtained by the
+Finally, the source estimates obtained by the
 :ref:`inv_solution_node` are morphed to the ``fsaverage`` brain in the
 :ref:`morphing_node`.
 
@@ -124,10 +124,9 @@ sessions, ...) and the variable specific for the **inverse pipeline**
     subject_ids = params["general"]["subject_ids"]
     NJOBS = params["general"]["NJOBS"]
     session_ids = params["general"]["session_ids"]
-    conditions = params["general"]["conditions"]
     subjects_dir = params["general"]["subjects_dir"]
 
-    is_short = params["general"]["short"]  # to analyze a segment of data
+    is_short = params["general"]["short"]  # to analyze a shorter segment of data
 
     if "data_path" in params["general"].keys():
         data_path = params["general"]["data_path"]
@@ -139,6 +138,7 @@ sessions, ...) and the variable specific for the **inverse pipeline**
     pprint.pprint({'inverse parameters': params["inverse"]})
     events_id = params["inverse"]['events_id']
     condition = params["inverse"]['condition']
+    new_name_condition = params["inverse"]["new_name_condition"]
     t_min = params["inverse"]['tmin']
     t_max = params["inverse"]['tmax']
     spacing = params["inverse"]['spacing']  # oct-6
@@ -158,7 +158,6 @@ sessions, ...) and the variable specific for the **inverse pipeline**
  .. code-block:: none
 
     {'parameters': {'NJOBS': 1,
-                    'conditions': ['famous', 'scrambled', 'unfamiliar'],
                     'data_path': '/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives',
                     'data_type': 'fif',
                     'session_ids': ['01', '02'],
@@ -179,6 +178,9 @@ sessions, ...) and the variable specific for the **inverse pipeline**
                                           'scrambled/immediate': 18,
                                           'scrambled/long': 19},
                             'method': 'dSPM',
+                            'new_name_condition': ['famous',
+                                                   'scrambled',
+                                                   'unfamiliar'],
                             'parcellation': 'aparc',
                             'snr': 3.0,
                             'spacing': 'oct-6',
@@ -196,7 +198,7 @@ Define functions
 Here we define two different functions that will be encapsulated in two
 different nodes (:ref:`concat_event` and :ref:`morphing_node`).
 The ``run_events_concatenate`` function extracts events from the stimulus
-channel while ``compute_morph_stc`` morph the source estimates obtained by
+channel while the ``compute_morph_stc`` morphs the source estimates obtained by
 the :ref:`inv_solution_node` into the ``fsaverage`` brain.
 
 .. GENERATED FROM PYTHON SOURCE LINES 111-172
@@ -358,9 +360,9 @@ We set the dir from which to get the preprocessed MEG data
 Here we want to grab both the raw MEG data and the coregistration file,
 thus we have to specify the search patterns for ``raw_file`` and
 ``trans_file`` which are parameterized with the values defined in
-``template_args``
+``template_args``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 223-240
+.. GENERATED FROM PYTHON SOURCE LINES 223-239
 
 .. code-block:: default
 
@@ -387,17 +389,21 @@ thus we have to specify the search patterns for ``raw_file`` and
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 240-242
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-247
+.. note:: :func:`~ephypype.nodes.create_datagrabber` is used with different
+  input paramters respect to :ref:`preproc_meg`.
+
+.. GENERATED FROM PYTHON SOURCE LINES 244-250
 
 .. _concat_event:
 
 Event Node
 """"""""""
 We define the Node that encapsulates ``run_events_concatenate`` function
-(see :ref:`graph_inverse`) and specify the inputs and outputs of the function
+(see :ref:`graph_inverse`) and specify the inputs and outputs of the function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 247-253
+.. GENERATED FROM PYTHON SOURCE LINES 250-256
 
 .. code-block:: default
 
@@ -414,7 +420,7 @@ We define the Node that encapsulates ``run_events_concatenate`` function
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 254-281
+.. GENERATED FROM PYTHON SOURCE LINES 257-284
 
 .. _inv_solution_node:
 
@@ -435,16 +441,16 @@ that perform the source reconstruction steps. In particular, the three nodes
 are:
 
 * :func:`~ephypype.interfaces.mne.LF_computation.LFComputation` compute the
-  Lead Field matrix
+  Lead Field matrix;
 * :func:`~ephypype.interfaces.mne.Inverse_solution.NoiseCovariance` computes
-  the noise covariance matrix
+  the noise covariance matrix;
 * :func:`~ephypype.interfaces.mne.Inverse_solution.InverseSolution` estimates
-  the time series of the neural sources on a set of dipoles grid
+  the time series of the neural sources on a set of dipoles grid.
 
 The **input node** (``raw``, ``sbj_id``, ``trans_file`` and ``events_file``)
 will be specified once the different nodes are connected.
 
-.. GENERATED FROM PYTHON SOURCE LINES 281-286
+.. GENERATED FROM PYTHON SOURCE LINES 284-289
 
 .. code-block:: default
 
@@ -466,7 +472,7 @@ will be specified once the different nodes are connected.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 287-292
+.. GENERATED FROM PYTHON SOURCE LINES 290-295
 
 .. _morphing_node:
 
@@ -474,7 +480,7 @@ Morphing Node
 """""""""""""
 The last Node we define encapsulates ``compute_morph_stc`` function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 292-301
+.. GENERATED FROM PYTHON SOURCE LINES 295-304
 
 .. code-block:: default
 
@@ -484,7 +490,7 @@ The last Node we define encapsulates ``compute_morph_stc`` function.
                  function=compute_morph_stc),
         name="morph_stc")
 
-    morph_stc.inputs.conditions = conditions
+    morph_stc.inputs.conditions = new_name_condition
     morph_stc.inputs.subjects_dir = subjects_dir
 
 
@@ -494,14 +500,14 @@ The last Node we define encapsulates ``compute_morph_stc`` function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 302-306
+.. GENERATED FROM PYTHON SOURCE LINES 305-309
 
 Create workflow
 ^^^^^^^^^^^^^^^
 Then, we can create our workflow and specify the ``base_dir`` which tells
 nipype the directory in which to store the outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 306-315
+.. GENERATED FROM PYTHON SOURCE LINES 309-318
 
 .. code-block:: default
 
@@ -521,7 +527,7 @@ nipype the directory in which to store the outputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 316-321
+.. GENERATED FROM PYTHON SOURCE LINES 319-324
 
 Connect Nodes
 ^^^^^^^^^^^^^
@@ -529,7 +535,7 @@ Finally, we connect the nodes two at a time. First, we connect the
 output (``subject_id``) of the ``infosource`` node to the input of
 ``datasource`` node. So, these two nodes taken together can grab data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 321-323
+.. GENERATED FROM PYTHON SOURCE LINES 324-326
 
 .. code-block:: default
 
@@ -542,12 +548,12 @@ output (``subject_id``) of the ``infosource`` node to the input of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 324-326
+.. GENERATED FROM PYTHON SOURCE LINES 327-329
 
-First, we connect their outputs to the input of 
+We connect their outputs to the input of 
 (``list_ica_files``, ``subject``) of :ref:`concat_event`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 326-330
+.. GENERATED FROM PYTHON SOURCE LINES 329-333
 
 .. code-block:: default
 
@@ -562,12 +568,12 @@ First, we connect their outputs to the input of
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 331-333
+.. GENERATED FROM PYTHON SOURCE LINES 334-336
 
 The output of ``infosource``, ``datasource`` and ``concat_event`` are the
 inputs of ``inv_sol_workflow``, thus we connect these nodes two at time.
 
-.. GENERATED FROM PYTHON SOURCE LINES 333-342
+.. GENERATED FROM PYTHON SOURCE LINES 336-345
 
 .. code-block:: default
 
@@ -587,12 +593,12 @@ inputs of ``inv_sol_workflow``, thus we connect these nodes two at time.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 343-345
+.. GENERATED FROM PYTHON SOURCE LINES 346-348
 
 Finally, we connect ``infosource`` and ``inv_sol_workflow`` to
 ``morph_stc``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 345-349
+.. GENERATED FROM PYTHON SOURCE LINES 348-352
 
 .. code-block:: default
 
@@ -607,13 +613,13 @@ Finally, we connect ``infosource`` and ``inv_sol_workflow`` to
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 350-353
+.. GENERATED FROM PYTHON SOURCE LINES 353-356
 
 Run workflow
 ^^^^^^^^^^^^
 Now, we are now ready to execute our workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 353-355
+.. GENERATED FROM PYTHON SOURCE LINES 356-358
 
 .. code-block:: default
 
@@ -632,7 +638,7 @@ Now, we are now ready to execute our workflow.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 356-363
+.. GENERATED FROM PYTHON SOURCE LINES 359-366
 
 .. _graph_inverse:
 
@@ -642,7 +648,7 @@ Workflow graph
 Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes.
 
-.. GENERATED FROM PYTHON SOURCE LINES 363-374
+.. GENERATED FROM PYTHON SOURCE LINES 366-377
 
 .. code-block:: default
 
@@ -677,11 +683,11 @@ here correspond to how we connected the nodes.
     /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/source_dsamp_full_reconstruction_dSPM_aparc/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw.fif
     /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/source_dsamp_full_reconstruction_dSPM_aparc/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw-eve.fif
 
-    <networkx.classes.digraph.DiGraph object at 0x7feb6bc8a170>
+    <networkx.classes.digraph.DiGraph object at 0x7fdefa0b5b40>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 375-381
+.. GENERATED FROM PYTHON SOURCE LINES 378-384
 
 Results
 ^^^^^^^
@@ -693,7 +699,7 @@ we can use :ref:`plot_stc`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  14.455 seconds)
+   **Total running time of the script:** ( 0 minutes  14.429 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_01_meg_plot_02_events_inverse_stc.py:

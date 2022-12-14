@@ -29,7 +29,7 @@ contrast between both types of faces together and scrambled at 170 ms
 poststimulus. The image was produced by subtracting normalized solutions of
 faces to the ones of scrambled.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-100
+.. GENERATED FROM PYTHON SOURCE LINES 13-101
 
 .. code-block:: default
 
@@ -55,7 +55,8 @@ faces to the ones of scrambled.
     subject_ids = params["general"]["subject_ids"]
     NJOBS = params["general"]["NJOBS"]
     session_ids = params["general"]["session_ids"]
-    conditions = params["general"]["conditions"]
+
+    new_name_condition = params["inverse"]["new_name_condition"]
 
     is_short = params["general"]["short"]  # # to analyze a segment of data
 
@@ -80,7 +81,7 @@ faces to the ones of scrambled.
         os.mkdir(fig_path)
     # PLot
     stc_condition = list()
-    for cond in conditions:
+    for cond in new_name_condition:
         stcs = list()
 
         for subject in subject_ids:
@@ -129,7 +130,6 @@ faces to the ones of scrambled.
  .. code-block:: none
 
     {'parameters': {'general': {'NJOBS': 1,
-                                'conditions': ['famous', 'scrambled', 'unfamiliar'],
                                 'data_path': '/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives',
                                 'data_type': 'fif',
                                 'session_ids': ['01', '02'],
@@ -149,6 +149,9 @@ faces to the ones of scrambled.
                                               'scrambled/immediate': 18,
                                               'scrambled/long': 19},
                                 'method': 'dSPM',
+                                'new_name_condition': ['famous',
+                                                       'scrambled',
+                                                       'unfamiliar'],
                                 'parcellation': 'aparc',
                                 'snr': 3.0,
                                 'spacing': 'oct-6',
@@ -170,7 +173,7 @@ faces to the ones of scrambled.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-104
+.. GENERATED FROM PYTHON SOURCE LINES 102-105
 
 .. image:: ../../img/dspm-contrast.png
    :width: 50%
@@ -179,7 +182,7 @@ faces to the ones of scrambled.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.986 seconds)
+   **Total running time of the script:** ( 0 minutes  2.866 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_01_meg_plot_03_stc.py:

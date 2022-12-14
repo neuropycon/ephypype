@@ -33,7 +33,9 @@ matrix. A cortical segmentation of the anatomical MRI is necessary to generate
 the source space, where the neural activity will be estimated.
 A `Boundary Element Model <https://mne.tools/stable/auto_tutorials/forward/30_forward.html?highlight=bem>`_
 (BEM) which uses the segmented surfaces is used to
-construct the lead field matrix. To perform the cortical segmentation we
+construct the lead field matrix. 
+
+To perform the **cortical segmentation** we
 provide a workflow based on nipype Interface wrapping the
 `recon-all <https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all>`_ command of
 Freesurfer. The output of :ref:`reconallnode` node is used as input of another node that
@@ -45,7 +47,7 @@ colored contours overlaid on the T1 MRI images to verify that the surfaces do no
 .. warning:: Make sure that Freesurfer is properly configured before
     running this script.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-35
+.. GENERATED FROM PYTHON SOURCE LINES 31-37
 
 .. code-block:: default
 
@@ -56,12 +58,12 @@ colored contours overlaid on the T1 MRI images to verify that the surfaces do no
     # sphinx_gallery_thumbnail_number = 1
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-38
+.. GENERATED FROM PYTHON SOURCE LINES 38-40
 
 Import modules
 ^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-50
+.. GENERATED FROM PYTHON SOURCE LINES 40-52
 
 .. code-block:: default
 
@@ -78,19 +80,19 @@ Import modules
     from ephypype.compute_fwd_problem import _create_bem_sol
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-60
+.. GENERATED FROM PYTHON SOURCE LINES 53-62
 
 Define data and variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Let us specify the variables that are specific for the data analysis (the
 main directories where the data are stored, the list of subjects and
 sessions, ...) and the variable specific for the particular pipeline
-(MRI path, Freesurfer fir, ...) in a |params.json| file
+(MRI path, Freesurfer fir, ...) in a |params.json| file.
 
 .. |params.json| replace::
   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-81
+.. GENERATED FROM PYTHON SOURCE LINES 62-83
 
 .. code-block:: default
 
@@ -116,7 +118,7 @@ sessions, ...) and the variable specific for the particular pipeline
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-93
+.. GENERATED FROM PYTHON SOURCE LINES 84-95
 
 Specify Nodes
 ^^^^^^^^^^^^^
@@ -128,9 +130,9 @@ the values in the ``infosource`` node.
 Here we define an input field for ``create_datagrabber`` called
 ``subject_id``. This is then used to set the template (see %s in the
 template). We look for .nii files located in the ``ses-mri/anat`` folder of
-the subject
+the subject.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-102
+.. GENERATED FROM PYTHON SOURCE LINES 95-104
 
 .. code-block:: default
 
@@ -144,7 +146,7 @@ the subject
                                     infields=infields)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-110
+.. GENERATED FROM PYTHON SOURCE LINES 105-112
 
 .. _reconallnode:
 
@@ -154,7 +156,7 @@ ReconAll Node
 of Freesurfer that generates surfaces and parcellations of structural
 data from anatomical images of a subject.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-115
+.. GENERATED FROM PYTHON SOURCE LINES 112-117
 
 .. code-block:: default
 
@@ -164,17 +166,17 @@ data from anatomical images of a subject.
     recon_all.inputs.directive = 'all'
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-123
+.. GENERATED FROM PYTHON SOURCE LINES 118-125
 
 .. _bemnode:
 
 BEM Node
 """"""""
-We define a node wrapping an ephypype function calling
+Then, we define a node wrapping an ephypype function calling
 `make_watershed_bem <https://mne.tools/stable/generated/mne.bem.make_watershed_bem.html?highlight=make_watershed_bem#mne.bem.make_watershed_bem>`_
 of MNE Python package for BEM generation
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-128
+.. GENERATED FROM PYTHON SOURCE LINES 125-130
 
 .. code-block:: default
 
@@ -184,17 +186,17 @@ of MNE Python package for BEM generation
     bem_generation.inputs.subjects_dir = subjects_dir
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-136
+.. GENERATED FROM PYTHON SOURCE LINES 131-138
 
 .. _main_wf:
 
 Create workflows
 ^^^^^^^^^^^^^^^^
-First, we create a workflow containing the :ref:`reconallnode` ans specify the
+First, we create a workflow containing the :ref:`reconallnode` and specify the
 connections between all nodes (``infosource``, ``datasource`` and
-``recon_all``)
+``recon_all``).
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-146
+.. GENERATED FROM PYTHON SOURCE LINES 138-148
 
 .. code-block:: default
 
@@ -209,12 +211,12 @@ connections between all nodes (``infosource``, ``datasource`` and
     reconall_workflow.connect(datasource, 'raw_file', recon_all, 'T1_files')
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 147-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-151
 
 Then, we create the main workflow where we will connect the output of
-``reconall_workflow`` to the input of ``bem_generation`` node
+``reconall_workflow`` to the input of ``bem_generation`` node.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-157
+.. GENERATED FROM PYTHON SOURCE LINES 151-159
 
 .. code-block:: default
 
@@ -227,7 +229,7 @@ Then, we create the main workflow where we will connect the output of
                           bem_generation, 'sbj_id')
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 158-165
+.. GENERATED FROM PYTHON SOURCE LINES 160-167
 
 Run workflow
 ^^^^^^^^^^^^
@@ -237,7 +239,7 @@ between the processes, but does not generate any output. To actually run the
 analysis on the data the :func:`~nipype.pipeline.engine.Pipeline.Run`
 function needs to be called.
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-170
+.. GENERATED FROM PYTHON SOURCE LINES 167-172
 
 .. code-block:: default
 
@@ -247,7 +249,7 @@ function needs to be called.
     main_workflow.run(plugin='LegacyMultiProc', plugin_args={'n_procs': NJOBS})
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-184
+.. GENERATED FROM PYTHON SOURCE LINES 173-186
 
 Results
 ^^^^^^^

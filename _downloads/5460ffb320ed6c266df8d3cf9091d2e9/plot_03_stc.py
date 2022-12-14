@@ -32,7 +32,8 @@ data_type = params["general"]["data_type"]
 subject_ids = params["general"]["subject_ids"]
 NJOBS = params["general"]["NJOBS"]
 session_ids = params["general"]["session_ids"]
-conditions = params["general"]["conditions"]
+
+new_name_condition = params["inverse"]["new_name_condition"]
 
 is_short = params["general"]["short"]  # # to analyze a segment of data
 
@@ -57,7 +58,7 @@ if not os.path.isdir(fig_path):
     os.mkdir(fig_path)
 # PLot
 stc_condition = list()
-for cond in conditions:
+for cond in new_name_condition:
     stcs = list()
 
     for subject in subject_ids:

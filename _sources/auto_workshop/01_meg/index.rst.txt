@@ -100,6 +100,23 @@ Here, we focus only on MEG data and use :func:`~ephypype.pipelines.create_pipeli
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="04. Preprocess MEG data and compute inverse solution">
+
+.. only:: html
+
+  .. image:: /auto_workshop/01_meg/images/thumb/sphx_glr_plot_04-preprocessing_inverse_thumb.png
+    :alt: 04. Preprocess MEG data and compute inverse solution
+
+  :ref:`sphx_glr_auto_workshop_01_meg_plot_04-preprocessing_inverse.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">04. Preprocess MEG data and compute inverse solution</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 
@@ -110,4 +127,5 @@ Here, we focus only on MEG data and use :func:`~ephypype.pipelines.create_pipeli
    /auto_workshop/01_meg/plot_01_meg_preprocessing
    /auto_workshop/01_meg/plot_02_events_inverse_stc
    /auto_workshop/01_meg/plot_03_stc
+   /auto_workshop/01_meg/plot_04-preprocessing_inverse
 

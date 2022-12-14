@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>04. Preprocess MEG data and compute inverse solution &#8212; ephypype 0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          Ephypype</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../auto_examples/index.html">Gallery</a></li>
+                <li><a href="../../api.html">API</a></li>
+                <li><a href="../../tutorials/index.html">Tutorials</a></li>
+                <li><a href="../index.html">Workshop</a></li>
+                <li><a href="https://github.com/neuropycon/ephypype">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">04. Preprocess MEG data and compute inverse solution</a><ul>
+<li><a class="reference internal" href="#function-to-extract-events-from-the-stimulus-channel">Function to extract events from the stimulus channel</a></li>
+<li><a class="reference internal" href="#group-average-on-source-level">Group average on source level</a></li>
+<li><a class="reference internal" href="#defining-pipeline-to-compute-inverse-solution">Defining pipeline to compute inverse solution</a><ul>
+<li><a class="reference internal" href="#workflow-graph">Workflow graph</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="../../_sources/auto_workshop/01_meg/plot_04-preprocessing_inverse.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-workshop-01-meg-plot-04-preprocessing-inverse-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="preprocess-meg-data-and-compute-inverse-solution">
+<span id="sphx-glr-auto-workshop-01-meg-plot-04-preprocessing-inverse-py"></span><h1>04. Preprocess MEG data and compute inverse solution<a class="headerlink" href="#preprocess-meg-data-and-compute-inverse-solution" title="Permalink to this heading">¶</a></h1>
+<p>Here we combine the previous pipeline (<a class="reference internal" href="../../auto_examples/plot_preprocessing.html#preproc-meeg"><span class="std std-ref">preprocessing pipeline</span></a>,
+<a class="reference internal" href="plot_02_events_inverse_stc.html#plot-events-inverse"><span class="std std-ref">03. Compute inverse solution</span></a>) in a unique workflow.
+This example shows how to combine the different NeuroPycon pipeline to create
+an analysis workflow.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Authors: Annalisa Pascarella &lt;a.pascarella@iac.cnr.it&gt;</span>
+<span class="c1"># License: BSD (3-clause)</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 1</span>
+
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
+
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+<span class="kn">import</span> <span class="nn">nipype.pipeline.engine</span> <span class="k">as</span> <span class="nn">pe</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.interfaces.base.core.html#nipype.interfaces.base.core.Interface" title="nipype.interfaces.base.core.Interface" class="sphx-glr-backref-module-nipype-interfaces-base-core sphx-glr-backref-type-py-class"><span class="n">IdentityInterface</span></a><span class="p">,</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.interfaces.base.core.html#nipype.interfaces.base.core.Interface" title="nipype.interfaces.base.core.Interface" class="sphx-glr-backref-module-nipype-interfaces-base-core sphx-glr-backref-type-py-class"><span class="n">Function</span></a>
+<span class="kn">import</span> <span class="nn">nipype.interfaces.io</span> <span class="k">as</span> <span class="nn">nio</span>
+
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">,</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a>
+<span class="kn">from</span> <span class="nn">ephypype.pipelines.preproc_meeg</span> <span class="kn">import</span> <a href="../../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_preproc_meeg</span></a>  <span class="c1"># noqa</span>
+<span class="kn">from</span> <span class="nn">ephypype.pipelines.fif_to_inv_sol</span> <span class="kn">import</span> <a href="../../generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_source_reconstruction</span></a>  <span class="c1"># noqa</span>
+
+
+<span class="c1"># Read experiment params as json</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/json.html#json.load" title="json.load" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">})</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_type</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;data_type&quot;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject_ids</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subject_ids&quot;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NJOBS</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;NJOBS&quot;</span><span class="p">]</span>
+<span class="k">if</span> <span class="s2">&quot;data_path&quot;</span> <span class="ow">in</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;data_path&quot;</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.expanduser" title="os.path.expanduser" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">expanduser</span></a><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;data_path : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;parameters&#39;: {&#39;general&#39;: {&#39;NJOBS&#39;: 1,
+                            &#39;data_path&#39;: &#39;/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives&#39;,
+                            &#39;data_type&#39;: &#39;fif&#39;,
+                            &#39;session_ids&#39;: [&#39;01&#39;, &#39;02&#39;],
+                            &#39;short&#39;: False,
+                            &#39;subject_ids&#39;: [&#39;sub-01&#39;],
+                            &#39;subjects_dir&#39;: &#39;/home/pasca/Science/workshop/PracticalMEEG/ds000117/FSF&#39;},
+                &#39;inverse&#39;: {&#39;condition&#39;: [&#39;face/famous&#39;,
+                                          &#39;scrambled&#39;,
+                                          &#39;face/unfamiliar&#39;],
+                            &#39;events_id&#39;: {&#39;face/famous/first&#39;: 5,
+                                          &#39;face/famous/immediate&#39;: 6,
+                                          &#39;face/famous/long&#39;: 7,
+                                          &#39;face/unfamiliar/first&#39;: 13,
+                                          &#39;face/unfamiliar/immediate&#39;: 14,
+                                          &#39;face/unfamiliar/long&#39;: 15,
+                                          &#39;scrambled/first&#39;: 17,
+                                          &#39;scrambled/immediate&#39;: 18,
+                                          &#39;scrambled/long&#39;: 19},
+                            &#39;method&#39;: &#39;dSPM&#39;,
+                            &#39;new_name_condition&#39;: [&#39;famous&#39;,
+                                                   &#39;scrambled&#39;,
+                                                   &#39;unfamiliar&#39;],
+                            &#39;parcellation&#39;: &#39;aparc&#39;,
+                            &#39;snr&#39;: 3.0,
+                            &#39;spacing&#39;: &#39;oct-6&#39;,
+                            &#39;tmax&#39;: 1.0,
+                            &#39;tmin&#39;: -0.2,
+                            &#39;trans_fname&#39;: &#39;*-trans.fif&#39;},
+                &#39;preprocessing&#39;: {&#39;ECG_ch_name&#39;: &#39;EEG063&#39;,
+                                  &#39;EoG_ch_name&#39;: [&#39;EEG061&#39;, &#39;EEG062&#39;],
+                                  &#39;down_sfreq&#39;: 300,
+                                  &#39;h_freq&#39;: 40,
+                                  &#39;l_freq&#39;: 0.1,
+                                  &#39;reject&#39;: {&#39;grad&#39;: 4e-10, &#39;mag&#39;: 4e-12},
+                                  &#39;variance&#39;: 0.999}}}
+data_path : /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives
+</pre></div>
+</div>
+<p>Read the parameters for preprocessing from a json file and print it</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;preprocessing parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">]})</span>
+
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;l_freq&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_freq</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;h_freq&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ECG_ch_name</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;ECG_ch_name&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EoG_ch_name</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;EoG_ch_name&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">variance</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;variance&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">reject</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">down_sfreq</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;preprocessing&quot;</span><span class="p">][</span><span class="s1">&#39;down_sfreq&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;preprocessing parameters&#39;: {&#39;ECG_ch_name&#39;: &#39;EEG063&#39;,
+                              &#39;EoG_ch_name&#39;: [&#39;EEG061&#39;, &#39;EEG062&#39;],
+                              &#39;down_sfreq&#39;: 300,
+                              &#39;h_freq&#39;: 40,
+                              &#39;l_freq&#39;: 0.1,
+                              &#39;reject&#39;: {&#39;grad&#39;: 4e-10, &#39;mag&#39;: 4e-12},
+                              &#39;variance&#39;: 0.999}}
+</pre></div>
+</div>
+<p>Then, we create our workflow and specify the <cite>base_dir</cite> which tells
+nipype the directory in which to store the outputs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># workflow directory within the `base_dir`</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_name</span></a> <span class="o">=</span> <span class="s1">&#39;preprocessing_full_inverse&#39;</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span></a> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span></a><span class="p">(</span><span class="n">name</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_name</span></a><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a>
+</pre></div>
+</div>
+<p>Then we create a node to pass input filenames to DataGrabber from nipype</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span> <span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject_ids</span></a><span class="p">])</span>
+</pre></div>
+</div>
+<p>and a node to grab data. The template_args in this node iterate upon
+the values in the infosource node</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_path</span></a> <span class="o">=</span> <span class="s1">&#39;*&#39;</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/ses-meg/meg_short/*</span><span class="si">%s</span><span class="s1">*run*sss*.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trans_file</span></a> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/ses-meg/meg_short/</span><span class="si">%s%s</span><span class="s1">.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">field_template</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trans_file</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trans_file</span></a><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_args</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]],</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trans_file</span></a><span class="o">=</span><span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s2">&quot;-trans&quot;</span><span class="p">]])</span>
+
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">template_args</span></a><span class="p">,</span>
+                                <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">field_template</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">field_template</span></a><span class="p">,</span>
+                                <span class="n">infields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span>
+                                <span class="n">outfields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">])</span>
+
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ephypype creates for us a pipeline which can be connected to these
+nodes we created. The preprocessing pipeline is implemented by the function
+ephypype.pipelines.preproc_meeg.create_pipeline_preproc_meeg, thus to
+instantiate this pipeline node, we import it and pass our
+parameters to it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a> <span class="o">=</span> <a href="../../generated/ephypype.pipelines.create_pipeline_preproc_meeg.html#ephypype.pipelines.create_pipeline_preproc_meeg" title="ephypype.pipelines.create_pipeline_preproc_meeg" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_preproc_meeg</span></a><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">l_freq</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_freq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">h_freq</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">variance</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">variance</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ECG_ch_name</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ECG_ch_name</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EoG_ch_name</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">EoG_ch_name</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_type</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_type</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">down_sfreq</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">down_sfreq</span></a><span class="p">,</span> <span class="n">mapnode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.subject_id&#39;</span><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;raw_file&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.raw_file&#39;</span><span class="p">)</span>
+
+<span class="c1"># Source reconstruction</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>*** main_path -&gt; /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives ***
+</pre></div>
+</div>
+<section id="function-to-extract-events-from-the-stimulus-channel">
+<h2>Function to extract events from the stimulus channel<a class="headerlink" href="#function-to-extract-events-from-the-stimulus-channel" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_events_concatenate</span><span class="p">(</span><span class="n">list_ica_files</span><span class="p">,</span> <span class="n">subject</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The events are extracted from stim channel &#39;STI101&#39;. The events are saved</span>
+<span class="sd">    to the Node directory.</span>
+<span class="sd">    For each subject, the different run are concatenated in one single raw file</span>
+<span class="sd">    and saved in the Node directory. We take the different run from the</span>
+<span class="sd">    preprocessing workflow directory, i.e. the cleaned raw data.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">list_ica_files</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">mne</span>
+
+    <span class="c1"># could be added in a node to come</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="mi">4096</span> <span class="o">+</span> <span class="mi">256</span>  <span class="c1"># mask for excluding high order bits</span>
+    <span class="n">delay_item</span> <span class="o">=</span> <span class="mf">0.0345</span>
+    <span class="n">min_duration</span> <span class="o">=</span> <span class="mf">0.015</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;processing subject: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject</span><span class="p">)</span>
+
+    <span class="n">raw_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">events_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">fname_events_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Loading raw data&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">run_fname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_ica_files</span><span class="p">):</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+
+        <span class="n">raw</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.io.read_raw_fif.html#mne.io.read_raw_fif" title="mne.io.read_raw_fif" class="sphx-glr-backref-module-mne-io sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">read_raw_fif</span></a><span class="p">(</span><span class="n">run_fname</span><span class="p">,</span> <span class="n">preload</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">events</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.find_events.html#mne.find_events" title="mne.find_events" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">find_events</span></a><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">stim_channel</span><span class="o">=</span><span class="s1">&#39;STI101&#39;</span><span class="p">,</span>
+                                 <span class="n">consecutive</span><span class="o">=</span><span class="s1">&#39;increasing&#39;</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+                                 <span class="n">mask_type</span><span class="o">=</span><span class="s1">&#39;not_and&#39;</span><span class="p">,</span>
+                                 <span class="n">min_duration</span><span class="o">=</span><span class="n">min_duration</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  S </span><span class="si">%s</span><span class="s2"> - R </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">run</span><span class="p">))</span>
+
+        <span class="n">fname_events</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.abspath" title="os.path.abspath" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span></a><span class="p">(</span><span class="s1">&#39;run_</span><span class="si">%02d</span><span class="s1">-eve.fif&#39;</span> <span class="o">%</span> <span class="n">run</span><span class="p">)</span>
+        <a href="http://mne-tools.github.io/stable/generated/mne.write_events.html#mne.write_events" title="mne.write_events" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">write_events</span></a><span class="p">(</span><span class="n">fname_events</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+        <span class="n">fname_events_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fname_events</span><span class="p">)</span>
+
+        <span class="n">delay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">delay_item</span> <span class="o">*</span> <span class="n">raw</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]))</span>
+        <span class="n">events</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">events</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">delay</span>
+        <span class="n">events_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
+
+        <span class="n">raw_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+
+    <span class="n">raw</span><span class="p">,</span> <span class="n">events</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.concatenate_raws.html#mne.concatenate_raws" title="mne.concatenate_raws" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">concatenate_raws</span></a><span class="p">(</span><span class="n">raw_list</span><span class="p">,</span> <span class="n">events_list</span><span class="o">=</span><span class="n">events_list</span><span class="p">)</span>
+    <span class="n">raw</span><span class="o">.</span><span class="n">set_eeg_reference</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.abspath" title="os.path.abspath" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span></a><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_sss_filt_dsamp_ica-raw.fif&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subject</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="p">)</span>
+
+    <span class="n">raw</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">event_file</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.abspath" title="os.path.abspath" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span></a><span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_sss_filt_dsamp_ica-raw-eve.fif&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subject</span><span class="p">))</span>
+    <a href="http://mne-tools.github.io/stable/generated/mne.write_events.html#mne.write_events" title="mne.write_events" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">write_events</span></a><span class="p">(</span><span class="n">event_file</span><span class="p">,</span> <span class="n">events</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">raw_list</span>
+    <span class="k">del</span> <span class="n">raw</span>
+
+    <span class="k">return</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_file</span></a><span class="p">,</span> <span class="n">event_file</span><span class="p">,</span> <span class="n">fname_events_files</span>
+</pre></div>
+</div>
+</section>
+<section id="group-average-on-source-level">
+<h2>Group average on source level<a class="headerlink" href="#group-average-on-source-level" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">compute_morph_stc</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">cond_files</span><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">op</span>
+    <span class="kn">import</span> <span class="nn">mne</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;processing subject: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">subject</span><span class="p">)</span>
+
+    <span class="c1"># Morph STCs</span>
+    <span class="n">stc_morphed_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">cond_file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cond_files</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">conditions</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">cond_file</span><span class="p">)</span>
+
+        <span class="n">stc</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.read_source_estimate.html#mne.read_source_estimate" title="mne.read_source_estimate" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">read_source_estimate</span></a><span class="p">(</span><span class="n">cond_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">stc</span><span class="p">)</span>
+
+        <span class="n">morph</span> <span class="o">=</span> <a href="http://mne-tools.github.io/stable/generated/mne.compute_source_morph.html#mne.compute_source_morph" title="mne.compute_source_morph" class="sphx-glr-backref-module-mne sphx-glr-backref-type-py-function"><span class="n">mne</span><span class="o">.</span><span class="n">compute_source_morph</span></a><span class="p">(</span>
+                        <span class="n">stc</span><span class="p">,</span> <span class="n">subject_from</span><span class="o">=</span><span class="n">subject</span><span class="p">,</span> <span class="n">subject_to</span><span class="o">=</span><span class="s1">&#39;fsaverage&#39;</span><span class="p">,</span>
+                        <span class="n">subjects_dir</span><span class="o">=</span><span class="n">subjects_dir</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">morph</span><span class="p">)</span>
+
+        <span class="n">stc_morphed</span> <span class="o">=</span> <span class="n">morph</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">stc</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">stc_morphed</span><span class="p">)</span>
+
+        <span class="n">stc_morphed_file</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.abspath" title="os.path.abspath" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">abspath</span></a><span class="p">(</span><span class="s1">&#39;mne_dSPM_inverse_morph-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">conditions</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>  <span class="c1"># noqa</span>
+        <span class="n">stc_morphed</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">stc_morphed_file</span><span class="p">)</span>
+
+        <span class="n">stc_morphed_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stc_morphed_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stc_morphed_files</span>
+
+
+<span class="k">def</span> <span class="nf">show_files</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">files</span>
+
+
+<span class="c1"># building full inverse pipeline</span>
+<span class="k">def</span> <span class="nf">create_full_inv_pipeline</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">,</span>
+                             <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;full_inv_pipeline&quot;</span><span class="p">):</span>
+
+    <span class="c1"># inverse parameters</span>
+    <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;inverse parameters&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">]})</span>
+
+    <span class="n">events_id</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;events_id&#39;</span><span class="p">]</span>
+    <span class="n">condition</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span>
+    <span class="n">t_min</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;tmin&#39;</span><span class="p">]</span>
+    <span class="n">t_max</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;tmax&#39;</span><span class="p">]</span>
+    <span class="n">spacing</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span>  <span class="c1"># oct-6</span>
+    <span class="n">snr</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;snr&#39;</span><span class="p">]</span>
+    <span class="n">inv_method</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;method&#39;</span><span class="p">]</span>  <span class="c1"># dSPM</span>
+    <span class="n">parc</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;parcellation&#39;</span><span class="p">]</span>  <span class="c1"># aparc</span>
+
+    <span class="n">subjects_dir</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subjects_dir&quot;</span><span class="p">])</span>
+
+    <span class="c1"># full inverse pipeline</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span></a><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">pipeline_name</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">base_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a>
+
+    <span class="c1"># define the inputs of the pipeline</span>
+    <span class="n">inputnode</span> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Node</span></a><span class="p">(</span>
+        <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.interfaces.base.core.html#nipype.interfaces.base.core.Interface" title="nipype.interfaces.base.core.Interface" class="sphx-glr-backref-module-nipype-interfaces-base-core sphx-glr-backref-type-py-class"><span class="n">IdentityInterface</span></a><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_ica_files&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">]),</span>  <span class="c1"># noqa</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;inputnode&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We connect the output of infosource node to the one of datasource.</span>
+    <span class="c1"># So, these two nodes taken together can grab data.</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span>  <span class="s1">&#39;subject_id&#39;</span><span class="p">)</span>
+
+    <span class="c1"># We define the Node that encapsulates run_events_concatenate function</span>
+    <span class="n">concat_event</span> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Node</span></a><span class="p">(</span>
+        <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.interfaces.base.core.html#nipype.interfaces.base.core.Interface" title="nipype.interfaces.base.core.Interface" class="sphx-glr-backref-module-nipype-interfaces-base-core sphx-glr-backref-type-py-class"><span class="n">Function</span></a><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;list_ica_files&#39;</span><span class="p">,</span> <span class="s1">&#39;subject&#39;</span><span class="p">],</span>
+                 <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="s1">&#39;event_file&#39;</span><span class="p">,</span> <span class="s1">&#39;fname_events_files&#39;</span><span class="p">],</span>
+                 <span class="n">function</span><span class="o">=</span><span class="n">run_events_concatenate</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;concat_event&#39;</span><span class="p">)</span>
+
+    <span class="c1"># and its connections to the other nodes</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;list_ica_files&#39;</span><span class="p">,</span>
+                         <span class="n">concat_event</span><span class="p">,</span> <span class="s1">&#39;list_ica_files&#39;</span><span class="p">)</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">concat_event</span><span class="p">,</span> <span class="s1">&#39;subject&#39;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Ephypype creates for us a pipeline to compute inverse solution which can</span>
+    <span class="c1"># be connected to these nodes we created.</span>
+    <span class="n">inv_sol_workflow</span> <span class="o">=</span> <a href="../../generated/ephypype.pipelines.create_pipeline_source_reconstruction.html#ephypype.pipelines.create_pipeline_source_reconstruction" title="ephypype.pipelines.create_pipeline_source_reconstruction" class="sphx-glr-backref-module-ephypype-pipelines sphx-glr-backref-type-py-function"><span class="n">create_pipeline_source_reconstruction</span></a><span class="p">(</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <span class="n">subjects_dir</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="n">spacing</span><span class="p">,</span> <span class="n">inv_method</span><span class="o">=</span><span class="n">inv_method</span><span class="p">,</span>
+        <span class="n">is_epoched</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_evoked</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">events_id</span><span class="o">=</span><span class="n">events_id</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span>  <span class="c1"># noqa</span>
+        <span class="n">t_min</span><span class="o">=</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="o">=</span><span class="n">t_max</span><span class="p">,</span> <span class="n">all_src_space</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parc</span><span class="o">=</span><span class="n">parc</span><span class="p">,</span> <span class="n">snr</span><span class="o">=</span><span class="n">snr</span><span class="p">)</span>
+
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                         <span class="n">inv_sol_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.sbj_id&#39;</span><span class="p">)</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">concat_event</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;raw_file&#39;</span><span class="p">,</span> <span class="n">show_files</span><span class="p">),</span>
+                         <span class="n">inv_sol_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.raw&#39;</span><span class="p">)</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">concat_event</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;event_file&#39;</span><span class="p">,</span> <span class="n">show_files</span><span class="p">),</span>
+                         <span class="n">inv_sol_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.events_file&#39;</span><span class="p">)</span>
+
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">inputnode</span><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">,</span>
+                         <span class="n">inv_sol_workflow</span><span class="p">,</span> <span class="s1">&#39;inputnode.trans_file&#39;</span><span class="p">)</span>
+
+    <span class="n">conditions</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">[</span><span class="s2">&quot;inverse&quot;</span><span class="p">][</span><span class="s1">&#39;new_name_condition&#39;</span><span class="p">]</span>
+
+    <span class="c1"># We define the Node that encapsulates compute_morph_stc function</span>
+    <span class="n">morph_stc</span> <span class="o">=</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class"><span class="n">pe</span><span class="o">.</span><span class="n">Node</span></a><span class="p">(</span>
+        <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.interfaces.base.core.html#nipype.interfaces.base.core.Interface" title="nipype.interfaces.base.core.Interface" class="sphx-glr-backref-module-nipype-interfaces-base-core sphx-glr-backref-type-py-class"><span class="n">Function</span></a><span class="p">(</span><span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;conditions&#39;</span><span class="p">,</span> <span class="s1">&#39;cond_files&#39;</span><span class="p">,</span> <span class="s1">&#39;subjects_dir&#39;</span><span class="p">],</span>  <span class="c1"># noqa</span>
+                <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;stc_morphed_files&#39;</span><span class="p">],</span>
+                <span class="n">function</span><span class="o">=</span><span class="n">compute_morph_stc</span><span class="p">),</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;morph_stc&quot;</span><span class="p">)</span>
+
+    <span class="c1"># and its connections to the other nodes</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="n">morph_stc</span><span class="p">,</span> <span class="s1">&#39;subject&#39;</span><span class="p">)</span>
+    <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">inv_pipeline</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><span class="n">inv_sol_workflow</span><span class="p">,</span> <span class="s1">&#39;inv_solution.stc_files&#39;</span><span class="p">,</span>
+                         <span class="n">morph_stc</span><span class="p">,</span> <span class="s1">&#39;cond_files&#39;</span><span class="p">)</span>
+
+    <span class="n">morph_stc</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="n">conditions</span>
+    <span class="n">morph_stc</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">subjects_dir</span> <span class="o">=</span> <span class="n">subjects_dir</span>
+
+    <span class="k">return</span> <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a>
+</pre></div>
+</div>
+</section>
+<section id="defining-pipeline-to-compute-inverse-solution">
+<h2>Defining pipeline to compute inverse solution<a class="headerlink" href="#defining-pipeline-to-compute-inverse-solution" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a> <span class="o">=</span> <span class="n">create_full_inv_pipeline</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">params</span></a><span class="p">)</span>
+
+<span class="c1"># and its connections to the other nodes</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">preproc_workflow</span></a><span class="p">,</span> <span class="s1">&#39;ica.ica_file&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.list_ica_files&#39;</span><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">infosource</span></a><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.subject_id&#39;</span><span class="p">)</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.connect" title="nipype.pipeline.engine.workflows.Workflow.connect" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">connect</span></a><span class="p">(</span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.nodes.html#nipype.pipeline.engine.nodes.Node" title="nipype.pipeline.engine.nodes.Node" class="sphx-glr-backref-module-nipype-pipeline-engine-nodes sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datasource</span></a><span class="p">,</span> <span class="s1">&#39;trans_file&#39;</span><span class="p">,</span>
+                      <a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow" title="nipype.pipeline.engine.workflows.Workflow" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_pipeline</span></a><span class="p">,</span> <span class="s1">&#39;inputnode.trans_file&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;inverse parameters&#39;: {&#39;condition&#39;: [&#39;face/famous&#39;,
+                                      &#39;scrambled&#39;,
+                                      &#39;face/unfamiliar&#39;],
+                        &#39;events_id&#39;: {&#39;face/famous/first&#39;: 5,
+                                      &#39;face/famous/immediate&#39;: 6,
+                                      &#39;face/famous/long&#39;: 7,
+                                      &#39;face/unfamiliar/first&#39;: 13,
+                                      &#39;face/unfamiliar/immediate&#39;: 14,
+                                      &#39;face/unfamiliar/long&#39;: 15,
+                                      &#39;scrambled/first&#39;: 17,
+                                      &#39;scrambled/immediate&#39;: 18,
+                                      &#39;scrambled/long&#39;: 19},
+                        &#39;method&#39;: &#39;dSPM&#39;,
+                        &#39;new_name_condition&#39;: [&#39;famous&#39;,
+                                               &#39;scrambled&#39;,
+                                               &#39;unfamiliar&#39;],
+                        &#39;parcellation&#39;: &#39;aparc&#39;,
+                        &#39;snr&#39;: 3.0,
+                        &#39;spacing&#39;: &#39;oct-6&#39;,
+                        &#39;tmax&#39;: 1.0,
+                        &#39;tmin&#39;: -0.2,
+                        &#39;trans_fname&#39;: &#39;*-trans.fif&#39;}}
+******************** {}
+</pre></div>
+</div>
+<section id="workflow-graph">
+<h3>Workflow graph<a class="headerlink" href="#workflow-graph" title="Permalink to this heading">¶</a></h3>
+<p>To do so, we first write the workflow graph (optional)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.write_graph" title="nipype.pipeline.engine.workflows.Workflow.write_graph" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">write_graph</span></a><span class="p">(</span><span class="n">graph2use</span><span class="o">=</span><span class="s1">&#39;colored&#39;</span><span class="p">)</span>  <span class="c1"># colored</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&#39;/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/graph.png&#39;
+</pre></div>
+</div>
+<p>Take a moment to pause and notice how the connections
+here correspond to how we connected the nodes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># noqa</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">img</span></a> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">wf_name</span></a><span class="p">,</span> <span class="s1">&#39;graph.png&#39;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">img</span></a><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span></a><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.run" title="nipype.pipeline.engine.workflows.Workflow.run" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span></a><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;LegacyMultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NJOBS</span></a><span class="p">})</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_plot_04-preprocessing_inverse_001.png" srcset="../../_images/sphx_glr_plot_04-preprocessing_inverse_001.png" alt="plot 04 preprocessing inverse" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw.fif
+/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw.fif
+/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw-eve.fif
+
+&lt;networkx.classes.digraph.DiGraph object at 0x7fa895bb2410&gt;
+</pre></div>
+</div>
+<p>Finally, we are now ready to execute our workflow.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">main_workflow</span><span class="o">.</span><span class="n">config</span></a><span class="p">[</span><span class="s1">&#39;execution&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;remove_unnecessary_outputs&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span><span class="p">}</span>
+
+<span class="c1"># Run workflow locally on 1 CPU</span>
+<a href="https://nipype.readthedocs.io/en/latest/api/generated/nipype.pipeline.engine.workflows.html#nipype.pipeline.engine.workflows.Workflow.run" title="nipype.pipeline.engine.workflows.Workflow.run" class="sphx-glr-backref-module-nipype-pipeline-engine-workflows sphx-glr-backref-type-py-method"><span class="n">main_workflow</span><span class="o">.</span><span class="n">run</span></a><span class="p">(</span><span class="n">plugin</span><span class="o">=</span><span class="s1">&#39;LegacyMultiProc&#39;</span><span class="p">,</span> <span class="n">plugin_args</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_procs&#39;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">NJOBS</span></a><span class="p">})</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw.fif
+/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw.fif
+/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_full_inverse/full_inv_pipeline/_subject_id_sub-01/concat_event/sub-01_sss_filt_dsamp_ica-raw-eve.fif
+
+&lt;networkx.classes.digraph.DiGraph object at 0x7fa8983b07c0&gt;
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  1.669 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-workshop-01-meg-plot-04-preprocessing-inverse-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a1ec89a1de7efc3a8bbbcea58a808789/plot_04-preprocessing_inverse.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_04-preprocessing_inverse.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/2c191d56a51323e1a46bf19ec940822c/plot_04-preprocessing_inverse.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_04-preprocessing_inverse.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-14.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

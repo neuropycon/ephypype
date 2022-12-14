@@ -72,7 +72,7 @@ mainly from |nipype| and |ephypype| packages.
     import nipype.pipeline.engine as pe
 
     from ephypype.nodes import create_iterator, create_datagrabber
-    from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg  # noqa
+    from ephypype.pipelines.preproc_meeg import create_pipeline_preproc_meeg
 
 
 
@@ -91,7 +91,7 @@ main directories where the data are stored, the list of subjects and
 sessions, ...) and the variables specific for the particular pipeline
 (downsampling frequency, EOG and ECG channels, cut-off frequencies, ...) in a
 |params.json| file
-(if it is does work, try to go on the github page, and right-click "Save As" on the Raw button)
+(if it is does work, try to go on the github page, and right-click "Save As" on the Raw button).
 
 .. |params.json| replace::
   :download:`json <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json>`
@@ -110,7 +110,7 @@ sessions, ...) and the variables specific for the particular pipeline
     NJOBS = params["general"]["NJOBS"]
     session_ids = params["general"]["session_ids"]
 
-    is_short = params["general"]["short"]  # to analyze a segment of data
+    is_short = params["general"]["short"]  # to analyze a shorter segment of data
 
     if "data_path" in params["general"].keys():
         data_path = params["general"]["data_path"]
@@ -127,7 +127,6 @@ sessions, ...) and the variables specific for the particular pipeline
  .. code-block:: none
 
     {'parameters': {'NJOBS': 1,
-                    'conditions': ['famous', 'scrambled', 'unfamiliar'],
                     'data_path': '/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives',
                     'data_type': 'fif',
                     'session_ids': ['01', '02'],
@@ -139,15 +138,17 @@ sessions, ...) and the variables specific for the particular pipeline
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-78
+.. GENERATED FROM PYTHON SOURCE LINES 73-80
 
-Then, we read the parameters for preprocessing from the json file and print
+Then, we read the **parameters for preprocessing** from the json file and print
 it. In the json file we set : the names of EoG and ECG channels, the
 filter settings, the downsampling frequency, the number of ICA components
 specified as a fraction of explained variance (0.999) and a reject
-dictionary to exclude time segments
+dictionary to exclude time segments.
+The list of all input can be found in the definition of the pipeline
+:func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-88
+.. GENERATED FROM PYTHON SOURCE LINES 80-90
 
 .. code-block:: default
 
@@ -180,7 +181,7 @@ dictionary to exclude time segments
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-109
+.. GENERATED FROM PYTHON SOURCE LINES 91-111
 
 Specify Nodes
 ^^^^^^^^^^^^^
@@ -195,15 +196,15 @@ workflow itself. In this example the main Nodes are
 
    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_nodes.html" target="_blank">nodes</a>
 
-* ``infosource`` is a Node that just distributes values (:ref:`meg_infosourcenode`)
-* ``datasource`` is a |DataGrabber| Node that allows the user to define flexible search patterns which can be parameterized by user defined inputs (:ref:`meg_datagrabbernode`) 
-* ``preproc_meg_pipeline`` is a Node containing the pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` (:ref:`preproc_meg_node`)
+* ``infosource`` is a Node that just distributes values (:ref:`meg_infosourcenode`);
+* ``datasource`` is a |DataGrabber| Node that allows the user to **define flexible search patterns** which can be parameterized by user defined inputs (:ref:`meg_datagrabbernode`) ;
+* ``preproc_meg_pipeline`` is a Node containing the NeuroPycon pipeline created by :func:`~ephypype.pipelines.create_pipeline_preproc_meeg` (:ref:`preproc_meg_node`).
 
 .. |DataGrabber| raw:: html
 
    <a href="https://miykael.github.io/nipype_tutorial/notebooks/basic_data_input.html#DataGrabber" target="_blank">DataGrabber</a>
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-119
+.. GENERATED FROM PYTHON SOURCE LINES 113-121
 
 .. _meg_infosourcenode:
 
@@ -214,7 +215,7 @@ The ephypype function :func:`~ephypype.nodes.create_iterator` creates the
 the different subject names into the workflow we only need a Node that can
 receive the input and distribute those inputs to the workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-122
+.. GENERATED FROM PYTHON SOURCE LINES 121-124
 
 .. code-block:: default
 
@@ -228,7 +229,7 @@ receive the input and distribute those inputs to the workflow.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-137
+.. GENERATED FROM PYTHON SOURCE LINES 125-139
 
 .. _meg_datagrabbernode:
 
@@ -237,15 +238,15 @@ DataGrabber
 Then we create the ``datasource`` node to grab data. The ephypype function
 :func:`~ephypype.nodes.create_datagrabber`
 creates a node to grab data using |DataGrabber| in Nipype. The DataGrabber
-Interface allows to define flexible search patterns which can be
+Interface allows to define **flexible search patterns** which can be
 parameterized by user defined inputs (such as subject ID, session, etc.).
 
 In this example we parameterize the pattern search with ``subject_id`` and
 ``session_id``. The ``template_args`` in this node iterates upon the values
 in the ``infosource`` node.
-We look for MEG data contained in ``ses-meg/meg`` folder.
+We look for MEG data contained in ``ses-meg/meg`` (``ses-meg/meg_short``) folder.
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-145
+.. GENERATED FROM PYTHON SOURCE LINES 139-147
 
 .. code-block:: default
 
@@ -264,7 +265,7 @@ We look for MEG data contained in ``ses-meg/meg`` folder.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-165
+.. GENERATED FROM PYTHON SOURCE LINES 148-167
 
 .. _preproc_meg_node:
 
@@ -279,14 +280,14 @@ Each pipeline provided by NeuroPycon requires two different kind of inputs:
 
 * inputs of the pipeline
 * **inputnode**: particular inputs defined after the creation of the pipeline;
-  an inputnode of a pipeline is defined by an output of a previous Node
+  an inputnode of a pipeline is defined by an output of a previous Node.
 
 For example, looking at the definition of :func:`~ephypype.pipelines.create_pipeline_preproc_meeg`
 we have the input of the pipeline (e.g., ``main_path``, ``lfreq``) and the 
 inputnode ``raw_file`` and ``subject_id``. 
 In the next section :ref:`workflow_meg` we'll see how to specify these inputnode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-172
+.. GENERATED FROM PYTHON SOURCE LINES 167-174
 
 .. code-block:: default
 
@@ -310,16 +311,27 @@ In the next section :ref:`workflow_meg` we'll see how to specify these inputnode
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 173-179
+.. GENERATED FROM PYTHON SOURCE LINES 175-192
 
 .. _workflow_meg:
 
 Specify Workflows and Connect Nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The purpose of Workflow is to guide the sequential execution of Nodes: we
+create a main Workflow to connect the different Nodes and define the data
+flow from the outputs of one Node to the inputs of the connected Nodes.
+The specified connections create our workflow: the created nodes and the
+dependencies between them are represented as a graph
+(see :ref:`graph_preproc_meg`), in this way it is easy to see which nodes are
+executed and in which order.
+
+It is important to point out that we have to connect the output and input
+fields of each node to the output and input fields of another node.
+
 Now, we create our main workflow and specify the ``base_dir`` which tells
 nipype the directory in which to store the outputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-186
+.. GENERATED FROM PYTHON SOURCE LINES 192-199
 
 .. code-block:: default
 
@@ -337,14 +349,14 @@ nipype the directory in which to store the outputs.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-191
+.. GENERATED FROM PYTHON SOURCE LINES 200-204
 
 We then connect the nodes two at a time. First, we connect the two outputs
 (``subject_id`` and ``session_id``) of the :ref:`meg_infosourcenode` node to
 the :ref:`meg_datagrabbernode` node. So, these two nodes taken together can
 grab data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-195
+.. GENERATED FROM PYTHON SOURCE LINES 204-208
 
 .. code-block:: default
 
@@ -359,12 +371,12 @@ grab data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 196-198
+.. GENERATED FROM PYTHON SOURCE LINES 209-211
 
 Similarly, for the inputnode of the :ref:`preproc_meg_node`. Things will
 become clearer in a moment when we plot the graph of the workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-204
+.. GENERATED FROM PYTHON SOURCE LINES 211-217
 
 .. code-block:: default
 
@@ -381,16 +393,21 @@ become clearer in a moment when we plot the graph of the workflow.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-211
+.. GENERATED FROM PYTHON SOURCE LINES 218-220
+
+.. note:: The inputnode ``raw_file`` of the pipeline node ``preproc_workflow``
+  is the output of ``datasource`` node.
+
+.. GENERATED FROM PYTHON SOURCE LINES 222-228
 
 Run workflow
 ^^^^^^^^^^^^
 After we have specified all the nodes and connections of the workflow, the
-last step is to run it by calling the ``run`` method. It’s also possible to
+last step is to run it by calling the ``run()`` method. It’s also possible to
 generate static graph representing nodes and connections between them by
 calling ``write_graph`` method.
 
-.. GENERATED FROM PYTHON SOURCE LINES 211-214
+.. GENERATED FROM PYTHON SOURCE LINES 228-231
 
 .. code-block:: default
 
@@ -410,7 +427,12 @@ calling ``write_graph`` method.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 215-220
+.. GENERATED FROM PYTHON SOURCE LINES 232-242
+
+.. _graph_preproc_meg:
+
+Workflow graph
+""""""""""""""
 
 Take a moment to pause and notice how the connections
 here correspond to how we connected the nodes. In other words, the
@@ -418,7 +440,7 @@ connections we specified created the workflow: the nodes and the dependencies
 between them are represented as a graph, in this way it is easy to see which
 nodes are executed and in which order.
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-227
+.. GENERATED FROM PYTHON SOURCE LINES 242-249
 
 .. code-block:: default
 
@@ -447,16 +469,19 @@ nodes are executed and in which order.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-230
+.. GENERATED FROM PYTHON SOURCE LINES 250-252
 
 .. note:: We have to connect the output and input fields of each node to the
       output and input fields of another node.
 
-.. GENERATED FROM PYTHON SOURCE LINES 232-233
+.. GENERATED FROM PYTHON SOURCE LINES 254-258
+
+Run
+"""
 
 Finally, we are now ready to execute our workflow.
 
-.. GENERATED FROM PYTHON SOURCE LINES 233-238
+.. GENERATED FROM PYTHON SOURCE LINES 258-263
 
 .. code-block:: default
 
@@ -474,22 +499,23 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7feb6f36cf10>
+    <networkx.classes.digraph.DiGraph object at 0x7f00f6f63c70>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 239-242
+.. GENERATED FROM PYTHON SOURCE LINES 264-268
 
 .. note::  If we rerun the workflow, only the nodes whose inputs have changed
-      since the last run will be executed again. If not, it will simply
-      return cached results. This is achieved by recording a hash of the inputs.
+  since the last run will be executed again. If not, it will simply
+  return cached results. This is achieved by recording a hash of the inputs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 244-256
+
+.. GENERATED FROM PYTHON SOURCE LINES 271-284
 
 Results
 ^^^^^^^
-The output is the preprocessed data stored in the workflow directory
-defined by ``base_dir``. Here we find the folder
+The output of this workflow is the preprocessed data stored in the workflow
+directory defined by ``base_dir``. Here we find the folder
 ``preprocessing_dsamp_workflow`` where all the results of each iteration are
 sorted by nodes. The cleaned data will be used in :ref:`plot_events_inverse`.
 
@@ -497,9 +523,10 @@ It’s a good rule to inspect the report file saved in the ``ica`` dir to look
 at the excluded ICA components.
 
 .. note:: You could use this :download:`notebook <https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/ipynb_preprocessing.ipynb>`
-      to better inspect your ICs
+      to better inspect your ICs.
 
-.. GENERATED FROM PYTHON SOURCE LINES 256-271
+
+.. GENERATED FROM PYTHON SOURCE LINES 284-299
 
 .. code-block:: default
 
@@ -527,56 +554,56 @@ at the excluded ICA components.
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_002.png
-         :alt: ICA027 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA025 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_002.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_003.png
-         :alt: ICA017 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA030 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_003.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_004.png
-         :alt: ICA029 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA027 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_004.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_005.png
-         :alt: ICA023 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA019 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_005.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_006.png
-         :alt: ICA024 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA026 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_006.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_007.png
-         :alt: ICA027 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA021 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_007.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_008.png
-         :alt: ICA022 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA020 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_008.png
          :class: sphx-glr-multi-img
 
     *
 
       .. image-sg:: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_009.png
-         :alt: ICA010 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
+         :alt: ICA009 (mag), Segment image and ERP/ERF, Spectrum, Dropped segments: 0.00 %
          :srcset: /auto_workshop/01_meg/images/sphx_glr_plot_01_meg_preprocessing_009.png
          :class: sphx-glr-multi-img
 
@@ -587,29 +614,29 @@ at the excluded ICA components.
 
     *** /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica.fif ***
     Opening raw data file /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica.fif...
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:265: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:293: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
       raw = mne.io.read_raw_fif(raw_file)
         Range : 67800 ... 157799 =    226.000 ...   525.997 secs
     Ready.
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:266: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:294: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
       ica = mne.preprocessing.read_ica(ica_file)
     Reading /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_01_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-01_proc-sss_meg_filt_dsamp_ica_solution.fif ...
     Now restoring ICA solution ...
     Ready.
         Using multitaper spectrum estimation with 7 DPSS windows
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
@@ -617,41 +644,41 @@ at the excluded ICA components.
     0 projection items activated
     *** /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica.fif ***
     Opening raw data file /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica.fif...
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:265: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:293: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica.fif) does not conform to MNE naming conventions. All raw files should end with raw.fif, raw_sss.fif, raw_tsss.fif, _meg.fif, _eeg.fif, _ieeg.fif, raw.fif.gz, raw_sss.fif.gz, raw_tsss.fif.gz, _meg.fif.gz, _eeg.fif.gz or _ieeg.fif.gz
       raw = mne.io.read_raw_fif(raw_file)
         Range : 18600 ... 108599 =     62.000 ...   361.997 secs
     Ready.
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:266: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:294: RuntimeWarning: This filename (/home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica_solution.fif) does not conform to MNE naming conventions. All ICA files should end with -ica.fif, -ica.fif.gz, _ica.fif or _ica.fif.gz
       ica = mne.preprocessing.read_ica(ica_file)
     Reading /home/pasca/Science/workshop/PracticalMEEG/ds000117/derivatives/meg_derivatives/preprocessing_dsamp_workflow/preproc_meg_dsamp_pipeline/_session_id_02_subject_id_sub-01/ica/sub-01_ses-meg_task-facerecognition_run-02_proc-sss_meg_filt_dsamp_ica_solution.fif ...
     Now restoring ICA solution ...
     Ready.
         Using multitaper spectrum estimation with 7 DPSS windows
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
     No baseline correction applied
     0 projection items activated
-    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:267: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
+    /home/pasca/Tools/python/packages/neuropycon/ephypype/doc/workshop/01_meg/plot_01_meg_preprocessing.py:295: RuntimeWarning: (X, Y) fit (3.1, 32.2) more than 20 mm from head frame origin
       ica.plot_properties(raw, picks=ica.exclude, figsize=[4.5, 4.5])
     Not setting metadata
     150 matching events found
@@ -664,7 +691,7 @@ at the excluded ICA components.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.303 seconds)
+   **Total running time of the script:** ( 0 minutes  18.899 seconds)
 
 
 .. _sphx_glr_download_auto_workshop_01_meg_plot_01_meg_preprocessing.py:

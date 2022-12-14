@@ -8,6 +8,7 @@
     <title>Apply bipolar montage to depth electrodes &#8212; ephypype 0.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -18,6 +19,8 @@
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
@@ -132,13 +135,13 @@ a desired function of a Matlab toolbox (<a href="http://www.fieldtriptoolbox.org
 </pre></div>
 </div>
 <p>Let us fetch the data first. It is around 675 MB download.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">base_path</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/os.path.html#os.path.dirname" title="os.path.dirname" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">dirname</span></a><span class="p">(</span><span class="n">ephypype</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;examples&#39;</span><span class="p">)</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">fetch_ieeg_dataset</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">json</span>  <span class="c1"># noqa</span>
 <span class="kn">import</span> <span class="nn">pprint</span>  <span class="c1"># noqa</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;time frequency parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">]})</span>
+<span class="n">params</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/json.html#json.load" title="json.load" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;time frequency parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">]})</span>
 <span class="n">ft_path</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">][</span><span class="s1">&#39;fieldtrip_path&#39;</span><span class="p">]</span>
 <span class="n">refmethod</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">][</span><span class="s1">&#39;refmethod&#39;</span><span class="p">]</span>
 <span class="n">channels_name</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;tfr&quot;</span><span class="p">][</span><span class="s1">&#39;channels_name&#39;</span><span class="p">]</span>
@@ -147,7 +150,7 @@ a desired function of a Matlab toolbox (<a href="http://www.fieldtriptoolbox.org
 
 <span class="c1"># Now we call the interface Reference to apply a bipolar montage to sEEG data</span>
 <span class="n">reference_if</span> <span class="o">=</span> <span class="n">Reference</span><span class="p">()</span>
-<span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">data_file</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;SubjectUCI29_data.mat&#39;</span><span class="p">)</span>
+<span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">data_file</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.join" title="os.path.join" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">op</span><span class="o">.</span><span class="n">join</span></a><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s1">&#39;SubjectUCI29_data.mat&#39;</span><span class="p">)</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">channels</span> <span class="o">=</span> <span class="n">channels_name</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">ft_path</span> <span class="o">=</span> <span class="n">ft_path</span>
 <span class="n">reference_if</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">refmethod</span> <span class="o">=</span> <span class="n">refmethod</span>
@@ -182,7 +185,7 @@ a desired function of a Matlab toolbox (<a href="http://www.fieldtriptoolbox.org
       
     </p>
     <p>
-        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-14.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>

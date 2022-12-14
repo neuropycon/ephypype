@@ -360,7 +360,7 @@ Finally, we are now ready to execute our workflow.
  .. code-block:: none
 
 
-    <networkx.classes.digraph.DiGraph object at 0x7feb8fc75c60>
+    <networkx.classes.digraph.DiGraph object at 0x7fdf88204f40>
 
 
 
@@ -485,7 +485,7 @@ with different flag parameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.363 seconds)
+   **Total running time of the script:** ( 0 minutes  9.216 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_preprocessing.py:

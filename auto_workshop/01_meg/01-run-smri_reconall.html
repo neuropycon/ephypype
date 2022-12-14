@@ -8,6 +8,7 @@
     <title>01. Freesurfer anatomical pipeline &#8212; ephypype 0.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
@@ -18,6 +19,8 @@
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
 <meta charset='utf-8'>
@@ -139,7 +142,8 @@ matrix. A cortical segmentation of the anatomical MRI is necessary to generate
 the source space, where the neural activity will be estimated.
 A <a class="reference external" href="https://mne.tools/stable/auto_tutorials/forward/30_forward.html?highlight=bem">Boundary Element Model</a>
 (BEM) which uses the segmented surfaces is used to
-construct the lead field matrix. To perform the cortical segmentation we
+construct the lead field matrix.</p>
+<p>To perform the <strong>cortical segmentation</strong> we
 provide a workflow based on nipype Interface wrapping the
 <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/recon-all">recon-all</a> command of
 Freesurfer. The output of <a class="reference internal" href="#reconallnode"><span class="std std-ref">ReconAll Node</span></a> node is used as input of another node that
@@ -168,7 +172,7 @@ running this script.</p>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.freesurfer</span> <span class="kn">import</span> <span class="n">ReconAll</span>
 <span class="kn">from</span> <span class="nn">nipype.interfaces.utility</span> <span class="kn">import</span> <span class="n">Function</span>
 
-<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <span class="n">create_iterator</span><span class="p">,</span> <span class="n">create_datagrabber</span>
+<span class="kn">from</span> <span class="nn">ephypype.nodes</span> <span class="kn">import</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">,</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a>
 <span class="kn">from</span> <span class="nn">ephypype.compute_fwd_problem</span> <span class="kn">import</span> <span class="n">_create_bem_sol</span>
 </pre></div>
 </div>
@@ -178,10 +182,10 @@ running this script.</p>
 <p>Let us specify the variables that are specific for the data analysis (the
 main directories where the data are stored, the list of subjects and
 sessions, …) and the variable specific for the particular pipeline
-(MRI path, Freesurfer fir, …) in a <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file</p>
+(MRI path, Freesurfer fir, …) in a <a class="reference download external" download="" href="https://github.com/neuropycon/ephypype/tree/master/doc/workshop/01_meg/params.json"><code class="xref download docutils literal notranslate"><span class="pre">json</span></code></a> file.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read experiment params as json</span>
-<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
-<span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">({</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]})</span>
+<span class="n">params</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/json.html#json.load" title="json.load" class="sphx-glr-backref-module-json sphx-glr-backref-type-py-function"><span class="n">json</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;params.json&quot;</span><span class="p">))</span>
+<a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span></a><span class="p">({</span><span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]})</span>
 
 <span class="n">subjects_dir</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subjects_dir&quot;</span><span class="p">]</span>
 <span class="n">subject_ids</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subject_ids&quot;</span><span class="p">]</span>
@@ -190,13 +194,13 @@ sessions, …) and the variable specific for the particular pipeline
 <span class="k">if</span> <span class="s2">&quot;subjects_dir&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
     <span class="n">data_path</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;general&quot;</span><span class="p">][</span><span class="s2">&quot;subjects_dir&quot;</span><span class="p">]</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
+    <span class="n">data_path</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.expanduser" title="os.path.expanduser" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span></a><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">)</span>
 
 <span class="c1"># Check envoiroment variables</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FREESURFER_HOME&#39;</span><span class="p">):</span>
+<span class="k">if</span> <span class="ow">not</span> <a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;FREESURFER_HOME&#39;</span><span class="p">):</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;FREESURFER_HOME environment variable not set&#39;</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SUBJECTS_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subjects_dir</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SUBJECTS_DIR </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;SUBJECTS_DIR&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="p">[</span><span class="s2">&quot;SUBJECTS_DIR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subjects_dir</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;SUBJECTS_DIR </span><span class="si">{</span><a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="p">[</span><span class="s2">&quot;SUBJECTS_DIR&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> &#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -210,13 +214,13 @@ the values in the <code class="docutils literal notranslate"><span class="pre">i
 Here we define an input field for <code class="docutils literal notranslate"><span class="pre">create_datagrabber</span></code> called
 <code class="docutils literal notranslate"><span class="pre">subject_id</span></code>. This is then used to set the template (see %s in the
 template). We look for .nii files located in the <code class="docutils literal notranslate"><span class="pre">ses-mri/anat</span></code> folder of
-the subject</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <span class="n">create_iterator</span><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">subject_ids</span><span class="p">])</span>
+the subject.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">infosource</span> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_iterator.html#ephypype.nodes.create_iterator" title="ephypype.nodes.create_iterator" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_iterator</span></a><span class="p">([</span><span class="s1">&#39;subject_id&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">subject_ids</span><span class="p">])</span>
 
 <span class="n">template_path</span> <span class="o">=</span> <span class="s1">&#39;../</span><span class="si">%s</span><span class="s1">/ses-mri/anat/</span><span class="si">%s</span><span class="s1">*T1w.nii.gz&#39;</span>
 <span class="n">template_args</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">,</span> <span class="s1">&#39;subject_id&#39;</span><span class="p">]]</span>
 <span class="n">infields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span>
-<span class="n">datasource</span> <span class="o">=</span> <span class="n">create_datagrabber</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">,</span>
+<span class="n">datasource</span> <span class="o">=</span> <a href="../../generated/ephypype.nodes.create_datagrabber.html#ephypype.nodes.create_datagrabber" title="ephypype.nodes.create_datagrabber" class="sphx-glr-backref-module-ephypype-nodes sphx-glr-backref-type-py-function"><span class="n">create_datagrabber</span></a><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">template_path</span><span class="p">,</span> <span class="n">template_args</span><span class="p">,</span>
                                 <span class="n">infields</span><span class="o">=</span><span class="n">infields</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -235,7 +239,7 @@ data from anatomical images of a subject.</p>
 </section>
 <section id="bem-node">
 <span id="bemnode"></span><h3>BEM Node<a class="headerlink" href="#bem-node" title="Permalink to this heading">¶</a></h3>
-<p>We define a node wrapping an ephypype function calling
+<p>Then, we define a node wrapping an ephypype function calling
 <a class="reference external" href="https://mne.tools/stable/generated/mne.bem.make_watershed_bem.html?highlight=make_watershed_bem#mne.bem.make_watershed_bem">make_watershed_bem</a>
 of MNE Python package for BEM generation</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bem_generation</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span><span class="n">interface</span><span class="o">=</span><span class="n">Function</span><span class="p">(</span>
@@ -248,9 +252,9 @@ of MNE Python package for BEM generation</p>
 </section>
 <section id="create-workflows">
 <span id="main-wf"></span><h2>Create workflows<a class="headerlink" href="#create-workflows" title="Permalink to this heading">¶</a></h2>
-<p>First, we create a workflow containing the <a class="reference internal" href="#reconallnode"><span class="std std-ref">ReconAll Node</span></a> ans specify the
+<p>First, we create a workflow containing the <a class="reference internal" href="#reconallnode"><span class="std std-ref">ReconAll Node</span></a> and specify the
 connections between all nodes (<code class="docutils literal notranslate"><span class="pre">infosource</span></code>, <code class="docutils literal notranslate"><span class="pre">datasource</span></code> and
-<code class="docutils literal notranslate"><span class="pre">recon_all</span></code>)</p>
+<code class="docutils literal notranslate"><span class="pre">recon_all</span></code>).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># reconall_workflow will be a node of the main workflow</span>
 <span class="n">reconall_workflow_name</span> <span class="o">=</span> <span class="s1">&#39;segmentation_workflow&#39;</span>
 <span class="n">reconall_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">reconall_workflow_name</span><span class="p">)</span>
@@ -262,7 +266,7 @@ connections between all nodes (<code class="docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>Then, we create the main workflow where we will connect the output of
-<code class="docutils literal notranslate"><span class="pre">reconall_workflow</span></code> to the input of <code class="docutils literal notranslate"><span class="pre">bem_generation</span></code> node</p>
+<code class="docutils literal notranslate"><span class="pre">reconall_workflow</span></code> to the input of <code class="docutils literal notranslate"><span class="pre">bem_generation</span></code> node.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">freesurfer_workflow_name</span> <span class="o">=</span> <span class="s1">&#39;FS_workflow&#39;</span>
 <span class="n">main_workflow</span> <span class="o">=</span> <span class="n">pe</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">freesurfer_workflow_name</span><span class="p">)</span>
 <span class="n">main_workflow</span><span class="o">.</span><span class="n">base_dir</span> <span class="o">=</span> <span class="n">subjects_dir</span>
@@ -324,7 +328,7 @@ takes one day.</p>
       
     </p>
     <p>
-        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-11.<br/>
+        &copy; Copyright 2022, Neuropycon Developers. Last updated on 2022-12-14.<br/>
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br/>
     </p>
   </div>
