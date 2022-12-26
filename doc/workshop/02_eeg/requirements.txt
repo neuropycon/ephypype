@@ -134,7 +134,7 @@ visbrain==0.4.5
 vispy==0.8.0
 vtk==9.0.1
 wcwidth==0.2.5
-wheel==0.37.0
+wheel==0.38.1
 wrapt==1.12.1
 xlrd==2.0.1
 xlwt==1.3.0
