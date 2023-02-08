@@ -27,7 +27,7 @@ cloudpickle==2.2.0
 colorama==0.4.6
 colorspacious==1.1.2
 contourpy==1.0.6
-cryptography==38.0.4
+cryptography==39.0.1
 cycler==0.11.0
 cytoolz==0.12.0
 darkdetect==0.7.1
