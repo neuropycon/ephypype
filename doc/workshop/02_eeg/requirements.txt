@@ -60,7 +60,7 @@ nibabel==3.2.1
 nilearn==0.8.0
 nipype==1.6.1
 numexpr==2.7.3
-numpy==1.21.2
+numpy==1.22.0
 numpydoc==1.1.0
 olefile==0.46
 packaging==21.0
