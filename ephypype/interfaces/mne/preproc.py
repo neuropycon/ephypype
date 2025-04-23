@@ -126,10 +126,11 @@ class PreprocFifInputSpec(BaseInterfaceInputSpec):
         None, desc='upper bound for filtering', mandatory=False)
     data_type = traits.String('fif', desc='data type', usedefault=True)
     montage = traits.String(desc='EEG layout')
-    misc = traits.String(desc='EEG misc channels')
+    misc = traits.List(desc='EEG misc channels')
     bipolar = traits.Dict(desc='set EEG bipolar channels')
     ch_new_names = traits.Dict(desc='new channel name')
     eog = traits.List(desc='EEG eog channels')
+    ecg = traits.String(desc='EEG ecg channel')
     down_sfreq = traits.Int(None, desc='downsampling frequency',
                             mandatory=False)
 
@@ -189,6 +190,8 @@ class PreprocFif(BaseInterface):
             misc = self.inputs.misc
             bipolar = self.inputs.bipolar
             EoG_ch_name = self.inputs.eog
+            ECG_ch_name = self.inputs.ecg
+            print(f'***************************************** {ECG_ch_name}')
             ch_new_names = self.inputs.ch_new_names
         else:
             montage, misc, bipolar, EoG_ch_name = None, None, None, None
@@ -197,7 +200,8 @@ class PreprocFif(BaseInterface):
         result_fif = _preprocess_fif(
             fif_file, data_type, l_freq=l_freq, h_freq=h_freq,
             down_sfreq=down_sfreq, montage=montage, misc=misc,
-            eog_ch=EoG_ch_name, bipolar=bipolar, ch_new_names=ch_new_names)
+            eog_ch=EoG_ch_name, ecg_ch=ECG_ch_name,
+            bipolar=bipolar, ch_new_names=ch_new_names)
 
         self.fif_file = result_fif
         return runtime

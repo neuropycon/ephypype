@@ -5,6 +5,7 @@ Authors: Dmitrii Altukhov <dm-altukhov@ya.ru>
 """
 
 import os
+import mne
 import sys
 import numpy as np
 import glob
@@ -16,7 +17,7 @@ from mne.io import read_raw_fif, read_raw_brainvision, read_raw_eeglab
 from mne.preprocessing import ICA
 from mne.preprocessing import create_ecg_epochs, create_eog_epochs
 from mne.report import Report
-from mne.time_frequency import psd_multitaper
+# from mne.time_frequency import psd_multitaper
 from mne.channels import read_custom_montage, make_standard_montage
 
 from nipype.utils.filemanip import split_filename
@@ -24,7 +25,7 @@ from nipype.utils.filemanip import split_filename
 
 def _preprocess_fif(
         fif_file, data_type='fif', l_freq=None, h_freq=None, down_sfreq=None,
-        montage=None, misc=None, eog_ch=None, ch_new_names=None,
+        montage=None, misc=None, eog_ch=None, ecg_ch=None, ch_new_names=None,
         bipolar=None):
     """Filter and downsample data."""
     _, basename, ext = split_filename(fif_file)
@@ -36,9 +37,15 @@ def _preprocess_fif(
             raw = read_raw_brainvision(fif_file, preload=True)
         elif ext == '.set':  # EEGLAB
             raw = read_raw_eeglab(fif_file, preload=True)
+        else:
+            try:
+                raw = read_raw_fif(fif_file, preload=True)
+            except:
+                raw = read_epochs(fif_file)
         ext = '.fif'
         if misc:
             for ch in misc:
+                print(ch)
                 raw.set_channel_types({ch: 'misc'})
         # channels = eog_ch.replace(' ', '').split(',')
 
@@ -59,14 +66,21 @@ def _preprocess_fif(
         print(raw.info['ch_names'])
         for ch in eog_ch:
             raw.set_channel_types({ch: 'eog'})
+        if ecg_ch:
+            print('*** SET ECG')
+            try:
+                raw.set_channel_types({ecg_ch: 'ecg'})
+            except:
+                pass
 
     filt_str, down_str = '', ''
 
 #    select_sensors = pick_types(raw.info, meg=True, ref_meg=False, eeg=False)
 
     if l_freq or h_freq:
+        pick = pick_types(raw.info, meg=True, eeg=True, eog=False, ecg=False)
         raw.filter(l_freq=l_freq, h_freq=h_freq,
-                   picks=None, fir_design='firwin')
+                   picks=pick, fir_design='firwin')
         filt_str = '_filt'
     if down_sfreq:
         raw.resample(sfreq=down_sfreq, npad=0)
@@ -81,12 +95,17 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
                  ecg_ch_name, eog_ch_name, n_components, reject):
     """Compute ica solution."""
     subj_path, basename, ext = split_filename(fif_file)
-    orig_raw = read_raw_fif(raw_fif_file, preload=True)
-    raw = read_raw_fif(fif_file, preload=True)
+    try:
+        raw = read_raw_fif(fif_file, preload=True)
+        orig_raw = read_raw_fif(raw_fif_file, preload=True)
+    except:
+        raw = read_epochs(fif_file)
+        orig_raw = read_epochs(raw_fif_file)
 
     # select sensors
     if data_type == 'eeg':
         select_sensors = pick_types(raw.info, eeg=True, exclude='bads')
+        print(f'{select_sensors} ****************************')
     else:
         select_sensors = pick_types(
             raw.info, meg=True, ref_meg=False, exclude='bads')
@@ -99,8 +118,13 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
 
     flat = dict(mag=1e-13, grad=1e-13)
 
-    ica = ICA(n_components=n_components, method='fastica', max_iter='auto')
-    ica.fit(orig_raw, picks=select_sensors, reject=reject, flat=flat)
+    if n_components > 1:
+        n_components = int(n_components)
+    ica = ICA(n_components=n_components, method='fastica', max_iter='auto',
+              random_state=0)
+    ica.fit(
+        orig_raw, picks=select_sensors, reject=reject,
+        flat=flat, reject_by_annotation=True)
     del orig_raw
     # -------------------- Save ica timeseries ---------------------------- #
     ica_ts_file = os.path.abspath(basename + "_ica-tseries.fif")
@@ -123,14 +147,22 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
         ecg_ch_name = None
 
     # set ref_meg to 'auto'
-    if data_type != "eeg":
-        select_sensors = pick_types(raw.info, meg=True,
+    if ecg_ch_name:
+        select_sensors = pick_types(raw.info, meg=True, eeg=True, ecg=True,
                                     ref_meg='auto', exclude='bads')
-        ecg_epochs = create_ecg_epochs(raw, tmin=-0.5, tmax=0.5,
-                                       picks=select_sensors,
-                                       ch_name=ecg_ch_name)
+        if isinstance(raw, mne.io.Raw):
+            ecg_epochs = create_ecg_epochs(raw, tmin=-0.5, tmax=0.5,
+                                           picks=select_sensors,
+                                           ch_name=ecg_ch_name)
+        else:
+            data_raw = np.hstack(raw.get_data())
+            raw_tmp = mne.io.RawArray(data_raw, raw.info)
+            ecg_epochs = create_ecg_epochs(raw_tmp, tmin=-0.5, tmax=0.5,
+                                           picks=select_sensors,
+                                           ch_name=ecg_ch_name) 
 
-        ecg_inds, ecg_scores = ica.find_bads_ecg(ecg_epochs, method='ctps')
+        ecg_inds, ecg_scores = ica.find_bads_ecg(
+            ecg_epochs, ch_name=ecg_ch_name, method='ctps')
 
         ecg_evoked = ecg_epochs.average()
         ecg_epochs = None
@@ -143,7 +175,8 @@ def _compute_ica(fif_file, raw_fif_file, data_type,
         ecg_scores = []
 
     # eog_ch_name = eog_ch_name.replace(' ', '')
-    if set(eog_ch_name).issubset(set(raw.info['ch_names'])):
+    print(f'***********************************************************++ {eog_ch_name}')
+    if set(eog_ch_name).issubset(set(raw.info['ch_names'])) and eog_ch_name:
         print('*** EOG CHANNELS FOUND ***')
         eog_inds, eog_scores = ica.find_bads_eog(raw, ch_name=eog_ch_name)
         eog_inds = eog_inds[:n_max_eog]
@@ -361,23 +394,26 @@ def _generate_report(raw, ica, subj_name, basename,
 
         # plot ECG sources + selection
         fig_ecg_src = ica.plot_sources(ecg_evoked, show=is_show)
-        fig = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
-        report.add_figure(fig,
-                          title=['Scores of ICs related to ECG',
-                                 'Time Series plots of ICs (ECG)',
-                                 'TopoMap of ICs (ECG)',
-                                 'Time-locked ECG sources'],
-                          section='ICA - ECG')
+        figs = [fig_ecg_scores, fig_ecg_ts, fig_ecg_comp, fig_ecg_src]
+        titles = ['Scores of ICs related to ECG',
+                  'Time Series plots of ICs (ECG)',
+                  'TopoMap of ICs (ECG)',
+                  'Time-locked ECG sources']
+        for fig, title in zip(figs, titles):
+            print(title)
+            report.add_figure(fig,
+                              title=title,
+                              section='ICA - ECG')
     # -------------------- end generate report for ECG ---------------------- #
 
     # -------------------------- Generate report for EoG -------------------- #
     # check how many EoG ch we have
-    if set(eog_ch_name).issubset(set(raw.info['ch_names'])):
+    if set(eog_ch_name).issubset(set(raw.info['ch_names'])) and eog_ch_name:
         fig_eog_scores = ica.plot_scores(eog_scores, exclude=eog_inds,
                                          title=ica_title % 'eog', show=is_show)
 
         report.add_figure(fig_eog_scores,
-                          title=['Scores of ICs related to EOG'],
+                          title='Scores of ICs related to EOG',
                           section='ICA - EOG')
 
         n_eogs = np.shape(eog_scores)
@@ -392,7 +428,7 @@ def _generate_report(raw, ica, subj_name, basename,
 
                 fig = [fig_eog_comp]
                 report.add_figure(fig,
-                                  title=['Scores of EoG ICs'],
+                                  title='Scores of EoG ICs',
                                   section='ICA - EOG')
         else:
             show_picks = np.abs(eog_scores).argsort()[::-1][:5]
@@ -401,24 +437,24 @@ def _generate_report(raw, ica, subj_name, basename,
                                                colorbar=True, show=is_show)
 
             fig = [fig_eog_comp]
-            report.add_figure(fig, title=['TopoMap of ICs (EOG)'],
+            report.add_figure(fig, title='TopoMap of ICs (EOG)',
                                        section='ICA - EOG')
 
         fig_eog_src = ica.plot_sources(eog_evoked,
                                        show=is_show)
 
         fig = [fig_eog_src]
-        report.add_figure(fig, title=['Time-locked EOG sources'],
+        report.add_figure(fig, title='Time-locked EOG sources',
                                    section='ICA - EOG')
     # ----------------- end generate report for EoG ---------- #
     ic_nums = list(range(ica.n_components_))
     fig = ica.plot_components(picks=ic_nums, show=False)
-    report.add_figure(fig, title=['All IC topographies'],
+    report.add_figure(fig, title='All IC topographies',
                                section='ICA - muscles')
 
     fig = ica.plot_sources(raw, start=0, stop=None, show=False,
                            title='All IC time series')
-    report.add_figure(fig, title=['All IC time series'],
+    report.add_figure(fig, title='All IC time series',
                                section='ICA - muscles')
 
     '''
@@ -499,44 +535,47 @@ def _define_epochs(
 
     Splitted epochs have a length ep_length with rejection criteria.
     """
-    raw = read_raw_fif(fif_file, preload=True)
-    raw.set_eeg_reference(ref_channels='average', projection=True)
-
-    reject = _create_reject_dict(raw.info, data_type)
-    if data_type == 'meg':
-        picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
-                           stim=True, exclude='bads')
-    elif data_type == 'eeg':
-        picks = pick_types(raw.info, meg=False, eeg=True, eog=True,
-                           stim=False, exclude='bads')
-
-    data_path, base, ext = split_filename(fif_file)
-
-    if events_file:
-        events_fpath = glob.glob(op.join(data_path, events_file))
-        print('*** {} ***'.format(events_fpath[0]))
-        events = read_events(events_fpath[0])
-    else:
-        events = find_events(raw)
-
-    # TODO -> use autoreject ?
-    # reject_tmax = 0.8  # duration we really care about
-    epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
-                    picks=picks, baseline=baseline, decim=decim, preload=True)
-    epochs.drop_bad(reject=reject)
-    fig = epochs.plot_drop_log(show=False)
-    fig_fpath = os.path.abspath(base + '-epo-dropped.jpg')
-
-    fig.savefig(fig_fpath, facecolor='black')
+    if not fif_file.endswith('epo.fif'):
+        raw = read_raw_fif(fif_file, preload=True)
+        raw.set_eeg_reference(ref_channels='average', projection=True)
     
-    good_events_file = os.path.join(data_path, 'good_events.txt')
-    np.savetxt(good_events_file, epochs.events)
-
-    # TODO -> decide where to save...
-    savename = os.path.abspath(base + '-epo' + ext)
-    # savename = os.path.join(data_path, base + '-epo' + ext)
-    print(epochs.info)
-    epochs.save(savename, overwrite=True)
+        reject = _create_reject_dict(raw.info, data_type)
+        if data_type == 'meg':
+            picks = pick_types(raw.info, meg=True, ref_meg=False, eog=True,
+                               stim=True, exclude='bads')
+        elif data_type == 'eeg':
+            picks = pick_types(raw.info, meg=False, eeg=True, eog=True,
+                               stim=False, exclude='bads')
+    
+        data_path, base, ext = split_filename(fif_file)
+    
+        if events_file:
+            events_fpath = glob.glob(op.join(data_path, events_file))
+            print('*** {} ***'.format(events_fpath[0]))
+            events = read_events(events_fpath[0])
+        else:
+            events = find_events(raw)
+    
+        # TODO -> use autoreject ?
+        # reject_tmax = 0.8  # duration we really care about
+        epochs = Epochs(raw, events, events_id, t_min, t_max, proj=True,
+                        picks=picks, baseline=baseline, decim=decim, preload=True)
+        epochs.drop_bad(reject=reject)
+        fig = epochs.plot_drop_log(show=False)
+        fig_fpath = os.path.abspath(base + '-epo-dropped.jpg')
+    
+        fig.savefig(fig_fpath, facecolor='black')
+        
+        good_events_file = os.path.join(data_path, 'good_events.txt')
+        np.savetxt(good_events_file, epochs.events)
+    
+        # TODO -> decide where to save...
+        savename = os.path.abspath(base + '-epo' + ext)
+        # savename = os.path.join(data_path, base + '-epo' + ext)
+        print(epochs.info)
+        epochs.save(savename, overwrite=True)
+    else:
+        savename = fif_file
 
     return savename
 

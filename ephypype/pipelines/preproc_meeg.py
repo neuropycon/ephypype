@@ -42,7 +42,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                                  data_type='fif', l_freq=1, h_freq=150,
                                  down_sfreq=None, is_ICA=True, variance=None,
                                  n_components=None,
-                                 ECG_ch_name='', EoG_ch_name='', reject=None,
+                                 ECG_ch_name='', EoG_ch_name=[], reject=None,
                                  is_set_ICA_components=False, mapnode=False,
                                  n_comp_exclude=[], is_sensor_space=True,
                                  montage=None, misc=None, bipolar=None,
@@ -210,6 +210,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
                 if ch_new_names:
                     preproc_node.inputs.ch_new_names = ch_new_names
                 preproc_node.inputs.eog = EoG_ch_name
+                preproc_node.inputs.ecg = ECG_ch_name
                 pipeline.connect(inputnode, 'raw_file',
                                  preproc_node, 'fif_file')
             elif data_type == 'fif':
