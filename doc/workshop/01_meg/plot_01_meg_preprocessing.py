@@ -138,9 +138,9 @@ infosource = create_iterator(['subject_id', 'session_id'],
 # We look for MEG data contained in ``ses-meg/meg`` (``ses-meg/meg_short``) folder.
 
 if is_short:
-    template_path = '%s/ses-meg/meg_short/*%s*run*%s*sss*.fif'
+    template_path = '%s/ses-meg/meg_short/*%s*run*%s*ssS*.fif'
 else:
-    template_path = '%s/ses-meg/meg/*%s*run*%s*sss*.fif'
+    template_path = '%s/ses-meg/meg/*%s*run*%s*sss.fif'
 template_args = [['subject_id', 'subject_id', 'session_id']]
 datasource = create_datagrabber(data_path, template_path, template_args)
 
@@ -191,7 +191,7 @@ preproc_workflow = create_pipeline_preproc_meeg(
 # nipype the directory in which to store the outputs.
 
 preproc_wf_name = 'preprocessing_dsamp_short_workflow' if is_short \
-    else 'preprocessing_dsamp_workflow'
+    else 'preprocessing_dsamp_workflow_new'
 
 main_workflow = pe.Workflow(name=preproc_wf_name)
 main_workflow.base_dir = data_path
