@@ -194,7 +194,7 @@ class PreprocFif(BaseInterface):
             print(f'***************************************** {ECG_ch_name}')
             ch_new_names = self.inputs.ch_new_names
         else:
-            montage, misc, bipolar, EoG_ch_name = None, None, None, None
+            montage, misc, bipolar, EoG_ch_name, ECG_ch_name = None, None, None, None, None
             ch_new_names = None
 
         result_fif = _preprocess_fif(
