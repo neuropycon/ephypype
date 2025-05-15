@@ -278,6 +278,7 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             write_evokeds(fname_evo, evoked)
 
             for k in range(len(events_name)):
+                print(k)
                 print(evoked[k])
                 stc_evo = apply_inverse(evoked[k], inverse_operator, lambda2,
                                         inv_method, pick_ori=pick_ori)

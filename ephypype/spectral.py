@@ -40,7 +40,7 @@ def _compute_spectral_connectivity(data, con_method, sfreq, fmin, fmax,
                 mt_adaptive=False, n_jobs=1)
 
             con_matrix = conn.get_data(output='dense')[:, :, 0]
-
+            print(f'************************ {con_matrix.shape}')
         elif gathering_method == "max":
             con_matrix = spectral_connectivity_epochs(
                 data, method=con_method, sfreq=sfreq, fmin=fmin,
