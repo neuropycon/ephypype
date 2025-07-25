@@ -22,5 +22,6 @@ doc/generated/
 examples/sample_BIDS_omega
 examples/ieeg
 examples/*ipynb
+examples/_ERP_CORE
 doc/workshop/ERP_CORE
 doc/workshop/.*

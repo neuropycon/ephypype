@@ -131,6 +131,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             if data_type == 'ds':
                 pipeline.connect(ds2fif_node, 'fif_file',
                                  preproc_node, 'fif_file')
+                preproc_node.inputs.data_type = 'fif'
             elif data_type == 'fif':
                 pipeline.connect(inputnode, 'raw_file',
                                  preproc_node, 'fif_file')
@@ -201,6 +202,7 @@ def create_pipeline_preproc_meeg(main_path, pipeline_name='preproc_meeg_pipeline
             if data_type == 'ds':
                 pipeline.connect(ds2fif_node, 'fif_file',
                                  preproc_node, 'fif_file')
+                preproc_node.inputs.data_type = 'fif'
             elif data_type == 'eeg':
                 preproc_node.inputs.montage = montage
                 if bipolar:

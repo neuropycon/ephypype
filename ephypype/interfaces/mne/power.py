@@ -17,6 +17,13 @@ class PowerInputSpec(BaseInterfaceInputSpec):
     data_file = traits.File(exists=True,
                             desc='File with mne.Epochs or mne.io.Raw or .npy',
                             mandatory=True)
+    inv_file = traits.File(exists=True,
+                           desc='File with inverse operator',
+                           mandatory=False)
+
+    inv_method = traits.String('MNE', desc='possible inverse methods are \
+                               sLORETA, MNE, dSPM', usedefault=True,
+                               mandatory=True)
 
     fmin = traits.Float(desc='lower psd frequency', mandatory=False)
     fmax = traits.Float(desc='higher psd frequency', mandatory=False)
@@ -35,6 +42,8 @@ class PowerInputSpec(BaseInterfaceInputSpec):
                                   dedesc='True for PSD on sensor space \
                                   False for PSD on source',
                                   mandatory=False)
+    snr = traits.Float(3.0, usedefault=True, desc='use smaller SNR for \
+                       raw data', mandatory=False)
 
 
 class PowerOutputSpec(TraitedSpec):
@@ -80,7 +89,10 @@ class Power(BaseInterface):
 
     def _run_interface(self, runtime):
         data_file = self.inputs.data_file
+        inv_file = self.inputs.inv_file
+        inv_method = self.inputs.inv_method
         sfreq = self.inputs.sfreq
+        snr = self.inputs.snr
         fmin = self.inputs.fmin
         fmax = self.inputs.fmax
         nfft = self.inputs.nfft
@@ -92,11 +104,12 @@ class Power(BaseInterface):
             self.psds_file = _compute_and_save_psd(data_file, fmin, fmax,
                                                    method, is_epoched)
         else:
-            self.psds_file = _compute_and_save_src_psd(data_file, sfreq,
+            self.psds_file = _compute_and_save_src_psd(data_file, sfreq, inv_file,
                                                        fmin=fmin, fmax=fmax,
-                                                       n_fft=nfft,
+                                                       n_fft=nfft, snr=snr,
                                                        n_overlap=overlap,
-                                                       is_epoched=is_epoched)
+                                                       is_epoched=is_epoched,
+                                                       inv_method=inv_method)
         return runtime
 
     def _list_outputs(self):

@@ -8,9 +8,11 @@ import numpy as np
 from nipype.utils.filemanip import split_filename
 from mne import read_epochs
 from mne.io import read_raw_fif
+from mne.minimum_norm import compute_source_psd, read_inverse_operator
 from scipy.signal import welch
 
 from .fif2array import _get_raw_array
+from .import_data import _read_hdf5
 
 
 def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
@@ -43,12 +45,16 @@ def _compute_and_save_psd(data_fname, fmin=0, fmax=120,
     return psds_fname
 
 
-def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
-                              is_epoched=False,
-                              n_fft=256, n_overlap=0,
-                              n_jobs=1, verbose=None):
+def _compute_and_save_src_psd_old(data_fname, sfreq, fmin=0, fmax=120,
+                                  is_epoched=False,
+                                  n_fft=256, n_overlap=0,
+                                  n_jobs=1, verbose=None):
     """Load epochs/raw from file, compute psd and save the result."""
-    src_data = np.load(data_fname)
+    data_path, basename, ext = split_filename(data_fname)
+    if ext == '.npy':
+        src_data = np.load(data_fname)
+    elif ext == '.hdf5':
+        src_data = _read_hdf5(data_fname, dataset_name='stc_data')
     dim = src_data.shape
     if len(dim) == 3 and dim[0] == 1:
         src_data = np.squeeze(src_data)
@@ -65,6 +71,37 @@ def _compute_and_save_src_psd(data_fname, sfreq, fmin=0, fmax=120,
         freqs, Pxx = welch(src_data[i, :], fs=sfreq, window='hamming',
                            nperseg=nperseg, noverlap=n_overlap, nfft=None)
         psds[i, :] = Pxx
+
+    psds_fname = _save_psd(data_fname, psds, freqs)
+    _save_psd_img(data_fname, psds, freqs, is_epoched)
+
+    return psds_fname
+
+
+def _compute_and_save_src_psd(data_fname, sfreq, inv_file, fmin=0, fmax=120,
+                              is_epoched=False, inv_method='MNE', snr=3.0,
+                              n_fft=256, n_overlap=0,
+                              n_jobs=1, verbose=None):
+    """Load epochs/raw from file, compute psd and save the result."""
+    data_path, basename, ext = split_filename(data_fname)
+
+    raw = read_raw_fif(data_fname, preload=True)
+
+    inverse_operator = read_inverse_operator(inv_file)
+    stc = compute_source_psd(
+        raw,
+        inverse_operator,
+        lambda2=1.0 / snr ** 2,
+        method=inv_method,
+        fmin=fmin,
+        fmax=fmax,
+        pick_ori="normal",
+        n_fft=n_fft,
+        overlap=n_overlap,
+        dB=False)
+
+    freqs = stc.times
+    psds = stc.data
 
     psds_fname = _save_psd(data_fname, psds, freqs)
     _save_psd_img(data_fname, psds, freqs, is_epoched)
