@@ -14,6 +14,7 @@ from mne import read_epochs
 from mne.evoked import write_evokeds, read_evokeds
 from mne.minimum_norm import make_inverse_operator, apply_inverse_raw
 from mne.minimum_norm import apply_inverse_epochs, apply_inverse
+from mne.minimum_norm import write_inverse_operator
 from mne.beamformer import apply_lcmv_raw, make_lcmv
 from mne import compute_raw_covariance, pick_types, write_cov
 
@@ -257,6 +258,8 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
     inverse_operator = make_inverse_operator(info, forward, noise_cov,
                                              loose=loose, depth=depth,
                                              fixed=is_fixed)
+    inv_filename = op.abspath(basename + '-inv.fif')
+    write_inverse_operator(inv_filename, inverse_operator)
 
     # apply inverse operator to the time windows [t_start, t_stop]s
     print('\n*** APPLY INV OP ***\n')
@@ -323,12 +326,13 @@ def _compute_inverse_solution(raw_filename, sbj_id, subjects_dir, fwd_filename,
             stc.append(stc_evo)
             stc_files.append(stc_evo_file)
     else:
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
         stc = apply_inverse_raw(raw, inverse_operator, lambda2, inv_method,
                                 label=None,
                                 start=None, stop=None,
-                                buffer_size=1000,
+                                buffer_size=None,
                                 pick_ori=pick_ori)  # None 'normal'
-
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^')
 
     ts_file, labels_file, label_names_file, label_coords_file = \
         _process_stc(stc, basename, sbj_id, subjects_dir, parc, forward,
