@@ -265,6 +265,7 @@ class NoiseCovariance(BaseInterface):
         # self.cov_fname_out = op.join(data_path, '%s-cov.fif' % basename)
         self.cov_fname_out = op.abspath('%s-cov.fif' % basename)
 
+        print(f'*******************************************{cov_fname_in}')
         # Check if a noise cov matrix was already computed
         if not op.isfile(cov_fname_in):
             if is_epoched and is_evoked:

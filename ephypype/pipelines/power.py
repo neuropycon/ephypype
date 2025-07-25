@@ -74,7 +74,8 @@ def create_pipeline_power(main_path, freq_bands, pipeline_name='power_pipeline',
 def create_pipeline_power_src_space(main_path, sfreq, freq_bands,
                                     pipeline_name='source_power',
                                     fmin=0, fmax=300, nfft=256, overlap=0,
-                                    is_epoched=False):
+                                    is_epoched=False, inv_method='MNE',
+                                    snr=3.0):
     """Power pipeline: wraps functions of MNE to compute source PSD.
 
     Parameters
@@ -113,19 +114,26 @@ def create_pipeline_power_src_space(main_path, sfreq, freq_bands,
     print('*** main_path -> %s' % main_path + ' ***')
 
     # define the inputs of the pipeline
-    inputnode = pe.Node(IdentityInterface(fields=['data_file']),
+    # inputnode = pe.Node(IdentityInterface(fields=['data_file']),
+    #                     name='inputnode')
+
+    inputnode = pe.Node(IdentityInterface(fields=['raw_file',
+                                                  'inv_file']),
                         name='inputnode')
 
     power_node = pe.Node(interface=Power(), name='power')
+    power_node.inputs.snr = snr
     power_node.inputs.sfreq = sfreq
     power_node.inputs.fmin = fmin
     power_node.inputs.fmax = fmax
     power_node.inputs.nfft = nfft
     power_node.inputs.overlap = overlap
     power_node.inputs.is_epoched = is_epoched
+    power_node.inputs.inv_method = inv_method
     power_node.inputs.is_sensor_space = False
 
-    pipeline.connect(inputnode, 'data_file', power_node, 'data_file')
+    pipeline.connect(inputnode, 'raw_file', power_node, 'data_file')
+    pipeline.connect(inputnode, 'inv_file', power_node, 'inv_file')
 
     power_band_node = pe.Node(interface=PowerBand(), name='power_band')
     power_band_node.inputs.freq_bands = freq_bands
