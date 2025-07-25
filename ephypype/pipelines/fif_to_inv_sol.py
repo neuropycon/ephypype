@@ -97,7 +97,8 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
 
     inputnode = pe.Node(IdentityInterface(fields=['sbj_id', 'raw',
                                                   'trans_file',
-                                                  'events_file']),
+                                                  'events_file',
+                                                  'cov_file']),
                         name='inputnode')
 
     # Lead Field computation Node
@@ -128,8 +129,13 @@ def create_pipeline_source_reconstruction(main_path, subjects_dir,
     create_noise_cov = pe.Node(interface=NoiseCovariance(),
                                name="create_noise_cov")
 
-    print('******************** {}', noise_cov_fname)
-    create_noise_cov.inputs.cov_fname_in = noise_cov_fname
+    if noise_cov_fname:
+        print('*** {}', noise_cov_fname)
+        create_noise_cov.inputs.cov_fname_in = noise_cov_fname
+    else:
+        print('*** Noise cov passed as input node ***')
+        pipeline.connect(inputnode, 'cov_file',
+                         create_noise_cov, 'cov_fname_in')
     create_noise_cov.inputs.is_epoched = is_epoched
     create_noise_cov.inputs.is_evoked = is_evoked
 
